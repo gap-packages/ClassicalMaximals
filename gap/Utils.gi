@@ -95,6 +95,8 @@ end);
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
 # Construction as in Lemma 2.2 of [2]
+# Note, however, that a solution cannot always be constructed as below, most
+# notably in the case type = "S", alpha = 0 and q even.
 InstallGlobalFunction("SolveFrobeniusEquation",
 function(type, alpha, q)
     local R, S, x, delta, polynomial, result;
