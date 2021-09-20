@@ -72,4 +72,75 @@ function(c, q)
     return rec(a := a, b := b);
 end);
 
+InstallGlobalFunction("ApplyFunctionToEntries",
+function(M, func)
+    local numberRows, numberColumns, i, j, result;
+    if not IsMatrix(M) or Length(M) = 0 then
+        ErrorNoReturn("<M> must be a matrix but <M> = ", M);
+    fi;
 
+    numberRows := Length(M);
+    numberColumns := Length(M[1]);
+    result := NullMat(numberRows, numberColumns, DefaultFieldOfMatrix(M));
+    for i in [1..numberRows] do
+        for j in [1..numberColumns] do
+            result[i][j] := func(M[i][j]);
+        od;
+    od;
+
+    return result;
+end);
+
+# If type = "S" then find a beta in GF(q ^ 2) with beta + beta ^ q = alpha.
+# If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
+# In both cases, alpha is an element of GF(q).
+# Construction as in Lemma 2.2 of [2]
+InstallGlobalFunction("SolveFrobeniusEquation",
+function(type, alpha, q)
+    local R, S, x, delta, polynomial, result;
+    if not alpha in GF(q) then
+        ErrorNoReturn("<alpha> must be an element of GF(<q>) but <alpha> = ",
+                      alpha, " and <q> = ", q);
+    fi;
+    if not type in ["S", "P"] then
+        ErrorNoReturn("<type> must be one of 'S' or 'P' but <type> = ", type);
+    fi;
+
+    R := PolynomialRing(GF(q), ["x"]);
+    S := PolynomialRing(GF(q ^ 2), ["x"]);
+    x := Indeterminate(GF(q), "x");
+
+    if type = "S" then
+        for delta in GF(q) do
+            polynomial := x ^ 2 - alpha * x + delta;
+            if IsIrreducibleRingElement(R, polynomial) then
+                result := CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
+                return result;
+            fi;
+        od;
+    elif type = "P" then
+        for delta in GF(q) do
+            polynomial := x ^ 2 + delta * x + alpha;
+            if IsIrreducibleRingElement(R, polynomial) then
+                result := CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
+                return result;
+            fi;
+        od;
+    fi;
+end);
+
+# An n x n - matrix of zeroes with a 1 in position (row, column)
+InstallGlobalFunction("SquareSingleEntryMatrix",
+function(field, n, row, column)
+    return MatrixByEntries(field, n, n, [[row, column, 1]]);
+end);
+
+# Compute Ceil(m / n) for two integers m, n
+InstallGlobalFunction("QuoCeil",
+function(m, n)
+    if m mod n = 0 then
+        return QuoInt(m, n);
+    else
+        return QuoInt(m, n) + 1;
+    fi;
+end);

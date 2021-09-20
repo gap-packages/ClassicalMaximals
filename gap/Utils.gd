@@ -15,3 +15,7 @@ DeclareGlobalFunction("MatrixByEntries");
 DeclareGlobalFunction("ChangeFixedSesquilinearForm");
 DeclareGlobalFunction("AntidiagonalMat");
 DeclareGlobalFunction("SolveQuadraticCongruence");
+DeclareGlobalFunction("ApplyFunctionToEntries");
+DeclareGlobalFunction("SolveFrobeniusEquation");
+DeclareGlobalFunction("SquareSingleEntryMatrix");
+DeclareGlobalFunction("QuoCeil");
