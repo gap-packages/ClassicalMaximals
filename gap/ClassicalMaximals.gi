@@ -90,6 +90,7 @@ C4SubgroupsSpecialLinearGroupGeneric := function(n, q)
     generatorGLMinusSL := GL(n, q).1;
     for n1 in divisorListOfn do
         tensorProductSubgroup := TensorProductStabilizerInSL(n1, QuoInt(n, n1), q);
+        # Cf. Tables 3.5.A and 3.5.G in [3]
         numberOfConjugates := Gcd([q - 1, n1, QuoInt(n, n1)]);
         result := Concatenation(result,
                                 ConjugatesInGeneralGroup(tensorProductSubgroup, 
@@ -114,6 +115,7 @@ C5SubgroupsSpecialLinearGroupGeneric := function(n, q)
     for degreeOfExtension in primeDivisorsOfe do
         f := QuoInt(e, degreeOfExtension);
         subfieldGroup := SubfieldSL(n, p, e, f);
+        # Cf. Tables 3.5.A and 3.5.G in [3]
         numberOfConjugates := Gcd(n, QuoInt(q - 1, p ^ f - 1));
         result := Concatenation(result,
                                 ConjugatesInGeneralGroup(subfieldGroup, 
@@ -145,6 +147,7 @@ C6SubgroupsSpecialLinearGroupGeneric := function(n, q)
     if IsOddInt(r) then
         if IsOddInt(e) and e = OrderMod(p, r) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSL(r, m, q);
+            # Cf. Tables 3.5.A and 3.5.G in [3]
             numberOfConjugates := Gcd(n, q - 1);
             if n = 3 and ((q - 4) mod 9 = 0 or (q - 7) mod 9 = 0) then
                 numberOfConjugates := 1;
@@ -158,6 +161,7 @@ C6SubgroupsSpecialLinearGroupGeneric := function(n, q)
         # n = 2 ^ m >= 4
         if e = 1 and (q - 1) mod 4 = 0 then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSL(2, m, q);
+            # Cf. Tables 3.5.A and 3.5.G in [3]
             numberOfConjugates := Gcd(n, q - 1);
             if n = 4 and (q - 5) mod 8 = 0 then
                 numberOfConjugates := 2;
@@ -172,6 +176,8 @@ C6SubgroupsSpecialLinearGroupGeneric := function(n, q)
         if e = 1 and (q - 1) mod 2 = 0 then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSL(2, 1, q);
             if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
+                # Cf. Tables 3.5.A and 3.5.G in [3]
+                numberOfConjugates := Gcd(n, q - 1);
                 result := Concatenation(result,
                                         ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
                                                                  generatorGLMinusSL,
@@ -204,6 +210,7 @@ C7SubgroupsSpecialLinearGroupGeneric := function(n, q)
     for t in divisorsHighestPowern{[2..Length(divisorsHighestPowern)]} do
         m := RootInt(n, t);
         tensorInducedSubgroup := TensorInducedDecompositionStabilizerInSL(m, t, q);
+        # Cf. Tables 3.5.A and 3.5.G in [3]
         numberOfConjugates := Gcd(q - 1, m ^ (t - 1));
         if m mod 4 = 2 and t = 2 and q mod 4 = 3 then
             numberOfConjugates := QuoInt(numberOfConjugates, 2);
@@ -230,6 +237,7 @@ C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
 
     if IsEvenInt(n) then
         symplecticSubgroup := SymplecticNormalizerInSL(n, q);
+        # Cf. Tables 3.5.A and 3.5.G in [3]
         numberOfConjugatesSymplectic := Gcd(q - 1, QuoInt(n, 2));
         result := Concatenation(result,
                                 ConjugatesInGeneralGroup(symplecticSubgroup, 
@@ -239,6 +247,7 @@ C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
 
     if IsEvenInt(e) then
         unitarySubgroup := UnitaryNormalizerInSL(n, q);
+        # Cf. Tables 3.5.A and 3.5.G in [3]
         numberOfConjugatesUnitary := Gcd(p ^ QuoInt(e, 2) - 1, n);
         result := Concatenation(result,
                                 ConjugatesInGeneralGroup(unitarySubgroup,
@@ -249,6 +258,7 @@ C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
     if IsOddInt(q) then
         if IsOddInt(n) then
             orthogonalSubgroup := OrthogonalNormalizerInSL(0, n, q);
+            # Cf. Tables 3.5.A and 3.5.G in [3]
             numberOfConjugatesOrthogonal := Gcd(q - 1, n);
             result := Concatenation(result,
                                     ConjugatesInGeneralGroup(orthogonalSubgroup,
@@ -257,6 +267,7 @@ C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
         else
             for epsilon in [1, -1] do
                 orthogonalSubgroup := OrthogonalNormalizerInSL(epsilon, n, q);
+                # Cf. Tables 3.5.A. and 3.5.G in [3]
                 numberOfConjugatesOrthogonal := QuoInt(Gcd(q - 1, n), 2);
                 result := Concatenation(result,
                                         ConjugatesInGeneralGroup(orthogonalSubgroup,
