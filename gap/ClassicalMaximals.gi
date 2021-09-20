@@ -23,9 +23,19 @@ ConjugatesInGeneralGroup := function(S, C, r)
 end;
 
 InstallGlobalFunction(ClassicalMaximalsGeneric,
-function(type, n, q)
+function(type, n, q, classes...)
+    if Length(classes) = 0 then
+        classes := [1..9];
+    elif IsList(classes[1]) then
+        classes := classes[1];
+    fi;
+    if not IsSubset([1..9], classes) then
+        ErrorNoReturn("<classes> must be a subset of [1..9] but <classes> = ",
+                      classes);
+    fi;
+
     if type = "L" then
-        return MaximalSubgroupClassRepsSpecialLinearGroup(n, q);
+        return MaximalSubgroupClassRepsSpecialLinearGroup(n, q, classes);
     fi;
     ErrorNoReturn("not yet implemented");
 end);
@@ -207,10 +217,71 @@ C7SubgroupsSpecialLinearGroupGeneric := function(n, q)
     return result;
 end;
 
+C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
+    local factorisation, p, e, result, generatorGLMinusSL, symplecticSubgroup,
+    numberOfConjugatesSymplectic, unitarySubgroup, numberOfConjugatesUnitary,
+    orthogonalSubgroup, numberOfConjugatesOrthogonal, epsilon;
+    
+    result := [];
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
+    generatorGLMinusSL := GL(n, q).1;
+
+    if IsEvenInt(n) then
+        symplecticSubgroup := SymplecticNormalizerInSL(n, q);
+        numberOfConjugatesSymplectic := Gcd(q - 1, QuoInt(n, 2));
+        result := Concatenation(result,
+                                ConjugatesInGeneralGroup(symplecticSubgroup, 
+                                                         generatorGLMinusSL,
+                                                         numberOfConjugatesSymplectic));
+    fi;
+
+    if IsEvenInt(e) then
+        unitarySubgroup := UnitaryNormalizerInSL(n, q);
+        numberOfConjugatesUnitary := Gcd(p ^ QuoInt(e, 2) - 1, n);
+        result := Concatenation(result,
+                                ConjugatesInGeneralGroup(unitarySubgroup,
+                                                         generatorGLMinusSL,
+                                                         numberOfConjugatesUnitary));
+    fi;
+
+    if IsOddInt(q) then
+        if IsOddInt(n) then
+            orthogonalSubgroup := OrthogonalNormalizerInSL(0, n, q);
+            numberOfConjugatesOrthogonal := Gcd(q - 1, n);
+            result := Concatenation(result,
+                                    ConjugatesInGeneralGroup(orthogonalSubgroup,
+                                                             generatorGLMinusSL,
+                                                             numberOfConjugatesOrthogonal));
+        else
+            for epsilon in [1, -1] do
+                orthogonalSubgroup := OrthogonalNormalizerInSL(epsilon, n, q);
+                numberOfConjugatesOrthogonal := QuoInt(Gcd(q - 1, n), 2);
+                result := Concatenation(result,
+                                        ConjugatesInGeneralGroup(orthogonalSubgroup,
+                                                                 generatorGLMinusSL,
+                                                                 numberOfConjugatesOrthogonal));
+            od;
+        fi;
+    fi;
+
+    return result;
+end;
+
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialLinearGroup,
-function(n, q)
-    local maximalSubgroups, primeDivisorsOfe, factorisation, p, e, generatorGLMinusSL, 
-    degreeOfExtension, f, numberOfConjugates, subfieldGroup;
+function(n, q, classes...)
+    local maximalSubgroups, factorisation, p, e;
+
+    if Length(classes) = 0 then
+        classes := [1..9];
+    elif IsList(classes[1]) then
+        classes := classes[1];
+    fi;
+    if not IsSubset([1..9], classes) then
+        ErrorNoReturn("<classes> must be a subset of [1..9] but <classes> = ",
+                      classes);
+    fi;
 
     maximalSubgroups := [];
 
@@ -221,112 +292,138 @@ function(n, q)
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
     e := factorisation[2];
-    generatorGLMinusSL := GL(n, q).1;
     
-    # Class C1 subgroups ######################################################
-    # Cf. Propositions 3.1.2 (n = 2), 3.2.1 (n = 3), 3.3.1 (n = 4), 
-    #                  3.4.1 (n = 5), 3.5.1 (n = 6), 3.6.1 (n = 7), 
-    #                  3.7.1 (n = 8), 3.8.1 (n = 9), 3.9.1 (n = 10), 
-    #                  3.10.1 (n = 11), 3.11.1 (n = 12) in [1]
-    maximalSubgroups := Concatenation(maximalSubgroups,
-                                      C1SubgroupsSpecialLinearGroupGeneric(n, q));
-
-    # Class C2 subgroups ######################################################
-    if not n in [2, 4] then
-        # Cf. Propositions 3.2.2. (n = 3), 3.4.2 (n = 5), 
-        #                  3.5.2, 3.5.3, 3.5.4 (all n = 6), 3.6.2 (n = 7),
-        #                  3.7.2, 3.7.3, 3.7.4 (all n = 8), 3.8.2 (n = 9),
-        #                  3.9.2, 3.9.3, 3.9.4 (all n = 10), 3.10.2 (n = 11),
-        #                  3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (n = 12) in [1]
-        # The exceptions mentioned in these propositions are all general
-        # exceptions and are dealt with directly in the function
-        # C2SubgroupsSpecialLinearGeneric
+    if 1 in classes then
+        # Class C1 subgroups ######################################################
+        # Cf. Propositions 3.1.2 (n = 2), 3.2.1 (n = 3), 3.3.1 (n = 4), 
+        #                  3.4.1 (n = 5), 3.5.1 (n = 6), 3.6.1 (n = 7), 
+        #                  3.7.1 (n = 8), 3.8.1 (n = 9), 3.9.1 (n = 10), 
+        #                  3.10.1 (n = 11), 3.11.1 (n = 12) in [1]
         maximalSubgroups := Concatenation(maximalSubgroups,
-                                          C2SubgroupsSpecialLinearGroupGeneric(n, q));
-    elif n = 2 then
-        # Cf. Lemma 3.1.3 and Theorem 6.3.10 in [1]
-        if not q in [5, 7, 9, 11] then
-            Add(maximalSubgroups, ImprimitivesMeetSL(2, q, 2));
-        fi;
-    else
-        # n = 4
-
-        # Cf. Proposition 3.3.2 in [1]
-        if q >= 7 then
-            Add(maximalSubgroups, ImprimitivesMeetSL(4, q, 4));
-        fi;
-        # Cf. Proposition 3.3.3 in [1]
-        if q > 3 then
-            Add(maximalSubgroups, ImprimitivesMeetSL(4, q, 2));
-        fi;
+                                          C1SubgroupsSpecialLinearGroupGeneric(n, q));
     fi;
 
-    # Class C3 subgroups ######################################################
-    # Cf. Propositions 3.3.4 (n = 4), 3.4.3 (n = 5), 3.5.5 (n = 6), 
-    #                  3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9),
-    #                  3.9.5 (n = 10), 3.10.3 (n = 11), 3.11.7 (n = 12) in [1]
-    if not n in [2, 3] then
-        maximalSubgroups := Concatenation(maximalSubgroups, 
-                                          C3SubgroupsSpecialLinearGroupGeneric(n, q));
-    elif n = 2 then
-        # Cf. Lemma 3.1.4 and Theorem 6.3.10 in [1]
-        if not q in [7, 9] then
-            maximalSubgroups := Concatenation(maximalSubgroups, 
-                                              C3SubgroupsSpecialLinearGroupGeneric(2, q));
-        fi;
-    else 
-        # n = 3
-
-        # Cf. Proposition 3.2.3 in [1]
-        if q <> 4 then
-            maximalSubgroups := Concatenation(maximalSubgroups, 
-                                              C3SubgroupsSpecialLinearGroupGeneric(3, q));
-        fi;
-    fi;
-
-    # Class C4 subgroups ######################################################
-    # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10), 
-    #                  3.11.8 (n = 12) in [1]
-    # For all other n, class C4 is empty.
-    maximalSubgroups := Concatenation(maximalSubgroups,
-                                      C4SubgroupsSpecialLinearGroupGeneric(n, q));
-
-    # Class C5 subgroups ######################################################
-    # Cf. Propositions 3.2.4 (n = 3), 3.3.5 (n = 4), 3.4.3 (n = 5), 
-    #                  3.5.7 (n = 6), 3.6.3 (n = 7), 3.7.8 (n = 8),
-    #                  3.8.4 (n = 9), 3.9.7 (n = 10), 3.10.3 (n = 11),
-    #                  3.11.9 (n = 12) in [1]
-    if n <> 2 then
-        maximalSubgroups := Concatenation(maximalSubgroups,
-                                          C5SubgroupsSpecialLinearGroupGeneric(n, q));
-    else
-        # n = 2
-
-        # Cf. Lemma 3.1.5 in [1]
-        if  p <> 2 or not IsPrimeInt(e) then
+    if 2 in classes then
+        # Class C2 subgroups ######################################################
+        if not n in [2, 4] then
+            # Cf. Propositions 3.2.2. (n = 3), 3.4.2 (n = 5), 
+            #                  3.5.2, 3.5.3, 3.5.4 all (n = 6), 3.6.2 (n = 7),
+            #                  3.7.2, 3.7.3, 3.7.4 (all n = 8), 3.8.2 (n = 9),
+            #                  3.9.2, 3.9.3, 3.9.4 (all n = 10), 3.10.2 (n = 11),
+            #                  3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (n = 12) in [1]
+            # The exceptions mentioned in these propositions are all general
+            # exceptions and are dealt with directly in the function
+            # C2SubgroupsSpecialLinearGeneric
             maximalSubgroups := Concatenation(maximalSubgroups,
-                                              C5SubgroupsSpecialLinearGroupGeneric(2, q));
+                                              C2SubgroupsSpecialLinearGroupGeneric(n, q));
+        elif n = 2 then
+            # Cf. Lemma 3.1.3 and Theorem 6.3.10 in [1]
+            if not q in [5, 7, 9, 11] then
+                Add(maximalSubgroups, ImprimitivesMeetSL(2, q, 2));
+            fi;
+        else
+            # n = 4
+
+            # Cf. Proposition 3.3.2 in [1]
+            if q >= 7 then
+                Add(maximalSubgroups, ImprimitivesMeetSL(4, q, 4));
+            fi;
+            # Cf. Proposition 3.3.3 in [1]
+            if q > 3 then
+                Add(maximalSubgroups, ImprimitivesMeetSL(4, q, 2));
+            fi;
         fi;
     fi;
 
-    # Class C6 subgroups ######################################################
-    # Cf. Lemma 3.1.6 (n = 2) and Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
-    #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
-    #                                          3.7.9 (n = 8), 3.8.5 (n = 9), 
-    #                                          3.10.3 (n = 11) in [1]
-    # For all other n, class C6 is empty.
+    if 3 in classes then
+        # Class C3 subgroups ######################################################
+        # Cf. Propositions 3.3.4 (n = 4), 3.4.3 (n = 5), 3.5.5 (n = 6), 
+        #                  3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9),
+        #                  3.9.5 (n = 10), 3.10.3 (n = 11), 3.11.7 (n = 12) in [1]
+        if not n in [2, 3] then
+            maximalSubgroups := Concatenation(maximalSubgroups, 
+                                              C3SubgroupsSpecialLinearGroupGeneric(n, q));
+        elif n = 2 then
+            # Cf. Lemma 3.1.4 and Theorem 6.3.10 in [1]
+            if not q in [7, 9] then
+                maximalSubgroups := Concatenation(maximalSubgroups, 
+                                                  C3SubgroupsSpecialLinearGroupGeneric(2, q));
+            fi;
+        else 
+            # n = 3
 
-    # Cf. Theorem 6.3.10 in [1]
-    if n <> 2 or not q mod 40 in [11, 19, 21, 29] then 
-        maximalSubgroups := Concatenation(maximalSubgroups,
-                                          C6SubgroupsSpecialLinearGroupGeneric(n, q));
+            # Cf. Proposition 3.2.3 in [1]
+            if q <> 4 then
+                maximalSubgroups := Concatenation(maximalSubgroups, 
+                                                  C3SubgroupsSpecialLinearGroupGeneric(3, q));
+            fi;
+        fi;
     fi;
 
-    # Class C7 subgroups ######################################################
-    # Cf. Proposition 3.8.6 in [1]
-    # For all other n, class C7 is empty.
-    maximalSubgroups := Concatenation(maximalSubgroups,
-                                      C7SubgroupsSpecialLinearGroupGeneric(n, q));
+    if 4 in classes then
+        # Class C4 subgroups ######################################################
+        # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10), 
+        #                  3.11.8 (n = 12) in [1]
+        # For all other n, class C4 is empty.
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C4SubgroupsSpecialLinearGroupGeneric(n, q));
+    fi;
+
+    if 5 in classes then
+        # Class C5 subgroups ######################################################
+        # Cf. Propositions 3.2.4 (n = 3), 3.3.5 (n = 4), 3.4.3 (n = 5), 
+        #                  3.5.7 (n = 6), 3.6.3 (n = 7), 3.7.8 (n = 8),
+        #                  3.8.4 (n = 9), 3.9.7 (n = 10), 3.10.3 (n = 11),
+        #                  3.11.9 (n = 12) in [1]
+        if n <> 2 then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C5SubgroupsSpecialLinearGroupGeneric(n, q));
+        else
+            # n = 2
+
+            # Cf. Lemma 3.1.5 in [1]
+            if  p <> 2 or not IsPrimeInt(e) then
+                maximalSubgroups := Concatenation(maximalSubgroups,
+                                                  C5SubgroupsSpecialLinearGroupGeneric(2, q));
+            fi;
+        fi;
+    fi;
+
+    if 6 in classes then
+        # Class C6 subgroups ######################################################
+        # Cf. Lemma 3.1.6 (n = 2) and Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
+        #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
+        #                                          3.7.9 (n = 8), 3.8.5 (n = 9), 
+        #                                          3.10.3 (n = 11) in [1]
+        # For all other n, class C6 is empty.
+
+        # Cf. Theorem 6.3.10 in [1]
+        if n <> 2 or not q mod 40 in [11, 19, 21, 29] then 
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C6SubgroupsSpecialLinearGroupGeneric(n, q));
+        fi;
+    fi;
+
+    if 7 in classes then
+        # Class C7 subgroups ######################################################
+        # Cf. Proposition 3.8.6 (n = 9) in [1]
+        # For all other n, class C7 is empty.
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C7SubgroupsSpecialLinearGroupGeneric(n, q));
+    fi;
+
+    if 8 in classes then
+        # Class C8 subgroups ######################################################
+        # Cf. Lemma 3.1.1 (n = 2) and Propositions 3.2.6 (n = 3), 3.3.7 (n = 4),
+        #                                          3.4.3 (n = 5), 3.5.8 (n = 6),
+        #                                          3.6.3 (n = 7), 3.7.11 (n = 8),
+        #                                          3.8.7 (n = 9), 3.9.8 (n = 10),
+        #                                          3.10.3 (n = 11), 3.11.10 (n = 12) in [1]
+        if n <> 2 then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C8SubgroupsSpecialLinearGroupGeneric(n, q));
+        fi;
+    fi;
 
     return maximalSubgroups;
 end);
