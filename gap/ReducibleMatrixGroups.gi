@@ -199,7 +199,7 @@ function(d, q, k)
                 generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
             generator{[dHalf + 1]}{[dHalf + 1]} := 
                 generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 1]};
-            generator{[dHalf + 1]}{d - kHalf + 1..d]} := 
+            generator{[dHalf + 1]}{[d - kHalf + 1..d]} := 
                 generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
             generator{[1..kHalf]}{[dHalf + 1]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
@@ -255,7 +255,7 @@ function(d, q, k)
                 generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
             generator{[dHalf + 1]}{[dHalf + 1]} := 
                 generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 1]};
-            generator{[dHalf + 1]}{d - kHalf + 1..d]} := 
+            generator{[dHalf + 1]}{[d - kHalf + 1..d]} := 
                 generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
             generator{[1..kHalf]}{[dHalf + 1]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
