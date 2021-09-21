@@ -19,6 +19,7 @@ function(n, q, k)
 end);
 
 # Construction as in Proposition 4.5 of [2]
+# The subspace stabilised is < e_1, e_2, ..., e_k >.
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
     local zeta, generatorsOfSL, generatorOfSL, generatorsOfSU, generatorOfSU, J,
@@ -39,26 +40,19 @@ function(d, q, k)
     # claimed in the proof of Proposition 4.5 in [2] since some of the
     # generators constructed below would not have determinant 1 otherwise.
     generatorsOfSL := GeneratorsOfGroup(SL(k, q ^ 2));
+    for generatorOfSL in generatorsOfSL do
+        generator := IdentityMat(d, GF(q ^ 2));
+        generator{[1..k]}{[1..k]} := generatorOfSL;
+        generator{[d - k + 1..d]}{[d - k + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
+                                                                                automorphism) 
+                                                       * J;
+        Add(generators, generator);
+    od;
     if d - 2 * k > 0 then
         generatorsOfSU := GeneratorsOfGroup(SU(d - 2 * k, q));
-        for generatorOfSL in generatorsOfSL do
-            for generatorOfSU in generatorsOfSU do
-                generator := NullMat(d, d, GF(q ^ 2));
-                generator{[1..k]}{[1..k]} := generatorOfSL;
-                generator{[d - k + 1..d]}{[d - k + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
-                                                                                        automorphism) 
-                                                               * J;
-                generator{[k + 1..d - k]}{[k + 1..d - k]} := generatorOfSU;
-                Add(generators, generator);
-            od;
-        od;
-    else
-        for generatorOfSL in generatorsOfSL do
-            generator := NullMat(d, d, GF(q ^ 2));
-            generator{[1..k]}{[1..k]} := generatorOfSL;
-            generator{[d - k + 1..d]}{[d - k + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
-                                                                                    automorphism) 
-                                                            * J;
+        for generatorOfSU in generatorsOfSU do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[k + 1..d - k]}{[k + 1..d - k]} := generatorOfSU;
             Add(generators, generator);
         od;
     fi;
@@ -91,7 +85,7 @@ function(d, q, k)
                                             + mu ^ q * SquareSingleEntryMatrix(GF(q ^ 2), d, QuoCeil(d, 2), 1);
         fi;
     else
-        # if d = 2 * k we do not need a second transvection
+        # if d = 2 * k, we do not need a second transvection
         T2 := IdentityMat(d, GF(q ^ 2));
     fi;
     generators := Concatenation(generators, [T1, T2]);
@@ -128,4 +122,16 @@ function(d, q, k)
     fi;
 
     return result;
+end);
+
+# Construction as in Proposition 4.6 of [2]
+BindGlobal("SUStabilizerOfNonDegenerateSubspace",
+function(d, q, k)
+    local zeta;
+    if k >= d / 2 then
+        ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
+        " and <d> = ", d);
+    fi;
+
+    zeta := PrimitiveElement(GF(q ^ 2));
 end);

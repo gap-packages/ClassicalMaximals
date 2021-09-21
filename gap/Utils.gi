@@ -109,7 +109,7 @@ function(type, alpha, q)
     # does not work here: x ^ 2 + delta is never irreducible over GF(q) since
     # all elements of GF(q) are squares for q even.
     if type = "S" and alpha = 0 and IsEvenInt(q) then
-        return Z(q) ^ 0
+        return Z(q) ^ 0;
     fi;
 
     R := PolynomialRing(GF(q), ["x"]);
