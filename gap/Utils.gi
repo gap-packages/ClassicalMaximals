@@ -124,7 +124,7 @@ function(type, alpha, q)
         for delta in GF(q) do
             polynomial := x ^ 2 - alpha * x + delta;
             if IsIrreducibleRingElement(R, polynomial) then
-                result := CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
+                result := -CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
                 return result;
             fi;
         od;
@@ -146,7 +146,7 @@ function(type, alpha, q)
         for delta in GF(q) do
             polynomial := x ^ 2 + delta * x + alpha;
             if IsIrreducibleRingElement(R, polynomial) then
-                result := CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
+                result := -CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
                 return result;
             fi;
         od;

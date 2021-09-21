@@ -36,6 +36,8 @@ function(type, n, q, classes...)
 
     if type = "L" then
         return MaximalSubgroupClassRepsSpecialLinearGroup(n, q, classes);
+    elif type = "U" then
+        return MaximalSubgroupClassRepsSpecialUnitaryGroup(n, q, classes);
     fi;
     ErrorNoReturn("not yet implemented");
 end);
@@ -423,6 +425,52 @@ function(n, q, classes...)
             maximalSubgroups := Concatenation(maximalSubgroups,
                                               C8SubgroupsSpecialLinearGroupGeneric(n, q));
         fi;
+    fi;
+
+    return maximalSubgroups;
+end);
+
+C1SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    local result;
+    # type P_k subgroups
+    result := List([1..QuoInt(n, 2)], k -> SUStabilizerOfIsotropicSubspace(n, q, k));
+    # type GU(k, q) _|_ GU(n - k, q) subgroups
+    result := Concatenation(result, 
+                            List([1..QuoCeil(n, 2) - 1], 
+                                 k -> SUStabilizerOfNonDegenerateSubspace(n, q, k)));
+    return result;
+end;
+
+
+InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
+function(n, q, classes...)
+    local maximalSubgroups;
+
+    if Length(classes) = 0 then
+        classes := [1..9];
+    elif IsList(classes[1]) then
+        classes := classes[1];
+    fi;
+    if not IsSubset([1..9], classes) then
+        ErrorNoReturn("<classes> must be a subset of [1..9] but <classes> = ",
+                      classes);
+    fi;
+
+    if (n = 3 and q = 2) then
+        Error("PSU(3, 2) is soluble");
+    fi;
+
+
+    maximalSubgroups := [];
+
+    if 1 in classes then
+        # Class C1 subgroups ######################################################
+        # Cf. Propositions 3.1.2 (n = 2), 3.2.1 (n = 3), 3.3.1 (n = 4), 
+        #                  3.4.1 (n = 5), 3.5.1 (n = 6), 3.6.1 (n = 7), 
+        #                  3.7.1 (n = 8), 3.8.1 (n = 9), 3.9.1 (n = 10), 
+        #                  3.10.1 (n = 11), 3.11.1 (n = 12) in [1]
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C1SubgroupsSpecialLinearGroupGeneric(n, q));
     fi;
 
     return maximalSubgroups;

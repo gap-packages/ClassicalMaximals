@@ -129,7 +129,7 @@ BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
     local zeta, generators, kHalf, dHalf, generatorsOfSUSubspace, generatorOfSUSubspace, 
     generatorsOfSUComplement, generatorOfSUComplement, generator,
-    determinantShiftMatrix, alpha, beta;
+    determinantShiftMatrix, alpha, beta, result;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
         " and <d> = ", d);
@@ -170,11 +170,11 @@ function(d, q, k)
         # Now add a diagonal matrix where each of the SU(k, q) and SU(d - k, q)
         # blocks has determinant zeta ^ +- (q - 1).
         determinantShiftMatrix := DiagonalMat(Concatenation([zeta],
-                                                            List([2..kHalf], i -> 1),
+                                                            List([2..kHalf], i -> zeta ^ 0),
                                                             [zeta ^ (-1)],
-                                                            List([kHalf + 2..d - kHalf -1], i -> 1),
+                                                            List([kHalf + 2..d - kHalf -1], i -> zeta ^ 0),
                                                             [zeta ^ q],
-                                                            List([d - kHalf + 1..d - 1], i -> 1),
+                                                            List([d - kHalf + 1..d - 1], i -> zeta ^ 0),
                                                             [zeta ^ (-q)]));
         Add(generators, determinantShiftMatrix);
     elif IsOddInt(k) and IsOddInt(d) then        
@@ -223,21 +223,32 @@ function(d, q, k)
 
         # Now add a diagonal matrix where each of the SU(k, q) and SU(d - k, q)
         # blocks has determinant zeta ^ +- (q - 1).
-        determinantShiftMatrix := DiagonalMat(Concatenation(List([1..dHalf - 1], i -> 1),
+        # Note that the choice of matrix differs from the original Magma code,
+        # but this is much cleaner.
+        determinantShiftMatrix := DiagonalMat(Concatenation(List([1..dHalf - 1], i -> zeta ^ 0),
                                                             [zeta ^ (-1), zeta ^ (1 - q), zeta ^ q],
-                                                            List([dHalf + 3..d], i -> 1)));
+                                                            List([dHalf + 3..d], i -> zeta ^ 0)));
         Add(generators, determinantShiftMatrix);
     else
         # Find alpha, beta with alpha + alpha ^ q = 1 and beta * beta ^ q = -1.
-        alpha := SolveFrobeniusEquation("S", 1, q);
+        alpha := SolveFrobeniusEquation("S", zeta ^ 0, q);
         if IsOddInt(q) then
             beta := zeta ^ QuoInt(q - 1, 2);
         else
             beta := zeta ^ 0;
         fi;
         # We stabilise the subspace < e_1, ..., e_{kHalf}, w_1, f_{kHalf}, ..., f_1 >  
-        # and its complement < e_{kHalf + 1}, ..., e_{dHalf - 1}, w_2, f_{dHalf - 1}, ..., f_{kHalf + 1} >
+        # and its complement < e_{kHalf + 1}, ..., e_{dHalf - 1}, w_2, f_{dHalf - 1}, ..., f_{kHalf + 1} >,
+        # where w_1 = alpha * e_{dHalf} + f_{dHalf} and 
+        #       w_2 = -alpha ^ q * beta * e_{dHalf} + beta * f_{dHalf}.
         # (e_1, ..., e_{d / 2}, f_{d / 2}, ..., f_1 is the standard basis).
+        #
+        # Note that, by construction of alpha and beta,
+        #       e_{dHalf} = w_1 + beta ^ q * w_2
+        #       f_{dHalf} = alpha ^ q * w_1 - alpha * beta ^ q * w_2
+        # Also by construction of alpha and beta, our standard unitary form
+        # applied to w_1 and w_1 or w_2 and w_2, respectively, each gives 1
+        # again, as needed.
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
         generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
@@ -251,37 +262,112 @@ function(d, q, k)
                 generatorOfSUSubspace{[kHalf + 2..k]}{[1..kHalf]};
             generator{[1..kHalf]}{[d - kHalf + 1..d]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 2..k]};
-            generator{[dHalf + 1]}{[1..kHalf]} := 
-                generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
-            generator{[dHalf + 1]}{[dHalf + 1]} := 
-                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 1]};
-            generator{[dHalf + 1]}{[d - kHalf + 1..d]} := 
-                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
-            generator{[1..kHalf]}{[dHalf + 1]} := 
+            # use w_1 = alpha * e_{dHalf} + f_{dHalf} for the following lines
+            generator{[1..kHalf]}{[dHalf]} := 
+                alpha * generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
+            generator{[1..kHalf]}{[dHalf + 1]} :=
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
-            generator{[d - kHalf + 1..d]}{[dHalf + 1]} := 
+            generator{[d - kHalf + 1..d]}{[dHalf]} :=
+                alpha * generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
+            generator{[d - kHalf + 1..d]}{[dHalf]} :=
                 generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
+            # now use e_{dHalf} = w_1 + beta ^ q * w_2
+            #         f_{dHalf} = alpha ^ q * w_1 - alpha * beta ^ q * w_2
+            generator{[dHalf]}{[1..kHalf]} :=
+                generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]}; 
+            generator{[dHalf + 1]}{[1..kHalf]} :=
+                alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
+            generator{[dHalf]}{[d - kHalf + 1..d]} :=
+                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+            generator{[dHalf + 1]}{[d - kHalf + 1..d]} :=
+                alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+            # finally, for the central 2x2-submatrix, we have to use all four
+            # relations above together
+            generator[dHalf][dHalf] := 
+                alpha * generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+                    + beta ^ q * (- alpha ^ q * beta);
+            generator[dHalf][dHalf + 1] := 
+                generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+                    + beta ^ q * beta;
+            generator[dHalf + 1][dHalf] :=
+                alpha ^ q * alpha * generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+                    - alpha * beta ^ q * (- alpha ^ q * beta);
+            generator[dHalf + 1][dHalf + 1] :=
+                alpha ^ q * generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+                    - alpha * beta ^ q * beta;
             Add(generators, generator);
         od;
         generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
         for generatorOfSUComplement in generatorsOfSUComplement do
-            generator := IdentityMat(d, GF(q ^ 2));
-            generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
-                generatorOfSUComplement{[1..(d - k) / 2]}{[1..(d - k) / 2]};
-            generator{[kHalf + 1..dHalf]}{[dHalf + 2..d - kHalf]} :=
-                generatorOfSUComplement{[1..(d - k) / 2]}{[(d - k) / 2 + 1..d - k]};
-            generator{[dHalf + 2..d - kHalf]}{[kHalf + 1..dHalf]} := 
-                generatorOfSUComplement{[(d - k) / 2 + 1..d - k]}{[1..(d - k) / 2]};
-            generator{[dHalf + 2..d - kHalf]}{[dHalf + 2..d - kHalf]} := 
-                generatorOfSUComplement{[(d - k) / 2 + 1..d - k]}{[(d - k) / 2 + 1..d - k]};
+            generator := IdentityMat(d, GF(q ^ 2)); 
+            generator{[kHalf + 1..dHalf - 1]}{[kHalf + 1..dHalf - 1]} := 
+                generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[1..dHalf - kHalf - 1]};
+            generator{[kHalf + 1..dHalf - 1]}{[dHalf + 2..d - kHalf]} := 
+                generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[dHalf - kHalf + 1..d - k]};
+            generator{[dHalf + 2..d - kHalf]}{[kHalf + 1..dHalf - 1]} := 
+                generatorOfSUComplement{[dHalf - kHalf + 1..d - k]}{[1..dHalf - kHalf - 1]};
+            generator{[dHalf + 2..d - kHalf]}{[dHalf + 2..d - kHalf]} :=
+                generatorOfSUComplement{[dHalf - kHalf + 1..d - k]}{[dHalf - kHalf + 1..d - k]};
+            # use w_1 = alpha * e_{dHalf} + f_{dHalf} for the following lines
+            generator{[kHalf + 1..dHalf - 1]}{[dHalf]} := 
+                -alpha ^ q * beta * generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[dHalf - kHalf]};
+            generator{[kHalf + 1..dHalf - 1]}{[dHalf + 1]} :=
+                beta * generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[dHalf - kHalf]};
+            generator{[dHalf + 2..d - kHalf]}{[dHalf]} :=
+                -alpha ^ q * beta * generatorOfSUComplement{[dHalf - kHalf + 1..d - k]}{[dHalf - kHalf]};
+            generator{[dHalf + 2..d - kHalf]}{[dHalf + 1]} :=
+                beta * generatorOfSUComplement{[dHalf - kHalf + 1..d - k]}{[dHalf - kHalf]};
+            # now use e_{dHalf} = w_1 + beta ^ q * w_2
+            #         f_{dHalf} = alpha ^ q * w_1 - alpha * beta ^ q * w_2
+            generator{[dHalf]}{[kHalf + 1..dHalf - 1]} :=
+                beta ^ q * generatorOfSUComplement{[dHalf - kHalf]}{[1..dHalf - kHalf - 1]}; 
+            generator{[dHalf + 1]}{[kHalf + 1..dHalf - 1]} :=
+                -alpha * beta ^ q * generatorOfSUComplement{[dHalf - kHalf]}{[1..dHalf - kHalf - 1]};
+            generator{[dHalf]}{[dHalf + 2..d - kHalf]} :=
+                beta ^ q * generatorOfSUComplement{[dHalf - kHalf]}{[dHalf - kHalf + 1..d - k]};
+            generator{[dHalf + 1]}{[dHalf + 2..d - kHalf]} :=
+                -alpha * beta ^ q * generatorOfSUComplement{[dHalf - kHalf]}{[dHalf - kHalf + 1..d - k]};
+            # finally, for the central 2x2-submatrix, we have to use all four
+            # relations above together
+            generator[dHalf][dHalf] := 
+                beta ^ q * (- alpha ^ q * beta) * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+                    + alpha;
+            generator[dHalf][dHalf + 1] := 
+                beta ^ q * beta * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+                    + zeta ^ 0;
+            generator[dHalf + 1][dHalf] :=
+                alpha * beta ^ q * alpha ^ q * beta * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+                    + alpha ^ q * alpha;
+            generator[dHalf + 1][dHalf + 1] :=
+                - alpha * beta ^ q * beta * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+                    + alpha ^ q;
             Add(generators, generator);
         od;
 
         # Now add a diagonal matrix where each of the SU(k, q) and SU(d - k, q)
-        # blocks has determinant zeta ^ +- (q - 1).
-        determinantShiftMatrix := DiagonalMat(Concatenation(List([1..dHalf - 1], i -> 1),
-                                                            [zeta ^ (-1), zeta ^ (1 - q), zeta ^ q],
-                                                            List([dHalf + 3..d], i -> 1)));
+        # blocks has determinant zeta ^ +- (q - 1). We take the matrix obtained
+        # by sending w_1 to zeta ^ (q - 1) * w_1 and w_2 to zeta ^ (1 - q) * w_2.
+        # Note that this choice differs from the original Magma code, but it
+        # is much cleaner this way.
+        determinantShiftMatrix := IdentityMat(d, GF(q ^ 2));
+        determinantShiftMatrix[dHalf][dHalf] :=
+            beta ^ q * (-alpha ^ q * beta) * zeta ^ (1 - q) 
+                + alpha * zeta ^ (q - 1);
+        determinantShiftMatrix[dHalf][dHalf + 1] :=
+            beta ^ q * beta * zeta ^ (1 - q)
+                + zeta ^ (q - 1);
+        determinantShiftMatrix[dHalf + 1][dHalf] :=
+            alpha * beta ^ q * alpha ^ q * beta * zeta ^ (1 - q)
+                + alpha ^ q * alpha * zeta ^ (q - 1);
+        determinantShiftMatrix[dHalf + 1][dHalf + 1] :=
+            -alpha * beta ^ q * beta * zeta ^ (1 - q)
+                + alpha ^ q * zeta ^ (q - 1);
         Add(generators, determinantShiftMatrix);
     fi;
+
+    result := Group(generators);
+    # Size according to Table 2.3 of [1]
+    SetSize(result, Size(SU(k, q)) * Size(SU(d - k, q)) * (q + 1));
+
+    return result;
 end);
