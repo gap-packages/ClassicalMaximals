@@ -35,7 +35,7 @@ function(n, p, e, f)
 
     # solving the congruence lambda * n = z (mod p ^ e - 1) by solving the
     # matrix equation (n, p ^ e - 1) * (lambda, t) ^ T = z over the integers
-    matrixForCongruence := MatrixByEntries(Integers, 2, 1, [n, p ^ e - 1]);
+    matrixForCongruence := [[n], [p ^ e - 1]];
     z := c * QuoInt(p ^ e - 1, p ^ f - 1);
     lambda := SolutionMat(matrixForCongruence, [z])[1];
 
