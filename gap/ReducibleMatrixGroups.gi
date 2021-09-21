@@ -22,24 +22,25 @@ end);
 # The subspace stabilised is < e_1, e_2, ..., e_k >.
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
-    local zeta, generatorOfSL, generatorOfSU, J,
-    generators, generator, T1, T2, nu, mu, D, result;
+    local F, zeta, generators, J, generator, nu, T1, T2, mu, D, result,
+        generatorOfSL, generatorOfSU;
 
     if not k <= d / 2 then
         ErrorNoReturn("<k> must not be larger than <d> / 2 but <k> = ", k, 
                       " and <d> = ", d);
     fi;
 
-    zeta := PrimitiveElement(GF(q ^ 2));
+    F := GF(q ^ 2);
+    zeta := PrimitiveElement(F);
     generators := [];
-    J := AntidiagonalMat(List([1..k], i -> 1), GF(q ^ 2));
+    J := AntidiagonalMat(List([1..k], i -> 1), F);
 
     # The following elements generate SL(k, q ^ 2) x SU(d - 2 * k, q).
     # Note that we actually do need SL(k, q ^ 2) here and not GL(k, q ^ 2) as
     # claimed in the proof of Proposition 4.5 in [2] since some of the
     # generators constructed below would not have determinant 1 otherwise.
     for generatorOfSL in GeneratorsOfGroup(SL(k, q ^ 2)) do
-        generator := IdentityMat(d, GF(q ^ 2));
+        generator := IdentityMat(d, F);
         generator{[1..k]}{[1..k]} := generatorOfSL;
         generator{[d - k + 1..d]}{[d - k + 1..d]} := J * HermitianConjugate(generatorOfSL, q) ^ (-1) 
                                                        * J;
@@ -47,7 +48,7 @@ function(d, q, k)
     od;
     if d - 2 * k > 0 then
         for generatorOfSU in GeneratorsOfGroup(SU(d - 2 * k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2));
+            generator := IdentityMat(d, F);
             generator{[k + 1..d - k]}{[k + 1..d - k]} := generatorOfSU;
             Add(generators, generator);
         od;
@@ -59,35 +60,35 @@ function(d, q, k)
     else
         nu := zeta ^ 0;
     fi;
-    T1 := IdentityMat(d, GF(q ^ 2)) + nu * SquareSingleEntryMatrix(GF(q ^ 2), d, d, 1);
+    T1 := IdentityMat(d, F) + nu * SquareSingleEntryMatrix(F, d, d, 1);
     if d - 2 * k > 1 then
         # Note that in the proof of Proposition 4.5 in [2], there is a + sign
         # instead of the - sign below, but this is wrong and will lead to T2
         # not being in SU(d, q).
-        T2 := IdentityMat(d, GF(q ^ 2)) + SquareSingleEntryMatrix(GF(q ^ 2), d, d, d - k)   
-                                        - SquareSingleEntryMatrix(GF(q ^ 2), d, k + 1, 1);
+        T2 := IdentityMat(d, F) + SquareSingleEntryMatrix(F, d, d, d - k)   
+                                        - SquareSingleEntryMatrix(F, d, k + 1, 1);
     elif d - 2 * k = 1 then
         if IsEvenInt(q) then
-            T2 := IdentityMat(d, GF(q ^ 2)) + zeta * SquareSingleEntryMatrix(GF(q ^ 2), d, d, 1)
-                                            + SquareSingleEntryMatrix(GF(q ^ 2), d, d, QuoCeil(d, 2))
-                                            + SquareSingleEntryMatrix(GF(q ^ 2), d, QuoCeil(d, 2), 1);
+            T2 := IdentityMat(d, F) + zeta * SquareSingleEntryMatrix(F, d, d, 1)
+                                            + SquareSingleEntryMatrix(F, d, d, QuoCeil(d, 2))
+                                            + SquareSingleEntryMatrix(F, d, QuoCeil(d, 2), 1);
         else
             mu := SolveFrobeniusEquation("P", -2 * zeta ^ 0, q);
             # Again, note that in the proof of Proposition 4.5 in [2], there is
             # a + sign instead of the - sign below, but this is wrong and will
             # lead to T2 not being in SU(d, q).
-            T2 := IdentityMat(d, GF(q ^ 2)) + SquareSingleEntryMatrix(GF(q ^ 2), d, d, 1)
-                                            - mu * SquareSingleEntryMatrix(GF(q ^ 2), d, d, QuoCeil(d, 2))
-                                            + mu ^ q * SquareSingleEntryMatrix(GF(q ^ 2), d, QuoCeil(d, 2), 1);
+            T2 := IdentityMat(d, F) + SquareSingleEntryMatrix(F, d, d, 1)
+                                            - mu * SquareSingleEntryMatrix(F, d, d, QuoCeil(d, 2))
+                                            + mu ^ q * SquareSingleEntryMatrix(F, d, QuoCeil(d, 2), 1);
         fi;
     else
         # if d = 2 * k, we do not need a second transvection
-        T2 := IdentityMat(d, GF(q ^ 2));
+        T2 := IdentityMat(d, F);
     fi;
     generators := Concatenation(generators, [T1, T2]);
 
     # finally a diagonal matrix of order q ^ 2 - 1 (or q - 1 if d = 2 * k)
-    D := IdentityMat(d, GF(q ^ 2));
+    D := IdentityMat(d, F);
     if d - 2 * k > 1 then
         D[1, 1] := zeta;
         D[k + 1, k + 1] := zeta ^ (-1);
@@ -122,15 +123,15 @@ end);
 # Construction as in Proposition 4.6 of [2]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
-    local zeta, generators, kHalf, dHalf, generatorOfSUSubspace, 
-    generatorOfSUComplement, generator,
-    determinantShiftMatrix, alpha, beta, result;
+    local F, zeta, generators, kHalf, dHalf, generator, determinantShiftMatrix,
+        alpha, beta, result, generatorOfSUSubspace, generatorOfSUComplement;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
         " and <d> = ", d);
     fi;
 
-    zeta := PrimitiveElement(GF(q ^ 2));
+    F := GF(q ^ 2);
+    zeta := PrimitiveElement(F);
     generators := [];
     kHalf := QuoInt(k, 2);
     dHalf := QuoInt(d, 2);
@@ -142,7 +143,7 @@ function(d, q, k)
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
         for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2));
+            generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
             generator{[d - kHalf + 1..d]}{[d - kHalf + 1..d]} :=
@@ -154,7 +155,7 @@ function(d, q, k)
             Add(generators, generator);
         od;
         for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2));
+            generator := IdentityMat(d, F);
             generator{[kHalf + 1..d - kHalf]}{[k / 2 + 1..d - kHalf]} := 
                 generatorOfSUComplement;
             Add(generators, generator);
@@ -178,7 +179,7 @@ function(d, q, k)
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
         for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2));
+            generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
             generator{[d - kHalf + 1..d]}{[d - kHalf + 1..d]} := 
@@ -200,7 +201,7 @@ function(d, q, k)
             Add(generators, generator);
         od;
         for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2));
+            generator := IdentityMat(d, F);
             generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
                 generatorOfSUComplement{[1..(d - k) / 2]}{[1..(d - k) / 2]};
             generator{[kHalf + 1..dHalf]}{[dHalf + 2..d - kHalf]} :=
@@ -243,7 +244,7 @@ function(d, q, k)
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
         for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2));
+            generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
             generator{[d - kHalf + 1..d]}{[d - kHalf + 1..d]} := 
@@ -288,7 +289,7 @@ function(d, q, k)
             Add(generators, generator);
         od;
         for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
-            generator := IdentityMat(d, GF(q ^ 2)); 
+            generator := IdentityMat(d, F); 
             generator{[kHalf + 1..dHalf - 1]}{[kHalf + 1..dHalf - 1]} := 
                 generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[1..dHalf - kHalf - 1]};
             generator{[kHalf + 1..dHalf - 1]}{[dHalf + 2..d - kHalf]} := 
