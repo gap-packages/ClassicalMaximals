@@ -109,7 +109,7 @@ function(d, q, t)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
     result := ChangeFixedSesquilinearForm(result,
                                           "U",
-                                          AntidiagonalMat(List([1..d], i -> 1), F));
+                                          AntidiagonalMat(d, F));
     # Size according to Table 2.5 of [1]
     SetSize(result, Size(SU(m, q)) ^ t * (q + 1) ^ (t - 1) * Factorial(t));
     
@@ -131,7 +131,7 @@ function(d, q)
     F := GF(q ^ 2);
     zeta := PrimitiveElement(F);
     generators := [];
-    J := AntidiagonalMat(List([1..d / 2], i -> 1), F);
+    J := AntidiagonalMat(d / 2, F);
 
     # first generate SL(d / 2, q ^ 2) as a subgroup of SU(d, q)
     for generatorOfSL in GeneratorsOfGroup(SL(d / 2, q ^ 2)) do

@@ -96,7 +96,7 @@ function(d1, d2, q)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
     result := ChangeFixedSesquilinearForm(result,
                                           "U",
-                                          AntidiagonalMat(List([1..d], i -> zeta ^ 0), F));
+                                          AntidiagonalMat(d, F));
     # Size according to Table 2.7 in [1]
     SetSize(result, Size(SU(d1, q)) * Size(SU(d2, q)) * Gcd(q + 1, d1, d2));
     return result;

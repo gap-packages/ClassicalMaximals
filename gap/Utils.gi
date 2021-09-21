@@ -44,10 +44,18 @@ end);
 
 InstallGlobalFunction("AntidiagonalMat",
 function(entries, field)
-    local dimension;
-    dimension := Length(entries);
-    return MatrixByEntries(field, dimension, dimension, 
-                           List([1..dimension], i -> [i, dimension - i + 1, entries[i]]));
+    local d, m, i;
+    if IsInt(entries) then
+        d := entries;
+        entries := ListWithIdenticalEntries(d, One(field));
+    else
+        d := Length(entries);
+    fi;
+    m := NullMat(d, d, field);
+    for i in [1..d] do
+        m[i, d - i + 1] := entries[i];
+    od;
+    return ImmutableMatrix(field, m);
 end);
 
 # Solving the congruence a ^ 2 + b ^ 2 = c in F_q by trial and error.
@@ -212,7 +220,7 @@ function(epsilon, n, q)
             E := zeta * IdentityMat(n, GF(q));
     else 
         if epsilon = 1 then
-            gramMatrix := AntidiagonalMat(List([1..n], i -> 1), GF(q));
+            gramMatrix := AntidiagonalMat(n, GF(q));
             generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));

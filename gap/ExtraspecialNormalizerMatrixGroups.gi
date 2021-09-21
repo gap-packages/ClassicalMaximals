@@ -568,7 +568,7 @@ end);
 # Construction as in Proposition 9.5 of [2]
 BindGlobal("ExtraspecialNormalizerInSU",
 function(r, m, q)
-    local result;
+    local result, F;
     if not r ^ m > 2 then
         ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case, but",
                       " <r> = ", r, " and <m> = ", m);
@@ -587,10 +587,11 @@ function(r, m, q)
     # (see the constructor functions above for more info).
     # We conjugate the group so that it preserves the standard GAP form
     # Antidiag(1, ..., 1). 
-    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, GF(q ^ 2))));
+    F := GF(q ^ 2);
+    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, F)));
     result := ChangeFixedSesquilinearForm(result,
                                           "U",
-                                          AntidiagonalMat(List([1..r ^ m], i -> 1), GF(q ^ 2)));
+                                          AntidiagonalMat(r ^ m, F));
 
     return result;
 end);

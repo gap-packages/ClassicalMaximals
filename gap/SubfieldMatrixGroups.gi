@@ -103,7 +103,7 @@ function(d, q)
     fi;
 
     form := AntidiagonalMat(Concatenation(List([1..d / 2], i -> 1),
-                                          List([1..d / 2], i -> -1)),
+                                          List([1..d / 2], i -> -1)) * Z(q ^ 2)^0,
                             GF(q ^ 2));
     generators := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
     zeta := PrimitiveElement(GF(q ^ 2));
@@ -133,7 +133,7 @@ function(d, q)
                                      rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form));
         result := ChangeFixedSesquilinearForm(result, 
                                               "U",
-                                              AntidiagonalMat(List([1..d], i -> 1), GF(q ^ 2)));
+                                              AntidiagonalMat(d, GF(q ^ 2)));
     fi;
     # Size according to Table 2.8 of [1]
     SetSize(result, Size(Sp(d, q)) * Gcd(q + 1, d / 2));
@@ -168,7 +168,7 @@ function(epsilon, d, q)
     if IsOddInt(d) then
         SOChangedForm := ChangeFixedSesquilinearForm(SO(d, q),
                                                      "O",
-                                                     AntidiagonalMat(List([1..d], i -> 1), GF(q)));
+                                                     AntidiagonalMat(d, GF(q)));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
 
         result := Group(generators);
@@ -271,7 +271,7 @@ function(epsilon, d, q)
                 SetInvariantSesquilinearForm(result, rec(matrix := form));
                 result := ChangeFixedSesquilinearForm(result,
                                                       "U",
-                                                      AntidiagonalMat(List([1..d], i -> 1), 
+                                                      AntidiagonalMat(d, 
                                                                       GF(q ^ 2)));
             else
                 # The form preserved by the constructed subgroup is given by
@@ -280,7 +280,7 @@ function(epsilon, d, q)
                 SetInvariantSesquilinearForm(result, rec(matrix := form));
                 result := ChangeFixedSesquilinearForm(result,
                                                       "U",
-                                                      AntidiagonalMat(List([1..d], i -> 1), 
+                                                      AntidiagonalMat(d, 
                                                                       GF(q ^ 2)));
             fi;
         fi;
