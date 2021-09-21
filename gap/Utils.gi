@@ -95,8 +95,6 @@ end);
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
 # Construction as in Lemma 2.2 of [2]
-# Note, however, that a solution cannot always be constructed as below, most
-# notably in the case type = "S", alpha = 0 and q even.
 InstallGlobalFunction("SolveFrobeniusEquation",
 function(type, alpha, q)
     local R, S, x, delta, polynomial, result;
@@ -107,11 +105,21 @@ function(type, alpha, q)
     if not type in ["S", "P"] then
         ErrorNoReturn("<type> must be one of 'S' or 'P' but <type> = ", type);
     fi;
+    # We have to make an exception for this case since the construction below
+    # does not work here: x ^ 2 + delta is never irreducible over GF(q) since
+    # all elements of GF(q) are squares for q even.
+    if type = "S" and alpha = 0 and IsEvenInt(q) then
+        return Z(q) ^ 0
+    fi;
 
     R := PolynomialRing(GF(q), ["x"]);
     S := PolynomialRing(GF(q ^ 2), ["x"]);
     x := Indeterminate(GF(q), "x");
 
+    # A quick argument using the quadratic formula for q odd or some
+    # algebraic manipulations and the non-surjectivity of the Artin-Schreier
+    # map x -> x ^ 2 + x for q odd and alpha <> 0 shows that the construction
+    # below always works.
     if type = "S" then
         for delta in GF(q) do
             polynomial := x ^ 2 - alpha * x + delta;
@@ -120,6 +128,20 @@ function(type, alpha, q)
                 return result;
             fi;
         od;
+    # A similar argument to the one used for type "S" works here as well. Note,
+    # however, that the argument for q odd via the quadratic formula now
+    # additionally needs that the squares in GF(q) do not form an arithmetic
+    # progression (which is "closed", i.e. not only a_i+1 = a_i + d, but also
+    # a_n + d = a_1), which can be proved in the following way: If they did,
+    # then they would be given by -kd, ..., -d, 0, d, 2d, ..., ((q - 1) / 2 - k) * d
+    # for some 0 <= k <= (q - 1) / 2; since they form a multiplicative
+    # subgroup, we can divide by -d or d, respectively, and see that 
+    # -+k, ..., -+1, 0, +-1, +-2, ..., +-((q - 1) / 2 - k) are also all the
+    # squares in GF(q). Most notably they all are in GF(p) and thus there are
+    # at most p squares in GF(q), which is < (q + 1) / 2 if q >= p ^ 2 - a
+    # contradiction. Now we can restrict ourselves to q = p and reach a
+    # contradiction for p >= 7 (we leave out the details); this leaves p = 3
+    # and p = 5, which can easily be checked manually.
     elif type = "P" then
         for delta in GF(q) do
             polynomial := x ^ 2 + delta * x + alpha;
