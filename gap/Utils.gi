@@ -63,7 +63,7 @@ end);
 
 # Solving the congruence a ^ 2 + b ^ 2 = c in F_q by trial and error.
 #
-# A solution always exists by a simple counting argument using the pidgeonhole
+# A solution always exists by a simple counting argument using the pigeonhole
 # principle and the fact that there are (q + 1) / 2 > q / 2 squares in F_q (for
 # q odd; the case q even is trivial). The trial and error approach taken here 
 # should in principle almost always terminate quickly: Assuming that - 1 - a ^ 2 
