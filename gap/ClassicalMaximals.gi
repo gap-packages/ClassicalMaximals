@@ -74,7 +74,7 @@ C4SubgroupsSpecialLinearGroupGeneric := function(n, q)
     divisorListOfn := Filtered(divisorListOfn, x -> x < n / x);
     # Cf. Proposition 2.3.22
     if q = 2 and 2 in divisorListOfn then
-        Remove(divisorListOfn, 2);
+        RemoveSet(divisorListOfn, 2);
     fi;
     result := [];
     
