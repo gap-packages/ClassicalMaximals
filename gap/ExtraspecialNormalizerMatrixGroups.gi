@@ -2,28 +2,29 @@
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialGroup := function(r, m, q)
-    local zeta, omega, X, Y, permutationMatrixEntries, listOfXi, listOfYi;
+    local F, zeta, omega, X, Y, permutationMatrixEntries, listOfXi, listOfYi;
 
     if (q - 1) mod r <> 0 or not IsPrime(r) then
         ErrorNoReturn("<r> must be prime and a divisor of <q> - 1 but <r> = ", r,
                       " and <q> = ", q);
-    fi; 
-    zeta := PrimitiveElement(GF(q));
+    fi;
+    F := GF(q);
+    zeta := PrimitiveElement(F);
     omega := zeta ^ (QuoInt(q - 1, r));
     X := DiagonalMat(List([0..r - 1], i -> omega ^ i));
     permutationMatrixEntries := Concatenation(List([1..r - 1], i -> [i, i + 1,
     zeta ^ 0]), [[r, 1, zeta ^ 0]]);
-    Y := MatrixByEntries(GF(q), r, r, permutationMatrixEntries);
+    Y := MatrixByEntries(F, r, r, permutationMatrixEntries);
 
     # It is a straightforward calculation to show that these matrices preserve
     # the unitary form given by the matrix I_d if one uses the fact that r | q + 1
     # in the unitary case.
     listOfXi := List([1..m], i ->
-    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), GF(q)), X),
-    IdentityMat(r ^ (i - 1), GF(q))));
+    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), X),
+    IdentityMat(r ^ (i - 1), F)));
     listOfYi := List([1..m], i ->
-    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), GF(q)), Y),
-    IdentityMat(r ^ (i - 1), GF(q))));
+    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), Y),
+    IdentityMat(r ^ (i - 1), F)));
 
     return rec(listOfXi := listOfXi, listOfYi := listOfYi);
 end;
@@ -32,8 +33,9 @@ end;
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialNormalizerInGL := function(r, m, q, type...)
-    local zeta, omega, U, V, W, listOfUi, listOfVi, listOfWi, matrixIndices,
-    entriesOfV, w, generatingScalar, result, listForPermutation, rootOfq;
+    local type, F, zeta, omega, U, matrixIndices, entriesOfV, V, listOfUi,
+        listOfVi, listForPermutation, w, W, listOfWi, generatingScalar, rootOfq,
+        result;
 
     if Length(type) = 0 then
         type := "L";
@@ -41,28 +43,29 @@ OddExtraspecialNormalizerInGL := function(r, m, q, type...)
         type := type[1];
     fi;
 
-    zeta := PrimitiveElement(GF(q));
+    F := GF(q);
+    zeta := PrimitiveElement(F);
     omega := zeta ^ (QuoInt(q - 1, r));
     U := DiagonalMat(List([1..r], i -> omega ^ (i * (i - 1) / 2)));
     matrixIndices := Concatenation(List([1..r], i -> List([1..r], j -> [i,
     j])));
     entriesOfV := List(matrixIndices, index -> Concatenation(index, [omega ^
     ((index[1] - 1) * (index[2] - 1))]));
-    V := MatrixByEntries(GF(q), r, r, entriesOfV);
+    V := MatrixByEntries(F, r, r, entriesOfV);
 
     # Similarly to above, it is a straightforward calculation to show that the
     # matrices Ui preserve the unitary form given by the identity matrix
     listOfUi := List([1..m], i ->
-    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), GF(q)), U),
-    IdentityMat(r ^ (i - 1), GF(q))));
+    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), U),
+    IdentityMat(r ^ (i - 1), F)));
     # The matrices Vi do not directly preserve the unitary form given by the
     # identity matrix, but rather preserve it *modulo a scalar*; namely, it is
     # straightforward to see Vi * I_d * HermitianConjugate(Vi) = r * I_d. This
     # "problem" will be taken care of eventually when we normalize determinants
     # in the function ExtraspecialNormalizerInSL.
     listOfVi := List([1..m], i ->
-    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), GF(q)), V),
-    IdentityMat(r ^ (i - 1), GF(q))));
+    KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), V),
+    IdentityMat(r ^ (i - 1), F)));
 
     if m <> 1 then
         # If m = 1 then we cannot have the Wi as generators since W is in 
@@ -80,19 +83,19 @@ OddExtraspecialNormalizerInGL := function(r, m, q, type...)
         # as W is a permutation matrix.
         listOfWi := List([1..m - 1], 
                          i -> KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - 1 - i), 
-                                                                            GF(q)), 
-                                               W), IdentityMat(r ^ (i - 1), GF(q))));
+                                                                            F), 
+                                               W), IdentityMat(r ^ (i - 1), F)));
     else
         listOfWi := [];
     fi;
 
     if type = "L" then
-        generatingScalar := zeta * IdentityMat(r ^ m, GF(q));
+        generatingScalar := zeta * IdentityMat(r ^ m, F);
     elif type = "U" then
         # remember that the variable q is actually q ^ 2 in the unitary case,
         # so this is actually q
         rootOfq := RootInt(q);
-        generatingScalar := (zeta ^ (rootOfq - 1)) * IdentityMat(r ^ m, GF(q));
+        generatingScalar := (zeta ^ (rootOfq - 1)) * IdentityMat(r ^ m, F);
     fi;
     result := OddExtraspecialGroup(r, m, q);
     result.generatingScalar := generatingScalar;
