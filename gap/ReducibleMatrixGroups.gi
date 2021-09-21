@@ -127,11 +127,161 @@ end);
 # Construction as in Proposition 4.6 of [2]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
-    local zeta;
+    local zeta, generators, kHalf, dHalf, generatorsOfSUSubspace, generatorOfSUSubspace, 
+    generatorsOfSUComplement, generatorOfSUComplement, generator,
+    determinantShiftMatrix, alpha, beta;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
         " and <d> = ", d);
     fi;
 
     zeta := PrimitiveElement(GF(q ^ 2));
+    generators := [];
+    kHalf := QuoInt(k, 2);
+    dHalf := QuoInt(d, 2);
+
+    if IsEvenInt(k) then
+        # We stabilise the subspace < e_1, ..., e_{kHalf}, f_{kHalf}, ..., f_1 >  
+        # and its complement (e_1, ..., e_{d / 2}, (w), f_{d / 2}, ..., f_1 is
+        # the standard basis).
+        #
+        # The following matrices generate SU(k, q) x SU(d - k, q).
+        generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
+        for generatorOfSUSubspace in generatorsOfSUSubspace do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[1..kHalf]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
+            generator{[d - kHalf + 1..d]}{[d - kHalf + 1..d]} :=
+                generatorOfSUSubspace{[kHalf + 1..k]}{[kHalf + 1..k]};
+            generator{[d - kHalf + 1..d]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[kHalf + 1..k]}{[1..kHalf]};
+            generator{[1..kHalf]}{[d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1..k]};
+            Add(generators, generator);
+        od;
+        generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
+        for generatorOfSUComplement in generatorsOfSUComplement do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[kHalf + 1..d - kHalf]}{[k / 2 + 1..d - kHalf]} := 
+                generatorOfSUComplement;
+            Add(generators, generator);
+        od;
+
+        # Now add a diagonal matrix where each of the SU(k, q) and SU(d - k, q)
+        # blocks has determinant zeta ^ +- (q - 1).
+        determinantShiftMatrix := DiagonalMat(Concatenation([zeta],
+                                                            List([2..kHalf], i -> 1),
+                                                            [zeta ^ (-1)],
+                                                            List([kHalf + 2..d - kHalf -1], i -> 1),
+                                                            [zeta ^ q],
+                                                            List([d - kHalf + 1..d - 1], i -> 1),
+                                                            [zeta ^ (-q)]));
+        Add(generators, determinantShiftMatrix);
+    elif IsOddInt(k) and IsOddInt(d) then        
+        # We stabilise the subspace < e_1, ..., e_{kHalf}, w, f_{kHalf}, ..., f_1 >  
+        # and its complement (e_1, ..., e_{d / 2}, w, f_{d / 2}, ..., f_1 is
+        # the standard basis; division by 2 is to be understood as integer
+        # division here).
+        #
+        # The following matrices generate SU(k, q) x SU(d - k, q).
+        generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
+        for generatorOfSUSubspace in generatorsOfSUSubspace do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[1..kHalf]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
+            generator{[d - kHalf + 1..d]}{[d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 2..k]};
+            generator{[d - kHalf + 1..d]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[kHalf + 2..k]}{[1..kHalf]};
+            generator{[1..kHalf]}{[d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[kHalf + 2..k]};
+            generator{[dHalf + 1]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
+            generator{[dHalf + 1]}{[dHalf + 1]} := 
+                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 1]};
+            generator{[dHalf + 1]}{d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+            generator{[1..kHalf]}{[dHalf + 1]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
+            generator{[d - kHalf + 1..d]}{[dHalf + 1]} := 
+                generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
+            Add(generators, generator);
+        od;
+        generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
+        for generatorOfSUComplement in generatorsOfSUComplement do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
+                generatorOfSUComplement{[1..(d - k) / 2]}{[1..(d - k) / 2]};
+            generator{[kHalf + 1..dHalf]}{[dHalf + 2..d - kHalf]} :=
+                generatorOfSUComplement{[1..(d - k) / 2]}{[(d - k) / 2 + 1..d - k]};
+            generator{[dHalf + 2..d - kHalf]}{[kHalf + 1..dHalf]} := 
+                generatorOfSUComplement{[(d - k) / 2 + 1..d - k]}{[1..(d - k) / 2]};
+            generator{[dHalf + 2..d - kHalf]}{[dHalf + 2..d - kHalf]} := 
+                generatorOfSUComplement{[(d - k) / 2 + 1..d - k]}{[(d - k) / 2 + 1..d - k]};
+            Add(generators, generator);
+        od;
+
+        # Now add a diagonal matrix where each of the SU(k, q) and SU(d - k, q)
+        # blocks has determinant zeta ^ +- (q - 1).
+        determinantShiftMatrix := DiagonalMat(Concatenation(List([1..dHalf - 1], i -> 1),
+                                                            [zeta ^ (-1), zeta ^ (1 - q), zeta ^ q],
+                                                            List([dHalf + 3..d], i -> 1)));
+        Add(generators, determinantShiftMatrix);
+    else
+        # Find alpha, beta with alpha + alpha ^ q = 1 and beta * beta ^ q = -1.
+        alpha := SolveFrobeniusEquation("S", 1, q);
+        if IsOddInt(q) then
+            beta := zeta ^ QuoInt(q - 1, 2);
+        else
+            beta := zeta ^ 0;
+        fi;
+        # We stabilise the subspace < e_1, ..., e_{kHalf}, w_1, f_{kHalf}, ..., f_1 >  
+        # and its complement < e_{kHalf + 1}, ..., e_{dHalf - 1}, w_2, f_{dHalf - 1}, ..., f_{kHalf + 1} >
+        # (e_1, ..., e_{d / 2}, f_{d / 2}, ..., f_1 is the standard basis).
+        #
+        # The following matrices generate SU(k, q) x SU(d - k, q).
+        generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
+        for generatorOfSUSubspace in generatorsOfSUSubspace do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[1..kHalf]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
+            generator{[d - kHalf + 1..d]}{[d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 2..k]};
+            generator{[d - kHalf + 1..d]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[kHalf + 2..k]}{[1..kHalf]};
+            generator{[1..kHalf]}{[d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[kHalf + 2..k]};
+            generator{[dHalf + 1]}{[1..kHalf]} := 
+                generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
+            generator{[dHalf + 1]}{[dHalf + 1]} := 
+                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 1]};
+            generator{[dHalf + 1]}{d - kHalf + 1..d]} := 
+                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+            generator{[1..kHalf]}{[dHalf + 1]} := 
+                generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
+            generator{[d - kHalf + 1..d]}{[dHalf + 1]} := 
+                generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
+            Add(generators, generator);
+        od;
+        generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
+        for generatorOfSUComplement in generatorsOfSUComplement do
+            generator := IdentityMat(d, GF(q ^ 2));
+            generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
+                generatorOfSUComplement{[1..(d - k) / 2]}{[1..(d - k) / 2]};
+            generator{[kHalf + 1..dHalf]}{[dHalf + 2..d - kHalf]} :=
+                generatorOfSUComplement{[1..(d - k) / 2]}{[(d - k) / 2 + 1..d - k]};
+            generator{[dHalf + 2..d - kHalf]}{[kHalf + 1..dHalf]} := 
+                generatorOfSUComplement{[(d - k) / 2 + 1..d - k]}{[1..(d - k) / 2]};
+            generator{[dHalf + 2..d - kHalf]}{[dHalf + 2..d - kHalf]} := 
+                generatorOfSUComplement{[(d - k) / 2 + 1..d - k]}{[(d - k) / 2 + 1..d - k]};
+            Add(generators, generator);
+        od;
+
+        # Now add a diagonal matrix where each of the SU(k, q) and SU(d - k, q)
+        # blocks has determinant zeta ^ +- (q - 1).
+        determinantShiftMatrix := DiagonalMat(Concatenation(List([1..dHalf - 1], i -> 1),
+                                                            [zeta ^ (-1), zeta ^ (1 - q), zeta ^ q],
+                                                            List([dHalf + 3..d], i -> 1)));
+        Add(generators, determinantShiftMatrix);
+    fi;
 end);
