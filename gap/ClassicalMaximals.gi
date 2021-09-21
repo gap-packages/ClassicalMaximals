@@ -41,12 +41,7 @@ function(type, n, q, classes...)
 end);
 
 C1SubgroupsSpecialLinearGroupGeneric := function(n, q)
-    local k, result;
-    result := [];
-    for k in [1..n-1] do
-        Add(result, SLStabilizerOfSubspace(n, q, k));
-    od;
-    return result;
+    return List([1..n-1], k -> SLStabilizerOfSubspace(n, q, k));
 end;
 
 C2SubgroupsSpecialLinearGroupGeneric := function(n, q)
@@ -65,13 +60,7 @@ C2SubgroupsSpecialLinearGroupGeneric := function(n, q)
 end;
 
 C3SubgroupsSpecialLinearGroupGeneric := function(n, q)
-    local primeDivisorsOfn, s, result;
-    primeDivisorsOfn := PrimeDivisors(n);
-    result := [];
-    for s in primeDivisorsOfn do
-        Add(result, GammaLMeetSL(n, q, s));
-    od;
-    return result;
+    return List(PrimeDivisors(n), s -> GammaLMeetSL(n, q, s));
 end;
 
 C4SubgroupsSpecialLinearGroupGeneric := function(n, q)
