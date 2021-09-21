@@ -88,8 +88,8 @@ function(M, func)
         ErrorNoReturn("<M> must be a matrix but <M> = ", M);
     fi;
 
-    numberRows := Length(M);
-    numberColumns := Length(M[1]);
+    numberRows := NrRows(M);
+    numberColumns := NrCols(M);
     result := NullMat(numberRows, numberColumns, DefaultFieldOfMatrix(M));
     for i in [1..numberRows] do
         for j in [1..numberColumns] do
