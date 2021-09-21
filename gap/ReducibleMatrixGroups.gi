@@ -33,7 +33,7 @@ function(d, q, k)
     zeta := PrimitiveElement(GF(q ^ 2));
     generators := [];
     automorphism := x -> x ^ q;
-    J := AntidiagonalMat(List([1..k], i -> 1), GF(q ^ 2));
+    J := AntidiagonalMat(List([1..k], i -> One(GF(q ^ 2))), GF(q ^ 2));
 
     # The following elements generate SL(k, q ^ 2) x SU(d - 2 * k, q).
     # Note that we actually do need SL(k, q ^ 2) here and not GL(k, q ^ 2) as

@@ -107,7 +107,7 @@ GeneratorsOfOrthogonalGroup := function(epsilon, n, q)
             E := zeta * IdentityMat(n, GF(q));
     else 
         if epsilon = 1 then
-            gramMatrix := AntidiagonalMat(List([1..n], i -> 1), GF(q));
+            gramMatrix := AntidiagonalMat(List([1..n], i -> One(GF(q))), GF(q));
             generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
                                                                             gramMatrix));
             # Our standard bilinear form is given by the Gram matrix 
