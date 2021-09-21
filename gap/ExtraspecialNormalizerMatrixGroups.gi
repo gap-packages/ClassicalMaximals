@@ -2,7 +2,7 @@
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialGroup := function(r, m, q)
-    local F, zeta, omega, X, Y, permutationMatrixEntries, listOfXi, listOfYi;
+    local F, zeta, omega, X, Y, listOfXi, listOfYi;
 
     if (q - 1) mod r <> 0 or not IsPrime(r) then
         ErrorNoReturn("<r> must be prime and a divisor of <q> - 1 but <r> = ", r,
@@ -12,9 +12,7 @@ OddExtraspecialGroup := function(r, m, q)
     zeta := PrimitiveElement(F);
     omega := zeta ^ (QuoInt(q - 1, r));
     X := DiagonalMat(List([0..r - 1], i -> omega ^ i));
-    permutationMatrixEntries := Concatenation(List([1..r - 1], i -> [i, i + 1,
-    zeta ^ 0]), [[r, 1, zeta ^ 0]]);
-    Y := MatrixByEntries(F, r, r, permutationMatrixEntries);
+    Y := PermutationMat(CycleFromList([1..r]), r, F);
 
     # It is a straightforward calculation to show that these matrices preserve
     # the unitary form given by the matrix I_d if one uses the fact that r | q + 1
@@ -33,9 +31,8 @@ end;
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialNormalizerInGL := function(r, m, q, type...)
-    local type, F, zeta, omega, U, matrixIndices, entriesOfV, V, listOfUi,
-        listOfVi, listForPermutation, w, W, listOfWi, generatingScalar, rootOfq,
-        result;
+    local type, F, zeta, omega, U, V, listOfUi, listOfVi, listForPermutation,
+        w, W, listOfWi, generatingScalar, rootOfq, result, i, j;
 
     if Length(type) = 0 then
         type := "L";
@@ -47,11 +44,13 @@ OddExtraspecialNormalizerInGL := function(r, m, q, type...)
     zeta := PrimitiveElement(F);
     omega := zeta ^ (QuoInt(q - 1, r));
     U := DiagonalMat(List([1..r], i -> omega ^ (i * (i - 1) / 2)));
-    matrixIndices := Concatenation(List([1..r], i -> List([1..r], j -> [i,
-    j])));
-    entriesOfV := List(matrixIndices, index -> Concatenation(index, [omega ^
-    ((index[1] - 1) * (index[2] - 1))]));
-    V := MatrixByEntries(F, r, r, entriesOfV);
+    V := NullMat(r, r, F);
+    for i in [1..r] do
+        for j in [1..r] do
+            V[i,j] := omega ^ ((i - 1) * (j - 1));
+        od;
+    od;
+    V := ImmutableMatrix(F, V);
 
     # Similarly to above, it is a straightforward calculation to show that the
     # matrices Ui preserve the unitary form given by the identity matrix
