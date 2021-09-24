@@ -17,7 +17,7 @@ function(d, q)
     if IsEvenInt(q) or gcd / 2 = Gcd(q - 1, d / 2) then
         result := Group([A, B, C]);
         # Size according to Table in [BHR13]
-        SetSize(result, gcd * Size(PSp(d, q)));
+        SetSize(result, gcd * SizePSp(d, q));
     else
         D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta),
                                        List([1..d / 2], i -> zeta ^ 0)));
@@ -30,7 +30,7 @@ function(d, q)
         #                        = |Sp(d, q)| * |CSp(d, q) : Sp(d, q)| / (q - 1) 
         #                        = |Sp(d, q)|,
         # since |CSp(d, q) : Sp(d, q)| = q - 1 according to Table 1.3 of [BHR13]
-        SetSize(result, gcd * Size(Sp(d, q)));
+        SetSize(result, gcd * SizeSp(d, q));
     fi;
 
     return result;
@@ -68,7 +68,7 @@ function(d, q)
 
     result := Group(gens);
     # Size according to Table 2.11 in [BHR13]
-    SetSize(result, Size(SUWithIdentityForm) * Gcd(q0 - 1, d));
+    SetSize(result, SizeSU(d, q0) * Gcd(q0 - 1, d));
     return result;
 end);
 
@@ -157,8 +157,8 @@ function(epsilon, d, q)
     fi;
 
     result := Group(generators);
-    # Size according to Table 2.11 in [BHR13] (note that the structure given in
+    # Size according to Table 2.11 in [1] (note that the structure given in
     # Proposition 11.2 of [HR05] is wrong!)
-    SetSize(result, Gcd(q - 1, d) * Size(SO(epsilon, d, q)));
+    SetSize(result, Gcd(q - 1, d) * SizeSO(epsilon, d, q));
     return result;
 end);

@@ -41,7 +41,7 @@ function(d1, d2, q)
 
     result := Group(gens);
     # Size according to Table 2.7 in [BHR13]
-    SetSize(result, Size(SL(d1, q)) * Size(SL(d2, q)) * g);
+    SetSize(result, SizeSL(d1, q) * SizeSL(d2, q) * g);
     return result;
 end);
 

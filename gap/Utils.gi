@@ -150,6 +150,104 @@ function(m, n)
     fi;
 end);
 
+
+# Compute the size of Sp(n, q) according to Theorem 1.6.22 in [1]
+InstallGlobalFunction("SizeSp",
+function(n, q)
+    local m, result, powerOfq, i;
+    if IsOddInt(n) then
+        ErrorNoReturn("Dimension <n> must be even but ", n, " was given.");
+    fi;
+    m := QuoInt(n, 2);
+    result := q ^ (m * m);
+    powerOfq := 1;
+    for i in [1..m] do
+        powerOfq := powerOfq * q * q;
+        result := result * (powerOfq - 1);
+    od;
+    return result;
+end);
+
+
+# Compute the size of PSp(n, q) according to Table 1.3 in [1],
+InstallGlobalFunction("SizePSp",
+function(n, q)
+    return QuoInt(SizeSp(n, q), Gcd(2, q - 1));
+end);
+
+
+# Compute the size of SU(n, q) according to Theorem 1.6.22 in [1]
+# using the formula for GU(n, q) but starting with i = 2
+# because Table 1.3 gives [GU(n, q):SU(n, q)] = q + 1.
+InstallGlobalFunction("SizeSU",
+function(n, q)
+    local result, powerOfq, sign, i;
+    result := q ^ QuoInt(n * (n - 1), 2);
+    powerOfq := q;
+    sign := 1;
+    for i in [2..n] do
+        powerOfq := powerOfq * q;
+        sign := -sign;
+        result := result * (powerOfq + sign);
+    od;
+    return result;
+end);
+
+
+# Compute the size of GU(n, q) according to Table 1.3 in [1]
+InstallGlobalFunction("SizeGU",
+function(n, q)
+    return (q + 1) * SizeSU(n, q);
+end);
+
+
+# Compute the size of GO(epsilon, n, q) according to Theorem 1.6.22 in [1]
+InstallGlobalFunction("SizeGO",
+function(epsilon, n, q)
+    local m, result, powerOfq, i;
+    if epsilon = 0 then
+
+        if IsEvenInt(n) then
+            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be odd but ", n, " was given.");
+        fi;
+
+        if IsEvenInt(q) then
+            return SizeSp(n - 1, q);
+        fi;
+
+        m := QuoInt(n - 1, 2);
+        result := 2 * q ^ (m * m);
+
+    elif epsilon in [-1, 1] then
+
+        if IsOddInt(n) then
+            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be even but ", n, " was given.");
+        fi;
+
+        m := QuoInt(n, 2);
+        result := 2 * q ^ (m * (m - 1)) * (q ^ m - epsilon);
+        m := m - 1;
+    else
+        ErrorNoReturn("<epsilon> must be in [-1, 0, 1] but ", epsilon, " was given.");
+    fi;
+
+    powerOfq := 1;
+    for i in [1..m] do
+        powerOfq := powerOfq * q * q;
+        result := result * (powerOfq - 1);
+    od;
+
+    return result;
+end);
+
+
+# Compute the size of SO(epsilon, n, q) according to Table 1.3 in [1]
+InstallGlobalFunction("SizeSO",
+function(epsilon, n, q)
+    return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
+end);
+
+
 ReflectionMatrix := function(n, q, gramMatrix, v)
     local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
     F := GF(q);
@@ -256,4 +354,3 @@ function(epsilon, n, q)
     
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
-

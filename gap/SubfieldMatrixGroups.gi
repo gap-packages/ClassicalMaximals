@@ -26,7 +26,7 @@ function(n, p, e, f)
     if c = Gcd(p ^ f - 1, n) then
         result := Group(A, B, C);
         # Size according to Table 2.8 of [BHR13]
-        SetSize(result, Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f -
+        SetSize(result, SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f -
         1), n));
         return result;
     fi;
@@ -44,7 +44,7 @@ function(n, p, e, f)
     result := Group(A, B, C, X * D);
     # Size according to Table 2.8 of [BHR13]
     SetSize(result,
-            Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
+            SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
     return result;
 end);
 

@@ -112,7 +112,7 @@ function(n, q, s)
             # In characteristic 2 we have det(Bs) = -1 = 1.
             result := Group(Bs, Cs);
         fi;
-        SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
+        SetSize(result, SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s);
         return result;
     fi;
 
@@ -136,7 +136,7 @@ function(n, q, s)
 
     result := Group(A, B, C, D);
     # Size according to Proposition 6.3 of [HR05]
-    SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
+    SetSize(result, SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s);
     return result;
 end);
 
