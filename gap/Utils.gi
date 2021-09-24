@@ -20,6 +20,8 @@ function(field, nrRows, nrCols, entries)
     return m;
 end);
 
+# Note that <group> must have the attribute InvariantBilinearForm or
+# InvariantSesquilinearForm for this to work.
 InstallGlobalFunction("ChangeFixedSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field;

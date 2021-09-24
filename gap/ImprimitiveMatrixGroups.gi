@@ -39,13 +39,84 @@ function(n, q, t)
     return result;
 end);
 
+# Construction as in Proposition 5.4 of [2]
+# We stabilise the decomposition with the summands 
+# < e_1, e_2, ..., e_m >, < e_{m + 1}, ..., e_{2m} >, ..., 
+# < e_{d - m + 1}, ..., e_d > using the form I_d.
+BindGlobal("SUNonDegenerateImprimitives",
+function(d, q, t)
+    local m, F, zeta, SUChangedForm, generators, generatorOfSU, generator, C, 
+    D1, D, E, result;
+    if t = 1 or (d mod t) <> 0 then
+        ErrorNoReturn("<t> must be greater than 1 and a divisor of <d> but <t> = ", t,
+                      " and <d> = ", d);
+    fi;
+    m := QuoInt(d, t);
+    generators := [];
+    F := GF(q ^ 2);
+    zeta := PrimitiveElement(F);
+
+    # generate SU(m, q)
+    #
+    # We have to exclude m = 1 since the Forms package has a bug in this case;
+    # however, this case is trivial.
+    if m > 1 then
+        SUChangedForm := ChangeFixedSesquilinearForm(SU(m, q), "U", IdentityMat(m, F));
+    else
+        SUChangedForm := SU(m, q);
+    fi;
+    for generatorOfSU in GeneratorsOfGroup(SUChangedForm) do
+        generator := IdentityMat(d, F);
+        generator{[1..m]}{[1..m]} := generatorOfSU;
+        Add(generators, generator);
+    od;
+
+    # A matrix interchanging v_i with -v_{i + m} for 1 <= i <= m 
+    # (i.e. a 2-cycle in Sym(t)).
+    # det(C) = 1
+    C := IdentityMat(d, F);
+    C{[1..m]}{[1..m]} := NullMat(m, m, F);
+    C{[m + 1..2 * m]}{[m + 1..2 * m]} := NullMat(m, m, F);
+    C{[1..m]}{[m + 1..2 * m]} := - IdentityMat(m, F);
+    C{[m + 1..2 * m]}{[1..m]} := - IdentityMat(m, F);
+    Add(generators, C);
+
+    # A matrix shifting v_i to v_{i + m} where indices are to be understood mod d
+    # (i.e. a t-cycle in Sym(t)).
+    D1 := BlockMatrix(List([1..t], i -> [i, i mod t + 1, IdentityMat(m, F)]), t, t);
+    # det(D) = 1 since det(D1) = (-1) ^ (m * (d - m))
+    if IsEvenInt(m) or IsEvenInt(q) or IsOddInt(t) then
+        D := D1;
+    else
+        D := DiagonalMat(Concatenation([- zeta ^ 0], List([2..d], i -> zeta ^ 0))) * D1;
+    fi;
+    Add(generators, D);
+
+    # Finally a matrix allowing to "shift determinants around between blocks"
+    E := DiagonalMat(Concatenation([zeta ^ (q - 1)],
+                                   List([2..m], i -> zeta ^ 0),
+                                   [zeta ^ (1 - q)],
+                                   List([m + 2..d], i -> zeta ^ 0)));
+    Add(generators, E);
+
+    result := Group(generators);
+    # change back fixed form into standard GAP form Antidiag(1, ..., 1)
+    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
+    result := ChangeFixedSesquilinearForm(result,
+                                          "U",
+                                          AntidiagonalMat(List([1..d], i -> -1), F));
+    SetSize(result, Size(SU(m, q)) ^ t * (q + 1) ^ (t - 1) * Factorial(t));
+    
+    return result;
+end);
+
 # Construction as in Proposition 5.5 of [2]
 # The decomposition stabilized is given by the summands 
 # < e_1, ..., e_{d / 2} > and < f_{d / 2}, ..., f_1 >, 
 # where (e_1, ..., e_{d / 2}, f_{d / 2}, ..., f_1) is the standard basis.
 BindGlobal("SUIsotropicImprimitives",
 function(d, q)
-    local F, zeta, generators, automorphism, J, generatorsOfSL, generatorOfSL,
+    local F, zeta, generators, automorphism, J, generatorOfSL,
     generator, C, D, result;
     if not IsEvenInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
@@ -58,8 +129,7 @@ function(d, q)
     J := AntidiagonalMat(List([1..d / 2], i -> 1), F);
 
     # first generate SL(d / 2, q ^ 2) as a subgroup of SU(d, q)
-    generatorsOfSL := GeneratorsOfGroup(SL(d / 2, q ^ 2));
-    for generatorOfSL in generatorsOfSL do
+    for generatorOfSL in GeneratorsOfGroup(SL(d / 2, q ^ 2)) do
         generator := NullMat(d, d, F);
         generator{[1..d / 2]}{[1..d / 2]} := generatorOfSL;
         generator{[d / 2 + 1..d]}{[d / 2 + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
