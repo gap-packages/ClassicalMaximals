@@ -93,20 +93,19 @@ function(d, q, k)
     # finally a diagonal matrix of order q ^ 2 - 1 (or q - 1 if d = 2 * k)
     D := IdentityMat(d, GF(q ^ 2));
     if d - 2 * k > 1 then
-        D[1][1] := zeta;
-        D[k + 1][k + 1] := zeta ^ (-1);
-        D[d - k][d - k] := zeta ^ q;
-        D[d][d] := zeta ^ (-q);
+        D[1, 1] := zeta;
+        D[k + 1, k + 1] := zeta ^ (-1);
+        D[d - k, d - k] := zeta ^ q;
+        D[d, d] := zeta ^ (-q);
         Add(generators, D);
     elif d - 2 * k = 1 then
-        D[1][1] := zeta;
-        D[k + 1][k + 1] := zeta ^ (q - 1);
-        D[d][d] := zeta ^ (-q);
+        D[1, 1] := zeta;
+        D[k + 1, k + 1] := zeta ^ (q - 1);
+        D[d, d] := zeta ^ (-q);
         Add(generators, D);
     else
-        D := IdentityMat(d, GF(q ^ 2));
-        D[1][1] := zeta ^ (q + 1);
-        D[d][d] := zeta ^ (-q - 1);
+        D[1, 1] := zeta ^ (q + 1);
+        D[d, d] := zeta ^ (-q - 1);
         Add(generators, D);
     fi;
 
@@ -283,17 +282,17 @@ function(d, q, k)
                 alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
             # finally, for the central 2x2-submatrix, we have to use all four
             # relations above together
-            generator[dHalf][dHalf] := 
-                alpha * generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+            generator[dHalf, dHalf] := 
+                alpha * generatorOfSUSubspace[kHalf + 1, kHalf + 1]
                     + beta ^ q * (- alpha ^ q * beta);
-            generator[dHalf][dHalf + 1] := 
-                generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+            generator[dHalf, dHalf + 1] := 
+                generatorOfSUSubspace[kHalf + 1, kHalf + 1]
                     + beta ^ q * beta;
-            generator[dHalf + 1][dHalf] :=
-                alpha ^ q * alpha * generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+            generator[dHalf + 1, dHalf] :=
+                alpha ^ q * alpha * generatorOfSUSubspace[kHalf + 1, kHalf + 1]
                     - alpha * beta ^ q * (- alpha ^ q * beta);
-            generator[dHalf + 1][dHalf + 1] :=
-                alpha ^ q * generatorOfSUSubspace[kHalf + 1][kHalf + 1]
+            generator[dHalf + 1, dHalf + 1] :=
+                alpha ^ q * generatorOfSUSubspace[kHalf + 1, kHalf + 1]
                     - alpha * beta ^ q * beta;
             Add(generators, generator);
         od;
@@ -329,17 +328,17 @@ function(d, q, k)
                 -alpha * beta ^ q * generatorOfSUComplement{[dHalf - kHalf]}{[dHalf - kHalf + 1..d - k]};
             # finally, for the central 2x2-submatrix, we have to use all four
             # relations above together
-            generator[dHalf][dHalf] := 
-                beta ^ q * (- alpha ^ q * beta) * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+            generator[dHalf, dHalf] := 
+                beta ^ q * (- alpha ^ q * beta) * generatorOfSUComplement[dHalf - kHalf, dHalf - kHalf]
                     + alpha;
-            generator[dHalf][dHalf + 1] := 
-                beta ^ q * beta * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+            generator[dHalf, dHalf + 1] := 
+                beta ^ q * beta * generatorOfSUComplement[dHalf - kHalf, dHalf - kHalf]
                     + zeta ^ 0;
-            generator[dHalf + 1][dHalf] :=
-                alpha * beta ^ q * alpha ^ q * beta * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+            generator[dHalf + 1, dHalf] :=
+                alpha * beta ^ q * alpha ^ q * beta * generatorOfSUComplement[dHalf - kHalf, dHalf - kHalf]
                     + alpha ^ q * alpha;
-            generator[dHalf + 1][dHalf + 1] :=
-                - alpha * beta ^ q * beta * generatorOfSUComplement[dHalf - kHalf][dHalf - kHalf]
+            generator[dHalf + 1, dHalf + 1] :=
+                - alpha * beta ^ q * beta * generatorOfSUComplement[dHalf - kHalf, dHalf - kHalf]
                     + alpha ^ q;
             Add(generators, generator);
         od;
@@ -350,16 +349,16 @@ function(d, q, k)
         # Note that this choice differs from the original Magma code, but it
         # is much cleaner this way.
         determinantShiftMatrix := IdentityMat(d, GF(q ^ 2));
-        determinantShiftMatrix[dHalf][dHalf] :=
+        determinantShiftMatrix[dHalf, dHalf] :=
             beta ^ q * (-alpha ^ q * beta) * zeta ^ (1 - q) 
                 + alpha * zeta ^ (q - 1);
-        determinantShiftMatrix[dHalf][dHalf + 1] :=
+        determinantShiftMatrix[dHalf, dHalf + 1] :=
             beta ^ q * beta * zeta ^ (1 - q)
                 + zeta ^ (q - 1);
-        determinantShiftMatrix[dHalf + 1][dHalf] :=
+        determinantShiftMatrix[dHalf + 1, dHalf] :=
             alpha * beta ^ q * alpha ^ q * beta * zeta ^ (1 - q)
                 + alpha ^ q * alpha * zeta ^ (q - 1);
-        determinantShiftMatrix[dHalf + 1][dHalf + 1] :=
+        determinantShiftMatrix[dHalf + 1, dHalf + 1] :=
             -alpha * beta ^ q * beta * zeta ^ (1 - q)
                 + alpha ^ q * zeta ^ (q - 1);
         Add(generators, determinantShiftMatrix);
