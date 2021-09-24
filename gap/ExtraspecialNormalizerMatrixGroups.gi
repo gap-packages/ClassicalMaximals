@@ -389,7 +389,34 @@ function(r, m, q)
         # r = 2 and m >= 2
         return SymplecticTypeNormalizerInSL(m, q);
     else
-        # r = 2 and m = 2
+        # r = 2 and m = 1
         return Extraspecial2MinusTypeNormalizerInSL(q);
     fi;
+end);
+
+# Construction as in Proposition 9.5 of [2]
+BindGlobal("ExtraspecialNormalizerInSU",
+function(r, m, q)
+    local result;
+    if not q = RootInt(q) ^ 2 then
+        ErrorNoReturn("<q> must be a square but <q> = ", q);
+    elif not r ^ m > 2 then
+        ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case, but",
+                      " <r> = ", r, " and <m> = ", m);
+    elif IsEvenInt(r) and not IsPrime(RootInt(q)) then
+        ErrorNoReturn("If <r> = 2 then <q> must be a square of a prime, but",
+                      " <r> = ", r, " and <q> = ", q);
+    fi;
+
+    result := ExtraspecialNormalizerInSL(r, m, q);
+    # According to Proposition 9.5 of [2], this group now preserves the unitary
+    # form given by the identity matrix.
+    # We conjugate the group so that it preserves the standard GAP form
+    # Antidiag(1, ..., 1). 
+    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, GF(q))));
+    result := ChangeFixedSesquilinearForm(result,
+                                          "U",
+                                          AntidiagonalMat(List([1..r ^ m], i -> 1), GF(q)));
+
+    return result;
 end);
