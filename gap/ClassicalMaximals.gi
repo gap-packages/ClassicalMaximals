@@ -461,6 +461,34 @@ C2SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     return result;
 end;
 
+C4SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    local divisorListOfn, result, n1, numberOfConjugates, generatorGUMinusSU,
+    tensorProductSubgroup;
+    
+    divisorListOfn := List(DivisorsInt(n));
+    Remove(divisorListOfn, 1);
+    divisorListOfn := Filtered(divisorListOfn, x -> x < n / x);
+    # Cf. Proposition 2.3.22
+    if q = 2 and 2 in divisorListOfn then
+        RemoveSet(divisorListOfn, 2);
+    fi;
+    result := [];
+    
+    generatorGUMinusSU := GU(n, q).1;
+    for n1 in divisorListOfn do
+        tensorProductSubgroup := TensorProductStabilizerInSU(n1, QuoInt(n, n1), q);
+        # Cf. Tables 3.5.B and 3.5.G in [3]
+        numberOfConjugates := Gcd([q + 1, n1, QuoInt(n, n1)]);
+        result := Concatenation(result,
+                                ConjugatesInGeneralGroup(tensorProductSubgroup, 
+                                                         generatorGUMinusSU,
+                                                         numberOfConjugates));
+    od;
+
+    return result;
+end;
+
+
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
 function(n, q, classes...)
     local maximalSubgroups;
@@ -494,7 +522,7 @@ function(n, q, classes...)
         #                  3.8.1 (n = 9), 3.9.1 (n = 10), 3.10.1 (n = 11), 
         #                  3.11.1 (n = 12) in [1]
         maximalSubgroups := Concatenation(maximalSubgroups,
-                                          C1SubgroupsSpecialLinearGroupGeneric(n, q));
+                                          C1SubgroupsSpecialUnitaryGroupGeneric(n, q));
     fi;
 
     if 2 in classes then
@@ -507,7 +535,7 @@ function(n, q, classes...)
         #                  3.11.6 (all n = 12) in [1]
         if not (n = 3 and q = 5) and not (n = 4 and q <= 3) and not (n = 6 and q = 2) then
             maximalSubgroups := Concatenation(maximalSubgroups,
-                                              C2SubgroupsSpecialLinearGroupGeneric(n, q));
+                                              C2SubgroupsSpecialUnitaryGroupGeneric(n, q));
         # There are no maximal C2 subgroups for n = 3 and q = 5, cf. Theorem
         # 6.3.10 in [1].
         elif n = 4 and q <= 3 then
@@ -524,6 +552,14 @@ function(n, q, classes...)
             Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 2));
             Add(maximalSubgroups, SUIsotropicImprimitives(n, q));
         fi;
+    fi;
+
+    if 4 in classes then
+        # Class C4 subgroups ######################################################
+        # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10), 
+        #                  3.11.8 (n = 12) in [1]
+        maximalSubgroups := Concatenation(maximalSubgroups, 
+                                          C4SubgroupsSpecialUnitaryGroupGeneric(n, q));
     fi;
 
     return maximalSubgroups;
