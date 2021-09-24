@@ -22,7 +22,7 @@ end);
 # The subspace stabilised is < e_1, e_2, ..., e_k >.
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
-    local zeta, generatorsOfSL, generatorOfSL, generatorsOfSU, generatorOfSU, J,
+    local zeta, generatorOfSL, generatorOfSU, J,
     automorphism, generators, generator, T1, T2, nu, mu, D, result;
 
     if not k <= d / 2 then
@@ -39,8 +39,7 @@ function(d, q, k)
     # Note that we actually do need SL(k, q ^ 2) here and not GL(k, q ^ 2) as
     # claimed in the proof of Proposition 4.5 in [2] since some of the
     # generators constructed below would not have determinant 1 otherwise.
-    generatorsOfSL := GeneratorsOfGroup(SL(k, q ^ 2));
-    for generatorOfSL in generatorsOfSL do
+    for generatorOfSL in GeneratorsOfGroup(SL(k, q ^ 2)) do
         generator := IdentityMat(d, GF(q ^ 2));
         generator{[1..k]}{[1..k]} := generatorOfSL;
         generator{[d - k + 1..d]}{[d - k + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
@@ -49,8 +48,7 @@ function(d, q, k)
         Add(generators, generator);
     od;
     if d - 2 * k > 0 then
-        generatorsOfSU := GeneratorsOfGroup(SU(d - 2 * k, q));
-        for generatorOfSU in generatorsOfSU do
+        for generatorOfSU in GeneratorsOfGroup(SU(d - 2 * k, q)) do
             generator := IdentityMat(d, GF(q ^ 2));
             generator{[k + 1..d - k]}{[k + 1..d - k]} := generatorOfSU;
             Add(generators, generator);
@@ -126,8 +124,8 @@ end);
 # Construction as in Proposition 4.6 of [2]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
-    local zeta, generators, kHalf, dHalf, generatorsOfSUSubspace, generatorOfSUSubspace, 
-    generatorsOfSUComplement, generatorOfSUComplement, generator,
+    local zeta, generators, kHalf, dHalf, generatorOfSUSubspace, 
+    generatorOfSUComplement, generator,
     determinantShiftMatrix, alpha, beta, result;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
@@ -145,8 +143,7 @@ function(d, q, k)
         # the standard basis).
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
-        generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
-        for generatorOfSUSubspace in generatorsOfSUSubspace do
+        for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
             generator := IdentityMat(d, GF(q ^ 2));
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
@@ -158,8 +155,7 @@ function(d, q, k)
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1..k]};
             Add(generators, generator);
         od;
-        generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
-        for generatorOfSUComplement in generatorsOfSUComplement do
+        for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
             generator := IdentityMat(d, GF(q ^ 2));
             generator{[kHalf + 1..d - kHalf]}{[k / 2 + 1..d - kHalf]} := 
                 generatorOfSUComplement;
@@ -183,8 +179,7 @@ function(d, q, k)
         # division here).
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
-        generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
-        for generatorOfSUSubspace in generatorsOfSUSubspace do
+        for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
             generator := IdentityMat(d, GF(q ^ 2));
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
@@ -206,8 +201,7 @@ function(d, q, k)
                 generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
             Add(generators, generator);
         od;
-        generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
-        for generatorOfSUComplement in generatorsOfSUComplement do
+        for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
             generator := IdentityMat(d, GF(q ^ 2));
             generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
                 generatorOfSUComplement{[1..(d - k) / 2]}{[1..(d - k) / 2]};
@@ -250,8 +244,7 @@ function(d, q, k)
         # again, as needed.
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
-        generatorsOfSUSubspace := GeneratorsOfGroup(SU(k, q));
-        for generatorOfSUSubspace in generatorsOfSUSubspace do
+        for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
             generator := IdentityMat(d, GF(q ^ 2));
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
@@ -296,8 +289,7 @@ function(d, q, k)
                     - alpha * beta ^ q * beta;
             Add(generators, generator);
         od;
-        generatorsOfSUComplement := GeneratorsOfGroup(SU(d - k, q));
-        for generatorOfSUComplement in generatorsOfSUComplement do
+        for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
             generator := IdentityMat(d, GF(q ^ 2)); 
             generator{[kHalf + 1..dHalf - 1]}{[kHalf + 1..dHalf - 1]} := 
                 generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[1..dHalf - kHalf - 1]};

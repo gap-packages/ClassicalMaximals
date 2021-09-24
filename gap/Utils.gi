@@ -5,7 +5,7 @@ function(field, nrRows, nrCols, entries)
     if ForAll(entries, x -> IsList(x) and Length(x)=3) then
         m := NullMat(nrRows, nrCols, field);
         for i in entries do
-            m[i[1]][i[2]] := i[3]*o;
+            m[i[1], i[2]] := i[3]*o;
         od;
     else
         if nrCols*nrRows<>Length(entries) then
@@ -21,13 +21,20 @@ function(field, nrRows, nrCols, entries)
 end);
 
 InstallGlobalFunction("ChangeFixedSesquilinearForm",
-function(group, gramMatrix)
+function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field;
-    gapForm := PreservedSesquilinearForms(group)[1];
-    field := BaseField(gapForm);
-    if IsBilinearForm(gapForm) then
+    if not type in ["S", "O", "U"] then
+        ErrorNoReturn("<type> must be one of 'S', 'U', 'O', but <type> = ",
+                      type);
+    fi;
+    field := DefaultFieldOfMatrixGroup(group);
+    if type = "S" or type = "O" then
+        gapForm := BilinearFormByMatrix(InvariantBilinearForm(group).matrix, 
+                                        field);
         newForm := BilinearFormByMatrix(gramMatrix, field);
-    elif IsHermitianForm(gapForm) then
+    else
+        gapForm := HermitianFormByMatrix(InvariantSesquilinearForm(group).matrix,
+                                         field);
         newForm := HermitianFormByMatrix(gramMatrix, field);
     fi;
     # the following if condition can only ever be fulfilled if <group> is an
@@ -84,7 +91,7 @@ function(M, func)
     result := NullMat(numberRows, numberColumns, DefaultFieldOfMatrix(M));
     for i in [1..numberRows] do
         for j in [1..numberColumns] do
-            result[i][j] := func(M[i][j]);
+            result[i, j] := func(M[i, j]);
         od;
     od;
 

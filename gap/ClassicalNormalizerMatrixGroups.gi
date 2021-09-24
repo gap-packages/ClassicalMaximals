@@ -51,7 +51,7 @@ function(d, q)
     C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, GF(q)); # generates the center of SL(d, q)
     g := Gcd(q - 1, d);
     c := QuoInt(Gcd(q0 + 1, d) * (q - 1), Lcm(q0 + 1, QuoInt(q - 1, g)) * g);
-    SUWithIdentityForm := ChangeFixedSesquilinearForm(SU(d, q0), IdentityMatrix(GF(q0), d));
+    SUWithIdentityForm := ChangeFixedSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
     SUGens := GeneratorsOfGroup(SUWithIdentityForm);
 
     gens := Concatenation(SUGens, [C]);
@@ -102,6 +102,7 @@ GeneratorsOfOrthogonalGroup := function(epsilon, n, q)
     if IsOddInt(n) then
             gramMatrix := IdentityMat(n, GF(q));
             generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                            "O",
                                                                             gramMatrix));
             D := - IdentityMat(n, GF(q));
             E := zeta * IdentityMat(n, GF(q));
@@ -109,6 +110,7 @@ GeneratorsOfOrthogonalGroup := function(epsilon, n, q)
         if epsilon = 1 then
             gramMatrix := AntidiagonalMat(List([1..n], i -> 1), GF(q));
             generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                            "O",
                                                                             gramMatrix));
             # Our standard bilinear form is given by the Gram matrix 
             # Antidiag(1, ..., 1). The norm of [1, 0, ..., 0, 2] under this
@@ -129,6 +131,7 @@ GeneratorsOfOrthogonalGroup := function(epsilon, n, q)
             if IsOddInt(n * (q - 1) / 4) then
                 gramMatrix := IdentityMat(n, GF(q));
                 generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                                "O",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
                 # Diag(1, ..., 1). The norm of [1, 0, ..., 0] under this bilinear
@@ -145,6 +148,7 @@ GeneratorsOfOrthogonalGroup := function(epsilon, n, q)
                 gramMatrix := Z(q) ^ 0 * DiagonalMat(Concatenation([zeta],
                                                                    List([1..n - 1], i -> 1)));
                 generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                                "O",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
                 # Diag(zeta, 1, ..., 1). The norm of [0, ..., 0, 1] under this
