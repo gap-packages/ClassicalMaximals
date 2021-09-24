@@ -441,6 +441,25 @@ C1SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     return result;
 end;
 
+C2SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    local divisorListOfn, result;
+    
+    divisorListOfn := List(DivisorsInt(n));
+    Remove(divisorListOfn, 1);
+    # Cf. Proposition 2.3.6 in [1]
+    if q = 2 and 2 in divisorListOfn then
+        RemoveSet(divisorListOfn, 2);
+    fi;
+
+    # type GU(m, q) Wr Sym(t) subgroups 
+    result := List(divisorListOfn, t -> SUNonDegenerateImprimitives(n, q, t));
+    # type GL(n / 2, q ^ 2).2 subgroups
+    if IsEvenInt(n) then
+        Add(result, SUIsotropicImprimitives);
+    fi;
+
+    return result;
+end;
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
 function(n, q, classes...)
@@ -456,6 +475,11 @@ function(n, q, classes...)
                       classes);
     fi;
 
+
+    if n = 2 then
+        Error("We assume <n> to be greater or equal to 3 in case 'U' since",
+              "SU(2, q) and SL(2, q) are isomorphic.");
+    fi;
     if (n = 3 and q = 2) then
         Error("PSU(3, 2) is soluble");
     fi;
@@ -465,12 +489,41 @@ function(n, q, classes...)
 
     if 1 in classes then
         # Class C1 subgroups ######################################################
-        # Cf. Propositions 3.1.2 (n = 2), 3.2.1 (n = 3), 3.3.1 (n = 4), 
-        #                  3.4.1 (n = 5), 3.5.1 (n = 6), 3.6.1 (n = 7), 
-        #                  3.7.1 (n = 8), 3.8.1 (n = 9), 3.9.1 (n = 10), 
-        #                  3.10.1 (n = 11), 3.11.1 (n = 12) in [1]
+        # Cf. Propositions 3.2.1 (n = 3), 3.3.1 (n = 4), 3.4.1 (n = 5), 
+        #                  3.5.1 (n = 6), 3.6.1 (n = 7), 3.7.1 (n = 8), 
+        #                  3.8.1 (n = 9), 3.9.1 (n = 10), 3.10.1 (n = 11), 
+        #                  3.11.1 (n = 12) in [1]
         maximalSubgroups := Concatenation(maximalSubgroups,
                                           C1SubgroupsSpecialLinearGroupGeneric(n, q));
+    fi;
+
+    if 2 in classes then
+        # Class C2 subgroups ######################################################
+        # Cf. Propositions 3.2.2 (n = 3), 3.3.2, 3.3.3 (all n = 4), 
+        #                  3.4.2 (n = 5), 3.5.2, 3.5.3, 3.5.4 (all n = 6),
+        #                  3.6.2 (n = 7), 3.7.2, 3.7.3, 3.7.4 (all n = 8),
+        #                  3.8.2 (n = 9), 3.9.2, 3.9.3, 3.9.4, 3.9.5 (all n = 10),
+        #                  3.10.2 (n = 11), 3.11.2, 3.11.3, 3.11.4, 3.11.5,
+        #                  3.11.6 (all n = 12) in [1]
+        if not (n = 3 and q = 5) and not (n = 4 and q <= 3) and not (n = 6 and q = 2) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C2SubgroupsSpecialLinearGroupGeneric(n, q));
+        # There are no maximal C2 subgroups for n = 3 and q = 5, cf. Theorem
+        # 6.3.10 in [1].
+        elif n = 4 and q <= 3 then
+            if q = 3 then
+                Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 2));
+            else
+                # q = 2
+                Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 4));
+            fi;
+        else 
+            # n = 6 and q = 2
+            # Cf. Theorem 6.3.10 in [1]
+            Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 3));
+            Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 2));
+            Add(maximalSubgroups, SUIsotropicImprimitives(n, q));
+        fi;
     fi;
 
     return maximalSubgroups;
