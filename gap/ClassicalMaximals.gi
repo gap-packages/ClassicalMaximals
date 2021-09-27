@@ -400,9 +400,9 @@ function(n, q, classes...)
         # For all other n, class C6 is empty.
 
         # Cf. Theorem 6.3.10 in [1]
-        if n <> 2 or not q mod 40 in [11, 19, 21, 29] then 
+        if not (n = 3 and q = 6) then
             maximalSubgroups := Concatenation(maximalSubgroups,
-                                              C6SubgroupsSpecialLinearGroupGeneric(n, q));
+                                              C6SubgroupsSpecialUnitaryGroupGeneric(n, q));
         fi;
     fi;
 
@@ -486,6 +486,57 @@ C4SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     od;
 
     return result;
+end;
+
+C6SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    local factorisationOfq, p, e, factorisationOfn, r, m, result,
+    generatorGUMinusSU, numberOfConjugates, extraspecialNormalizerSubgroup;
+
+    result := [];
+    if not IsPrimePowerInt(n) then
+        return result;
+    fi;
+    
+    factorisationOfq := PrimePowersInt(q);
+    p := factorisationOfq[1];
+    e := factorisationOfq[2];
+    factorisationOfn := PrimePowersInt(n);
+    r := factorisationOfn[1];
+    m := factorisationOfn[2];
+    generatorGUMinusSU := GU(n, q).1;
+
+    # Cf. Table 4.6.B and the corresponding definition in [3]
+    if IsOddInt(r) then
+        if 2 * e = OrderMod(p, r) then
+            extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(r, m, q);
+            # Cf. Tables 3.5.A and 3.5.G in [3]
+            numberOfConjugates := Gcd(n, q + 1);
+            if n = 3 and ((q - 2) mod 9 = 0 or (q - 5) mod 9 = 0) then
+                numberOfConjugates := 1;
+            fi;
+            result := Concatenation(result,
+                                    ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
+                                                             generatorGUMinusSU, 
+                                                             numberOfConjugates)); 
+        fi;
+    elif m >= 2 then
+        # n = 2 ^ m >= 4
+        if e = 1 and (q - 1) mod 4 <> 0 then
+            extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(2, m, q);
+            # Cf. Tables 3.5.A and 3.5.G in [3]
+            numberOfConjugates := Gcd(n, q + 1);
+            if n = 4 and (q - 3) mod 8 = 0 then
+                numberOfConjugates := 2;
+            fi;
+            result := Concatenation(result,
+                                    ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
+                                                             generatorGUMinusSU, 
+                                                             numberOfConjugates));
+        fi;
+    fi;
+
+    return result;
+
 end;
 
 
