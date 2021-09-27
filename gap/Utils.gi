@@ -100,6 +100,11 @@ function(M, func)
     return result;
 end);
 
+InstallGlobalFunction("HermitianConjugate",
+function(M, q)
+    return TransposedMat(ApplyFunctionToEntries(M, x -> x ^ q));
+end);
+
 # If type = "S" then find a beta in GF(q ^ 2) with beta + beta ^ q = alpha.
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).

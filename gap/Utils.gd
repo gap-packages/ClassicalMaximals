@@ -16,6 +16,7 @@ DeclareGlobalFunction("ChangeFixedSesquilinearForm");
 DeclareGlobalFunction("AntidiagonalMat");
 DeclareGlobalFunction("SolveQuadraticCongruence");
 DeclareGlobalFunction("ApplyFunctionToEntries");
+DeclareGlobalFunction("HermitianConjugate");
 DeclareGlobalFunction("SolveFrobeniusEquation");
 DeclareGlobalFunction("SquareSingleEntryMatrix");
 DeclareGlobalFunction("QuoCeil");
