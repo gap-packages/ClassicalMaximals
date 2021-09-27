@@ -35,14 +35,16 @@ gap> G := ExtraspecialNormalizerInSL(r, m, q);;
 gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
 true
 gap> r := 5;; m := 1;; q := 4;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q ^ 2);;
+gap> G := ExtraspecialNormalizerInSU(r, m, q);;
 gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
 true
-gap> r := 2;; m := 2;; q := 3;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q ^ 2);;
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> r := 2;; m := 3;; q := 3;;
+gap> G := ExtraspecialNormalizerInSU(r, m, q);;
 gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
 true
-gap> r := 3;; m := 1;; q := 5;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q ^ 2);;
+gap> r := 3;; m := 2;; q := 5;;
+gap> G := ExtraspecialNormalizerInSU(r, m, q);;
 gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
 true
