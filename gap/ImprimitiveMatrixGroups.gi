@@ -156,7 +156,7 @@ function(d, q)
     fi;
     Add(generators, C);
 
-    # finally a diagonal matrix accounting for the fact that the determinants
+    # Finally a diagonal matrix accounting for the fact that the determinants
     # of the two blocks can be anything as long as they multiply to 1
     # Note that the original Magma code and [2] use
     #   D := DiagonalMat(Concatenation([zeta, zeta ^ q], 

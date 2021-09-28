@@ -235,7 +235,7 @@ function(epsilon, n, q)
                                                            [2]);
             D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
             E := DiagonalMat(Concatenation(List([1..n / 2], i -> zeta), 
-                                           List([1..n / 2], i -> 1)));
+                                           List([1..n / 2], i -> zeta ^ 0)));
         elif epsilon = -1 then
 
             # Get a, b in GF(q) with a ^ 2 + b ^ 2 = zeta

@@ -32,8 +32,6 @@ gap> n := 3;; p := 5;; e := 3;; f := 1;;
 gap> G := UnitarySubfieldSU(n, p, e, f);;
 gap> IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G));
 true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
 gap> n := 4;; q := 5;;
 gap> G := SymplecticSubfieldSU(n, q);;
 gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
@@ -48,6 +46,48 @@ gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
 true
 gap> n := 4;; q := 3;;
 gap> G := SymplecticSubfieldSU(n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := 0;; n := 3;; q := 5;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := 0;; n := 5;; q := 3;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := 1;; n := 2;; q := 5;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := 1;; n := 4;; q := 3;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := -1;; n := 2;; q := 3;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := -1;; n := 2;; q := 5;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
+gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
+true
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
+gap> epsilon := -1;; n := 4;; q := 3;;
+gap> G := OrthogonalSubfieldSU(epsilon, n, q);;
 gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
 true
 gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);

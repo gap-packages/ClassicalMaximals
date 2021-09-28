@@ -621,7 +621,7 @@ function(n, q, classes...)
         # For all other n, class C6 is empty.
 
         # Cf. Theorem 6.3.10 in [1]
-        if not (n = 3 and q = 6) then
+        if not (n = 3 and q = 5) then
             maximalSubgroups := Concatenation(maximalSubgroups,
                                               C6SubgroupsSpecialUnitaryGroupGeneric(n, q));
         fi;

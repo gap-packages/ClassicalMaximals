@@ -142,5 +142,152 @@ function(d, q)
 end);
 
 BindGlobal("OrthogonalSubfieldSU",
-function(epsilon, n, q)
+function(epsilon, d, q)
+    local zeta, k, C, generators, SOChangedForm, result,
+    generatorsOfOrthogonalGroup, D, E, i, W, n, form;
+
+    if IsEvenInt(q) then
+        ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
+    elif epsilon = 0 and IsEvenInt(d) then
+        ErrorNoReturn("<epsilon> cannot be zero if <d> is even but", 
+                      "<epsilon> = ", epsilon, " and <d> = ", d);
+    elif epsilon <> 0 and IsOddInt(d) then
+        ErrorNoReturn("<epsilon> must be zero if <d> is odd but",
+                      "<epsilon> = ", epsilon, " and <d> = ", d);
+    elif not epsilon in [-1, 0, 1] then
+        ErrorNoReturn("<epsilon> must be one of -1, 0, 1 but",
+                      "<epsilon> = ", epsilon);
+    fi;
+
+    zeta := PrimitiveElement(GF(q ^ 2));
+    k := Gcd(q + 1, d);
+    # generates the center of SU(d, q)
+    C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, GF(q ^ 2));
+    generators := [C];
+
+    if IsOddInt(d) then
+        SOChangedForm := ChangeFixedSesquilinearForm(SO(d, q),
+                                                     "O",
+                                                     AntidiagonalMat(List([1..d], i -> 1), GF(q)));
+        generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
+
+        result := Group(generators);
+    else
+        generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
+        generators := Concatenation(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
+        # det(D) = -1 
+        D := generatorsOfOrthogonalGroup.D;
+        # det(E) = (epsilon * zeta ^ (q + 1)) ^ (d / 2)
+        # E scales the standard orthogonal form F by a factor of zeta ^ (q + 1)
+        E := generatorsOfOrthogonalGroup.E;
+        # Multiplying by zeta ^ (-1) will lead to E preserving the form F *as a
+        # unitary form* !!
+        # det(E) = (epsilon * zeta ^ (q - 1)) ^ (d / 2)
+        E := zeta ^ (-1) * E;
+
+        if epsilon = 1 then
+            # We already have generators for Z(SU(d, q)).SO(d, q);
+            # additionally, an element W of order 2 mod Z(SU(d, q)).SO(d, q) is
+            # needed.
+            if IsEvenInt((q + 1) / k) then
+                i := QuoInt(q ^ 2 - 1, 2 * k);
+                # det(W) = 1 because det(D) = -1 and
+                #   zeta ^ (i * d) = zeta ^ ((q ^ 2 - 1) * d / (2 * Gcd(q + 1, d)))
+                #                  = zeta ^ ((q ^ 2 - 1) / 2) = -1
+                # since d / Gcd(q + 1, d) is an odd integer by assumption.
+                #
+                # Multiplying D by zeta ^ i will not affect the result
+                # preserving our unitary form since i is divisble by q - 1.
+                W := zeta ^ i * D;
+            elif IsEvenInt(d / k) then
+                i := (q - 1) * ((q + 1) / k + 1) / 2;
+                # det(W) = 1 because det(E) = (zeta ^ (q - 1)) ^ (d / 2) and
+                #   zeta ^ (i * d) = zeta ^ (d * (q - 1) * ((q + 1) / k + 1) / 2)
+                #                  = zeta ^ (d * (q - 1) / 2)
+                #
+                # Multiplying E by zeta ^ (-i) will not affect the result
+                # preserving our unitary form since i is divisible by q - 1.
+                W := zeta ^ (-i) * E;
+            else 
+                n := (k / d) mod ((q + 1) / k); 
+                i := (q - 1) * n * (d + q + 1) / (2 * k);
+                # det(W) = 1 because det(D) = -1, det(E) = zeta ^ (d * (q - 1) / 2)
+                # and i * d mod q ^ 2 - 1 is
+                #   (q - 1) * n * (d + q + 1) * d / (2 * k)
+                #        = (q - 1) * (d + q + 1) / 2 
+                #           + (q - 1) * (d + q + 1) * (n * d / k - 1) / 2
+                #        = (q - 1) * (d + q + 1) / 2 = det(D * E) ^ (-1)
+                # since the second summand is divisible by q - 1 (first
+                # factor), by 2 * k (second factor; since d and q + 1 have the
+                # same 2-adic valuation here) and by (q + 1) / k (third
+                # factor), hence by q ^ 2 - 1.
+                #
+                # Multiplying D * E by zeta ^ (-i) will not affect the result
+                # preserving our unitary form since i is divisible by q - 1.
+                W := zeta ^ (-i) * D * E;
+            fi;
+            Add(generators, W);
+
+            # the standard orthogonal form in this case is Antidiag(1, ..., 1),
+            # i.e. has the same form matrix as the unitary form we want, so we
+            # do not need to conjugate the result
+            result := Group(generators);
+
+        elif epsilon = -1 then
+
+            # similarly to above
+            if IsEvenInt((q + 1) / k) then
+                i := QuoInt(q ^ 2 - 1, 2 * k);
+                W := zeta ^ i * D;
+            elif IsEvenInt(d / k) then
+                i := (q - 1) * ((q + 1) / k + 1) / 2;
+                W := zeta ^ (-i) * E;
+            elif IsEvenInt(d / 2) then
+                n := (k / d) mod ((q + 1) / k); 
+                i := (q - 1) * n * (d + q + 1) / (2 * k);
+                W := zeta ^ (-i) * D * E;
+            else
+                # We have to make an additional exception in the last case if 
+                # d / 2 is odd as we have an additional factor of -1 in the
+                # determinant in this case due to 
+                #   det(E) = (epsilon * zeta ^ (q - 1)) ^ (d  / 2) 
+                #          = - zeta ^ ((q - 1) * d / 2) 
+                # here.
+                n := (k / d) mod ((q + 1) / k); 
+                i := (q - 1) * n * (d + q + 1) / (2 * k);
+                W := zeta ^ (-i) * E;
+            fi;
+            Add(generators, W);
+
+            result := Group(generators);
+
+            # We still have to change the preserved unitary form to the
+            # standard GAP unitary form Antidiag(1, ..., 1)
+            if IsEvenInt(d * (q - 1) / 4) then
+                # The form preserved by the constructed subgroup is given by
+                # the matrix Diag(zeta ^ (q + 1), 1, ..., 1).
+                form := DiagonalMat(Concatenation([zeta ^ (q + 1)],
+                                                  List([2..d], i -> zeta ^ 0)));
+                SetInvariantSesquilinearForm(result, rec(matrix := form));
+                result := ChangeFixedSesquilinearForm(result,
+                                                      "U",
+                                                      AntidiagonalMat(List([1..d], i -> 1), 
+                                                                      GF(q ^ 2)));
+            else
+                # The form preserved by the constructed subgroup is given by
+                # the identity matrix.
+                form := IdentityMat(d, GF(q ^ 2));
+                SetInvariantSesquilinearForm(result, rec(matrix := form));
+                result := ChangeFixedSesquilinearForm(result,
+                                                      "U",
+                                                      AntidiagonalMat(List([1..d], i -> 1), 
+                                                                      GF(q ^ 2)));
+            fi;
+        fi;
+    fi;
+
+    # Size according to Table 2.8 of [1]
+    SetSize(result, Size(SO(epsilon, d, q)) * Gcd(q + 1, d));
+
+    return result;
 end);
