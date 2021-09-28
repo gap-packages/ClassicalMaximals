@@ -182,3 +182,105 @@ function(m, n)
         return QuoInt(m, n) + 1;
     fi;
 end);
+
+ReflectionMatrix := function(n, q, gramMatrix, v)
+    local reflectionMatrix, i, basisVector, reflectBasisVector, beta;
+    reflectionMatrix := NullMat(n, n, GF(q));
+    beta := BilinearFormByMatrix(gramMatrix);
+    for i in [1..n] do
+        basisVector := List([1..n], j -> 0 * Z(q));
+        basisVector[i] := Z(q) ^ 0;
+        reflectBasisVector := basisVector 
+                              - 2 * EvaluateForm(beta, v, basisVector) 
+                              / EvaluateForm(beta, v, v) * v;
+        reflectionMatrix[i]{[1..n]} := reflectBasisVector;
+    od;
+    return reflectionMatrix;
+end;
+
+# Construct generators for the orthogonal groups with the properties listed in
+# Lemma 2.4 of [2].
+# Construction as in: C. M. Roney-Dougal. "Conjugacy of Subgroups of the
+# General Linear Group." Experimental Mathematics, vol. 13 no. 2, 2004, pp.
+# 151-163. Lemma 2.4.
+# We take the notation from [2].
+InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
+function(epsilon, n, q)
+    local gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
+    solutionOfQuadraticCongruence;
+    if IsEvenInt(q) then
+        ErrorNoReturn("This function was only designed for <q> odd but <n> = ", 
+                      n, "and <q> = ", q);
+    fi;
+
+    zeta := PrimitiveElement(GF(q));
+    if IsOddInt(n) then
+            gramMatrix := IdentityMat(n, GF(q));
+            generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                            "O",
+                                                                            gramMatrix));
+            D := - IdentityMat(n, GF(q));
+            E := zeta * IdentityMat(n, GF(q));
+    else 
+        if epsilon = 1 then
+            gramMatrix := AntidiagonalMat(List([1..n], i -> 1), GF(q));
+            generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                            "O",
+                                                                            gramMatrix));
+            # Our standard bilinear form is given by the Gram matrix 
+            # Antidiag(1, ..., 1). The norm of [1, 0, ..., 0, 2] under this
+            # bilinear form is 4, i.e. a square. (Recall q odd, so this is not zero!)
+            vectorOfSquareNorm := zeta ^ 0 * Concatenation([1], 
+                                                           List([1..n - 2], i -> 0), 
+                                                           [2]);
+            D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
+            E := DiagonalMat(Concatenation(List([1..n / 2], i -> zeta), 
+                                           List([1..n / 2], i -> 1)));
+        elif epsilon = -1 then
+
+            # Get a, b in GF(q) with a ^ 2 + b ^ 2 = zeta
+            solutionOfQuadraticCongruence := SolveQuadraticCongruence(zeta, q);
+            a := solutionOfQuadraticCongruence.a;
+            b := solutionOfQuadraticCongruence.b;
+
+            if IsOddInt(n * (q - 1) / 4) then
+                gramMatrix := IdentityMat(n, GF(q));
+                generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                                "O",
+                                                                                gramMatrix));
+                # Our standard bilinear form is given by the Gram matrix 
+                # Diag(1, ..., 1). The norm of [1, 0, ..., 0] under this bilinear
+                # form is 1, i.e. a square.
+                vectorOfSquareNorm := zeta ^ 0 * Concatenation([1], 
+                                                               List([1..n - 1], i -> 0));
+                D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
+                # Block diagonal matrix consisting of n / 2 blocks of the form 
+                # [[a, b], [b, -a]].
+                E := MatrixByEntries(GF(q), n, n, 
+                                     Concatenation(List([1..n], i -> [i, i, (-1) ^ (i + 1) * a]), 
+                                                   List([1..n], i -> [i, i + (-1) ^ (i + 1), b])));
+            else
+                gramMatrix := Z(q) ^ 0 * DiagonalMat(Concatenation([zeta],
+                                                                   List([1..n - 1], i -> 1)));
+                generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                                                                                "O",
+                                                                                gramMatrix));
+                # Our standard bilinear form is given by the Gram matrix 
+                # Diag(zeta, 1, ..., 1). The norm of [0, ..., 0, 1] under this
+                # bilinear form is 1, i.e. a square.
+                vectorOfSquareNorm := zeta ^ 0 * Concatenation(List([1..n - 1], i -> 0), 
+                                                               [1]);
+                D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
+                # Block diagonal matrix consisting of one block [[0, zeta], [1, 0]]
+                # and n / 2 - 1 blocks of the form [[a, b], [b, -a]].
+                E := MatrixByEntries(GF(q), n, n, 
+                                     Concatenation([[1, 2, zeta], [2, 1, zeta ^ 0]],
+                                                   List([3..n], i -> [i, i, (-1) ^ (i + 1) * a]), 
+                                                   List([3..n], i -> [i, i + (-1) ^ (i + 1), b])));
+            fi;
+        fi;
+    fi;
+    
+    return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
+end);
+

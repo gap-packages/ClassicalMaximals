@@ -140,3 +140,7 @@ function(d, q)
 
     return result;
 end);
+
+BindGlobal("OrthogonalSubfieldSU",
+function(epsilon, n, q)
+end);

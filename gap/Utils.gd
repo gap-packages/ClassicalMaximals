@@ -20,3 +20,4 @@ DeclareGlobalFunction("HermitianConjugate");
 DeclareGlobalFunction("SolveFrobeniusEquation");
 DeclareGlobalFunction("SquareSingleEntryMatrix");
 DeclareGlobalFunction("QuoCeil");
+DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
