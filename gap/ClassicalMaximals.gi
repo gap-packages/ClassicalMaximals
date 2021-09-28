@@ -400,9 +400,9 @@ function(n, q, classes...)
         # For all other n, class C6 is empty.
 
         # Cf. Theorem 6.3.10 in [1]
-        if not (n = 3 and q = 6) then
+        if n <> 2 or not q mod 40 in [11, 19, 21, 29] then 
             maximalSubgroups := Concatenation(maximalSubgroups,
-                                              C6SubgroupsSpecialUnitaryGroupGeneric(n, q));
+                                              C6SubgroupsSpecialLinearGroupGeneric(n, q));
         fi;
     fi;
 
@@ -536,7 +536,6 @@ C6SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     fi;
 
     return result;
-
 end;
 
 
@@ -612,6 +611,22 @@ function(n, q, classes...)
         maximalSubgroups := Concatenation(maximalSubgroups, 
                                           C4SubgroupsSpecialUnitaryGroupGeneric(n, q));
     fi;
+
+    if 6 in classes then
+        # Class C6 subgroups ######################################################
+        # Cf. Lemma 3.1.6 (n = 2) and Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
+        #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
+        #                                          3.7.9 (n = 8), 3.8.5 (n = 9), 
+        #                                          3.10.3 (n = 11) in [1]
+        # For all other n, class C6 is empty.
+
+        # Cf. Theorem 6.3.10 in [1]
+        if not (n = 3 and q = 6) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C6SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        fi;
+    fi;
+
 
     return maximalSubgroups;
 end);

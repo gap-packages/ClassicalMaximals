@@ -23,7 +23,7 @@ end);
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
     local zeta, generatorOfSL, generatorOfSU, J,
-    automorphism, generators, generator, T1, T2, nu, mu, D, result;
+    generators, generator, T1, T2, nu, mu, D, result;
 
     if not k <= d / 2 then
         ErrorNoReturn("<k> must not be larger than <d> / 2 but <k> = ", k, 
@@ -32,7 +32,6 @@ function(d, q, k)
 
     zeta := PrimitiveElement(GF(q ^ 2));
     generators := [];
-    automorphism := x -> x ^ q;
     J := AntidiagonalMat(List([1..k], i -> 1), GF(q ^ 2));
 
     # The following elements generate SL(k, q ^ 2) x SU(d - 2 * k, q).
@@ -42,8 +41,7 @@ function(d, q, k)
     for generatorOfSL in GeneratorsOfGroup(SL(k, q ^ 2)) do
         generator := IdentityMat(d, GF(q ^ 2));
         generator{[1..k]}{[1..k]} := generatorOfSL;
-        generator{[d - k + 1..d]}{[d - k + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
-                                                                                automorphism) 
+        generator{[d - k + 1..d]}{[d - k + 1..d]} := J * HermitianConjugate(generatorOfSL, q) ^ (-1) 
                                                        * J;
         Add(generators, generator);
     od;

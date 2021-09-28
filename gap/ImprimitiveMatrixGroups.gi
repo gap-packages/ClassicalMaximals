@@ -73,19 +73,24 @@ function(d, q, t)
 
     # A matrix interchanging v_i with -v_{i + m} for 1 <= i <= m 
     # (i.e. a 2-cycle in Sym(t)).
-    # det(C) = 1
     C := IdentityMat(d, F);
     C{[1..m]}{[1..m]} := NullMat(m, m, F);
     C{[m + 1..2 * m]}{[m + 1..2 * m]} := NullMat(m, m, F);
     C{[1..m]}{[m + 1..2 * m]} := - IdentityMat(m, F);
     C{[m + 1..2 * m]}{[1..m]} := - IdentityMat(m, F);
+    # det(C) = (-1) ^ m (if we interchange the columns i and i + m for 
+    # 1 <= i <= m, C turns into a diagonal matrix of determinant 1) so we fix
+    # the determinant if m is odd. Note that [2] forgets to do this.
+    if IsOddInt(m) then
+        C := DiagonalMat(Concatenation([-zeta ^ 0], List([2..d], i -> zeta ^ 0))) * C;
+    fi;
     Add(generators, C);
 
     # A matrix shifting v_i to v_{i + m} where indices are to be understood mod d
     # (i.e. a t-cycle in Sym(t)).
     D1 := BlockMatrix(List([1..t], i -> [i, i mod t + 1, IdentityMat(m, F)]), t, t);
     # det(D) = 1 since det(D1) = (-1) ^ (m * (d - m))
-    if IsEvenInt(m) or IsEvenInt(q) or IsOddInt(t) then
+    if IsEvenInt(m) or IsEvenInt(q) or IsOddInt(t) then 
         D := D1;
     else
         D := DiagonalMat(Concatenation([- zeta ^ 0], List([2..d], i -> zeta ^ 0))) * D1;
@@ -117,7 +122,7 @@ end);
 # where (e_1, ..., e_{d / 2}, f_{d / 2}, ..., f_1) is the standard basis.
 BindGlobal("SUIsotropicImprimitives",
 function(d, q)
-    local F, zeta, generators, automorphism, J, generatorOfSL,
+    local F, zeta, generators, J, generatorOfSL,
     generator, C, D, result;
     if not IsEvenInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
@@ -126,15 +131,13 @@ function(d, q)
     F := GF(q ^ 2);
     zeta := PrimitiveElement(F);
     generators := [];
-    automorphism := x -> x ^ q;
     J := AntidiagonalMat(List([1..d / 2], i -> 1), F);
 
     # first generate SL(d / 2, q ^ 2) as a subgroup of SU(d, q)
     for generatorOfSL in GeneratorsOfGroup(SL(d / 2, q ^ 2)) do
         generator := NullMat(d, d, F);
         generator{[1..d / 2]}{[1..d / 2]} := generatorOfSL;
-        generator{[d / 2 + 1..d]}{[d / 2 + 1..d]} := J * ApplyFunctionToEntries(TransposedMat(generatorOfSL) ^ (-1),
-                                                                                automorphism) 
+        generator{[d / 2 + 1..d]}{[d / 2 + 1..d]} := J * HermitianConjugate(generatorOfSL, q) ^ (-1) 
                                                        * J;
         Add(generators, generator);
     od;
