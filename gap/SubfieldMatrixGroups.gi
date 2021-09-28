@@ -46,3 +46,97 @@ function(n, p, e, f)
             Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
     return result;
 end);
+
+BindGlobal("UnitarySubfieldSU",
+function(d, p, e, f)
+    local A, B, C, D, c, k, q, matrixForCongruence, lambda, zeta, omega, z, X,
+        result;
+
+    if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) or not IsOddInt(QuoInt(e, f)) then
+        ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be",
+                      "an odd prime but <e> = ", e, " and <f> = ", f);
+    fi;
+
+    q := p ^ e;
+    A := SU(d, p ^ f).1;
+    B := SU(d, p ^ f).2;
+    zeta := PrimitiveElement(GF(q ^ 2));
+    k := Gcd(q + 1, d);
+    c := QuoInt(k * Lcm(p ^ f + 1, QuoInt(q + 1, k)), q + 1);
+    # generates the center of SU(d, q)
+    C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, GF(q ^ 2));
+
+    if c = Gcd(p ^ f + 1, d) then
+        result := Group(A, B, C);
+        # Size according to Table 2.8 of [1]
+        SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
+        return result;
+    fi;
+
+    # a primitive element of GF(p ^ (2 * f))
+    omega := zeta ^ QuoInt(q ^ 2 - 1, p ^ (2 * f) - 1);
+    D := DiagonalMat(Concatenation([omega], 
+                                   List([2..d - 1], i -> zeta ^ 0),
+                                   [omega ^ (-p ^ f)])) ^ c;
+    
+    # det(D) = zeta ^ z
+    z := - c * QuoInt(q ^ 2 - 1, p ^ f + 1);
+    # solving the congruence lambda * (q - 1) * d = -z (mod q ^ 2 - 1)
+    # by calculating (d / k) ^ (-1) (mod (q + 1) / k).
+    lambda := - QuoInt(z, (q - 1) * k) * ((d / k) ^ (-1) mod ((q + 1) / k));
+    # det(X) = 1 by construction of lambda
+    X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, GF(q ^ 2));
+
+    result := Group(A, B, C, X * D);
+    # Size according to Table 2.8 of [1]
+    SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
+
+    return result;
+end);
+
+BindGlobal("SymplecticSubfieldSU",
+function(d, q)
+    local generators, zeta, k, C, c, result, D, form;
+
+    if IsOddInt(d) then
+        ErrorNoReturn("<d> must be even but <d> = ", d);
+    fi;
+
+    form := AntidiagonalMat(Concatenation(List([1..d / 2], i -> 1),
+                                          List([1..d / 2], i -> -1)),
+                            GF(q ^ 2));
+    generators := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
+    zeta := PrimitiveElement(GF(q ^ 2));
+    k := Gcd(q + 1, d);
+    # generates the center of SU(d, q)
+    C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, GF(q ^ 2));
+    Add(generators, C);
+    c := QuoInt(Gcd(2, q - 1) * Gcd(q + 1, d / 2), Gcd(q + 1, d));
+
+    if c <> 1 then
+        # q is odd and d = 0 mod 4 if c <> 1
+        #
+        # D preserves the standard symplectic form Antidiag(1, ..., 1, -1, ..., -1) 
+        # up to a factor of -1. det(D) = 1 since d = 0 mod 4.
+        D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta ^ ((q + 1) / 2)),
+                                       List([1..d / 2], i -> - zeta ^ (- (q + 1) / 2))));
+        Add(generators, D);
+    fi;
+     
+    result := Group(generators);
+    if IsOddInt(q) then
+        # The result preserves the unitary form given by 
+        # - zeta ^ ((q + 1) / 2) * Antidiag(1, ..., 1, -1, ..., -1);
+        # we conjugate it to preserve the standard unitary form given by
+        # Antidiag(1, ..., 1). (If q is even, this is not necessary.)
+        SetInvariantSesquilinearForm(result, 
+                                     rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form));
+        result := ChangeFixedSesquilinearForm(result, 
+                                              "U",
+                                              AntidiagonalMat(List([1..d], i -> 1), GF(q ^ 2)));
+    fi;
+    # Size according to Table 2.8 of [1]
+    SetSize(result, Size(Sp(d, q)) * Gcd(q + 1, d / 2));
+
+    return result;
+end);

@@ -585,10 +585,10 @@ function(r, m, q)
     # (see the constructor functions above for more info).
     # We conjugate the group so that it preserves the standard GAP form
     # Antidiag(1, ..., 1). 
-    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, GF(q))));
+    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, GF(q ^ 2))));
     result := ChangeFixedSesquilinearForm(result,
                                           "U",
-                                          AntidiagonalMat(List([1..r ^ m], i -> 1), GF(q)));
+                                          AntidiagonalMat(List([1..r ^ m], i -> 1), GF(q ^ 2)));
 
     return result;
 end);
