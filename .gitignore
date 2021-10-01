@@ -17,9 +17,10 @@
 /doc/*.six
 /doc/*.tex
 /doc/*.toc
-/doc/manual.pdf
+/doc/*.pdf
 /doc/_*.xml
 /doc/title.xml
+/doc/ClassicalMaximals.xml
 
 /bin/
 /gen/
