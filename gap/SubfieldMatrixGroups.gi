@@ -109,7 +109,7 @@ function(d, q)
     fi;
 
     F := GF(q ^ 2);
-    form := AntidiagonalMat(Concatenation(List([1..d / 2], i -> 1),
+    form := AntidiagonalMat(Concatenation(List([1..d / 2], i -> One(F)),
                                           List([1..d / 2], i -> -1)) * Z(q ^ 2)^0,
                             F);
     generators := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
