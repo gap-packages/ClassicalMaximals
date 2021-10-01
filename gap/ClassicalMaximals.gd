@@ -1,11 +1,6 @@
 #
 # ClassicalMaximals: Maximal subgroups of classical groups
 #
-#! @Chapter Introduction
-#!
-#! ClassicalMaximals is a package which does some
-#! interesting and cool things
-#!
 #! @Chapter Maximal Subgroups of Classical Groups
 #! @Section The Main function
 
