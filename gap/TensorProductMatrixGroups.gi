@@ -1,4 +1,4 @@
-# Construction as in Proposition 7.1 of [2]
+# Construction as in Proposition 7.1 of [HR05]
 BindGlobal("TensorProductStabilizerInSL",
 function(d1, d2, q)
     local F, d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
@@ -21,10 +21,10 @@ function(d1, d2, q)
     gens := [C];
     SLd1Gens := GeneratorsOfGroup(SL(d1, q));
     SLd2Gens := GeneratorsOfGroup(SL(d2, q));
-    Add(gens,KroneckerProduct(SLd1Gens[1], Id2)); # corresponds to S in [2]
-    Add(gens,KroneckerProduct(SLd1Gens[2], Id2)); # corresponds to T in [2]
-    Add(gens,KroneckerProduct(Id1, SLd2Gens[1])); # corresponds to U in [2]
-    Add(gens,KroneckerProduct(Id1, SLd2Gens[2])); # corresponds to V in [2]
+    Add(gens,KroneckerProduct(SLd1Gens[1], Id2)); # corresponds to S in [HR05]
+    Add(gens,KroneckerProduct(SLd1Gens[2], Id2)); # corresponds to T in [HR05]
+    Add(gens,KroneckerProduct(Id1, SLd2Gens[1])); # corresponds to U in [HR05]
+    Add(gens,KroneckerProduct(Id1, SLd2Gens[2])); # corresponds to V in [HR05]
 
     if not c = 1 then
         diagonalGenerator1 := GL(d1, q).1; # diagonal matrix [zeta, 1, ..., 1]
@@ -40,12 +40,12 @@ function(d1, d2, q)
     fi;
 
     result := Group(gens);
-    # Size according to Table 2.7 in [1]
+    # Size according to Table 2.7 in [BHR13]
     SetSize(result, Size(SL(d1, q)) * Size(SL(d2, q)) * g);
     return result;
 end);
 
-# Construction as in Proposition 7.3 of [2]
+# Construction as in Proposition 7.3 of [HR05]
 # We use the identity matrix as our hermitian form.
 BindGlobal("TensorProductStabilizerInSU",
 function(d1, d2, q)
@@ -97,7 +97,7 @@ function(d1, d2, q)
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
     result := ConjugateToStandardForm(result, "U");
-    # Size according to Table 2.7 in [1]
+    # Size according to Table 2.7 in [BHR13]
     SetSize(result, Size(SU(d1, q)) * Size(SU(d2, q)) * Gcd(q + 1, d1, d2));
     return result;
 end);

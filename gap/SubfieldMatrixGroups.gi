@@ -5,7 +5,7 @@
 # divisor of <A>e</A>. We further demand that <A>p</A> be a prime number and
 # that the quotient <C>f / e</C> be a prime number as well, i.e. <C>GF(p ^ e)
 # </C> is a prime extension of <C>GF(p ^ f)</C>.
-# Construction as in Proposition 8.1 of [2] 
+# Construction as in Proposition 8.1 of [HR05] 
 BindGlobal("SubfieldSL", 
 function(n, p, e, f)
     local F, A, B, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
@@ -25,7 +25,7 @@ function(n, p, e, f)
 
     if c = Gcd(p ^ f - 1, n) then
         result := Group(A, B, C);
-        # Size according to Table 2.8 of [1]
+        # Size according to Table 2.8 of [BHR13]
         SetSize(result, Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f -
         1), n));
         return result;
@@ -42,12 +42,13 @@ function(n, p, e, f)
 
     X := zeta ^ (-lambda) * IdentityMat(n, F);
     result := Group(A, B, C, X * D);
-    # Size according to Table 2.8 of [1]
+    # Size according to Table 2.8 of [BHR13]
     SetSize(result,
             Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
     return result;
 end);
 
+# Construction as in Proposition 8.3 of [HR05]
 BindGlobal("UnitarySubfieldSU",
 function(d, p, e, f)
     local F, A, B, C, D, c, k, q, matrixForCongruence, lambda, zeta, omega, z, X,
@@ -72,7 +73,7 @@ function(d, p, e, f)
         generators := [A, B, C];
         # generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
-        # Size according to Table 2.8 of [1]
+        # Size according to Table 2.8 of [BHR13]
         SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
         return result;
     fi;
@@ -94,12 +95,13 @@ function(d, p, e, f)
     generators := [A, B, C, X * D];
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
-    # Size according to Table 2.8 of [1]
+    # Size according to Table 2.8 of [BHR13]
     SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
 
     return result;
 end);
 
+# Construction as in Proposition 8.5 of [HR05]
 BindGlobal("SymplecticSubfieldSU",
 function(d, q)
     local F, generators, zeta, k, C, c, result, D, form;
@@ -141,12 +143,13 @@ function(d, q)
                                      rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form));
         result := ConjugateToStandardForm(result, "U");
     fi;
-    # Size according to Table 2.8 of [1]
+    # Size according to Table 2.8 of [BHR13]
     SetSize(result, Size(Sp(d, q)) * Gcd(q + 1, d / 2));
 
     return result;
 end);
 
+# Construction as in Proposition 8.4 of [HR05]
 BindGlobal("OrthogonalSubfieldSU",
 function(epsilon, d, q)
     local F, zeta, k, C, generators, SOChangedForm, result,
@@ -289,7 +292,7 @@ function(epsilon, d, q)
         fi;
     fi;
 
-    # Size according to Table 2.8 of [1]
+    # Size according to Table 2.8 of [BHR13]
     SetSize(result, Size(SO(epsilon, d, q)) * Gcd(q + 1, d));
 
     return result;

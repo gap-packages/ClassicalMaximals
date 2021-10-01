@@ -1,4 +1,4 @@
-# Construction as in Lemma 9.1 of [2]
+# Construction as in Lemma 9.1 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialGroup := function(r, m, q)
@@ -27,7 +27,7 @@ OddExtraspecialGroup := function(r, m, q)
     return rec(listOfXi := listOfXi, listOfYi := listOfYi);
 end;
 
-# Construction as in Lemma 9.2 of [2]
+# Construction as in Lemma 9.2 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialNormalizerInGL := function(r, m, q, type...)
@@ -104,7 +104,7 @@ OddExtraspecialNormalizerInGL := function(r, m, q, type...)
     return result;
 end;
 
-# Construction as in Lemma 9.3 of [2]
+# Construction as in Lemma 9.3 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 SymplecticTypeNormalizerInGL := function(m, q, type...)
@@ -148,7 +148,7 @@ SymplecticTypeNormalizerInGL := function(m, q, type...)
     return result;
 end;
 
-# Construction as in Lemma 9.4 of [2]
+# Construction as in Lemma 9.4 of [HR05]
 Extraspecial2MinusTypeNormalizerInGL := function(m, q)
     local F, solutionQuadraticCongruence, a, b, kroneckerFactorX1, kroneckerFactorY1, 
     kroneckerFactorU1, kroneckerFactorV1, kroneckerFactorW1, result, p;
@@ -215,7 +215,7 @@ ScalarToNormalizeDeterminant := function(matrix, sizeOfMatrix, field)
     fi;
 end;
 
-# Construction as in Proposition 9.5 of [2]
+# Construction as in Proposition 9.5 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialNormalizerInSL := function(r, m, q, type...)
@@ -325,7 +325,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
                                 generatorsOfNormalizerInGL.listOfWi);
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
-    # Size according to Table 2.9 of [1]
+    # Size according to Table 2.9 of [BHR13]
     if d = 3 and ((q - 4) mod 9 = 0 or (q - 7) mod 9 = 0) then
         SetSize(result, 27 * 8);
     elif type = "L" then
@@ -338,7 +338,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
     return result;
 end;
 
-# Construction as in Proposition 9.5 of [2]
+# Construction as in Proposition 9.5 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 SymplecticTypeNormalizerInSL := function(m, q, type...)
@@ -485,7 +485,7 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
 
-    # Size according to Table 2.9 of [1]
+    # Size according to Table 2.9 of [BHR13]
     if (d = 4 and (q - 5) mod 8 = 0 and type = "L") or
        (d = 4 and (p ^ QuoInt(e, 2) - 3) mod 8 = 0 and type = "U") then
         SetSize(result, 2 ^ 6 * Factorial(6) / 2);
@@ -499,7 +499,7 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
     return result;
 end;
 
-# Construction as in Proposition 9.5 of [2]
+# Construction as in Proposition 9.5 of [HR05]
 # Only for d = 2
 Extraspecial2MinusTypeNormalizerInSL := function(q)
     local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
@@ -550,7 +550,7 @@ Extraspecial2MinusTypeNormalizerInSL := function(q)
     fi;
 
     result := Group(generators);
-    # Size according to Table 2.9 of [1]
+    # Size according to Table 2.9 of [BHR13]
     if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
         SetSize(result, 2 * Factorial(4));
     else
@@ -572,7 +572,7 @@ function(r, m, q)
     fi;
 end);
 
-# Construction as in Proposition 9.5 of [2]
+# Construction as in Proposition 9.5 of [HR05]
 BindGlobal("ExtraspecialNormalizerInSU",
 function(r, m, q)
     local F, result;

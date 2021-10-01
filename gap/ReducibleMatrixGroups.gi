@@ -1,7 +1,7 @@
 # Return the subgroup of <M>SL(n, q)</M> stabilizing the
 # <A>k</A>-dimensional subspace of <M>F^n</M>, where <C>F := GF(q)</C>,
 # consisting of all vectors whose first <C>n-k</C> entries are zero.
-# Construction as in Proposition 4.1 of [2]
+# Construction as in Proposition 4.1 of [HR05]
 BindGlobal("SLStabilizerOfSubspace",
 function(n, q, k)
     local F, A5, dirProd, z, T, result;
@@ -13,13 +13,13 @@ function(n, q, k)
     dirProd := MatDirectProduct(SL(n - k, q), SL(k, q));
     T := IdentityMat(n, F) + SquareSingleEntryMatrix(F, n, 1, n - k + 1);
     result := Group(Concatenation([A5], GeneratorsOfGroup(dirProd), [T]));
-    # Size according to Table 2.3 of [1]
+    # Size according to Table 2.3 of [BHR13]
     SetSize(result,
             q ^ (k * (n - k)) * Size(SL(k, q)) * Size(SL(n - k, q)) * (q-1));
     return result;
 end);
 
-# Construction as in Proposition 4.5 of [2]
+# Construction as in Proposition 4.5 of [HR05]
 # The subspace stabilised is < e_1, e_2, ..., e_k >.
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
@@ -38,7 +38,7 @@ function(d, q, k)
 
     # The following elements generate SL(k, q ^ 2) x SU(d - 2 * k, q).
     # Note that we actually do need SL(k, q ^ 2) here and not GL(k, q ^ 2) as
-    # claimed in the proof of Proposition 4.5 in [2] since some of the
+    # claimed in the proof of Proposition 4.5 in [HR05] since some of the
     # generators constructed below would not have determinant 1 otherwise.
     for generatorOfSL in GeneratorsOfGroup(SL(k, q ^ 2)) do
         generator := IdentityMat(d, F);
@@ -63,7 +63,7 @@ function(d, q, k)
     fi;
     T1 := IdentityMat(d, F) + nu * SquareSingleEntryMatrix(F, d, d, 1);
     if d - 2 * k > 1 then
-        # Note that in the proof of Proposition 4.5 in [2], there is a + sign
+        # Note that in the proof of Proposition 4.5 in [HR05], there is a + sign
         # instead of the - sign below, but this is wrong and will lead to T2
         # not being in SU(d, q).
         T2 := IdentityMat(d, F) + SquareSingleEntryMatrix(F, d, d, d - k)   
@@ -75,7 +75,7 @@ function(d, q, k)
                                             + SquareSingleEntryMatrix(F, d, QuoCeil(d, 2), 1);
         else
             mu := SolveFrobeniusEquation("P", -2 * zeta ^ 0, q);
-            # Again, note that in the proof of Proposition 4.5 in [2], there is
+            # Again, note that in the proof of Proposition 4.5 in [HR05], there is
             # a + sign instead of the - sign below, but this is wrong and will
             # lead to T2 not being in SU(d, q).
             T2 := IdentityMat(d, F) + SquareSingleEntryMatrix(F, d, d, 1)
@@ -109,7 +109,7 @@ function(d, q, k)
 
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
-    # Size according to Table 2.3 of [1]
+    # Size according to Table 2.3 of [BHR13]
     if d - 2 * k > 0 then
         SetSize(result, q ^ (k * (2 * d - 3 * k)) * Size(SL(k, q ^ 2)) 
                                                   * Size(SU(d - 2 * k, q)) 
@@ -122,7 +122,7 @@ function(d, q, k)
     return result;
 end);
 
-# Construction as in Proposition 4.6 of [2]
+# Construction as in Proposition 4.6 of [HR05]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
     local F, zeta, generators, kHalf, dHalf, generator, determinantShiftMatrix,
@@ -359,7 +359,7 @@ function(d, q, k)
 
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
-    # Size according to Table 2.3 of [1]
+    # Size according to Table 2.3 of [BHR13]
     SetSize(result, Size(SU(k, q)) * Size(SU(d - k, q)) * (q + 1));
 
     return result;

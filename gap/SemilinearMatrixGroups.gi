@@ -4,10 +4,15 @@
 # we only take x -> x ^ q. However, the results of the other functions are as
 # expected -- so it seems that we do not construct the full GammaL here, but
 # that we don't need it anyway?
+# See Issue #39.
 # TODO
 #
-# Construction as in Lemma 6.1 of [2]
-BindGlobal("GammaLDimension1",
+# Return a subgroup of <M>GL(s, q)</M> isomorphic to the group <M>\Gamma L(1,
+# q ^ s)</M> of semilinear transformations of the vector space <M>F'^1</M>
+# over the field <C>F' := GF(q ^ s)</C>. See <Ref Func="GammaLMeetSL"/> for
+# further details.
+# Construction as in Lemma 6.1 of [HR05]
+BindGlobal("CLASSICALMAXIMALS_GammaLDimension1",
 function(s, q)
     local F, primitivePolynomial, A, x, xq, B, row, i;
     F := GF(q);
@@ -45,7 +50,7 @@ end);
 # q)</M>.) Note that this means <A>s</A> must be a divisor of <A>n</A>. We
 # further demand that <A>s</A> be a prime number, i.e. <M>F'</M> is a prime
 # extension of <M>F</M>.
-# Construction as in Proposition 6.3 of [2]
+# Construction as in Proposition 6.3 of [HR05]
 BindGlobal("GammaLMeetSL",
 function(n, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, Y, A, B, C, D, DBlock, ZBlock, i,
@@ -103,7 +108,7 @@ function(n, q, s)
     od;
 
     result := Group(A, B, C, D);
-    # Size according to Proposition 6.3 of [2]
+    # Size according to Proposition 6.3 of [HR05]
     SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
     return result;
 end);
@@ -137,7 +142,7 @@ Theta := function(M, A, omega)
     return result;
 end;
 
-# Construction as in Proposition 6.6 of [2]
+# Construction as in Proposition 6.6 of [HR05]
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, Y, A, B, C, D, i,
@@ -171,7 +176,7 @@ function(d, q, s)
         generators := [Bs, Cs];
         generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
-        # Size according to Table 2.6 of [1]
+        # Size according to Table 2.6 of [BHR13]
         SetSize(result, Size(SU(d / s, q ^ s)) * (q ^ s + 1) / (q + 1) * s);
         # conjugate the result so that it preserves the standard unitary form
         return ConjugateToStandardForm(result, "U");
@@ -193,7 +198,7 @@ function(d, q, s)
     generators := [A, B, C, D];
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
-    # Size according to Table 2.6 of [1]
+    # Size according to Table 2.6 of [BHR13]
     SetSize(result, Size(SU(d / s, q ^ s)) * (q ^ s + 1) / (q + 1) * s);
     # conjugate the result so that it preserves the standard unitary form 
     return ConjugateToStandardForm(result, "U");

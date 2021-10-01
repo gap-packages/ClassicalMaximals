@@ -73,7 +73,7 @@ end);
 # If type = "S" then find a beta in GF(q ^ 2) with beta + beta ^ q = alpha.
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
-# Construction as in Lemma 2.2 of [2]
+# Construction as in Lemma 2.2 of [HR05]
 InstallGlobalFunction("SolveFrobeniusEquation",
 function(type, alpha, q)
     local F, R, S, x, delta, polynomial, result;
@@ -171,11 +171,11 @@ ReflectionMatrix := function(n, q, gramMatrix, v)
 end;
 
 # Construct generators for the orthogonal groups with the properties listed in
-# Lemma 2.4 of [2].
+# Lemma 2.4 of [HR05].
 # Construction as in: C. M. Roney-Dougal. "Conjugacy of Subgroups of the
 # General Linear Group." Experimental Mathematics, vol. 13 no. 2, 2004, pp.
 # 151-163. Lemma 2.4.
-# We take the notation from [2].
+# We take the notation from [HR05].
 InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
 function(epsilon, n, q)
     local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,

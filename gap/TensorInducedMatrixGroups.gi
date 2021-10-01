@@ -57,7 +57,7 @@
 ###############################################################################     
 
 
-# Construction as in Proposition 10.2 of [2]
+# Construction as in Proposition 10.2 of [HR05]
 BindGlobal("TensorInducedDecompositionStabilizerInSL",
 function(m, t, q)
     local F, gensOfSLm, I, D, C, generatorsOfHInSL, gens, i, H, E, U, S, zeta, mu,
@@ -138,7 +138,7 @@ function(m, t, q)
 
     gens := Concatenation(generatorsOfHInSL, [C, U, S * E]);
     result := Group(gens);
-    # Size according to Table 2.10 of [1]
+    # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 3 then
         SetSize(result, Gcd(q - 1, m) * Size(PSL(m, q)) ^ 2 * Gcd(q - 1, m) ^ 2);
     else
@@ -149,9 +149,9 @@ function(m, t, q)
     return result;
 end);
 
-# Construction as in Proposition 10.4 of [2]
+# Construction as in Proposition 10.4 of [HR05]
 # Note, though, that the structure of G / Z(G) given there is incorrect and
-# that one should rather consult Table 2.10 of [1] on that (which, however, 
+# that one should rather consult Table 2.10 of [BHR13] on that (which, however, 
 # gives the structure of G, not G / Z(G)!).
 BindGlobal("TensorInducedDecompositionStabilizerInSU",
 function(m, t, q)
@@ -238,7 +238,7 @@ function(m, t, q)
     gens := Concatenation(generatorsOfHInSU, [C, U, S * E]);
     gens := List(gens, M -> ImmutableMatrix(F, M));
     result := Group(gens);
-    # Size according to Table 2.10 of [1]
+    # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 1 then
         SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ 2 * Gcd(q + 1, m) ^ 2);
     else
