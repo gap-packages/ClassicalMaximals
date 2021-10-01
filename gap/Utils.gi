@@ -35,9 +35,10 @@ end);
 # 1 / 2 in each trial.
 InstallGlobalFunction("SolveQuadraticCongruence",
 function(c, q)
-    local a, b;
-    for a in GF(q) do
-        b := RootFFE(GF(q), (c - a ^ 2) * Z(q) ^ 0, 2);
+    local F, a, b;
+    F := GF(q);
+    for a in F do
+        b := RootFFE(F, (c - a ^ 2) * Z(q) ^ 0, 2);
         if not b = fail then
             break;
         fi;
@@ -75,8 +76,10 @@ end);
 # Construction as in Lemma 2.2 of [2]
 InstallGlobalFunction("SolveFrobeniusEquation",
 function(type, alpha, q)
-    local R, S, x, delta, polynomial, result;
-    if not alpha in GF(q) then
+    local F, R, S, x, delta, polynomial, result;
+
+    F := GF(q);
+    if not alpha in F then
         ErrorNoReturn("<alpha> must be an element of GF(<q>) but <alpha> = ",
                       alpha, " and <q> = ", q);
     fi;
@@ -90,16 +93,16 @@ function(type, alpha, q)
         return Z(q) ^ 0;
     fi;
 
-    R := PolynomialRing(GF(q), ["x"]);
+    R := PolynomialRing(F, ["x"]);
     S := PolynomialRing(GF(q ^ 2), ["x"]);
-    x := Indeterminate(GF(q), "x");
+    x := Indeterminate(F, "x");
 
     # A quick argument using the quadratic formula for q odd or some
     # algebraic manipulations and the non-surjectivity of the Artin-Schreier
     # map x -> x ^ 2 + x for q odd and alpha <> 0 shows that the construction
     # below always works.
     if type = "S" then
-        for delta in GF(q) do
+        for delta in F do
             polynomial := x ^ 2 - alpha * x + delta;
             if IsIrreducibleRingElement(R, polynomial) then
                 result := -CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
@@ -121,7 +124,7 @@ function(type, alpha, q)
     # contradiction for p >= 7 (we leave out the details); this leaves p = 3
     # and p = 5, which can easily be checked manually.
     elif type = "P" then
-        for delta in GF(q) do
+        for delta in F do
             polynomial := x ^ 2 + delta * x + alpha;
             if IsIrreducibleRingElement(R, polynomial) then
                 result := -CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
@@ -148,15 +151,16 @@ function(m, n)
 end);
 
 ReflectionMatrix := function(n, q, gramMatrix, v)
-    local reflectionMatrix, i, basisVector, reflectBasisVector, beta;
-    reflectionMatrix := NullMat(n, n, GF(q));
+    local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
+    F := GF(q);
+    reflectionMatrix := NullMat(n, n, F);
     beta := BilinearFormByMatrix(gramMatrix);
     if IsZero(EvaluateForm(beta, v, v)) then
         ErrorNoReturn("The vector <v> must have non-zero norm with respect to",
                       " the bilinear form given by <gramMatrix>");
     fi;
     for i in [1..n] do
-        basisVector := List([1..n], j -> 0 * Z(q));
+        basisVector := List([1..n], j -> Zero(F));
         basisVector[i] := Z(q) ^ 0;
         reflectBasisVector := basisVector 
                               - 2 * EvaluateForm(beta, v, basisVector) 
@@ -174,24 +178,25 @@ end;
 # We take the notation from [2].
 InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
 function(epsilon, n, q)
-    local gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
+    local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
     solutionOfQuadraticCongruence;
     if IsEvenInt(q) then
         ErrorNoReturn("This function was only designed for <q> odd but <n> = ", 
                       n, "and <q> = ", q);
     fi;
 
-    zeta := PrimitiveElement(GF(q));
+    F := GF(q);
+    zeta := PrimitiveElement(F);
     if IsOddInt(n) then
-            gramMatrix := IdentityMat(n, GF(q));
+            gramMatrix := IdentityMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));
-            D := - IdentityMat(n, GF(q));
-            E := zeta * IdentityMat(n, GF(q));
+            D := - IdentityMat(n, F);
+            E := zeta * IdentityMat(n, F);
     else 
         if epsilon = 1 then
-            gramMatrix := AntidiagonalMat(n, GF(q));
+            gramMatrix := AntidiagonalMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));
@@ -212,7 +217,7 @@ function(epsilon, n, q)
             b := solutionOfQuadraticCongruence.b;
 
             if IsOddInt(n * (q - 1) / 4) then
-                gramMatrix := IdentityMat(n, GF(q));
+                gramMatrix := IdentityMat(n, F);
                 generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O",
                                                                                 gramMatrix));
@@ -224,7 +229,7 @@ function(epsilon, n, q)
                 D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
                 # Block diagonal matrix consisting of n / 2 blocks of the form 
                 # [[a, b], [b, -a]].
-                E := MatrixByEntries(GF(q), n, n, 
+                E := MatrixByEntries(F, n, n, 
                                      Concatenation(List([1..n], i -> [i, i, (-1) ^ (i + 1) * a]), 
                                                    List([1..n], i -> [i, i + (-1) ^ (i + 1), b])));
             else
@@ -241,7 +246,7 @@ function(epsilon, n, q)
                 D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
                 # Block diagonal matrix consisting of one block [[0, zeta], [1, 0]]
                 # and n / 2 - 1 blocks of the form [[a, b], [b, -a]].
-                E := MatrixByEntries(GF(q), n, n, 
+                E := MatrixByEntries(F, n, n, 
                                      Concatenation([[1, 2, zeta], [2, 1, zeta ^ 0]],
                                                    List([3..n], i -> [i, i, (-1) ^ (i + 1) * a]), 
                                                    List([3..n], i -> [i, i + (-1) ^ (i + 1), b])));

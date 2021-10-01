@@ -8,19 +8,20 @@
 # Construction as in Proposition 8.1 of [2] 
 BindGlobal("SubfieldSL", 
 function(n, p, e, f)
-    local A, B, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
+    local F, A, B, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
         result;
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) then
         ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be a prime but <e> = ", 
                       e, " and <f> = ", f);
     fi;
 
+    F := GF(p ^ e);
     A := SL(n, p ^ f).1;
     B := SL(n, p ^ f).2;
-    zeta := PrimitiveElement(GF(p ^ e));
+    zeta := PrimitiveElement(F);
     k := Gcd(p ^ e - 1, n);
     c := QuoInt((k * Lcm(p ^ f - 1, QuoInt((p ^ e - 1), k))), (p ^ e - 1));
-    C := zeta ^ (QuoInt(p ^ e - 1, k)) * IdentityMat(n, GF(p ^ e));
+    C := zeta ^ (QuoInt(p ^ e - 1, k)) * IdentityMat(n, F);
 
     if c = Gcd(p ^ f - 1, n) then
         result := Group(A, B, C);
@@ -39,7 +40,7 @@ function(n, p, e, f)
     z := c * QuoInt(p ^ e - 1, p ^ f - 1);
     lambda := SolutionMat(matrixForCongruence, [z])[1];
 
-    X := zeta ^ (-lambda) * IdentityMat(n, GF(p ^ e));
+    X := zeta ^ (-lambda) * IdentityMat(n, F);
     result := Group(A, B, C, X * D);
     # Size according to Table 2.8 of [1]
     SetSize(result,
@@ -174,7 +175,7 @@ function(epsilon, d, q)
     if IsOddInt(d) then
         SOChangedForm := ChangeFixedSesquilinearForm(SO(d, q),
                                                      "O",
-                                                     AntidiagonalMat(d, GF(q)));
+                                                     AntidiagonalMat(d, F));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
         generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);

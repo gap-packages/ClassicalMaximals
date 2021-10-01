@@ -108,7 +108,7 @@ end;
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 SymplecticTypeNormalizerInGL := function(m, q, type...)
-    local listOfUi, U, result, zeta, psi; 
+    local F, listOfUi, U, result, zeta, psi; 
 
     if (q - 1) mod 4 <> 0 or m < 2 then
         ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2 but <q> = ",
@@ -129,7 +129,8 @@ SymplecticTypeNormalizerInGL := function(m, q, type...)
     # normalizer, we already need a generating scalar, i.e. a scalar matrix of
     # order q - 1 (whereas Z has only order (q - 1) / 4), making Z redundant.
 
-    zeta := PrimitiveElement(GF(q));
+    F := GF(q);
+    zeta := PrimitiveElement(F);
     psi := zeta ^ (QuoInt(q - 1, 4));
     U := DiagonalMat([zeta ^ 0, psi]);
     # Determinant psi ^ (2 ^ (m - 1)) = (zeta ^ ((q - 1) / 2)) ^ (2 ^ (m - 2))
@@ -139,8 +140,8 @@ SymplecticTypeNormalizerInGL := function(m, q, type...)
     # given by the identity matrix (using the fact that 4 | q + 1 in the
     # unitary case with r = 2).
     listOfUi := List([1..m], i ->
-    KroneckerProduct(KroneckerProduct(IdentityMat(2 ^ (m - i), GF(q)), U),
-    IdentityMat(2 ^ (i - 1), GF(q))));
+    KroneckerProduct(KroneckerProduct(IdentityMat(2 ^ (m - i), F), U),
+    IdentityMat(2 ^ (i - 1), F)));
     
     result.listOfUi := listOfUi;
 
@@ -149,7 +150,7 @@ end;
 
 # Construction as in Lemma 9.4 of [2]
 Extraspecial2MinusTypeNormalizerInGL := function(m, q)
-    local solutionQuadraticCongruence, a, b, kroneckerFactorX1, kroneckerFactorY1, 
+    local F, solutionQuadraticCongruence, a, b, kroneckerFactorX1, kroneckerFactorY1, 
     kroneckerFactorU1, kroneckerFactorV1, kroneckerFactorW1, result, p;
 
     if (q - 1) mod 2 <> 0 then
@@ -158,6 +159,7 @@ Extraspecial2MinusTypeNormalizerInGL := function(m, q)
 
     result := OddExtraspecialNormalizerInGL(2, m, q);
    
+    F := GF(q);
     p := PrimeDivisors(q)[1];
     solutionQuadraticCongruence := SolveQuadraticCongruence(-1, p);
     a := solutionQuadraticCongruence.a; 
@@ -183,20 +185,20 @@ Extraspecial2MinusTypeNormalizerInGL := function(m, q)
     # --> Check this with the Magma code!
     result.listOfUi := [];
     # Determinant 1
-    result.listOfXi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), GF(q)),
+    result.listOfXi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), F),
                                            kroneckerFactorX1);
     # Determinant 1
-    result.listOfYi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), GF(q)),
+    result.listOfYi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), F),
                                            kroneckerFactorY1);
     # Determinant 2 ^ (2 ^ (m - 1))
-    result.listOfUi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), GF(q)),
+    result.listOfUi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), F),
                                            kroneckerFactorU1);
     # Determinant 4 ^ (2 ^ (m - 1)) = 2 ^ (2 ^ m)
-    result.listOfVi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), GF(q)),
+    result.listOfVi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), F),
                                            kroneckerFactorV1);
     if m <> 1 then
         # Determinant 4 ^ (2 ^ (m - 2)) = 2 ^ (2 ^ (m - 1))
-        result.listOfWi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 2), GF(q)),
+        result.listOfWi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 2), F),
                                                kroneckerFactorW1);
     fi;
 
@@ -500,15 +502,16 @@ end;
 # Construction as in Proposition 9.5 of [2]
 # Only for d = 2
 Extraspecial2MinusTypeNormalizerInSL := function(q)
-    local generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
+    local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
     factorization, generators, result, scalarMultiplierV1, scalarMultiplierU1,
     zeta;
-
+    
+    F := GF(q);
     # q = p ^ e with p prime
     factorization := PrimePowersInt(q);
     p := factorization[1];
     e := factorization[2];
-    zeta := PrimitiveElement(GF(q));
+    zeta := PrimitiveElement(F);
 
     generatorsOfNormalizerInGL := Extraspecial2MinusTypeNormalizerInGL(1, q);
     # Note that we only have the matrices X1, Y1, U1, V1
@@ -517,18 +520,18 @@ Extraspecial2MinusTypeNormalizerInSL := function(q)
 
     # We always need a generating element of Z(SL(d, q))
     generatingScalar := zeta ^ (QuoInt(q - 1, Gcd(q - 1, 2))) *
-    IdentityMat(2, GF(q));
+    IdentityMat(2, F);
 
     # Note that det(X1) = det(Y1) = 1, so we do not need to rescale these to
     # determinant 1. Furthermore, det(V1) = 4 and this is always a square, so
     # we can always rescale V1 to determinant 1.
-    scalarMultiplierV1 := ScalarToNormalizeDeterminant(V1, 2, GF(q));
+    scalarMultiplierV1 := ScalarToNormalizeDeterminant(V1, 2, F);
     V1 := scalarMultiplierV1 * V1;
 
     if IsEvenInt(e) or (p - 1) mod 8 = 0 or (p - 7) mod 8 = 0 then
         # These are the cases where we can find a square root of det(U1) = 2 in
         # GF(q) to rescale U1 to determinant 1.
-        scalarMultiplierU1 := ScalarToNormalizeDeterminant(U1, 2, GF(q));
+        scalarMultiplierU1 := ScalarToNormalizeDeterminant(U1, 2, F);
         U1 := scalarMultiplierU1 * U1;
 
         generators := Concatenation([generatingScalar],

@@ -4,13 +4,14 @@
 # Construction as in Proposition 4.1 of [2]
 BindGlobal("SLStabilizerOfSubspace",
 function(n, q, k)
-    local A5, dirProd, z, T, result;
-    z := PrimitiveElement(GF(q));
+    local F, A5, dirProd, z, T, result;
+    F := GF(q);
+    z := PrimitiveElement(F);
     A5 := DiagonalMat(
         Concatenation([z], List([2..n - 1], i -> z ^ 0), [z ^ -1])
     );
     dirProd := MatDirectProduct(SL(n - k, q), SL(k, q));
-    T := IdentityMat(n, GF(q)) + SquareSingleEntryMatrix(GF(q), n, 1, n - k + 1);
+    T := IdentityMat(n, F) + SquareSingleEntryMatrix(F, n, 1, n - k + 1);
     result := Group(Concatenation([A5], GeneratorsOfGroup(dirProd), [T]));
     # Size according to Table 2.3 of [1]
     SetSize(result,
@@ -340,7 +341,7 @@ function(d, q, k)
         # by sending w_1 to zeta ^ (q - 1) * w_1 and w_2 to zeta ^ (1 - q) * w_2.
         # Note that this choice differs from the original Magma code, but it
         # is much cleaner this way.
-        determinantShiftMatrix := IdentityMat(d, GF(q ^ 2));
+        determinantShiftMatrix := IdentityMat(d, F);
         determinantShiftMatrix[dHalf, dHalf] :=
             beta ^ q * (-alpha ^ q * beta) * zeta ^ (1 - q) 
                 + alpha * zeta ^ (q - 1);

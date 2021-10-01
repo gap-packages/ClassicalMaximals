@@ -1,17 +1,18 @@
 # Construction as in Proposition 11.1 of [2]
 BindGlobal("SymplecticNormalizerInSL",
 function(d, q)
-    local zeta, gcd, A, B, C, D, i, E, result;
+    local F, zeta, gcd, A, B, C, D, i, E, result;
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
 
-    zeta := PrimitiveElement(GF(q));
+    F := GF(q);
+    zeta := PrimitiveElement(F);
     A := Sp(d, q).1;
     B := Sp(d, q).2;
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
-    C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, GF(q));
+    C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);
 
     if IsEvenInt(q) or gcd / 2 = Gcd(q - 1, d / 2) then
         result := Group([A, B, C]);
@@ -38,7 +39,8 @@ end);
 # Construction as in Proposition 11.3 of [2]
 BindGlobal("UnitaryNormalizerInSL",
 function(d, q)
-    local qFactorization, e, p, q0, zeta, C, g, c, SUWithIdentityForm, SUGens, gens, D, zetaId, solution, result;
+    local F, qFactorization, e, p, q0, zeta, C, g, c, SUWithIdentityForm, 
+        SUGens, gens, D, zetaId, solution, result;
     qFactorization := PrimePowersInt(q);
     e := qFactorization[2];
     if IsOddInt(e) then
@@ -46,9 +48,10 @@ function(d, q)
     fi;
     p := qFactorization[1];
 
+    F := GF(q);
     q0 := p^(QuoInt(e, 2));
-    zeta := PrimitiveElement(GF(q));
-    C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, GF(q)); # generates the center of SL(d, q)
+    zeta := PrimitiveElement(F);
+    C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, F); # generates the center of SL(d, q)
     g := Gcd(q - 1, d);
     c := QuoInt(Gcd(q0 + 1, d) * (q - 1), Lcm(q0 + 1, QuoInt(q - 1, g)) * g);
     SUWithIdentityForm := ChangeFixedSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
@@ -57,7 +60,7 @@ function(d, q)
     gens := Concatenation(SUGens, [C]);
     if not IsOne(c) then
         D := (GL(d, q).1) ^ (q0 - 1); # diagonal matrix [zeta^(q0 - 1), 1, ..., 1]
-        zetaId := zeta * IdentityMat(d, GF(q));
+        zetaId := zeta * IdentityMat(d, F);
         for solution in NullspaceIntMat([[q0 - 1], [d], [q - 1]]) do
             Add(gens, D ^ solution[1] * zetaId ^ solution[2]);
         od;
@@ -75,7 +78,7 @@ end);
 # here instead.
 BindGlobal("OrthogonalNormalizerInSL",
 function(epsilon, d, q)
-    local generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
+    local F, generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
     result, i1, DEpsilon, EEpsilon, X, W, i2, k;
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
@@ -83,9 +86,10 @@ function(epsilon, d, q)
     if d <= 2 then
         ErrorNoReturn("This function might not work with <d> <= 2 but <d> = ", d);
     fi;
-
-    zeta := PrimitiveElement(GF(q));
-    generatingScalar := zeta ^ QuoInt(q - 1, Gcd(q - 1, d)) * IdentityMat(d, GF(q));
+    
+    F := GF(q);
+    zeta := PrimitiveElement(F);
+    generatingScalar := zeta ^ QuoInt(q - 1, Gcd(q - 1, d)) * IdentityMat(d, F);
     generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
     # These are A_epsilon, B_epsilon and C in [2]
     generators := Concatenation(generatorsOfOrthogonalGroup.generatorsOfSO,
@@ -99,7 +103,7 @@ function(epsilon, d, q)
         DEpsilon := generatorsOfOrthogonalGroup.D;
         # det(EEpsilon) = (epsilon * omega) ^ (d / 2)
         EEpsilon := generatorsOfOrthogonalGroup.E;
-        X := zeta * IdentityMat(d, GF(q));
+        X := zeta * IdentityMat(d, F);
         k := Gcd(q - 1, d);
 
         # We deal with the cases epsilon = +1 and epsilon = -1 simultaneously

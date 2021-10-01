@@ -9,12 +9,13 @@
 # Construction as in Lemma 6.1 of [2]
 BindGlobal("GammaLDimension1",
 function(s, q)
-    local primitivePolynomial, A, x, xq, B, row, i;
+    local F, primitivePolynomial, A, x, xq, B, row, i;
+    F := GF(q);
     # Let w be a primitive element of GF(q ^ s) over GF(q).
     # A acts on the standard basis in the same way as w acts by multiplication
     # on the GF(q)-basis {1, w, w ^ 2, ...} of GF(q ^ s). (Note that A is a
     # Singer cycle, i.e. has order q ^ s - 1.)
-    primitivePolynomial := MinimalPolynomial(GF(q), Z(q ^ s));
+    primitivePolynomial := MinimalPolynomial(F, Z(q ^ s));
     A := TransposedMat(CompanionMat(primitivePolynomial));
     # B acts on the standard basis in the same way as the Frobenius acts on the
     # basis {1, w, w ^ 2, ...} of GF(q ^ s) over GF(q), where w is as above.
@@ -27,7 +28,7 @@ function(s, q)
                                                            primitivePolynomial));
         row := Concatenation(row,
                              ListWithIdenticalEntries(s - Length(row),
-                                                      Zero(GF(q))));
+                                                      Zero(F)));
         Add(B, row);
     od;
     return rec(A := A, B := B);
@@ -47,13 +48,14 @@ end);
 # Construction as in Proposition 6.3 of [2]
 BindGlobal("GammaLMeetSL",
 function(n, q, s)
-    local As, Bs, Cs, Fs, m, gammaL1, Y, A, B, C, D, DBlock, ZBlock, i,
+    local F, As, Bs, Cs, Fs, m, gammaL1, Y, A, B, C, D, DBlock, ZBlock, i,
     range, result;
     if n mod s <> 0 or not IsPrime(s) then
         ErrorNoReturn("<s> must be prime and a divisor of <n> but <s> = ", s,
                       " and <n> = ", n);
     fi;
-    gammaL1 := GammaLDimension1(s, q);
+    F := GF(q);
+    gammaL1 := CLASSICALMAXIMALS_GammaLDimension1(s, q);
     # Let w be a primitive element of GF(q ^ s) over GF(q). Since As is the
     # companion matrix of the minimal polynomial of w over GF(q), its
     # determinant is (-1) ^ s times the constant term of said minimal
@@ -80,14 +82,14 @@ function(n, q, s)
         return result;
     fi;
 
-    A := IdentityMat(n, GF(q));
+    A := IdentityMat(n, F);
     A{[1..s]}{[1..s]} := As;
     A{[s + 1..2 * s]}{[s + 1..2 * s]} := As ^ -1;
     Y := SL(m, q ^ s).2;
-    B := KroneckerProduct(Y, IdentityMat(s, GF(q)));
-    C := IdentityMat(n, GF(q));
+    B := KroneckerProduct(Y, IdentityMat(s, F));
+    C := IdentityMat(n, F);
     C{[1..s]}{[1..s]} := Cs;
-    D := IdentityMat(n, GF(q));
+    D := IdentityMat(n, F);
     # The determinant of D might be -1. In these cases, adjust D.
     if s = 2 and IsOddInt(m) and IsOddInt(q) then
         ZBlock := As ^ QuoInt(q - 1, 2);

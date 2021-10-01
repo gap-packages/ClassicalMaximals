@@ -1,19 +1,20 @@
 # Construction as in Proposition 7.1 of [2]
 BindGlobal("TensorProductStabilizerInSL",
 function(d1, d2, q)
-    local d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
+    local F, d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
     diagonalGenerator1, diagonalGenerator2, solution, result;
     if not d1 > 1 or not d1 < d2 then
         ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
                       " and <d2> = ", d2);
     fi;
 
+    F := GF(q);
     d := d1 * d2;
     k := Gcd(d, q - 1);
     g := Gcd(d1, d2, q - 1);
     c := QuoInt(Gcd(d1, q - 1) * Gcd(d2, q - 1) * g, k);
-    zeta := PrimitiveElement(GF(q));
-    C := zeta^(QuoInt((q - 1), k)) * IdentityMat(d, GF(q)); # generates the center of SL(d, q)
+    zeta := PrimitiveElement(F);
+    C := zeta^(QuoInt((q - 1), k)) * IdentityMat(d, F); # generates the center of SL(d, q)
     Id1 := One(SL(d1 ,q));
     Id2 := One(SL(d2 ,q));
 
