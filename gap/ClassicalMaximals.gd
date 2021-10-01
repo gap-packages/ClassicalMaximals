@@ -19,3 +19,6 @@ DeclareGlobalFunction("ClassicalMaximalsGeneric");
 DeclareGlobalFunction("MaximalSubgroupClassRepsSpecialLinearGroup");
 
 DeclareGlobalFunction("MaximalSubgroupClassRepsSpecialUnitaryGroup");
+
+DeclareGlobalFunction("GLMinusSL");
+DeclareGlobalFunction("GUMinusSU");

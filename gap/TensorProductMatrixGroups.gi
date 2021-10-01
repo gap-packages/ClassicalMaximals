@@ -27,8 +27,8 @@ function(d1, d2, q)
     Add(gens,KroneckerProduct(Id1, SLd2Gens[2])); # corresponds to V in [HR05]
 
     if not c = 1 then
-        diagonalGenerator1 := GL(d1, q).1; # diagonal matrix [zeta, 1, ..., 1]
-        diagonalGenerator2 := GL(d2, q).1;
+        diagonalGenerator1 := GLMinusSL(d1, q); # diagonal matrix [zeta, 1, ..., 1]
+        diagonalGenerator2 := GLMinusSL(d2, q);
         # Solving the modular congruence d2 * x + d1 * y = 0 mod (q - 1) by
         # solving the matrix equation (d2, d1, q - 1) * (x, y, t) = 0 over the
         # integers.

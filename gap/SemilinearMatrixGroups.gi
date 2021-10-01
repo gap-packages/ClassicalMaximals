@@ -39,6 +39,35 @@ function(s, q)
     return rec(A := A, B := B);
 end);
 
+# Return a block matrix where the block in place (i, j) is A ^ k if and only if
+# the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
+# is zero as well).
+Theta := function(M, A, omega)
+    local result, i, j, exponent, dimensionOfA;
+
+    if not NumberRows(A) = NumberColumns(A) then
+        ErrorNoReturn("<A> must be a square matrix but <A> = ", A);
+    fi;
+
+    dimensionOfA := NumberRows(A);
+    result := NullMat(NumberRows(M) * dimensionOfA, 
+                      NumberColumns(M) * dimensionOfA, 
+                      DefaultFieldOfMatrix(A));
+
+    for i in [1..NumberRows(M)] do
+        for j in [1..NumberColumns(M)] do
+            if not IsZero(M[i, j]) then
+                exponent := LogFFE(M[i, j], omega);
+                result{[(i - 1) * dimensionOfA + 1..i * dimensionOfA]}
+                      {[(j - 1) * dimensionOfA + 1..j * dimensionOfA]} 
+                          := A ^ exponent;
+            fi;
+        od;
+    od;
+
+    return result;
+end;
+
 # Return the subgroup of <M>SL(n, q)</M> induced by the group of semilinear
 # transformations of the vector space <M>F'^m</M> over the field 
 # <C>F' := GF(q ^ s)</C>, where <M>m := n / s</M>. (More precisely, there is
@@ -53,7 +82,7 @@ end);
 # Construction as in Proposition 6.3 of [HR05]
 BindGlobal("GammaLMeetSL",
 function(n, q, s)
-    local F, As, Bs, Cs, Fs, m, gammaL1, Y, A, B, C, D, DBlock, ZBlock, i,
+    local F, As, Bs, Cs, Fs, m, gammaL1, zeta, A, B, C, D, DBlock, ZBlock, i,
     range, result;
     if n mod s <> 0 or not IsPrime(s) then
         ErrorNoReturn("<s> must be prime and a divisor of <n> but <s> = ", s,
@@ -87,11 +116,9 @@ function(n, q, s)
         return result;
     fi;
 
-    A := IdentityMat(n, F);
-    A{[1..s]}{[1..s]} := As;
-    A{[s + 1..2 * s]}{[s + 1..2 * s]} := As ^ -1;
-    Y := SL(m, q ^ s).2;
-    B := KroneckerProduct(Y, IdentityMat(s, F));
+    zeta := PrimitiveElement(GF(q ^ s));
+    A := Theta(SL(m, q ^ s).1, As, zeta);
+    B := Theta(SL(m, q ^ s).2, As, zeta);
     C := IdentityMat(n, F);
     C{[1..s]}{[1..s]} := Cs;
     D := IdentityMat(n, F);
@@ -112,35 +139,6 @@ function(n, q, s)
     SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
     return result;
 end);
-
-# Return a block matrix where the block in place (i, j) is A ^ k if and only if
-# the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
-# is zero as well).
-Theta := function(M, A, omega)
-    local result, i, j, exponent, dimensionOfA;
-
-    if not NumberRows(A) = NumberColumns(A) then
-        ErrorNoReturn("<A> must be a square matrix but <A> = ", A);
-    fi;
-
-    dimensionOfA := NumberRows(A);
-    result := NullMat(NumberRows(M) * dimensionOfA, 
-                      NumberColumns(M) * dimensionOfA, 
-                      DefaultFieldOfMatrix(A));
-
-    for i in [1..NumberRows(M)] do
-        for j in [1..NumberColumns(M)] do
-            if not IsZero(M[i, j]) then
-                exponent := LogFFE(M[i, j], omega);
-                result{[(i - 1) * dimensionOfA + 1..i * dimensionOfA]}
-                      {[(j - 1) * dimensionOfA + 1..j * dimensionOfA]} 
-                          := A ^ exponent;
-            fi;
-        od;
-    od;
-
-    return result;
-end;
 
 # Construction as in Proposition 6.6 of [HR05]
 BindGlobal("GammaLMeetSU",
@@ -186,8 +184,8 @@ function(d, q, s)
     # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
     A := Theta(SU(m, q ^ s).1, As, omega);
     B := Theta(SU(m, q ^ s).2, As, omega);
-    # Note that GU(m, q ^ s).1 ^ (q + 1) has determinant 1.
-    C := Theta(GU(m, q ^ s).1 ^ (q + 1), As, omega);
+    # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
+    C := Theta(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
     # det(D) = 1
     D := IdentityMat(d, GF(q));
     for i in [0..m - 1] do

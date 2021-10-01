@@ -59,7 +59,7 @@ function(d, q)
 
     gens := Concatenation(SUGens, [C]);
     if not IsOne(c) then
-        D := (GL(d, q).1) ^ (q0 - 1); # diagonal matrix [zeta^(q0 - 1), 1, ..., 1]
+        D := GLMinusSL(d, q) ^ (q0 - 1); # diagonal matrix [zeta^(q0 - 1), 1, ..., 1]
         zetaId := zeta * IdentityMat(d, F);
         for solution in NullspaceIntMat([[q0 - 1], [d], [q - 1]]) do
             Add(gens, D ^ solution[1] * zetaId ^ solution[2]);
