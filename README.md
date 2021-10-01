@@ -8,7 +8,7 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 
 ## Contact
 
-To report issues confer to our
+To report issues refer to our
 [issue tracker](https://github.com/ssiccha/ClassicalMaximals/issues)
 or send an email to `siccha@mathematik.uni-kl.de`.
 
