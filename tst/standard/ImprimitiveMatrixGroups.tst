@@ -1,54 +1,35 @@
-gap> n := 2;; q := 3;; t := 2;;
-gap> G := ImprimitivesMeetSL(n, q, t);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
+gap> TestImprimitivesMeetSL := function(args)
+>   local n, q, t, G;
+>   n := args[1];
+>   q := args[2];
+>   t := args[3];
+>   G := ImprimitivesMeetSL(n, q, t);
+>   return IsSubset(SL(n, q), GeneratorsOfGroup(G))
+>          and Size(Group(GeneratorsOfGroup(G))) = Size(G);
+> end;;
+gap> testsImprimitivesMeetSL := [[2, 3, 2], [4, 8, 2], [6, 5, 3]];;
+gap> ForAll(testsImprimitivesMeetSL, TestImprimitivesMeetSL);
 true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+gap> TestSUIsotropicImprimitives := function(args)
+>   local n, q, G;
+>   n := args[1];
+>   q := args[2];
+>   G := SUIsotropicImprimitives(n, q);
+>   return IsSubset(SU(n, q), GeneratorsOfGroup(G))
+>          and Size(Group(GeneratorsOfGroup(G))) = Size(G);
+> end;;
+gap> testsSUIsotropicImprimitives := [[6, 2], [4, 3], [2, 5]];;
+gap> ForAll(testsSUIsotropicImprimitives, TestSUIsotropicImprimitives);
 true
-gap> n := 4;; q := 8;; t := 2;;
-gap> G := ImprimitivesMeetSL(n, q, t);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 6;; q := 5;; t := 3;;
-gap> G := ImprimitivesMeetSL(n, q, t);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 6;; q := 2;;
-gap> G := SUIsotropicImprimitives(n, q);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 4;; q := 3;;
-gap> G := SUIsotropicImprimitives(n, q);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 2;; q := 5;;
-gap> G := SUIsotropicImprimitives(n, q);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 6;; q := 3;; t := 3;;
-gap> G := SUNonDegenerateImprimitives(n, q, t);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 9;; q := 2;; t := 3;;
-gap> G := SUNonDegenerateImprimitives(n, q, t);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 3;; q := 5;; t := 3;;
-gap> G := SUNonDegenerateImprimitives(n, q, t);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+gap> TestSUNonDegenerateImprimitives := function(args)
+>   local n, q, t, G;
+>   n := args[1];
+>   q := args[2];
+>   t := args[3];
+>   G := SUNonDegenerateImprimitives(n, q, t);
+>   return IsSubset(SU(n, q), GeneratorsOfGroup(G))
+>          and Size(Group(GeneratorsOfGroup(G))) = Size(G);
+> end;;
+gap> testsSUNonDegenerateImprimitives := [[6, 3, 3], [9, 2, 3], [3, 5, 3]];;
+gap> ForAll(testsSUNonDegenerateImprimitives, TestSUNonDegenerateImprimitives);
 true
