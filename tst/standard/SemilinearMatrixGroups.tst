@@ -1,44 +1,28 @@
-gap> n := 4;; q := 3;; s := 2;;
-gap> G := GammaLMeetSL(n, q, s);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
+gap> TestGammaLMeetSL := function(args)
+>   local n, q, s, G;
+>   n := args[1];
+>   q := args[2];
+>   s := args[3];
+>   G := GammaLMeetSL(n, q, s);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(SL(n, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q);
+> end;;
+gap> testsGammaLMeetSL := [[4, 3, 2], [2, 2, 2], [6, 5, 3], [3, 4, 3]];;
+gap> ForAll(testsGammaLMeetSL, TestGammaLMeetSL);
 true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 2;; q := 2;; s := 2;;
-gap> G := GammaLMeetSL(n, q, s);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 6;; q := 5;; s := 3;;
-gap> G := GammaLMeetSL(n, q, s);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 3;; q := 4;; s := 3;;
-gap> G := GammaLMeetSL(n, q, s);;
-gap> IsSubset(SL(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 3;; q := 5;; s := 3;;
-gap> G := GammaLMeetSU(n, q, s);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 6;; q := 3;; s := 3;;
-gap> G := GammaLMeetSU(n, q, s);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> n := 3;; q := 7;; s := 3;;
-gap> G := GammaLMeetSU(n, q, s);;
-gap> IsSubset(SU(n, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+gap> TestGammaLMeetSU := function(args)
+>   local n, q, s, G;
+>   n := args[1];
+>   q := args[2];
+>   s := args[3];
+>   G := GammaLMeetSU(n, q, s);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(SU(n, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2);
+> end;;
+gap> testsGammaLMeetSU := [[3, 5, 3], [6, 3, 3], [3, 7, 3]];;
+gap> ForAll(testsGammaLMeetSU, TestGammaLMeetSU);
 true
 gap> TestGammaLDimension1 := function(args)
 >   local q, s, gens;
