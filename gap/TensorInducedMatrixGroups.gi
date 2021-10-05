@@ -1,7 +1,8 @@
 ######################## WORKING OUT FOR ELSE BRANCH BELOW ####################
 #
 #     Let m be even and assume that a generator of the
-#     TensorWreathProduct(SL(m, q), Sym(t)) has determinant not equal to 1.
+#     TensorWreathProduct(SL(m, q), Sym(t)) (or the same with SU(m, q) instead
+#     of SL(m, q), respectively) has determinant not equal to 1.
 #
 #     We generate TensorWreathProduct(SL(m, q), Sym(t)) from 
 #       * (m - 1)-fold Kronecker products of the generators of SL(m, q) with 
@@ -48,6 +49,10 @@
 #     must have q = 1 mod 4: The case t = 2, m = 2 mod 4 and q = 3 mod 4 was
 #     filtered out in an if-statement before and the case q even will always
 #     give determinant 1 as -1 = 1 in characteristic 2.
+#
+#     In the unitary case, the analysis above still holds true; however, now
+#     the case t = 2, m = 2 mod 4 and q = 1 mod 4 was filtered out before so 
+#     t = 2, m = 2 mod 4 and q = 3 mod 4 remains.
 #
 ###############################################################################     
 
@@ -109,10 +114,13 @@ function(m, t, q)
     for i in [3..t] do
         U := KroneckerProduct(U, IdentityMat(m, GF(q)));
     od;
+    # det(U) = 1
     E := D ^ QuoInt(Gcd(q - 1, d), Gcd(q - 1, m ^ (t - 1)));
     for i in [2..t] do
         E := KroneckerProduct(E, IdentityMat(m, GF(q)));
     od;
+    # det(E) = zeta ^ (Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * m ^ (t - 1))
+    #        = zeta ^ (Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * d / m)
 
     # Write mu = zeta ^ k for some k. We want 
     # zeta ^ Gcd(q - 1, d) = det(mu * I_d) = mu ^ d = zeta ^ (kd), thus 
@@ -122,6 +130,10 @@ function(m, t, q)
     # k = 1 / (d / Gcd(q - 1, d)) mod ((q - 1) / Gcd(q - 1, d)).
     mu := zeta ^ (1 / (d / Gcd(q - 1, d)) mod ((q - 1) / Gcd(q - 1, d)));
     S := mu ^ (- d / (Gcd(q - 1, d / m) * m)) * IdentityMat(d, GF(q));
+    # det(S) = det(mu * I_d) ^ (- d / (Gcd(q - 1, d / m) * m))
+    #        = (zeta ^ Gcd(q - 1, d)) ^ (- d / (Gcd(q - 1, d / m) * m))
+    #        = zeta ^ (- Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * d / m)
+    #        = det(E) ^ (-1)
 
     gens := Concatenation(generatorsOfHInSL, [C, U, S * E]);
     result := Group(gens);
@@ -136,3 +148,102 @@ function(m, t, q)
     return result;
 end);
 
+# Construction as in Proposition 10.4 of [2]
+# Note, though, that the structure of G / Z(G) given there is incorrect and
+# that one should rather consult Table 2.10 of [1] on that (which, however, 
+# gives the structure of G, not G / Z(G)!).
+BindGlobal("TensorInducedDecompositionStabilizerInSU",
+function(m, t, q)
+    local F, gensOfSUm, I, D, C, generatorsOfHInSU, gens, i, H, E, U, S, zeta, mu,
+    result, scalingMatrix, d, generator, k;
+    if not t > 1 or not m > 1 then
+        ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
+                      t, " and <m> = ", m);
+    fi;
+
+    F := GF(q ^ 2);
+    d := m ^ t;
+    zeta := PrimitiveElement(F);
+    D := DiagonalMat(Concatenation([zeta], 
+                                   List([1..m - 2], i -> zeta ^ 0),
+                                   [zeta ^ (- q)]));
+    # generates the center of SU(d, q)
+    C := zeta ^ ((q ^ 2 - 1) / Gcd(q + 1, d)) * IdentityMat(d, F);
+
+    if t = 2 and m mod 4 = 2 and q mod 4 = 1 then
+        gensOfSUm := GeneratorsOfGroup(SU(m, q));
+        I := IdentityMat(m, F);
+        # Let Z = Z(SU(d, q)). Then these generate the group 
+        # Z.(SU(m, q) o SU(m, q)) (to see this, realize the first factor of the
+        # central product as all Kronecker Products I * M with M in SU(m, q)
+        # and, similarly, the second factor as the Kronecker Products M * I).
+        generatorsOfHInSU := [KroneckerProduct(gensOfSUm[1], I),
+                              KroneckerProduct(gensOfSUm[2], I),
+                              KroneckerProduct(I, gensOfSUm[1]),
+                              KroneckerProduct(I, gensOfSUm[2])];
+    else
+        H := TensorWreathProduct(SU(m, q), SymmetricGroup(t));
+        generatorsOfHInSU := [];
+        for generator in GeneratorsOfGroup(H) do
+            if DeterminantMat(generator) = zeta ^ 0 then
+                Add(generatorsOfHInSU, generator);
+            else
+                # det = -1 for odd permutation
+                if IsOddInt(m) then
+                    Add(generatorsOfHInSU, -1 * generator);
+                else
+                    # In this case, we have t = 2, m = 2 mod 4 and q = 3 mod 4
+                    # (see working out above).
+
+                    # This has determinant ((det D) ^ ((q + 1) / 4)) ^ m 
+                    # = ((zeta ^ (1 - q)) ^ ((q + 1) / 4)) ^ m, which, using m even,
+                    # becomes (zeta ^ (- (q ^ 2 - 1) / 2)) ^ (m / 2) = (-1) ^ (m / 2)
+                    # and this is -1 due to m = 2 mod 4.
+                    scalingMatrix := KroneckerProduct(D ^ QuoInt(q + 1, 4), 
+                                                      IdentityMat(m, F));
+                    # det(generator * scalingMatrix) = -1 * (-1) = 1
+                    Add(generatorsOfHInSU,(generator * scalingMatrix));
+                fi;
+            fi;
+        od;
+    fi;
+
+    U := KroneckerProduct(D, D ^ (-1));
+    for i in [3..t] do
+        U := KroneckerProduct(U, IdentityMat(m, F));
+    od;
+    # det(U) = 1
+    E := D ^ QuoInt(Gcd(q + 1, d), Gcd(q + 1, m ^ (t - 1)));
+    for i in [2..t] do
+        E := KroneckerProduct(E, IdentityMat(m, F));
+    od;
+    # det(E) = zeta ^ ((1 - q) * Gcd(q + 1, d) / Gcd(q + 1, m ^ (t - 1)) * m ^ (t - 1))
+    #        = zeta ^ ((1 - q) * Gcd(q + 1, d) / Gcd(q + 1, d / m) * d / m))
+
+    # Write mu = zeta ^ ((q - 1) * k) for some k. We want 
+    # det(mu * I_d) = zeta ^ ((q - 1) * Gcd(q + 1, d)), hence
+    # (q - 1) * k * d = (q - 1) * Gcd(q + 1, d) mod (q ^ 2 - 1).
+    # Divide through by (q - 1) and Gcd(q + 1, d) to obtain
+    # k * d / Gcd(q + 1, d) = 1 mod ((q + 1) / Gcd(q + 1, d)). 
+    # Now d / Gcd(q + 1, d) is invertible and we can take 
+    # k = 1 / (d / Gcd(q + 1, d)) mod ((q + 1) / Gcd(q + 1, d)).
+    k := 1 / (d / Gcd(q + 1, d)) mod ((q + 1) / Gcd(q + 1, d));
+    mu := zeta ^ ((q - 1) * k);
+    S := mu ^ (d / (Gcd(q + 1, d / m) * m)) * IdentityMat(d, F);
+    # det(S) = det(mu * I_d) ^ (d / (Gcd(q + 1, d / m) * m))
+    #        = zeta ^ ((q - 1) * Gcd(q + 1, d) / Gcd(q + 1, d / m) * d / m)
+    #        = det(E) ^ (-1)
+
+    gens := Concatenation(generatorsOfHInSU, [C, U, S * E]);
+    gens := List(gens, M -> ImmutableMatrix(F, M));
+    result := Group(gens);
+    # Size according to Table 2.10 of [1]
+    if t = 2 and m mod 4 = 2 and q mod 4 = 1 then
+        SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ 2 * Gcd(q + 1, m) ^ 2);
+    else
+        SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ t 
+                                      * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
+                                      * Factorial(t));
+    fi;
+    return result;
+end);

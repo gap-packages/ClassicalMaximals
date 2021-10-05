@@ -91,12 +91,11 @@ function(d1, d2, q)
         od;
     fi;
 
+    generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
-    result := ChangeFixedSesquilinearForm(result,
-                                          "U",
-                                          AntidiagonalMat(d, F));
+    result := ConjugateToStandardForm(result, "U");
     # Size according to Table 2.7 in [1]
     SetSize(result, Size(SU(d1, q)) * Size(SU(d2, q)) * Gcd(q + 1, d1, d2));
     return result;

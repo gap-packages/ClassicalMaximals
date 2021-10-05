@@ -9,39 +9,6 @@ function(field, nrRows, nrCols, entries)
     return ImmutableMatrix(field, m);
 end);
 
-# Note that <group> must have the attribute InvariantBilinearForm or
-# InvariantSesquilinearForm for this to work.
-InstallGlobalFunction("ChangeFixedSesquilinearForm",
-function(group, type, gramMatrix)
-    local gapForm, newForm, gapToCanonical, canonicalToNew, field;
-    if not type in ["S", "O", "U"] then
-        ErrorNoReturn("<type> must be one of 'S', 'U', 'O', but <type> = ",
-                      type);
-    fi;
-    field := DefaultFieldOfMatrixGroup(group);
-    if type = "S" or type = "O" then
-        gapForm := BilinearFormByMatrix(InvariantBilinearForm(group).matrix, 
-                                        field);
-        newForm := BilinearFormByMatrix(gramMatrix, field);
-    else
-        gapForm := HermitianFormByMatrix(InvariantSesquilinearForm(group).matrix,
-                                         field);
-        newForm := HermitianFormByMatrix(gramMatrix, field);
-    fi;
-    # the following if condition can only ever be fulfilled if <group> is an
-    # orthogonal group; there the case of even dimension is problematic since,
-    # in that case, there are two similarity classes of bilinear forms
-    if not WittIndex(gapForm) = WittIndex(newForm) then
-       ErrorNoReturn("The form preserved by <group> must be similar to the form ", 
-                     "described by the Gram matrix <gramMatrix>.");
-    fi;
-    gapToCanonical := BaseChangeHomomorphism(BaseChangeToCanonical(gapForm), 
-                                             field);
-    canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
-                                             field);
-    return Group(canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
-end);
-
 InstallGlobalFunction("AntidiagonalMat",
 function(entries, field)
     local d, m, i;
@@ -184,6 +151,10 @@ ReflectionMatrix := function(n, q, gramMatrix, v)
     local reflectionMatrix, i, basisVector, reflectBasisVector, beta;
     reflectionMatrix := NullMat(n, n, GF(q));
     beta := BilinearFormByMatrix(gramMatrix);
+    if IsZero(EvaluateForm(beta, v, v)) then
+        ErrorNoReturn("The vector <v> must have non-zero norm with respect to",
+                      " the bilinear form given by <gramMatrix>");
+    fi;
     for i in [1..n] do
         basisVector := List([1..n], j -> 0 * Z(q));
         basisVector[i] := Z(q) ^ 0;

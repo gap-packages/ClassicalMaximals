@@ -198,13 +198,17 @@ C7SubgroupsSpecialLinearGroupGeneric := function(n, q)
     highestPowern := Gcd(factorisationOfnExponents);
     
     divisorsHighestPowern := DivisorsInt(highestPowern);
+
     for t in divisorsHighestPowern{[2..Length(divisorsHighestPowern)]} do
         m := RootInt(n, t);
+        if m < 3 then
+            continue;
+        fi;
         tensorInducedSubgroup := TensorInducedDecompositionStabilizerInSL(m, t, q);
         # Cf. Tables 3.5.A and 3.5.G in [3]
         numberOfConjugates := Gcd(q - 1, m ^ (t - 1));
         if m mod 4 = 2 and t = 2 and q mod 4 = 3 then
-            numberOfConjugates := QuoInt(numberOfConjugates, 2);
+            numberOfConjugates := Gcd(q - 1, m) / 2;
         fi;
         result := Concatenation(result, 
                                 ConjugatesInGeneralGroup(tensorInducedSubgroup,
@@ -455,7 +459,7 @@ C2SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     result := List(divisorListOfn, t -> SUNonDegenerateImprimitives(n, q, t));
     # type GL(n / 2, q ^ 2).2 subgroups
     if IsEvenInt(n) then
-        Add(result, SUIsotropicImprimitives);
+        Add(result, SUIsotropicImprimitives(n, q));
     fi;
 
     return result;
@@ -484,6 +488,74 @@ C4SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
                                                          generatorGUMinusSU,
                                                          numberOfConjugates));
     od;
+
+    return result;
+end;
+
+C3SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    return List(Filtered(PrimeDivisors(n), IsOddInt), 
+                s -> GammaLMeetSU(n, q, s));
+end;
+
+C5SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    local factorisation, p, e, generatorGUMinusSU, primeDivisorsOfe,
+    degreeOfExtension, f, subfieldGroup, numberOfConjugates, result, epsilon;
+    
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
+    generatorGUMinusSU := GU(n, q).1;
+    primeDivisorsOfe := PrimeDivisors(e);
+
+    result := [];
+    # type GU subgroups
+    for degreeOfExtension in primeDivisorsOfe do
+        if IsEvenInt(degreeOfExtension) then
+            continue;
+        fi;
+        f := QuoInt(e, degreeOfExtension);
+        subfieldGroup := SubfieldSL(n, p, e, f);
+        # Cf. Tables 3.5.B and 3.5.G in [3]
+        numberOfConjugates := Gcd(n, QuoInt(q + 1, p ^ f + 1));
+        result := Concatenation(result,
+                                ConjugatesInGeneralGroup(subfieldGroup, 
+                                                         generatorGUMinusSU, 
+                                                         numberOfConjugates));
+    od;
+
+    # type GO subgroups
+    if IsOddInt(q) then
+        if IsOddInt(n) then 
+            subfieldGroup := OrthogonalSubfieldSU(0, n, q);
+            # Cf. Tables 3.5.B and 3.5.G in [3]
+            numberOfConjugates := Gcd(n, q + 1);
+            result := Concatenation(result, 
+                                    ConjugatesInGeneralGroup(subfieldGroup,
+                                                             generatorGUMinusSU,
+                                                             numberOfConjugates));
+        else 
+            for epsilon in [-1, 1] do
+                subfieldGroup := OrthogonalSubfieldSU(epsilon, n, q);
+                # Cf. Tables 3.5.B and 3.5.G in [3]
+                numberOfConjugates := QuoInt(Gcd(q + 1, n), 2);
+                result := Concatenation(result,
+                                        ConjugatesInGeneralGroup(subfieldGroup,
+                                                                 generatorGUMinusSU,
+                                                                 numberOfConjugates));
+            od;
+        fi;
+    fi;
+
+    # type Sp subgroups
+    if IsEvenInt(n) then
+        subfieldGroup := SymplecticSubfieldSU(n, q);
+        # Cf. Tables 3.5.B and 3.5.G in [3]
+        numberOfConjugates := Gcd(QuoInt(n, 2), q + 1);
+        result := Concatenation(result,
+                                ConjugatesInGeneralGroup(subfieldGroup,
+                                                         generatorGUMinusSU,
+                                                         numberOfConjugates));
+    fi;
 
     return result;
 end;
@@ -521,7 +593,7 @@ C6SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
         fi;
     elif m >= 2 then
         # n = 2 ^ m >= 4
-        if e = 1 and (q - 1) mod 4 <> 0 then
+        if e = 1 and 2 * e = OrderMod(p, 4) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(2, m, q);
             # Cf. Tables 3.5.A and 3.5.G in [3]
             numberOfConjugates := Gcd(n, q + 1);
@@ -538,10 +610,46 @@ C6SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     return result;
 end;
 
+C7SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+    local m, t, factorisationOfn, factorisationOfnExponents, highestPowern,
+    result, divisorsHighestPowern, numberOfConjugates, tensorInducedSubgroup, 
+    generatorGUMinusSU;
+
+    result := [];
+    generatorGUMinusSU := GU(n, q).1;
+    factorisationOfn := PrimePowersInt(n);
+    # get all exponents of prime factorisation of n
+    factorisationOfnExponents := factorisationOfn{Filtered([1..Length(factorisationOfn)], 
+                                                  IsEvenInt)};
+    # n can be written as k ^ highestPowern with k an integer and highestPowern
+    # is maximal with this property
+    highestPowern := Gcd(factorisationOfnExponents);
+    
+    divisorsHighestPowern := DivisorsInt(highestPowern);
+    for t in divisorsHighestPowern{[2..Length(divisorsHighestPowern)]} do
+        m := RootInt(n, t);
+        if (m = 3 and q = 2) or m < 3 then
+            continue;
+        fi;
+        tensorInducedSubgroup := TensorInducedDecompositionStabilizerInSU(m, t, q);
+        # Cf. Tables 3.5.B and 3.5.G in [3]
+        numberOfConjugates := Gcd(q + 1, m ^ (t - 1));
+        if m mod 4 = 2 and t = 2 and q mod 4 = 1 then
+            numberOfConjugates := Gcd(q + 1, m) / 2;
+        fi;
+        result := Concatenation(result, 
+                                ConjugatesInGeneralGroup(tensorInducedSubgroup,
+                                                         generatorGUMinusSU, 
+                                                         numberOfConjugates));
+    od;
+
+    return result;
+end;
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
 function(n, q, classes...)
-    local maximalSubgroups;
+    local maximalSubgroups, subfieldGroup, numberOfConjugates,
+    generatorGUMinusSU;
 
     if Length(classes) = 0 then
         classes := [1..9];
@@ -562,6 +670,7 @@ function(n, q, classes...)
         Error("PSU(3, 2) is soluble");
     fi;
 
+    generatorGUMinusSU := GU(n, q).1;
 
     maximalSubgroups := [];
 
@@ -595,13 +704,27 @@ function(n, q, classes...)
                 # q = 2
                 Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 4));
             fi;
-        else 
-            # n = 6 and q = 2
+        elif n = 6 and q = 2 then 
             # Cf. Theorem 6.3.10 in [1]
-            Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 3));
             Add(maximalSubgroups, SUNonDegenerateImprimitives(n, q, 2));
             Add(maximalSubgroups, SUIsotropicImprimitives(n, q));
         fi;
+    fi;
+
+    if 3 in classes then
+        # Class C3 subgroups ######################################################
+        # Cf. Propositions 3.2.3 (n = 3), 3.3.4 (n = 4), 3.4.3 (n = 5), 
+        #                  3.5.5 (n = 6), 3.6.3 (n = 7), 3.7.5 (n = 8), 
+        #                  3.8.3 (n = 9), 3.9.5 (n = 10), 3.10.3 (n = 11), 
+        #                  3.11.7 (n = 12) in [1]
+        if not (n = 6 and q = 2) and not (n = 3 and q = 5)
+                                 and not (n = 3 and q = 3)
+                                 and not (n = 5 and q = 2) then
+            maximalSubgroups := Concatenation(maximalSubgroups, 
+                                              C3SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        fi;
+        # There are no maximal C3 subgroups in the cases excluded above, cf.
+        # Proposition 3.5.5 and Theorem 6.3.10 in [1]
     fi;
 
     if 4 in classes then
@@ -610,6 +733,37 @@ function(n, q, classes...)
         #                  3.11.8 (n = 12) in [1]
         maximalSubgroups := Concatenation(maximalSubgroups, 
                                           C4SubgroupsSpecialUnitaryGroupGeneric(n, q));
+    fi;
+
+    if 5 in classes then
+        # Class C5 subgroups ######################################################
+        # Cf. Propositions 3.2.4 (n = 3), 3.3.5 (n = 4), 3.4.3 (n = 5), 
+        #                  3.5.7 (n = 6), 3.6.3 (n = 7), 3.7.8 (n = 8),
+        #                  3.8.4 (n = 9), 3.9.7 (n = 10), 3.10.3 (n = 11),
+        #                  3.11.9 (n = 12) in [1]
+        if not (n = 3 and q = 3) and not (n = 3 and q = 5) and not (n = 4 and q = 3) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C5SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        # There are no maximal C5 subgroups for n = 3 and q = 3 or n = 3 and q = 5, 
+        # cf. Proposition 3.2.4 and Theorem 6.3.10 in [1]
+        elif n = 4 and q = 3 then
+            # type Sp
+            subfieldGroup := SymplecticSubfieldSU(n, q);
+            # Cf. Tables 3.5.B and 3.5.G in [3]
+            numberOfConjugates := 2;
+            maximalSubgroups := Concatenation(maximalSubgroups, 
+                                              ConjugatesInGeneralGroup(subfieldGroup,
+                                                                       generatorGUMinusSU,
+                                                                       numberOfConjugates));
+            # type GO-
+            subfieldGroup := OrthogonalSubfieldSU(-1, n, q);
+            # Cf. Tables 3.5.B and 3.5.G in [3]
+            numberOfConjugates := 2;
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                              ConjugatesInGeneralGroup(subfieldGroup,
+                                                                       generatorGUMinusSU,
+                                                                       numberOfConjugates));
+        fi;
     fi;
 
     if 6 in classes then
@@ -627,6 +781,13 @@ function(n, q, classes...)
         fi;
     fi;
 
+    if 7 in classes then
+        # Class C7 subgroups ######################################################
+        # Cf. Proposition 3.8.6 (n = 9) in [1]
+        # For all other n, class C7 is empty.
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C7SubgroupsSpecialUnitaryGroupGeneric(n, q));
+    fi;
 
     return maximalSubgroups;
 end);

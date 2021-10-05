@@ -106,6 +106,7 @@ function(d, q, k)
         Add(generators, D);
     fi;
 
+    generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.3 of [1]
     if d - 2 * k > 0 then
@@ -355,6 +356,7 @@ function(d, q, k)
         Add(generators, determinantShiftMatrix);
     fi;
 
+    generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.3 of [1]
     SetSize(result, Size(SU(k, q)) * Size(SU(d - k, q)) * (q + 1));
