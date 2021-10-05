@@ -10,3 +10,4 @@ ReadPackage( "ClassicalMaximals", "gap/ReducibleMatrixGroups.gd");
 ReadPackage( "ClassicalMaximals", "gap/ImprimitiveMatrixGroups.gd");
 ReadPackage( "ClassicalMaximals", "gap/SemilinearMatrixGroups.gd");
 ReadPackage( "ClassicalMaximals", "gap/SubfieldMatrixGroups.gd");
+ReadPackage( "ClassicalMaximals", "gap/Forms.gd");

@@ -12,7 +12,6 @@
 #! written into the matrix row by row.
 DeclareGlobalFunction("MatrixByEntries");
 
-DeclareGlobalFunction("ChangeFixedSesquilinearForm");
 DeclareGlobalFunction("AntidiagonalMat");
 DeclareGlobalFunction("SolveQuadraticCongruence");
 DeclareGlobalFunction("ApplyFunctionToEntries");

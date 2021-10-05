@@ -217,11 +217,12 @@ end;
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialNormalizerInSL := function(r, m, q, type...)
-    local d, listOfUi, listOfVi, V, generatorsOfNormalizerInGL, scalarMultiplierUi, 
+    local F, d, listOfUi, listOfVi, V, generatorsOfNormalizerInGL, scalarMultiplierUi, 
     scalarMultiplierVi, generators, generatingScalar, result, zeta, rootOfq;
 
+    F := GF(q);
     d := r ^ m;
-    zeta := PrimitiveElement(GF(q));
+    zeta := PrimitiveElement(F);
 
     if Length(type) = 0 then
         type := "L";
@@ -238,14 +239,14 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
     # We always need a generating element of Z(SL(d, q))
     if type = "L" then
         generatingScalar := zeta ^ (QuoInt(q - 1, Gcd(q - 1, d))) 
-                                * IdentityMat(d, GF(q));
+                                * IdentityMat(d, F);
     elif type = "U" then
         # remember that the variable q is actually q ^ 2 in the unitary case so
         # this is actually just q
         rootOfq := RootInt(q);
         generatingScalar := (zeta ^ (rootOfq - 1)) ^ QuoInt(rootOfq + 1,
                                                             Gcd(rootOfq + 1, d)) 
-                                * IdentityMat(d, GF(q));
+                                * IdentityMat(d, F);
     fi;
 
     # Note that not only det(Xi) = det(Yi) = 1, but as d is odd we
@@ -280,7 +281,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
     # after rescaling Vi - which is exactly what we needed for Vi to preserve
     # the unitary form given by the identity matrix (see above).
 
-    scalarMultiplierVi := ScalarToNormalizeDeterminant(V, r, GF(q));
+    scalarMultiplierVi := ScalarToNormalizeDeterminant(V, r, F);
     listOfVi := List(listOfVi, Vi -> scalarMultiplierVi * Vi);
 
     if d = 3 then
@@ -305,7 +306,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
             # Ui * I_d * HermitianConjugate(Ui).
 
             scalarMultiplierUi := ScalarToNormalizeDeterminant(listOfUi[1],
-                                                               d, GF(q));
+                                                               d, F);
             listOfUi := List(listOfUi, Ui -> scalarMultiplierUi * Ui);
         else
             # Note that Length(listOfUi) = m = 1 here and use 
@@ -320,6 +321,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
                                 generatorsOfNormalizerInGL.listOfYi,
                                 listOfUi, listOfVi,
                                 generatorsOfNormalizerInGL.listOfWi);
+    generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.9 of [1]
     if d = 3 and ((q - 4) mod 9 = 0 or (q - 7) mod 9 = 0) then
@@ -338,7 +340,7 @@ end;
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 SymplecticTypeNormalizerInSL := function(m, q, type...)
-    local generatorsOfNormalizerInGL, d, listOfUi, listOfVi, listOfWi,
+    local F, generatorsOfNormalizerInGL, d, listOfUi, listOfVi, listOfWi,
     generatingScalar, scalarMultiplierVi, i, scalarMultiplierUiAndWi, p, e, 
     factorization, generators, result, zeta, U1InGL, rootOfq;
     
@@ -353,12 +355,13 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
         type := type[1];
     fi;
 
+    F := GF(q);
     d := 2 ^ m;
     # q = p ^ e with p prime
     factorization := PrimePowersInt(q);
     p := factorization[1];
     e := factorization[2];
-    zeta := PrimitiveElement(GF(q));
+    zeta := PrimitiveElement(F);
 
     generatorsOfNormalizerInGL := SymplecticTypeNormalizerInGL(m, q, type);
     listOfUi := generatorsOfNormalizerInGL.listOfUi;
@@ -368,14 +371,14 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
     # We always need a generating element of Z(SL(d, q))
     if type = "L" then
         generatingScalar := zeta ^ (QuoInt(q - 1, Gcd(q - 1, d))) 
-                                * IdentityMat(d, GF(q));
+                                * IdentityMat(d, F);
     elif type = "U" then
         # remember that the variable q is actually q ^ 2 in the unitary case so
         # this is actually just q
         rootOfq := RootInt(q);
         generatingScalar := (zeta ^ (rootOfq - 1)) ^ QuoInt(rootOfq + 1,
                                                             Gcd(rootOfq + 1, d)) 
-                                * IdentityMat(d, GF(q));
+                                * IdentityMat(d, F);
     fi;
 
     # Note that det(Xi) = det(Yi) = 1, so we do not need to rescale these to
@@ -389,7 +392,7 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
 
         if type = "L" then
             scalarMultiplierVi := ScalarToNormalizeDeterminant(listOfVi[1], 
-                                                               d, GF(q));
+                                                               d, F);
         elif type = "U" then
             # We have to be a bit more sophisticated in case U for the
             # generators to preserve the unitary form given by the identity
@@ -398,7 +401,7 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
                 # This will give the expression Vi * I_d * HermitianConjugate(Vi)
                 # and additional factor of 2 ^ (-1), which is what we need; see
                 # the elif-case below, which is analogous, for more details.
-                scalarMultiplierVi := RootFFE(GF(q), 4 * zeta ^ 0, 4) ^ (-1);
+                scalarMultiplierVi := RootFFE(F, 4 * zeta ^ 0, 4) ^ (-1);
             else
                 # Remember that the variable q is actually q ^ 2 in the unitary
                 # case so p ^ QuoInt(e, 2) is actually q. Since 4 | q + 1 in
@@ -411,8 +414,8 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
                 #                        = 2 * (2 / q) * (-1)
                 #                        = 2
                 # by quadratic reciprocity, which is what we want.
-                i := RootFFE(GF(q), -1 * zeta ^ 0, 2);
-                scalarMultiplierVi := RootFFE(GF(q), 2 * i, 2) ^ (-1);
+                i := RootFFE(F, -1 * zeta ^ 0, 2);
+                scalarMultiplierVi := RootFFE(F, 2 * i, 2) ^ (-1);
             fi;
         fi;
 
@@ -450,9 +453,9 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
         # out wrong if only 4 | q + 1 and not 8 | q + 1.
 
         scalarMultiplierUiAndWi := ScalarToNormalizeDeterminant(listOfUi[1],
-                                                                d, GF(q));
+                                                                d, F);
         scalarMultiplierVi := ScalarToNormalizeDeterminant(listOfVi[1],
-                                                           d, GF(q));
+                                                           d, F);
         listOfUi := List(listOfUi, Ui -> scalarMultiplierUiAndWi * Ui);
         listOfWi := List(listOfWi, Wi -> scalarMultiplierUiAndWi * Wi);
         listOfVi := List(listOfVi, Vi -> scalarMultiplierVi * Vi);
@@ -477,6 +480,7 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
                                 generatorsOfNormalizerInGL.listOfYi,
                                 listOfUi, listOfVi, listOfWi);
 
+    generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
 
     # Size according to Table 2.9 of [1]
@@ -568,7 +572,7 @@ end);
 # Construction as in Proposition 9.5 of [2]
 BindGlobal("ExtraspecialNormalizerInSU",
 function(r, m, q)
-    local result, F;
+    local F, result;
     if not r ^ m > 2 then
         ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case, but",
                       " <r> = ", r, " and <m> = ", m);
@@ -577,6 +581,7 @@ function(r, m, q)
                       "unitary case, but <q> =", q, " and <r> =", r);
     fi;
 
+    F := GF(q ^ 2);
     if IsOddInt(r) then 
         result := OddExtraspecialNormalizerInSL(r, m, q ^ 2, "U");
     else
@@ -587,11 +592,8 @@ function(r, m, q)
     # (see the constructor functions above for more info).
     # We conjugate the group so that it preserves the standard GAP form
     # Antidiag(1, ..., 1). 
-    F := GF(q ^ 2);
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, F)));
-    result := ChangeFixedSesquilinearForm(result,
-                                          "U",
-                                          AntidiagonalMat(r ^ m, F));
+    result := ConjugateToStandardForm(result, "U");
 
     return result;
 end);
