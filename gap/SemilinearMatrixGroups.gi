@@ -42,7 +42,8 @@ end);
 # Return a block matrix where the block in place (i, j) is A ^ k if and only if
 # the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
 # is zero as well).
-Theta := function(M, A, omega)
+# This is the function Theta(...) from [HR05].
+MapGammaLToGL := function(M, A, omega)
     local result, i, j, exponent, dimensionOfA;
 
     if not NumberRows(A) = NumberColumns(A) then
@@ -117,8 +118,8 @@ function(n, q, s)
     fi;
 
     zeta := PrimitiveElement(GF(q ^ s));
-    A := Theta(SL(m, q ^ s).1, As, zeta);
-    B := Theta(SL(m, q ^ s).2, As, zeta);
+    A := MapGammaLToGL(SL(m, q ^ s).1, As, zeta);
+    B := MapGammaLToGL(SL(m, q ^ s).2, As, zeta);
     C := IdentityMat(n, F);
     C{[1..s]}{[1..s]} := Cs;
     D := IdentityMat(n, F);
@@ -182,10 +183,10 @@ function(d, q, s)
 
     omega := PrimitiveElement(GF(q ^ (2 * s)));
     # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
-    A := Theta(SU(m, q ^ s).1, As, omega);
-    B := Theta(SU(m, q ^ s).2, As, omega);
+    A := MapGammaLToGL(SU(m, q ^ s).1, As, omega);
+    B := MapGammaLToGL(SU(m, q ^ s).2, As, omega);
     # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
-    C := Theta(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
+    C := MapGammaLToGL(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
     # det(D) = 1
     D := IdentityMat(d, GF(q));
     for i in [0..m - 1] do
