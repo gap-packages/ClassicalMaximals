@@ -24,7 +24,7 @@ gap> TestTensorProductStabilizerInSU := function(args)
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsTensorProductStabilizerInSU := [[2, 3, 2], [2, 3, 3], [2, 3, 4], [2, 4, 3]];;
 #@else
-gap> testsTensorProductStabilizerInSU := [[2, 3, 2], [2, 3, 3], [2, 3, 4]];;
+gap> testsTensorProductStabilizerInSU := [[2, 3, 2], [2, 3, 3]];;
 #@fi
 gap> ForAll(testsTensorProductStabilizerInSU, TestTensorProductStabilizerInSU);
 true
