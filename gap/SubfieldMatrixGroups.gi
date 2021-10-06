@@ -9,7 +9,7 @@
 BindGlobal("SubfieldSL", 
 function(n, p, e, f)
     local F, AandB, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
-        result;
+        size;
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) then
         ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be a prime but <e> = ", 
                       e, " and <f> = ", f);
@@ -22,12 +22,11 @@ function(n, p, e, f)
     c := QuoInt((k * Lcm(p ^ f - 1, QuoInt((p ^ e - 1), k))), (p ^ e - 1));
     C := zeta ^ (QuoInt(p ^ e - 1, k)) * IdentityMat(n, F);
 
+    # Size according to Table 2.8 of [BHR13]
+    size := SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n);
+
     if c = Gcd(p ^ f - 1, n) then
-        result := Group(Concatenation(AandB, [C]));
-        # Size according to Table 2.8 of [BHR13]
-        SetSize(result, SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f -
-        1), n));
-        return result;
+        return MatrixGroupWithSize(Concatenation(AandB, [C]), F, size);
     fi;
 
     omega := zeta ^ QuoInt(p ^ e - 1, p ^ f - 1);
@@ -39,19 +38,14 @@ function(n, p, e, f)
     z := c * QuoInt(p ^ e - 1, p ^ f - 1);
     lambda := SolutionMat(matrixForCongruence, [z])[1];
 
-    X := zeta ^ (-lambda) * IdentityMat(n, F);
-    result := Group(Concatenation(AandB, [C, X * D]));
-    # Size according to Table 2.8 of [BHR13]
-    SetSize(result,
-            SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
-    return result;
+    return MatrixGroupWithSize(Concatenation(AandB, [C, X * D]), F, size);
 end);
 
 # Construction as in Proposition 8.3 of [HR05]
 BindGlobal("UnitarySubfieldSU",
 function(d, p, e, f)
     local F, AandB, C, D, c, k, q, matrixForCongruence, lambda, zeta, omega, z, X,
-        result, generators;
+        size;
 
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) or not IsOddInt(QuoInt(e, f)) then
         ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be",
@@ -67,13 +61,11 @@ function(d, p, e, f)
     # generates the center of SU(d, q)
     C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, F);
 
+    # Size according to Table 2.8 of [BHR13]
+    size := SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d);
+
     if c = Gcd(p ^ f + 1, d) then
-        generators := Concatenation(AandB, [C]);
-        # generators := List(generators, M -> ImmutableMatrix(F, M));
-        result := Group(generators);
-        # Size according to Table 2.8 of [BHR13]
-        SetSize(result, SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
-        return result;
+        return MatrixGroupWithSize(Concatenation(AandB, [C]), F, size);
     fi;
 
     # a primitive element of GF(p ^ (2 * f))
@@ -90,19 +82,13 @@ function(d, p, e, f)
     # det(X) = 1 by construction of lambda
     X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, F);
 
-    generators := Concatenation(AandB, [C, X * D]);
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
-    # Size according to Table 2.8 of [BHR13]
-    SetSize(result, SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
-
-    return result;
+    return MatrixGroupWithSize(Concatenation(AandB, [C, X * D]), F, size);
 end);
 
 # Construction as in Proposition 8.5 of [HR05]
 BindGlobal("SymplecticSubfieldSU",
 function(d, q)
-    local F, generators, zeta, k, C, c, result, D, form;
+    local F, generators, zeta, k, C, c, result, D, form, size;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
@@ -130,8 +116,9 @@ function(d, q)
         Add(generators, D);
     fi;
     
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
+    # Size according to Table 2.8 of [BHR13]
+    size := SizeSp(d, q) * Gcd(q + 1, d / 2);
+    result := MatrixGroupWithSize(generators, F, size);
     if IsOddInt(q) then
         # The result preserves the unitary form given by 
         # - zeta ^ ((q + 1) / 2) * Antidiag(1, ..., 1, -1, ..., -1);
@@ -141,9 +128,7 @@ function(d, q)
                                      rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form));
         result := ConjugateToStandardForm(result, "U");
     fi;
-    # Size according to Table 2.8 of [BHR13]
-    SetSize(result, SizeSp(d, q) * Gcd(q + 1, d / 2));
-
+    
     return result;
 end);
 
@@ -151,7 +136,7 @@ end);
 BindGlobal("OrthogonalSubfieldSU",
 function(epsilon, d, q)
     local F, zeta, k, C, generators, SOChangedForm, result,
-    generatorsOfOrthogonalGroup, D, E, i, W, n, form;
+    generatorsOfOrthogonalGroup, D, E, i, W, n, form, size;
 
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
@@ -173,13 +158,15 @@ function(epsilon, d, q)
     C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, F);
     generators := [C];
 
+    # Size according to Table 2.8 of [BHR13]
+    size := SizeSO(epsilon, d, q) * Gcd(q + 1, d);
+
     if IsOddInt(d) then
         SOChangedForm := ChangeFixedSesquilinearForm(SO(d, q),
                                                      "O",
                                                      AntidiagonalMat(d, F));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
-        generators := List(generators, M -> ImmutableMatrix(F, M));
-        result := Group(generators);
+        result := MatrixGroupWithSize(generators, F, size);
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
         generators := Concatenation(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
@@ -239,8 +226,7 @@ function(epsilon, d, q)
             # the standard orthogonal form in this case is Antidiag(1, ..., 1),
             # i.e. has the same form matrix as the unitary form we want, so we
             # do not need to conjugate the result
-            generators := List(generators, M -> ImmutableMatrix(F, M));
-            result := Group(generators);
+            result := MatrixGroupWithSize(generators, F, size);
 
         elif epsilon = -1 then
 
@@ -268,8 +254,7 @@ function(epsilon, d, q)
             fi;
             Add(generators, W);
 
-            generators := List(generators, M -> ImmutableMatrix(F, M));
-            result := Group(generators);
+            result := MatrixGroupWithSize(generators, F, size);
 
             # We still have to change the preserved unitary form to the
             # standard GAP unitary form Antidiag(1, ..., 1)
@@ -289,9 +274,6 @@ function(epsilon, d, q)
             fi;
         fi;
     fi;
-
-    # Size according to Table 2.8 of [BHR13]
-    SetSize(result, SizeSO(epsilon, d, q) * Gcd(q + 1, d));
-
+ 
     return result;
 end);
