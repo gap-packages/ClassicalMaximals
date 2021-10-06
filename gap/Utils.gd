@@ -20,6 +20,8 @@ DeclareGlobalFunction("SolveFrobeniusEquation");
 DeclareGlobalFunction("SquareSingleEntryMatrix");
 DeclareGlobalFunction("QuoCeil");
 DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
+DeclareGlobalFunction("MatrixGroup");
+DeclareGlobalFunction("MatrixGroupWithSize");
 
 DeclareGlobalFunction("SizeSp");
 DeclareGlobalFunction("SizePSp");
