@@ -8,14 +8,13 @@ function(d, q)
 
     F := GF(q);
     zeta := PrimitiveElement(F);
-    A := Sp(d, q).1;
-    B := Sp(d, q).2;
+    AandB := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
     C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);
 
     if IsEvenInt(q) or gcd / 2 = Gcd(q - 1, d / 2) then
-        result := Group([A, B, C]);
+        result := Group(Concatenation(AandB, [C]));
         # Size according to Table in [BHR13]
         SetSize(result, gcd * Size(PSp(d, q)));
     else
@@ -24,7 +23,7 @@ function(d, q)
         # solving the congruence d * i = d / 2 mod q - 1 for i
         i := (d / 2) / gcd * (d / gcd) ^ (-1) mod ((q - 1) / gcd);
         E := zeta ^ (-i) * D;
-        result := Group([A, B, C, E]);
+        result := Group(Concatenation(AandB, [C, E]));
         # Size according to Table 2.11 in [BHR13]
         # Note that |PCSp(d, q)| = |CSp(d, q)| / (q - 1) 
         #                        = |Sp(d, q)| * |CSp(d, q) : Sp(d, q)| / (q - 1) 

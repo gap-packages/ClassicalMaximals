@@ -82,7 +82,7 @@ end;
 # Construction as in Proposition 6.3 of [HR05]
 BindGlobal("GammaLMeetSL",
 function(n, q, s)
-    local F, As, Bs, Cs, Fs, m, gammaL1, zeta, A, B, C, D, DBlock, ZBlock, i,
+    local F, As, Bs, Cs, Fs, m, gammaL1, zeta, AandB, C, D, DBlock, ZBlock, i,
     range, result;
     if n mod s <> 0 or not IsPrime(s) then
         ErrorNoReturn("<s> must be prime and a divisor of <n> but <s> = ", s,
@@ -117,8 +117,7 @@ function(n, q, s)
     fi;
 
     zeta := PrimitiveElement(GF(q ^ s));
-    A := Theta(SL(m, q ^ s).1, As, zeta);
-    B := Theta(SL(m, q ^ s).2, As, zeta);
+    AandB := List(GeneratorsOfGroup(SL(m, q ^ s)), g -> Theta(g, As, zeta));
     C := IdentityMat(n, F);
     C{[1..s]}{[1..s]} := Cs;
     D := IdentityMat(n, F);
@@ -134,7 +133,7 @@ function(n, q, s)
         D{range}{range} := DBlock;
     od;
 
-    result := Group(A, B, C, D);
+    result := Group(Concatenation(AandB, [C, D]));
     # Size according to Proposition 6.3 of [HR05]
     SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
     return result;
@@ -182,8 +181,7 @@ function(d, q, s)
 
     omega := PrimitiveElement(GF(q ^ (2 * s)));
     # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
-    A := Theta(SU(m, q ^ s).1, As, omega);
-    B := Theta(SU(m, q ^ s).2, As, omega);
+    AandB := List(GeneratorsOfGroup(SU(m, q ^ s)), g -> Theta(g, As, omega));
     # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
     C := Theta(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
     # det(D) = 1
@@ -193,7 +191,7 @@ function(d, q, s)
         D{range}{range} := Bs;
     od;
 
-    generators := [A, B, C, D];
+    generators := Concatenation(AandB, [C, D]);
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.6 of [BHR13]

@@ -8,7 +8,7 @@
 # Construction as in Proposition 8.1 of [HR05] 
 BindGlobal("SubfieldSL", 
 function(n, p, e, f)
-    local F, A, B, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
+    local F, AandB, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
         result;
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) then
         ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be a prime but <e> = ", 
@@ -16,15 +16,14 @@ function(n, p, e, f)
     fi;
 
     F := GF(p ^ e);
-    A := SL(n, p ^ f).1;
-    B := SL(n, p ^ f).2;
+    AandB := ShallowCopy(GeneratorsOfGroup(SL(n, p ^ f)));
     zeta := PrimitiveElement(F);
     k := Gcd(p ^ e - 1, n);
     c := QuoInt((k * Lcm(p ^ f - 1, QuoInt((p ^ e - 1), k))), (p ^ e - 1));
     C := zeta ^ (QuoInt(p ^ e - 1, k)) * IdentityMat(n, F);
 
     if c = Gcd(p ^ f - 1, n) then
-        result := Group(A, B, C);
+        result := Group(Concatenation(AandB, [C]));
         # Size according to Table 2.8 of [BHR13]
         SetSize(result, Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f -
         1), n));
@@ -41,7 +40,7 @@ function(n, p, e, f)
     lambda := SolutionMat(matrixForCongruence, [z])[1];
 
     X := zeta ^ (-lambda) * IdentityMat(n, F);
-    result := Group(A, B, C, X * D);
+    result := Group(Concatenation(AandB, [C, X * D]));
     # Size according to Table 2.8 of [BHR13]
     SetSize(result,
             Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
@@ -61,8 +60,7 @@ function(d, p, e, f)
 
     q := p ^ e;
     F := GF(q ^ 2);
-    A := SU(d, p ^ f).1;
-    B := SU(d, p ^ f).2;
+    AandB := ShallowCopy(GeneratorsOfGroup(SU(d, p ^ f)));
     zeta := PrimitiveElement(F);
     k := Gcd(q + 1, d);
     c := QuoInt(k * Lcm(p ^ f + 1, QuoInt(q + 1, k)), q + 1);
@@ -70,7 +68,7 @@ function(d, p, e, f)
     C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, F);
 
     if c = Gcd(p ^ f + 1, d) then
-        generators := [A, B, C];
+        generators := Concatenation(AandB, [C]);
         # generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
         # Size according to Table 2.8 of [BHR13]
@@ -92,7 +90,7 @@ function(d, p, e, f)
     # det(X) = 1 by construction of lambda
     X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, F);
 
-    generators := [A, B, C, X * D];
+    generators := Concatenation(AandB, [C, X * D]);
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.8 of [BHR13]
