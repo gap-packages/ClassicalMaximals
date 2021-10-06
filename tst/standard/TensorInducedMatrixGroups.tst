@@ -1,50 +1,26 @@
-gap> m := 3;; t := 2;; q := 5;;
-gap> G := TensorInducedDecompositionStabilizerInSL(m, t, q);;
-gap> IsSubset(SL(m ^ t, q), GeneratorsOfGroup(G));
+gap> TestTensorInducedDecompositionStabilizerInSL := function(args)
+>   local m, t, q, G;
+>   m := args[1];
+>   t := args[2];
+>   q := args[3];
+>   G := TensorInducedDecompositionStabilizerInSL(m, t, q);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(SL(m ^ t, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q);
+> end;;
+gap> testsTensorInducedDecompositionStabilizerInSL := [[3, 2, 5], [2, 2, 7], [2, 2, 5], [3, 3, 3]];;
+gap> ForAll(testsTensorInducedDecompositionStabilizerInSL, TestTensorInducedDecompositionStabilizerInSL);
 true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 2;; t := 2;; q := 7;;
-gap> G := TensorInducedDecompositionStabilizerInSL(m, t, q);;
-gap> IsSubset(SL(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 2;; t := 2;; q := 5;;
-gap> G := TensorInducedDecompositionStabilizerInSL(m, t, q);;
-gap> IsSubset(SL(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 3;; t := 3;; q := 3;;
-gap> G := TensorInducedDecompositionStabilizerInSL(m, t, q);;
-gap> IsSubset(SL(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 2;; t := 2;; q := 7;;
-gap> G := TensorInducedDecompositionStabilizerInSU(m, t, q);;
-gap> IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 2;; t := 2;; q := 5;;
-gap> G := TensorInducedDecompositionStabilizerInSU(m, t, q);;
-gap> IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 3;; t := 2;; q := 3;;
-gap> G := TensorInducedDecompositionStabilizerInSU(m, t, q);;
-gap> IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> m := 3;; t := 3;; q := 3;;
-gap> G := TensorInducedDecompositionStabilizerInSU(m, t, q);;
-gap> IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G));
-true
-gap> m := 3;; t := 2;; q := 5;;
-gap> G := TensorInducedDecompositionStabilizerInSU(m, t, q);;
-gap> IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G));
+gap> TestTensorInducedDecompositionStabilizerInSU := function(args)
+>   local m, t, q, G;
+>   m := args[1];
+>   t := args[2];
+>   q := args[3];
+>   G := TensorInducedDecompositionStabilizerInSU(m, t, q);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2);
+> end;;
+gap> testsTensorInducedDecompositionStabilizerInSU := [[2, 2, 7], [2, 2, 5], [3, 2, 3], [3, 3, 3], [3, 2, 5]];;
+gap> ForAll(testsTensorInducedDecompositionStabilizerInSU, TestTensorInducedDecompositionStabilizerInSU);
 true

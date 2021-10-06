@@ -27,7 +27,7 @@ gap> testsUnitarySubfieldSU := [[2, 3, 6, 2], [3, 7, 3, 1], [3, 5, 3, 1]];;
 gap> ForAll(testsUnitarySubfieldSU, TestUnitarySubfieldSU);
 true
 gap> TestSymplecticSubfieldSU := function(args)
->   local n, q;
+>   local n, q, G;
 >   n := args[1];
 >   q := args[2];
 >   G := SymplecticSubfieldSU(n, q);
@@ -51,7 +51,7 @@ gap> TestOrthogonalSubfieldSU := function(args)
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [1, 2, 5], [1, 4, 3], [-1, 2, 3], [-1, 2, 5], [-1, 4, 3]];;
 #@else
-gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [-1, 2, 3], [-1, 2, 5], [-1, 4, 3]];;
+gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [-1, 2, 3], [-1, 4, 3]];;
 #@fi
 gap> ForAll(testsOrthogonalSubfieldSU, TestOrthogonalSubfieldSU);
 true
