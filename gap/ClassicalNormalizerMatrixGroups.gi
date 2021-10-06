@@ -1,7 +1,7 @@
 # Construction as in Proposition 11.1 of [HR05]
 BindGlobal("SymplecticNormalizerInSL",
 function(d, q)
-    local F, zeta, gcd, A, B, C, D, i, E, result;
+    local F, zeta, gcd, AandB, C, D, i, E, result;
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;

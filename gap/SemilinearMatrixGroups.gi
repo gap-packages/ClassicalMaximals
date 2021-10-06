@@ -143,7 +143,7 @@ end);
 # Construction as in Proposition 6.6 of [HR05]
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
-    local F, As, Bs, Cs, Fs, m, gammaL1, Y, A, B, C, D, i,
+    local F, As, Bs, Cs, Fs, m, gammaL1, Y, AandB, C, D, i,
     range, result, AsInGU, omega, generators;
     if d mod s <> 0 or not IsPrime(s) or not IsOddInt(s) then
         ErrorNoReturn("<s> must be an odd prime and a divisor of <d> but <s> = ", s,

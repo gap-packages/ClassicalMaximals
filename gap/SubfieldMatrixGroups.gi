@@ -50,7 +50,7 @@ end);
 # Construction as in Proposition 8.3 of [HR05]
 BindGlobal("UnitarySubfieldSU",
 function(d, p, e, f)
-    local F, A, B, C, D, c, k, q, matrixForCongruence, lambda, zeta, omega, z, X,
+    local F, AandB, C, D, c, k, q, matrixForCongruence, lambda, zeta, omega, z, X,
         result, generators;
 
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) or not IsOddInt(QuoInt(e, f)) then

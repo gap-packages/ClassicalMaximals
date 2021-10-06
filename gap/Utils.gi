@@ -365,7 +365,7 @@ end);
 
 InstallGlobalFunction("MatrixGroup",
 function(gens, F)
-    return Group(List(gens, g -> ImmutableMatrix(F, g));
+    return Group(List(gens, g -> ImmutableMatrix(F, g)));
 end);
 
 InstallGlobalFunction("MatrixGroupWithSize",
