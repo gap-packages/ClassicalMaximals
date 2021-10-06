@@ -51,10 +51,10 @@ Persons := [
 
 SourceRepository := rec(
     Type := "git",
-    URL := "https://github.com/ssiccha/ClassicalMaximals",
+    URL := "https://github.com/gap-packages/ClassicalMaximals",
 ),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
-PackageWWWHome  := "https://ssiccha.github.io/ClassicalMaximals/",
+PackageWWWHome  := "https://gap-packages.github.io/ClassicalMaximals/",
 PackageInfoURL  := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
 README_URL      := Concatenation( ~.PackageWWWHome, "README.md" ),
 ArchiveURL      := Concatenation( ~.SourceRepository.URL,
