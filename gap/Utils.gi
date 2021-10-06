@@ -371,7 +371,7 @@ end);
 InstallGlobalFunction("MatrixGroupWithSize",
 function(F, gens, size)
     local result;
-    result := MatrixGroup(gens, F);
+    result := MatrixGroup(F, gens);
     SetSize(result, size);
     return result;
 end);
