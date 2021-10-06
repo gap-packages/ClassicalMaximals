@@ -360,7 +360,7 @@ function(d, q, k)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.3 of [BHR13]
-    SetSize(result, Size(SU(k, q)) * Size(SU(d - k, q)) * (q + 1));
+    SetSize(result, SizeSU(k, q) * SizeSU(d - k, q) * (q + 1));
 
     return result;
 end);

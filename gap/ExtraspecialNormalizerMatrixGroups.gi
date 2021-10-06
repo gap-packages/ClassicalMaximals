@@ -333,7 +333,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
                 Gcd(q - 1, d) * r ^ (2 * m) * SizeSp(2 * m, r));
     elif type = "U" then
         SetSize(result,
-                Gcd(rootOfq + 1, d) * r ^ (2 * m) * Size(Sp(2 * m, r)));
+                Gcd(rootOfq + 1, d) * r ^ (2 * m) * SizeSp(2 * m, r));
     fi;
     return result;
 end;
@@ -494,7 +494,7 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
                 Gcd(q - 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2));
     elif type = "U" then
         SetSize(result,
-                Gcd(rootOfq + 1, d) * 2 ^ (2 * m) * Size(Sp(2 * m, 2)));
+                Gcd(rootOfq + 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2));
     fi;
     return result;
 end;

@@ -175,7 +175,7 @@ function(d, q, s)
         generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
         # Size according to Table 2.6 of [BHR13]
-        SetSize(result, Size(SU(d / s, q ^ s)) * (q ^ s + 1) / (q + 1) * s);
+        SetSize(result, SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s);
         # conjugate the result so that it preserves the standard unitary form
         return ConjugateToStandardForm(result, "U");
     fi;
@@ -197,7 +197,7 @@ function(d, q, s)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.6 of [BHR13]
-    SetSize(result, Size(SU(d / s, q ^ s)) * (q ^ s + 1) / (q + 1) * s);
+    SetSize(result, SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s);
     # conjugate the result so that it preserves the standard unitary form 
     return ConjugateToStandardForm(result, "U");
 end);

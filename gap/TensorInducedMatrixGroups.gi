@@ -240,9 +240,9 @@ function(m, t, q)
     result := Group(gens);
     # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 1 then
-        SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ 2 * Gcd(q + 1, m) ^ 2);
+        SetSize(result, Gcd(q + 1, m) * SizePSU(m, q) ^ 2 * Gcd(q + 1, m) ^ 2);
     else
-        SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ t 
+        SetSize(result, Gcd(q + 1, m) * SizePSU(m, q) ^ t 
                                       * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
                                       * Factorial(t));
     fi;

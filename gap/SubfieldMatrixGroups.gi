@@ -74,7 +74,7 @@ function(d, p, e, f)
         # generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
         # Size according to Table 2.8 of [BHR13]
-        SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
+        SetSize(result, SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
         return result;
     fi;
 
@@ -96,7 +96,7 @@ function(d, p, e, f)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.8 of [BHR13]
-    SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
+    SetSize(result, SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
 
     return result;
 end);
@@ -144,7 +144,7 @@ function(d, q)
         result := ConjugateToStandardForm(result, "U");
     fi;
     # Size according to Table 2.8 of [BHR13]
-    SetSize(result, Size(Sp(d, q)) * Gcd(q + 1, d / 2));
+    SetSize(result, SizeSp(d, q) * Gcd(q + 1, d / 2));
 
     return result;
 end);
@@ -293,7 +293,7 @@ function(epsilon, d, q)
     fi;
 
     # Size according to Table 2.8 of [BHR13]
-    SetSize(result, Size(SO(epsilon, d, q)) * Gcd(q + 1, d));
+    SetSize(result, SizeSO(epsilon, d, q) * Gcd(q + 1, d));
 
     return result;
 end);

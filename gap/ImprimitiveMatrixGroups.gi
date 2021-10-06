@@ -110,7 +110,7 @@ function(d, q, t)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
     result := ConjugateToStandardForm(result, "U");
     # Size according to Table 2.5 of [BHR13]
-    SetSize(result, Size(SU(m, q)) ^ t * (q + 1) ^ (t - 1) * Factorial(t));
+    SetSize(result, SizeSU(m, q) ^ t * (q + 1) ^ (t - 1) * Factorial(t));
     
     return result;
 end);
@@ -171,7 +171,7 @@ function(d, q)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.5 of [BHR13]
-    SetSize(result, Size(SL(d / 2, q ^ 2)) * (q - 1) * 2);
+    SetSize(result, SizeSL(d / 2, q ^ 2) * (q - 1) * 2);
 
     return result;
 end);
