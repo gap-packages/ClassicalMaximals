@@ -151,7 +151,7 @@ function(m, n)
 end);
 
 
-# Compute the size of Sp(n, q) according to Theorem 1.6.22 in [1]
+# Compute the size of Sp(n, q) according to Theorem 1.6.22 in [BHR13]
 InstallGlobalFunction("SizeSp",
 function(n, q)
     local m, result, powerOfq, i;
@@ -169,14 +169,14 @@ function(n, q)
 end);
 
 
-# Compute the size of PSp(n, q) according to Table 1.3 in [1],
+# Compute the size of PSp(n, q) according to Table 1.3 in [BHR13],
 InstallGlobalFunction("SizePSp",
 function(n, q)
     return QuoInt(SizeSp(n, q), Gcd(2, q - 1));
 end);
 
 
-# Compute the size of SU(n, q) according to Theorem 1.6.22 in [1]
+# Compute the size of SU(n, q) according to Theorem 1.6.22 in [BHR13]
 # using the formula for GU(n, q) but starting with i = 2
 # because Table 1.3 gives [GU(n, q):SU(n, q)] = q + 1.
 InstallGlobalFunction("SizeSU",
@@ -193,15 +193,23 @@ function(n, q)
     return result;
 end);
 
+# Compute the size of PSU(n, q) according to Table 1.3 in [BHR13]
+# Namely, we have | G / Z(G) : S / Z(S) | = | G : S | * |Z(S)| / |Z(G)| so due
+# to | G : S | = q + 1, |Z(G)| = q + 1 and | G / Z(G) : S / Z(S) | = (q + 1, n), 
+# which are given in said table, this gives |Z(S)| = (q + 1, n). 
+InstallGlobalFunction("SizePSU",
+function(n, q)
+    return SizeSU(n, q) / Gcd(n, q + 1);
+end);
 
-# Compute the size of GU(n, q) according to Table 1.3 in [1]
+# Compute the size of GU(n, q) according to Table 1.3 in [BHR13]
 InstallGlobalFunction("SizeGU",
 function(n, q)
     return (q + 1) * SizeSU(n, q);
 end);
 
 
-# Compute the size of GO(epsilon, n, q) according to Theorem 1.6.22 in [1]
+# Compute the size of GO(epsilon, n, q) according to Theorem 1.6.22 in [BHR13]
 InstallGlobalFunction("SizeGO",
 function(epsilon, n, q)
     local m, result, powerOfq, i;
@@ -241,7 +249,7 @@ function(epsilon, n, q)
 end);
 
 
-# Compute the size of SO(epsilon, n, q) according to Table 1.3 in [1]
+# Compute the size of SO(epsilon, n, q) according to Table 1.3 in [BHR13]
 InstallGlobalFunction("SizeSO",
 function(epsilon, n, q)
     return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
