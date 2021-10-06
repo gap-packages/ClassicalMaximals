@@ -82,9 +82,26 @@ gap> TestGeneratorsOfOrthogonalGroup := function(args)
 gap> testsGeneratorsOfOrthogonalGroup := [[-1, 6, 7], [-1, 4, 9], [1, 4, 7], [0, 5, 5]];;
 gap> ForAll(testsGeneratorsOfOrthogonalGroup, TestGeneratorsOfOrthogonalGroup);
 true
+gap> TestMatrixGroupCreatingFunctions := function(args)
+>   local epsilon, n, q, F, gens, G, GWithSize;
+>   epsilon := args[1];
+>   n := args[2];
+>   q := args[3];
+>   F := GF(q);
+>   gens := GeneratorsOfOrthogonalGroup(epsilon, n, q);
+>   G := MatrixGroup(gens.generatorsOfSO, F);
+>   GWithSize := MatrixGroupWithSize(gens.generatorsOfSO, F, SizeSO(epsilon, n, q));
+>   return DefaultFieldOfMatrixGroup(G) = F 
+>          and DefaultFieldOfMatrixGroup(GWithSize) = F
+>          and HasSize(GWithSize) = true;
+> end;;
+gap> testsMatrixGroupCreatingFunctions := [[-1, 6, 7], [-1, 4, 9], [1, 4, 7], [0, 5, 5]];;
+gap> ForAll(testsMatrixGroupCreatingFunctions, TestMatrixGroupCreatingFunctions);
+true
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSp(n, q) <> Size(Sp(n, q)) then Error("bad result for Sp(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4, 6] do for q in [2, 3, 4, 5, 7] do if SizePSp(n, q) <> Size(PSp(n, q)) then Error("bad result for PSp(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSU(n, q) <> Size(SU(n, q)) then Error("bad result for SU(", n, ", ", q, ")"); fi; od; od;
+gap> for n in [2 .. 4] do for q in [2, 3, 4] do if SizePSU(n, q) <> Size(PSU(n, q)) then Error("bad result for SU(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeGU(n, q) <> Size(GU(n, q)) then Error("bad result for GU(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [3, 5 .. 9] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeGO(0, n, q) <> Size(GO(0, n, q)) then Error("bad result for GO(0, ", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeGO(1, n, q) <> Size(GO(1, n, q)) then Error("bad result for GO(1, ", n, ", ", q, ")"); fi; od; od;
