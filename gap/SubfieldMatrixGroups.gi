@@ -37,6 +37,7 @@ function(n, p, e, f)
     matrixForCongruence := [[n], [p ^ e - 1]];
     z := c * QuoInt(p ^ e - 1, p ^ f - 1);
     lambda := SolutionMat(matrixForCongruence, [z])[1];
+    X := zeta ^ (-lambda) * IdentityMat(n, F);
 
     return MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
 end);

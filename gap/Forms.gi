@@ -41,7 +41,7 @@ function(group, type, gramMatrix)
                                              field);
     canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
                                              field);
-    result := MatrixGroup(canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))), field);
+    result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
     if HasSize(group) then
         SetSize(result, Size(group));
     fi;
