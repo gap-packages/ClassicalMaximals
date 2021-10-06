@@ -36,7 +36,7 @@ function(n, q, t)
     Add(newGens, E);
     # Size according to Table 2.5 of [BHR13]
     size := SizeSL(n / t, q) ^ t * (q - 1) ^ (t - 1) * Factorial(t);
-    return MatrixGroupWithSize(newGens, F, size);
+    return MatrixGroupWithSize(F, newGens, size);
 end);
 
 # Construction as in Proposition 5.4 of [HR05]
@@ -106,7 +106,7 @@ function(d, q, t)
 
     # Size according to Table 2.5 of [BHR13]
     size := SizeSU(m, q) ^ t * (q + 1) ^ (t - 1) * Factorial(t);
-    result := MatrixGroupWithSize(generators, F, size);
+    result := MatrixGroupWithSize(F, generators, size);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
 
@@ -169,5 +169,5 @@ function(d, q)
     # Size according to Table 2.5 of [BHR13]
     size := SizeSL(d / 2, q ^ 2) * (q - 1) * 2;
 
-    return MatrixGroupWithSize(generators, F, size);
+    return MatrixGroupWithSize(F, generators, size);
 end);

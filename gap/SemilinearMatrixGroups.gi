@@ -108,14 +108,14 @@ function(n, q, s)
 
     if m = 1 then
         if n mod 2 = 1 then
-            return MatrixGroupWithSize([Bs, Cs], F, size);
+            return MatrixGroupWithSize(F, [Bs, Cs], size);
         elif q mod 2 = 1 then
             Fs := (As ^ QuoInt(q - 1, 2)) * Bs;
-            return MatrixGroupWithSize([Cs, Fs], F, size);
+            return MatrixGroupWithSize(F, [Cs, Fs], size);
         # n = s = 2 and q even
         else
             # In characteristic 2 we have det(Bs) = -1 = 1.
-            return MatrixGroupWithSize([Bs, Cs], F, size);
+            return MatrixGroupWithSize(F, [Bs, Cs], size);
         fi;
     fi;
 
@@ -136,7 +136,7 @@ function(n, q, s)
         D{range}{range} := DBlock;
     od;
 
-    return MatrixGroupWithSize(Concatenation(AandB, [C, D]), F, size);
+    return MatrixGroupWithSize(F, Concatenation(AandB, [C, D]), size);
 end);
 
 # Construction as in Proposition 6.6 of [HR05]
@@ -175,7 +175,7 @@ function(d, q, s)
     if m = 1 then
         # note that we require s to be odd
         generators := [Bs, Cs];
-        result := MatrixGroupWithSize(generators, F, size);
+        result := MatrixGroupWithSize(F, generators, size);
         # conjugate the result so that it preserves the standard unitary form
         return ConjugateToStandardForm(result, "U");
     fi;
@@ -193,7 +193,7 @@ function(d, q, s)
     od;
 
     generators := Concatenation(AandB, [C, D]);
-    result := MatrixGroupWithSize(generators, F, size);
+    result := MatrixGroupWithSize(F, generators, size);
     # conjugate the result so that it preserves the standard unitary form 
     return ConjugateToStandardForm(result, "U");
 end);

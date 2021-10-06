@@ -26,7 +26,7 @@ function(n, p, e, f)
     size := SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n);
 
     if c = Gcd(p ^ f - 1, n) then
-        return MatrixGroupWithSize(Concatenation(AandB, [C]), F, size);
+        return MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
     fi;
 
     omega := zeta ^ QuoInt(p ^ e - 1, p ^ f - 1);
@@ -38,7 +38,7 @@ function(n, p, e, f)
     z := c * QuoInt(p ^ e - 1, p ^ f - 1);
     lambda := SolutionMat(matrixForCongruence, [z])[1];
 
-    return MatrixGroupWithSize(Concatenation(AandB, [C, X * D]), F, size);
+    return MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
 end);
 
 # Construction as in Proposition 8.3 of [HR05]
@@ -65,7 +65,7 @@ function(d, p, e, f)
     size := SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d);
 
     if c = Gcd(p ^ f + 1, d) then
-        return MatrixGroupWithSize(Concatenation(AandB, [C]), F, size);
+        return MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
     fi;
 
     # a primitive element of GF(p ^ (2 * f))
@@ -82,7 +82,7 @@ function(d, p, e, f)
     # det(X) = 1 by construction of lambda
     X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, F);
 
-    return MatrixGroupWithSize(Concatenation(AandB, [C, X * D]), F, size);
+    return MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
 end);
 
 # Construction as in Proposition 8.5 of [HR05]
@@ -118,7 +118,7 @@ function(d, q)
     
     # Size according to Table 2.8 of [BHR13]
     size := SizeSp(d, q) * Gcd(q + 1, d / 2);
-    result := MatrixGroupWithSize(generators, F, size);
+    result := MatrixGroupWithSize(F, generators, size);
     if IsOddInt(q) then
         # The result preserves the unitary form given by 
         # - zeta ^ ((q + 1) / 2) * Antidiag(1, ..., 1, -1, ..., -1);
@@ -166,7 +166,7 @@ function(epsilon, d, q)
                                                      "O",
                                                      AntidiagonalMat(d, F));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
-        result := MatrixGroupWithSize(generators, F, size);
+        result := MatrixGroupWithSize(F, generators, size);
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
         generators := Concatenation(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
@@ -226,7 +226,7 @@ function(epsilon, d, q)
             # the standard orthogonal form in this case is Antidiag(1, ..., 1),
             # i.e. has the same form matrix as the unitary form we want, so we
             # do not need to conjugate the result
-            result := MatrixGroupWithSize(generators, F, size);
+            result := MatrixGroupWithSize(F, generators, size);
 
         elif epsilon = -1 then
 
@@ -254,7 +254,7 @@ function(epsilon, d, q)
             fi;
             Add(generators, W);
 
-            result := MatrixGroupWithSize(generators, F, size);
+            result := MatrixGroupWithSize(F, generators, size);
 
             # We still have to change the preserved unitary form to the
             # standard GAP unitary form Antidiag(1, ..., 1)

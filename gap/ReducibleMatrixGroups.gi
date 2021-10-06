@@ -14,7 +14,7 @@ function(n, q, k)
     T := IdentityMat(n, F) + SquareSingleEntryMatrix(F, n, 1, n - k + 1);
     # Size according to Table 2.3 of [BHR13]
     size := q ^ (k * (n - k)) * SizeSL(k, q) * SizeSL(n - k, q) * (q - 1);
-    return MatrixGroupWithSize(Concatenation([A5], GeneratorsOfGroup(dirProd), [T]), F, size);
+    return MatrixGroupWithSize(F, Concatenation([A5], GeneratorsOfGroup(dirProd), [T]), size);
 end);
 
 # Construction as in Proposition 4.5 of [HR05]
@@ -115,7 +115,7 @@ function(d, q, k)
                                           * (q - 1);
     fi;
 
-    return MatrixGroupWithSize(generators, F, size);
+    return MatrixGroupWithSize(F, generators, size);
 end);
 
 # Construction as in Proposition 4.6 of [HR05]
@@ -356,5 +356,5 @@ function(d, q, k)
     # Size according to Table 2.3 of [BHR13]
     size := SizeSU(k, q) * SizeSU(d - k, q) * (q + 1);
 
-    return MatrixGroupWithSize(generators, F, size);
+    return MatrixGroupWithSize(F, generators, size);
 end);

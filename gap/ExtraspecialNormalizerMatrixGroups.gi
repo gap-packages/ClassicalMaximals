@@ -331,7 +331,7 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
     elif type = "U" then
         size := Gcd(rootOfq + 1, d) * r ^ (2 * m) * SizeSp(2 * m, r);
     fi;
-    return MatrixGroupWithSize(generators, F, size);
+    return MatrixGroupWithSize(F, generators, size);
 end;
 
 # Construction as in Proposition 9.5 of [HR05]
@@ -487,14 +487,14 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
     elif type = "U" then
         size := Gcd(rootOfq + 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2);
     fi;
-    return MatrixGroupWithSize(generators, F, size);
+    return MatrixGroupWithSize(F, generators, size);
 end;
 
 # Construction as in Proposition 9.5 of [HR05]
 # Only for d = 2
 Extraspecial2MinusTypeNormalizerInSL := function(q)
     local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
-    factorization, generators, result, scalarMultiplierV1, scalarMultiplierU1,
+    factorization, generators, size, scalarMultiplierV1, scalarMultiplierU1,
     zeta;
     
     F := GF(q);
@@ -546,7 +546,7 @@ Extraspecial2MinusTypeNormalizerInSL := function(q)
     else
         size := Factorial(4);
     fi;
-    return MatrixGroupWithSize(generators, F, size);
+    return MatrixGroupWithSize(F, generators, size);
 end;
 
 BindGlobal("ExtraspecialNormalizerInSL",

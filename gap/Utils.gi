@@ -364,14 +364,14 @@ function(epsilon, n, q)
 end);
 
 InstallGlobalFunction("MatrixGroup",
-function(gens, F)
+function(F, gens)
     return Group(List(gens, g -> ImmutableMatrix(F, g)));
 end);
 
 InstallGlobalFunction("MatrixGroupWithSize",
-function(gens, F, size)
+function(F, gens, size)
     local result;
-    result := MatrixGroup(gens, F);
+    result := MatrixGroup(F, gens);
     SetSize(result, size);
     return result;
 end);
