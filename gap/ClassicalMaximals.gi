@@ -1,14 +1,7 @@
 #
 # ClassicalMaximals: Maximal subgroups of classical groups
 #
-# Code along the lines of:
-# [BHR13]   J. M. Bray, D. F. Holt, C. M. Roney-Dougal. "The Maximal Subgroups of the
-#           Low-Dimensional Finite Classical Groups." Cambridge UP, 2013.
-# [HR05]       D. F. Holt, C. M. Roney-Dougal. "Constructing Maximal Subgroups of
-#           Classical Groups." LMS Journal of Computation and Mathematics, vol. 8,
-#           2005, pp. 46-79.
-# [KL90]       P. Kleidman, M. Liebeck. "The Subgroup Structure of the Finite
-#           Classical Groups." Cambridge UP, 1990.
+# Code along the lines of [BHR13], [HR05] and [KL90].
 #
 # Implementations
 #
