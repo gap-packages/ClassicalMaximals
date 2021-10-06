@@ -27,7 +27,7 @@ gap> TestSUIsotropicImprimitives := function(args)
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsSUIsotropicImprimitives := [[6, 2], [4, 3], [2, 5]];;
 #@else
-gap> testsSUIsotropicImprimitives := [[6, 2], [4, 3]];;
+gap> testsSUIsotropicImprimitives := [[6, 2]];;
 #@fi
 gap> ForAll(testsSUIsotropicImprimitives, TestSUIsotropicImprimitives);
 true
