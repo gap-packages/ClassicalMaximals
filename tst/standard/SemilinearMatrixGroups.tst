@@ -28,7 +28,7 @@ gap> TestGammaLDimension1 := function(args)
 >   local q, s, gens;
 >   q := args[1];
 >   s := args[2];
->   gens := GammaLDimension1(s, q);
+>   gens := CLASSICALMAXIMALS_GammaLDimension1(s, q);
 >   return Order(gens.A) = (q ^ s - 1) and Order(gens.B) = s;
 > end;;
 gap> testsGammaLDimension1 := [[3, 2], [2, 2], [5, 3], [4, 3]];;

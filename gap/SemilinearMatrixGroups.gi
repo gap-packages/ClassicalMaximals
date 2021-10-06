@@ -150,7 +150,7 @@ function(d, q, s)
                       " and <n> = ", d);
     fi;
     F := GF(q ^ 2);
-    gammaL1 := GammaLDimension1(s, q ^ 2);
+    gammaL1 := CLASSICALMAXIMALS_GammaLDimension1(s, q ^ 2);
     # Let w be a primitive element of GF(q ^ (2 * s)) over GF(q ^ 2). Since As is the
     # companion matrix of the minimal polynomial of w over GF(q ^ 2), its
     # determinant is (-1) ^ s times the constant term of said minimal
