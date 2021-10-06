@@ -15,7 +15,7 @@ function(n, q, k)
     result := Group(Concatenation([A5], GeneratorsOfGroup(dirProd), [T]));
     # Size according to Table 2.3 of [BHR13]
     SetSize(result,
-            q ^ (k * (n - k)) * Size(SL(k, q)) * Size(SL(n - k, q)) * (q-1));
+            q ^ (k * (n - k)) * SizeSL(k, q) * SizeSL(n - k, q) * (q-1));
     return result;
 end);
 
@@ -111,11 +111,11 @@ function(d, q, k)
     result := Group(generators);
     # Size according to Table 2.3 of [BHR13]
     if d - 2 * k > 0 then
-        SetSize(result, q ^ (k * (2 * d - 3 * k)) * Size(SL(k, q ^ 2)) 
-                                                  * Size(SU(d - 2 * k, q)) 
+        SetSize(result, q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2) 
+                                                  * SizeSU(d - 2 * k, q) 
                                                   * (q ^ 2 - 1));
     else
-        SetSize(result, q ^ (k * (2 * d - 3 * k)) * Size(SL(k, q ^ 2))
+        SetSize(result, q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2)
                                                   * (q - 1));
     fi;
 
@@ -360,7 +360,7 @@ function(d, q, k)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.3 of [BHR13]
-    SetSize(result, Size(SU(k, q)) * Size(SU(d - k, q)) * (q + 1));
+    SetSize(result, SizeSU(k, q) * SizeSU(d - k, q) * (q + 1));
 
     return result;
 end);

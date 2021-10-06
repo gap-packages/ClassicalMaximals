@@ -20,3 +20,11 @@ DeclareGlobalFunction("SolveFrobeniusEquation");
 DeclareGlobalFunction("SquareSingleEntryMatrix");
 DeclareGlobalFunction("QuoCeil");
 DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
+
+DeclareGlobalFunction("SizeSp");
+DeclareGlobalFunction("SizePSp");
+DeclareGlobalFunction("SizeSU");
+DeclareGlobalFunction("SizePSU");
+DeclareGlobalFunction("SizeGU");
+DeclareGlobalFunction("SizeGO");
+DeclareGlobalFunction("SizeSO");

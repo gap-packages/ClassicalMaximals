@@ -25,7 +25,7 @@ function(n, p, e, f)
     if c = Gcd(p ^ f - 1, n) then
         result := Group(Concatenation(AandB, [C]));
         # Size according to Table 2.8 of [BHR13]
-        SetSize(result, Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f -
+        SetSize(result, SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f -
         1), n));
         return result;
     fi;
@@ -43,7 +43,7 @@ function(n, p, e, f)
     result := Group(Concatenation(AandB, [C, X * D]));
     # Size according to Table 2.8 of [BHR13]
     SetSize(result,
-            Size(SL(n, p ^ f)) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
+            SizeSL(n, p ^ f) * Gcd(QuoInt(p ^ e - 1, p ^ f - 1), n)); 
     return result;
 end);
 
@@ -72,7 +72,7 @@ function(d, p, e, f)
         # generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
         # Size according to Table 2.8 of [BHR13]
-        SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
+        SetSize(result, SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d));
         return result;
     fi;
 
@@ -94,7 +94,7 @@ function(d, p, e, f)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.8 of [BHR13]
-    SetSize(result, Size(SU(d, p ^ f)) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
+    SetSize(result, SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d)); 
 
     return result;
 end);
@@ -142,7 +142,7 @@ function(d, q)
         result := ConjugateToStandardForm(result, "U");
     fi;
     # Size according to Table 2.8 of [BHR13]
-    SetSize(result, Size(Sp(d, q)) * Gcd(q + 1, d / 2));
+    SetSize(result, SizeSp(d, q) * Gcd(q + 1, d / 2));
 
     return result;
 end);
@@ -291,7 +291,7 @@ function(epsilon, d, q)
     fi;
 
     # Size according to Table 2.8 of [BHR13]
-    SetSize(result, Size(SO(epsilon, d, q)) * Gcd(q + 1, d));
+    SetSize(result, SizeSO(epsilon, d, q) * Gcd(q + 1, d));
 
     return result;
 end);

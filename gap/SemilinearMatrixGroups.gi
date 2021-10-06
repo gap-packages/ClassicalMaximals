@@ -42,7 +42,8 @@ end);
 # Return a block matrix where the block in place (i, j) is A ^ k if and only if
 # the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
 # is zero as well).
-Theta := function(M, A, omega)
+# This is the function Theta(...) from [HR05].
+MapGammaLToGL := function(M, A, omega)
     local result, i, j, exponent, dimensionOfA;
 
     if not NumberRows(A) = NumberColumns(A) then
@@ -112,12 +113,12 @@ function(n, q, s)
             # In characteristic 2 we have det(Bs) = -1 = 1.
             result := Group(Bs, Cs);
         fi;
-        SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
+        SetSize(result, SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s);
         return result;
     fi;
 
     zeta := PrimitiveElement(GF(q ^ s));
-    AandB := List(GeneratorsOfGroup(SL(m, q ^ s)), g -> Theta(g, As, zeta));
+    AandB := List(GeneratorsOfGroup(SL(m, q ^ s)), g -> MapGammaLToGL(g, As, zeta));
     C := IdentityMat(n, F);
     C{[1..s]}{[1..s]} := Cs;
     D := IdentityMat(n, F);
@@ -135,7 +136,7 @@ function(n, q, s)
 
     result := Group(Concatenation(AandB, [C, D]));
     # Size according to Proposition 6.3 of [HR05]
-    SetSize(result, Size(SL(n / s, q ^ s)) * (q ^ s - 1) / (q - 1) * s);
+    SetSize(result, SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s);
     return result;
 end);
 
@@ -174,16 +175,16 @@ function(d, q, s)
         generators := List(generators, M -> ImmutableMatrix(F, M));
         result := Group(generators);
         # Size according to Table 2.6 of [BHR13]
-        SetSize(result, Size(SU(d / s, q ^ s)) * (q ^ s + 1) / (q + 1) * s);
+        SetSize(result, SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s);
         # conjugate the result so that it preserves the standard unitary form
         return ConjugateToStandardForm(result, "U");
     fi;
 
     omega := PrimitiveElement(GF(q ^ (2 * s)));
     # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
-    AandB := List(GeneratorsOfGroup(SU(m, q ^ s)), g -> Theta(g, As, omega));
+    AandB := List(GeneratorsOfGroup(SU(m, q ^ s)), g -> MapGammaLToGL(g, As, omega));
     # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
-    C := Theta(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
+    C := MapGammaLToGL(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
     # det(D) = 1
     D := IdentityMat(d, GF(q));
     for i in [0..m - 1] do
@@ -195,7 +196,7 @@ function(d, q, s)
     generators := List(generators, M -> ImmutableMatrix(F, M));
     result := Group(generators);
     # Size according to Table 2.6 of [BHR13]
-    SetSize(result, Size(SU(d / s, q ^ s)) * (q ^ s + 1) / (q + 1) * s);
+    SetSize(result, SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s);
     # conjugate the result so that it preserves the standard unitary form 
     return ConjugateToStandardForm(result, "U");
 end);

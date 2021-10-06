@@ -41,7 +41,7 @@ function(d1, d2, q)
 
     result := Group(gens);
     # Size according to Table 2.7 in [BHR13]
-    SetSize(result, Size(SL(d1, q)) * Size(SL(d2, q)) * g);
+    SetSize(result, SizeSL(d1, q) * SizeSL(d2, q) * g);
     return result;
 end);
 
@@ -98,6 +98,6 @@ function(d1, d2, q)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
     result := ConjugateToStandardForm(result, "U");
     # Size according to Table 2.7 in [BHR13]
-    SetSize(result, Size(SU(d1, q)) * Size(SU(d2, q)) * Gcd(q + 1, d1, d2));
+    SetSize(result, SizeSU(d1, q) * SizeSU(d2, q) * Gcd(q + 1, d1, d2));
     return result;
 end);
