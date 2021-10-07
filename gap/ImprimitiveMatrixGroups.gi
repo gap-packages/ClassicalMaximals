@@ -6,7 +6,7 @@
 # Construction as in Proposition 5.1 of [HR05]
 BindGlobal("ImprimitivesMeetSL", 
 function(n, q, t)
-    local det, E, gens, i, newGen, newGens, wreathProduct, z, m, result;
+    local det, E, gens, i, newGen, newGens, wreathProduct, z, F, m, size;
     if t = 1 or (n mod t) <> 0 then
         ErrorNoReturn("<t> must be greater than 1 and a divisor of <n> but <t> = ", t,
                       " and <n> = ", n);
@@ -27,16 +27,16 @@ function(n, q, t)
             Add(newGens, newGen);
         fi;
     od;
-    z := PrimitiveElement(GF(q));
+    F := GF(q);
+    z := PrimitiveElement(F);
     E := DiagonalMat(
         Concatenation([z], List([2..m], i -> z ^ 0),
                       [z ^ -1], List([m + 2..n], i -> z ^ 0))
     );
     Add(newGens, E);
-    result := Group(newGens);
     # Size according to Table 2.5 of [BHR13]
-    SetSize(result, SizeSL(n/t, q) ^ t * (q-1) ^ (t-1) * Factorial(t));
-    return result;
+    size := SizeSL(n / t, q) ^ t * (q - 1) ^ (t - 1) * Factorial(t);
+    return MatrixGroupWithSize(F, newGens, size);
 end);
 
 # Construction as in Proposition 5.4 of [HR05]
@@ -46,7 +46,7 @@ end);
 BindGlobal("SUNonDegenerateImprimitives",
 function(d, q, t)
     local m, F, zeta, SUChangedForm, generators, generatorOfSU, generator, C, 
-    D1, D, E, result;
+    D1, D, E, result, size;
     if t = 1 or (d mod t) <> 0 then
         ErrorNoReturn("<t> must be greater than 1 and a divisor of <d> but <t> = ", t,
                       " and <d> = ", d);
@@ -104,15 +104,13 @@ function(d, q, t)
                                    List([m + 2..d], i -> zeta ^ 0)));
     Add(generators, E);
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
+    # Size according to Table 2.5 of [BHR13]
+    size := SizeSU(m, q) ^ t * (q + 1) ^ (t - 1) * Factorial(t);
+    result := MatrixGroupWithSize(F, generators, size);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
-    result := ConjugateToStandardForm(result, "U");
-    # Size according to Table 2.5 of [BHR13]
-    SetSize(result, SizeSU(m, q) ^ t * (q + 1) ^ (t - 1) * Factorial(t));
-    
-    return result;
+
+    return ConjugateToStandardForm(result, "U");
 end);
 
 # Construction as in Proposition 5.5 of [HR05]
@@ -122,7 +120,7 @@ end);
 BindGlobal("SUIsotropicImprimitives",
 function(d, q)
     local F, zeta, generators, J, generatorOfSL,
-    generator, C, D, result;
+    generator, C, D, size;
     if not IsEvenInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
@@ -168,10 +166,8 @@ function(d, q)
                                    [zeta ^ (-q - 1)]));
     Add(generators, D);
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
     # Size according to Table 2.5 of [BHR13]
-    SetSize(result, SizeSL(d / 2, q ^ 2) * (q - 1) * 2);
+    size := SizeSL(d / 2, q ^ 2) * (q - 1) * 2;
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);

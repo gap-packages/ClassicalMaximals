@@ -362,16 +362,21 @@ function(epsilon, n, q)
     
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
-
+ 
 InstallGlobalFunction("MatrixGroup",
-function(gens, F)
+function(F, gens)
+    if IsEmpty(gens) then
+        ErrorNoReturn("<gens> cannot be empty"); 
+    elif not IsField(F) then
+        ErrorNoReturn("<F> must be a field");
+    fi;
     return Group(List(gens, g -> ImmutableMatrix(F, g)));
 end);
 
 InstallGlobalFunction("MatrixGroupWithSize",
-function(gens, F, size)
+function(F, gens, size)
     local result;
-    result := MatrixGroup(gens, F);
+    result := MatrixGroup(F, gens);
     SetSize(result, size);
     return result;
 end);

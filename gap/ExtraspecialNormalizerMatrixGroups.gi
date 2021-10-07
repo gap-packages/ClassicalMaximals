@@ -220,7 +220,7 @@ end;
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 OddExtraspecialNormalizerInSL := function(r, m, q, type...)
     local F, d, listOfUi, listOfVi, V, generatorsOfNormalizerInGL, scalarMultiplierUi, 
-    scalarMultiplierVi, generators, generatingScalar, result, zeta, rootOfq;
+    scalarMultiplierVi, generators, generatingScalar, size, zeta, rootOfq;
 
     F := GF(q);
     d := r ^ m;
@@ -323,19 +323,15 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
                                 generatorsOfNormalizerInGL.listOfYi,
                                 listOfUi, listOfVi,
                                 generatorsOfNormalizerInGL.listOfWi);
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
     # Size according to Table 2.9 of [BHR13]
     if d = 3 and ((q - 4) mod 9 = 0 or (q - 7) mod 9 = 0) then
-        SetSize(result, 27 * 8);
+        size := 27 * 8;
     elif type = "L" then
-        SetSize(result, 
-                Gcd(q - 1, d) * r ^ (2 * m) * SizeSp(2 * m, r));
+        size := Gcd(q - 1, d) * r ^ (2 * m) * SizeSp(2 * m, r);
     elif type = "U" then
-        SetSize(result,
-                Gcd(rootOfq + 1, d) * r ^ (2 * m) * SizeSp(2 * m, r));
+        size := Gcd(rootOfq + 1, d) * r ^ (2 * m) * SizeSp(2 * m, r);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end;
 
 # Construction as in Proposition 9.5 of [HR05]
@@ -344,7 +340,7 @@ end;
 SymplecticTypeNormalizerInSL := function(m, q, type...)
     local F, generatorsOfNormalizerInGL, d, listOfUi, listOfVi, listOfWi,
     generatingScalar, scalarMultiplierVi, i, scalarMultiplierUiAndWi, p, e, 
-    factorization, generators, result, zeta, U1InGL, rootOfq;
+    factorization, generators, size, zeta, U1InGL, rootOfq;
     
     if (q - 1) mod 4 <> 0 or m < 2 then
         ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2 but <q> = ",
@@ -482,28 +478,23 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
                                 generatorsOfNormalizerInGL.listOfYi,
                                 listOfUi, listOfVi, listOfWi);
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
-
     # Size according to Table 2.9 of [BHR13]
     if (d = 4 and (q - 5) mod 8 = 0 and type = "L") or
        (d = 4 and (p ^ QuoInt(e, 2) - 3) mod 8 = 0 and type = "U") then
-        SetSize(result, 2 ^ 6 * Factorial(6) / 2);
+        size := 2 ^ 6 * Factorial(6) / 2;
     elif type = "L" then
-        SetSize(result, 
-                Gcd(q - 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2));
+        size := Gcd(q - 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2);
     elif type = "U" then
-        SetSize(result,
-                Gcd(rootOfq + 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2));
+        size := Gcd(rootOfq + 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end;
 
 # Construction as in Proposition 9.5 of [HR05]
 # Only for d = 2
 Extraspecial2MinusTypeNormalizerInSL := function(q)
     local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
-    factorization, generators, result, scalarMultiplierV1, scalarMultiplierU1,
+    factorization, generators, size, scalarMultiplierV1, scalarMultiplierU1,
     zeta;
     
     F := GF(q);
@@ -549,14 +540,13 @@ Extraspecial2MinusTypeNormalizerInSL := function(q)
                                     [V1]);
     fi;
 
-    result := Group(generators);
     # Size according to Table 2.9 of [BHR13]
     if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
-        SetSize(result, 2 * Factorial(4));
+        size := 2 * Factorial(4);
     else
-        SetSize(result, Factorial(4));
+        size := Factorial(4);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end;
 
 BindGlobal("ExtraspecialNormalizerInSL",

@@ -2,7 +2,7 @@
 BindGlobal("TensorProductStabilizerInSL",
 function(d1, d2, q)
     local F, d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
-    diagonalGenerator1, diagonalGenerator2, solution, result;
+    diagonalGenerator1, diagonalGenerator2, solution, size;
     if not d1 > 1 or not d1 < d2 then
         ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
                       " and <d2> = ", d2);
@@ -39,10 +39,9 @@ function(d1, d2, q)
         od;
     fi;
 
-    result := Group(gens);
     # Size according to Table 2.7 in [BHR13]
-    SetSize(result, SizeSL(d1, q) * SizeSL(d2, q) * g);
-    return result;
+    size := SizeSL(d1, q) * SizeSL(d2, q) * g;
+    return MatrixGroupWithSize(F, gens, size);
 end);
 
 # Construction as in Proposition 7.3 of [HR05]
@@ -50,7 +49,7 @@ end);
 BindGlobal("TensorProductStabilizerInSU",
 function(d1, d2, q)
     local d, F, zeta, generators, SUd1FormIdentityMat, SUd2FormIdentityMat, C,
-    c, eta, diagonalMat1, diagonalMat2, solution, result;
+    c, eta, diagonalMat1, diagonalMat2, solution, result, size;
     if not d1 < d2 or not d1 > 1 then
         ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
                       " and <d2> = ", d2);
@@ -92,12 +91,10 @@ function(d1, d2, q)
         od;
     fi;
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
+    # Size according to Table 2.7 in [BHR13]
+    size := SizeSU(d1, q) * SizeSU(d2, q) * Gcd(q + 1, d1, d2);
+    result := MatrixGroupWithSize(F, generators, size);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
-    result := ConjugateToStandardForm(result, "U");
-    # Size according to Table 2.7 in [BHR13]
-    SetSize(result, SizeSU(d1, q) * SizeSU(d2, q) * Gcd(q + 1, d1, d2));
-    return result;
+    return ConjugateToStandardForm(result, "U");
 end);
