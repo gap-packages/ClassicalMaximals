@@ -5,6 +5,19 @@ function(q)
 end);
 
 
+BindGlobal("ComputeActionGroupOfConstitutionsByDim",
+function(G,fld,dim)
+    local M, T, MM, A;
+    
+    M:=GModuleByMats(GeneratorsOfGroup(G), fld);
+    T:=TensorProduct(M,M);
+    MM:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 8)[1];
+    A := Group(MTX.Generators(MM));
+    
+    return A;
+end);
+
+
 # Construction of group as in Table 5.6 row 4 from [BHR13]
 BindGlobal("l3qdim6",
 function(q, general)
@@ -72,7 +85,7 @@ function(d,q,special,general,normaliser)
     #   construct GL(2,q) as SL(2,q) with extra generator
     w:=PrimitiveElement(GF(q));
     G:=Group(Concatenation(GeneratorsOfGroup(SL(2,q)),[DiagonalMat([w,1])]));
-    M:=GModuleByMats(G,GF(q));
+    M:=GModuleByMats(GeneratorsOfGroup(G),GF(q));
     MM:=M;
     for i in [3..d] do
         T:=TensorProductGModule(M,MM);
@@ -108,7 +121,7 @@ function(d,q,normaliser)
     #   construct GL(2,q) as SL(2,q) with extra generator
     w:=PrimitiveElement(GF(q));
     G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q)), [DiagonalMat([w,1])]));
-    M:=GModuleByMats(G,GF(q));
+    M:=GModuleByMats(GeneratorsOfGroup(G),GF(q));
     MM:=M;
     for i in [3..d] do
         T:=TensorProductGModule(M,MM);
@@ -145,7 +158,7 @@ function(q,general)
     else
         G:=SL(5,q);
     fi;
-    M:=GModuleByMats(G,GF(q));
+    M:=GModuleByMats(GeneratorsOfGroup(G),GF(q));
     T:=TensorProductGModule(M,M);
     MM:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 10)[1];
     A:=Group(MTX.Generators(MM));
@@ -170,22 +183,19 @@ function(q,general,normaliser)
     else
         G:=SU(5,q);
     fi;
-    M:=GModule(G);
-    T:=TensorProduct(M,M);
-    MM:=Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=10)[1];
-    A:=ActionGroup(MM);
-    A:=A^TransformForm(A);
+    M:=GModuleByMats(GeneratorsOfGroup(G),GF(q^2));
+    T:=TensorProductGModule(M,M);
+    MM:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 10)[1];
+    A:=Group(MTX.Generators(MM));
+    A:=ConjugateToStandardForm(A, "U");
     if not general then
-        S:=ScalarMat(10,(w^(q-1))^(QuoInt((q+1),Gcd(10,q+1))));
-        return SubStructure(GL(10,q^2),A,#TODO CLOSURE
-        S);
+        S:=(w^(q-1))^(QuoInt((q+1),Gcd(10,q+1)))*IdentityMat(10,GF(q^2));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(A),[S]));
     fi;
     if not normaliser then
-        return SubStructure(GL(10,q^2),A,#TODO CLOSURE
-        ScalarMat(10,w^(q-1)));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(A),[w^(q-1)*IdentityMat(10,GF(q^2))]));
     fi;
-    return SubStructure(GL(10,q^2),A,#TODO CLOSURE
-        ScalarMat(10,w));
+    return GroupByGenerators(Concatenation(GeneratorsOfGroup(A),[w*IdentityMat(10,GF(q^2))]));
 end);
 
 
@@ -203,7 +213,7 @@ end);
 BindGlobal("l2q3dim8@",
 function(q,normaliser)
     #  /out:SL(2,q^3).3 <= Sp(8,q);
-    local G,M,M1,M2,T,varX,iso,u,w;
+    local G,M,M1,M2,T,varX,iso,u,w,GG;
     w:=PrimitiveElement(GF(q^3));
     G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q^3)),[DiagonalMat([w,1])]));
     M:=GModuleByMats(G,GF(q^3));
@@ -220,13 +230,12 @@ function(q,normaliser)
     G:=G.val2;
     # =^= MULTIASSIGN =^=
     Assert(1,iso);
-    G:=G^TransformForm(SubStructure(G,G.1,#TODO CLOSURE
-        G.2));
+    GG := GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G8)[2]]);
+    G:=G^TransformForm(SubStructure(G,G.1,G.2));
     if normaliser then
         return G;
     fi;
-    return (SubStructure(G,G.1,#TODO CLOSURE
-        G.2,G.4));
+    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G8)[2],GeneratorsOfGroup(G8)[4]]);
 end);
 
 
@@ -236,26 +245,21 @@ function(q, special, general, normaliser)
     local C,G,G8,M,M8,T,w;
     w:=PrimitiveElement(GF(q));
     G:=GL2@(3,q);
-    M:=GModule(G);
-    T:=TensorProduct(M,M);
-    C:=Constituents(T);
-    M8:=Filtered(C,c->DimensionOfMatrixGroup(c)=8)[1];
-    G8:=ActionGroup(M8);
-    G8:=G8^TransformForm(G8);
+    M:=GModuleByMats(GeneratorsOfGroup(G),GF(q));
+    T:=TensorProductGModule(M,M);
+    M8:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 8)[1];
+    G8:=Group(MTX.Generators(MM));
+    G8:=ConjugateToStandardForm(G8, "S");
     if normaliser then
-        return SubStructure(GL(8,q),G8,#TODO CLOSURE
-        ScalarMat(8,w));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(G8),[w*IdentityMat(8,GF(q))]));
     elif general and IsOddInt(q) then
-        return SubStructure(GL(8,q),G8,#TODO CLOSURE
-        ScalarMat(8,-1));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(G8),[-1*IdentityMat(8,GF(q))]));
     elif (special or general) and IsEvenInt(q) then
-        return SubStructure(GL(8,q),G8);
+        return G8;
     elif special or q mod 3=1 then
-        return SubStructure(GL(8,q),G8.1,#TODO CLOSURE
-        G8.2,ScalarMat(8,-1));
+        return GroupByGenerators([GeneratorsOfGroup(G8)[1],GeneratorsOfGroup(G8)[2],-1*IdentityMat(8,GF(q))]);
     else
-        return SubStructure(GL(8,q),G8.1,#TODO CLOSURE
-        G8.2);
+        return GroupByGenerators([GeneratorsOfGroup(G8)[1],GeneratorsOfGroup(G8)[2]]);
     fi;
 end);
 
@@ -266,11 +270,7 @@ function(q,special,general,normaliser)
     local C,G,G8,G8q,M,M8,T,isit,w;
     w:=PrimitiveElement(GF(q));
     G:=GU2@(3,q);
-    M:=GModule(G);
-    T:=TensorProduct(M,M);
-    C:=Constituents(T);
-    M8:=Filtered(C,c->DimensionOfMatrixGroup(c)=8)[1];
-    G8:=ActionGroup(M8);
+    A := ComputeActionGroupOfConstitutionsByDim(G,GF(q),8);
     # =v= MULTIASSIGN =v=
     G8q:=IsOverSmallerField(G8);
     isit:=G8q.val1;
