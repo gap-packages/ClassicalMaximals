@@ -1,3 +1,7 @@
+# If <group> preserves a sesquilinear form of type <type> (one of "S", "U",
+# "O"), return a group conjugate to <group> preserving the form of that type
+# given by <gramMatrix>.
+#
 # If <type> = "S" or type = "O" then <group> must have the attribute
 # InvariantBilinearForm.
 # Also, one need to ensure that the attribute DefaultFieldOfMatrixGroup is set
@@ -43,6 +47,10 @@ function(group, type, gramMatrix)
     return Group(canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
 end);
 
+# If <group> preserves a sesquilinear form of type <type> (one of "S", "U", "O"
+# (in odd dimension), "O+" or "O-" (both in even dimension), return a group
+# conjugate to <group> preserving the standard form of that type.
+#
 # Can only deal with sesquilinear forms, not with quadratic forms as of yet.
 # If <type> is one of "S", "O+", "O-" or "O" then <group> must have the
 # attribute InvariantBilinearForm.

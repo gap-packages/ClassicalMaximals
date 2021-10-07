@@ -1,3 +1,7 @@
+# Return a <nrRows> by <nrCols> matrix over the field <field>. The list
+# <entries> contains triples (row, column, entry) specifying the individual 
+# entries of the returned matrix; an entry that is not specified is set to zero
+# by default.
 InstallGlobalFunction("MatrixByEntries",
 function(field, nrRows, nrCols, entries)
     local i, m, o;
@@ -9,6 +13,12 @@ function(field, nrRows, nrCols, entries)
     return ImmutableMatrix(field, m);
 end);
 
+# Return an antidiagonal matrix M with entries as specified by the argument
+# <entries> in the following way:
+#     * If <entries> is a list, the entries of M are, from top right to
+#       bottom left, the entries of that list.
+#     * If <entries> is an integer, the entries of M are all ones and the
+#       number of them is <entries>.
 InstallGlobalFunction("AntidiagonalMat",
 function(entries, field)
     local d, m, i;
@@ -46,6 +56,7 @@ function(c, q)
     return rec(a := a, b := b);
 end);
 
+# Return a matrix N with the property that N[i, j] = func(M[i, j]).
 InstallGlobalFunction("ApplyFunctionToEntries",
 function(M, func)
     local numberRows, numberColumns, i, j, result;
@@ -65,6 +76,8 @@ function(M, func)
     return result;
 end);
 
+# Return a matrix N obtained from M by first raising each entry to the q-th
+# power and then transposing the result.
 InstallGlobalFunction("HermitianConjugate",
 function(M, q)
     return TransposedMat(ApplyFunctionToEntries(M, x -> x ^ q));
@@ -134,7 +147,7 @@ function(type, alpha, q)
     fi;
 end);
 
-# An n x n - matrix of zeroes with a 1 in position (row, column)
+# An n x n - matrix of zeroes over <field> with a 1 in position (<row>, <column>)
 InstallGlobalFunction("SquareSingleEntryMatrix",
 function(field, n, row, column)
     return MatrixByEntries(field, n, n, [[row, column, 1]]);
@@ -255,7 +268,8 @@ function(epsilon, n, q)
     return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
 end);
 
-
+# Return the reflection matrix in the space GF(q) ^ n determined by the
+# bilinear form given by the argument <gramMatrix> and the vector <v>.
 ReflectionMatrix := function(n, q, gramMatrix, v)
     local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
     F := GF(q);
