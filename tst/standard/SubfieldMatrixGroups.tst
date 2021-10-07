@@ -7,6 +7,9 @@ gap> TestSubfieldSL := function(args)
 >   G := SubfieldSL(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
+>   if not DefaultFieldOfMatrixGroup(G) = GF(p ^ e) then
+>       Print(n, p, e, f);
+>   fi;
 >   return IsSubset(SL(n, p ^ e), GeneratorsOfGroup(G))
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
 >          and hasSize;
@@ -23,6 +26,9 @@ gap> TestUnitarySubfieldSU := function(args)
 >   G := UnitarySubfieldSU(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
+>   if not DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e)) then
+>       Print(n, p, e, f);
+>   fi;
 >   return IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G))
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))
 >          and hasSize;
