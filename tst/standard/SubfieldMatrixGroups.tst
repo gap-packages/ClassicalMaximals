@@ -7,14 +7,11 @@ gap> TestSubfieldSL := function(args)
 >   G := SubfieldSL(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   if not DefaultFieldOfMatrixGroup(G) = GF(p ^ e) then
->       Print(n, p, e, f);
->   fi;
 >   return IsSubset(SL(n, p ^ e), GeneratorsOfGroup(G))
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
 >          and hasSize;
 > end;;
-#@if
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsSubfieldSL := [[4, 2, 4, 2], [2, 3, 6, 2], [3, 7, 3, 1]];;
 #@else
 gap> testsSubfieldSL := [[4, 2, 4, 2], [3, 7, 3, 1]];;
@@ -30,14 +27,11 @@ gap> TestUnitarySubfieldSU := function(args)
 >   G := UnitarySubfieldSU(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   if not DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e)) then
->       Print(n, p, e, f);
->   fi;
 >   return IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G))
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))
 >          and hasSize;
 > end;;
-#@if
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS) 
 gap> testsUnitarySubfieldSU := [[2, 3, 6, 2], [3, 7, 3, 1], [3, 5, 3, 1]];;
 #@else
 gap> testsUnitarySubfieldSU := [[3, 7, 3, 1], [3, 5, 3, 1]];;
