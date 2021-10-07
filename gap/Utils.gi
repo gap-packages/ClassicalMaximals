@@ -370,7 +370,7 @@ function(F, gens)
     elif not IsField(F) then
         ErrorNoReturn("<F> must be a field");
     fi;
-    return Group(List(gens, g -> NewMatrix(IsObject, F, NrCols(g), g)));
+    return Group(List(gens, g -> ImmutableMatrix(F, g)));
 end);
 
 InstallGlobalFunction("MatrixGroupWithSize",
