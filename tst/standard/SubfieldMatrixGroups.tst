@@ -14,7 +14,11 @@ gap> TestSubfieldSL := function(args)
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
 >          and hasSize;
 > end;;
+#@if
 gap> testsSubfieldSL := [[4, 2, 4, 2], [2, 3, 6, 2], [3, 7, 3, 1]];;
+#@else
+gap> testsSubfieldSL := [[4, 2, 4, 2], [3, 7, 3, 1]];;
+#@fi
 gap> ForAll(testsSubfieldSL, TestSubfieldSL);
 true
 gap> TestUnitarySubfieldSU := function(args)
@@ -33,7 +37,11 @@ gap> TestUnitarySubfieldSU := function(args)
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))
 >          and hasSize;
 > end;;
+#@if
 gap> testsUnitarySubfieldSU := [[2, 3, 6, 2], [3, 7, 3, 1], [3, 5, 3, 1]];;
+#@else
+gap> testsUnitarySubfieldSU := [[3, 7, 3, 1], [3, 5, 3, 1]];;
+#@fi
 gap> ForAll(testsUnitarySubfieldSU, TestUnitarySubfieldSU);
 true
 gap> TestSymplecticSubfieldSU := function(args)
