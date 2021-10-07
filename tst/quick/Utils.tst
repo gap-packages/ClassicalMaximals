@@ -82,6 +82,21 @@ gap> TestGeneratorsOfOrthogonalGroup := function(args)
 gap> testsGeneratorsOfOrthogonalGroup := [[-1, 6, 7], [-1, 4, 9], [1, 4, 7], [0, 5, 5]];;
 gap> ForAll(testsGeneratorsOfOrthogonalGroup, TestGeneratorsOfOrthogonalGroup);
 true
+gap> TestMatrixGroup := function(args)
+>   local F, M, size, G, GWithSize;
+>   F := args[1];
+>   M := args[2];
+>   size := args[3];
+>   G := MatrixGroup(F, [M]);
+>   GWithSize := MatrixGroupWithSize(F, [M], size);
+>   return DefaultFieldOfMatrixGroup(G) = F
+>          and DefaultFieldOfMatrixGroup(GWithSize) = F
+>          and Size(GWithSize) = size;
+> end;;
+gap> testsMatrixGroup := [[GF(7 ^ 4), Z(7 ^ 3) * IdentityMat(2, GF(7)), 37],
+>                         [CF(4), [[1, 2], [3, 4]], 73]];;
+gap> ForAll(testsMatrixGroup, TestMatrixGroup);
+true
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSp(n, q) <> Size(Sp(n, q)) then Error("bad result for Sp(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4, 6] do for q in [2, 3, 4, 5, 7] do if SizePSp(n, q) <> Size(PSp(n, q)) then Error("bad result for PSp(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSU(n, q) <> Size(SU(n, q)) then Error("bad result for SU(", n, ", ", q, ")"); fi; od; od;
