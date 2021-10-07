@@ -1,7 +1,3 @@
-# Return a <nrRows> by <nrCols> matrix over the field <field>. The list
-# <entries> contains triples (row, column, entry) specifying the individual 
-# entries of the returned matrix; an entry that is not specified is set to zero
-# by default.
 InstallGlobalFunction("MatrixByEntries",
 function(field, nrRows, nrCols, entries)
     local i, m, o;
@@ -13,12 +9,6 @@ function(field, nrRows, nrCols, entries)
     return ImmutableMatrix(field, m);
 end);
 
-# Return an antidiagonal matrix M with entries as specified by the argument
-# <entries> in the following way:
-#     * If <entries> is a list, the entries of M are, from top right to
-#       bottom left, the entries of that list.
-#     * If <entries> is an integer, the entries of M are all ones and the
-#       number of them is <entries>.
 InstallGlobalFunction("AntidiagonalMat",
 function(entries, field)
     local d, m, i;
@@ -43,7 +33,7 @@ end);
 # should in principle almost always terminate quickly: Assuming that - 1 - a ^ 2 
 # is evenly distributed in GF(q), the chance to hit a quadratic residue is about 
 # 1 / 2 in each trial.
-InstallGlobalFunction("SolveQuadraticCongruence",
+BindGlobal("SolveQuadraticCongruence",
 function(c, q)
     local F, a, b;
     F := GF(q);
@@ -57,7 +47,7 @@ function(c, q)
 end);
 
 # Return a matrix N with the property that N[i, j] = func(M[i, j]).
-InstallGlobalFunction("ApplyFunctionToEntries",
+BindGlobal("ApplyFunctionToEntries",
 function(M, func)
     local numberRows, numberColumns, i, j, result;
     if not IsMatrix(M) or Length(M) = 0 then
@@ -78,7 +68,7 @@ end);
 
 # Return a matrix N obtained from M by first raising each entry to the q-th
 # power and then transposing the result.
-InstallGlobalFunction("HermitianConjugate",
+BindGlobal("HermitianConjugate",
 function(M, q)
     return TransposedMat(ApplyFunctionToEntries(M, x -> x ^ q));
 end);
@@ -87,7 +77,7 @@ end);
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
 # Construction as in Lemma 2.2 of [HR05]
-InstallGlobalFunction("SolveFrobeniusEquation",
+BindGlobal("SolveFrobeniusEquation",
 function(type, alpha, q)
     local F, R, S, x, delta, polynomial, result;
 
@@ -148,13 +138,13 @@ function(type, alpha, q)
 end);
 
 # An n x n - matrix of zeroes over <field> with a 1 in position (<row>, <column>)
-InstallGlobalFunction("SquareSingleEntryMatrix",
+BindGlobal("SquareSingleEntryMatrix",
 function(field, n, row, column)
     return MatrixByEntries(field, n, n, [[row, column, 1]]);
 end);
 
 # Compute Ceil(m / n) for two integers m, n
-InstallGlobalFunction("QuoCeil",
+BindGlobal("QuoCeil",
 function(m, n)
     if m mod n = 0 then
         return QuoInt(m, n);
@@ -270,7 +260,8 @@ end);
 
 # Return the reflection matrix in the space GF(q) ^ n determined by the
 # bilinear form given by the argument <gramMatrix> and the vector <v>.
-ReflectionMatrix := function(n, q, gramMatrix, v)
+BindGlobal("ReflectionMatrix",
+function(n, q, gramMatrix, v)
     local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
     F := GF(q);
     reflectionMatrix := NullMat(n, n, F);
@@ -288,7 +279,7 @@ ReflectionMatrix := function(n, q, gramMatrix, v)
         reflectionMatrix[i]{[1..n]} := reflectBasisVector;
     od;
     return reflectionMatrix;
-end;
+end);
 
 # Construct generators for the orthogonal groups with the properties listed in
 # Lemma 2.4 of [HR05].
@@ -296,7 +287,7 @@ end;
 # General Linear Group." Experimental Mathematics, vol. 13 no. 2, 2004, pp.
 # 151-163. Lemma 2.4.
 # We take the notation from [HR05].
-InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
+BindGlobal("GeneratorsOfOrthogonalGroup",
 function(epsilon, n, q)
     local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
     solutionOfQuadraticCongruence;

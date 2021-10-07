@@ -8,7 +8,7 @@
 # correctly for <group>; this can be done, for example, by making the
 # generators used during construction of the group immutable matrices over the
 # appropriate field.
-InstallGlobalFunction("ChangeFixedSesquilinearForm",
+BindGlobal("ChangeFixedSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix;
     if not type in ["S", "O", "U"] then
@@ -58,7 +58,7 @@ end);
 # correctly for <group>; this can be done, for example, by making the
 # generators used during construction of the group immutable matrices over the
 # appropriate field.
-InstallGlobalFunction("ConjugateToStandardForm",
+BindGlobal("ConjugateToStandardForm",
 function(group, type)
     local d, F, q, gapForm, broadType;
 
@@ -114,10 +114,11 @@ function(group, type)
 end);
 
 
-ConjugateModule := function(M, q)
+BindGlobal("ConjugateModule"
+function(M, q)
   return GModuleByMats(List(MTX.Generators(M), A -> ApplyFunctionToEntries(A, x -> x ^ q)), 
                        MTX.Field(M));
-end;
+end);
 
 # Assuming that the group G acts absolutely irreducibly, try to find a unitary
 # form which is G-invariant or prove that no such form exists.
@@ -134,7 +135,7 @@ end;
 #
 # In general, this function should only be used if one can be sure that <G>
 # preserves a unitary form (but one does not know which one). 
-InstallGlobalFunction("UnitaryForm",
+BindGlobal("UnitaryForm",
 function(G)
     local d, F, q, M, inverseHermitianConjugateM, formMatrix, row, col, x,
     scalar, counter;

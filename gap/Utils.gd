@@ -11,15 +11,17 @@
 #! length <C>nrRows * nrCols</C>, the elements of <A>entries</A> will be
 #! written into the matrix row by row.
 DeclareGlobalFunction("MatrixByEntries");
-
+#! @Chapter Utility Functions
+#! @Section MatrixFunctions
+#! @Arguments entries, field
+#! @Description
+#! Return an antidiagonal matrix <C>M</C> with entries as specified by the 
+#! argument <A>entries</A> in the following way:
+#! - If <A>entries</A> is a list, the entries of <C>M</C> are, from top right 
+#!   to bottom left, the entries of that list.
+#! - If <A>entries</A> is an integer, the entries of <C>M</C> are all ones 
+#!   and the number of them is <A>entries</A>.
 DeclareGlobalFunction("AntidiagonalMat");
-DeclareGlobalFunction("SolveQuadraticCongruence");
-DeclareGlobalFunction("ApplyFunctionToEntries");
-DeclareGlobalFunction("HermitianConjugate");
-DeclareGlobalFunction("SolveFrobeniusEquation");
-DeclareGlobalFunction("SquareSingleEntryMatrix");
-DeclareGlobalFunction("QuoCeil");
-DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
 
 #! @Chapter Utility Functions
 #! @Section Creating Matrix Groups
