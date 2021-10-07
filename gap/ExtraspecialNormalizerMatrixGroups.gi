@@ -1,7 +1,8 @@
 # Construction as in Lemma 9.1 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
-OddExtraspecialGroup := function(r, m, q)
+BindGlobal("OddExtraspecialGroup",
+function(r, m, q)
     local F, zeta, omega, X, Y, listOfXi, listOfYi;
 
     if (q - 1) mod r <> 0 or not IsPrime(r) then
@@ -25,12 +26,13 @@ OddExtraspecialGroup := function(r, m, q)
     IdentityMat(r ^ (i - 1), F)));
 
     return rec(listOfXi := listOfXi, listOfYi := listOfYi);
-end;
+end);
 
 # Construction as in Lemma 9.2 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
-OddExtraspecialNormalizerInGL := function(r, m, q, type...)
+BindGlobal("OddExtraspecialNormalizerInGL",
+function(r, m, q, type...)
     local F, zeta, omega, U, V, listOfUi, listOfVi, listForPermutation,
         w, W, listOfWi, generatingScalar, rootOfq, result, i, j;
 
@@ -102,12 +104,13 @@ OddExtraspecialNormalizerInGL := function(r, m, q, type...)
     result.listOfVi := listOfVi;
     result.listOfWi := listOfWi;
     return result;
-end;
+end);
 
 # Construction as in Lemma 9.3 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
-SymplecticTypeNormalizerInGL := function(m, q, type...)
+BindGlobal("SymplecticTypeNormalizerInGL",
+function(m, q, type...)
     local F, listOfUi, U, result, zeta, psi; 
 
     if (q - 1) mod 4 <> 0 or m < 2 then
@@ -146,10 +149,11 @@ SymplecticTypeNormalizerInGL := function(m, q, type...)
     result.listOfUi := listOfUi;
 
     return result;
-end;
+end);
 
 # Construction as in Lemma 9.4 of [HR05]
-Extraspecial2MinusTypeNormalizerInGL := function(m, q)
+BindGlobal("Extraspecial2MinusTypeNormalizerInGL",
+function(m, q)
     local F, solutionQuadraticCongruence, a, b, kroneckerFactorX1, kroneckerFactorY1, 
     kroneckerFactorU1, kroneckerFactorV1, kroneckerFactorW1, result, p;
 
@@ -203,9 +207,10 @@ Extraspecial2MinusTypeNormalizerInGL := function(m, q)
     fi;
 
     return result;
-end;
+end);
 
-ScalarToNormalizeDeterminant := function(matrix, sizeOfMatrix, field)
+BindGlobal("ScalarToNormalizeDeterminant",
+function(matrix, sizeOfMatrix, field)
     local scalar;
     scalar := RootFFE(field, Determinant(matrix), sizeOfMatrix);
     if scalar = fail then
@@ -213,12 +218,13 @@ ScalarToNormalizeDeterminant := function(matrix, sizeOfMatrix, field)
     else
         return scalar ^ -1;
     fi;
-end;
+end);
 
 # Construction as in Proposition 9.5 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
-OddExtraspecialNormalizerInSL := function(r, m, q, type...)
+BindGlobal("OddExtraspecialNormalizerInSL",
+function(r, m, q, type...)
     local F, d, listOfUi, listOfVi, V, generatorsOfNormalizerInGL, scalarMultiplierUi, 
     scalarMultiplierVi, generators, generatingScalar, result, zeta, rootOfq;
 
@@ -336,12 +342,13 @@ OddExtraspecialNormalizerInSL := function(r, m, q, type...)
                 Gcd(rootOfq + 1, d) * r ^ (2 * m) * SizeSp(2 * m, r));
     fi;
     return result;
-end;
+end);
 
 # Construction as in Proposition 9.5 of [HR05]
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
-SymplecticTypeNormalizerInSL := function(m, q, type...)
+BindGlobal("SymplecticTypeNormalizerInSL",
+function(m, q, type...)
     local F, generatorsOfNormalizerInGL, d, listOfUi, listOfVi, listOfWi,
     generatingScalar, scalarMultiplierVi, i, scalarMultiplierUiAndWi, p, e, 
     factorization, generators, result, zeta, U1InGL, rootOfq;
@@ -497,11 +504,12 @@ SymplecticTypeNormalizerInSL := function(m, q, type...)
                 Gcd(rootOfq + 1, d) * 2 ^ (2 * m) * SizeSp(2 * m, 2));
     fi;
     return result;
-end;
+end);
 
 # Construction as in Proposition 9.5 of [HR05]
 # Only for d = 2
-Extraspecial2MinusTypeNormalizerInSL := function(q)
+BindGlobal("Extraspecial2MinusTypeNormalizerInSL",
+function(q)
     local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
     factorization, generators, result, scalarMultiplierV1, scalarMultiplierU1,
     zeta;
@@ -557,7 +565,7 @@ Extraspecial2MinusTypeNormalizerInSL := function(q)
         SetSize(result, Factorial(4));
     fi;
     return result;
-end;
+end);
 
 BindGlobal("ExtraspecialNormalizerInSL",
 function(r, m, q)

@@ -43,7 +43,8 @@ end);
 # the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
 # is zero as well).
 # This is the function Theta(...) from [HR05].
-MapGammaLToGL := function(M, A, omega)
+BindGlobal("MapGammaLToGL",
+function(M, A, omega)
     local result, i, j, exponent, dimensionOfA;
 
     if not NumberRows(A) = NumberColumns(A) then
@@ -67,7 +68,7 @@ MapGammaLToGL := function(M, A, omega)
     od;
 
     return result;
-end;
+end);
 
 # Return the subgroup of <M>SL(n, q)</M> induced by the group of semilinear
 # transformations of the vector space <M>F'^m</M> over the field 

@@ -36,7 +36,7 @@ function(type, n, q, classes...)
 end);
 
 # Return an element of GL(n, q) \ SL(n, q).
-InstallGlobalFunction("GLMinusSL",
+BindGlobal("GLMinusSL",
 function(n, q)
     local F, result;
     F := GF(q);
@@ -45,11 +45,13 @@ function(n, q)
     return ImmutableMatrix(F, result);
 end);
 
-C1SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C1SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     return List([1..n-1], k -> SLStabilizerOfSubspace(n, q, k));
-end;
+end);
 
-C2SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C2SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     local t, divisors, result;
     divisors := DivisorsInt(n);
     result := [];
@@ -62,13 +64,15 @@ C2SubgroupsSpecialLinearGroupGeneric := function(n, q)
         Add(result, ImprimitivesMeetSL(n, q, t));
     od;
     return result;
-end;
+end);
 
-C3SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C3SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     return List(PrimeDivisors(n), s -> GammaLMeetSL(n, q, s));
-end;
+end);
 
-C4SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C4SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     local divisorListOfn, result, n1, numberOfConjugates, generatorGLMinusSL,
     tensorProductSubgroup;
     
@@ -93,9 +97,10 @@ C4SubgroupsSpecialLinearGroupGeneric := function(n, q)
     od;
 
     return result;
-end;
+end);
 
-C5SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C5SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     local factorisation, p, e, generatorGLMinusSL, primeDivisorsOfe,
     degreeOfExtension, f, subfieldGroup, numberOfConjugates, result;
     
@@ -118,9 +123,10 @@ C5SubgroupsSpecialLinearGroupGeneric := function(n, q)
     od;
 
     return result;
-end;
+end);
 
-C6SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C6SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
     generatorGLMinusSL, numberOfConjugates, extraspecialNormalizerSubgroup;
 
@@ -183,9 +189,10 @@ C6SubgroupsSpecialLinearGroupGeneric := function(n, q)
     fi;
 
     return result;
-end;
+end);
 
-C7SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C7SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     local m, t, factorisationOfn, factorisationOfnExponents, highestPowern,
     result, divisorsHighestPowern, numberOfConjugates, tensorInducedSubgroup, 
     generatorGLMinusSL;
@@ -220,9 +227,10 @@ C7SubgroupsSpecialLinearGroupGeneric := function(n, q)
     od;
 
     return result;
-end;
+end);
 
-C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
+BindGlobal("C8SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
     local factorisation, p, e, result, generatorGLMinusSL, symplecticSubgroup,
     numberOfConjugatesSymplectic, unitarySubgroup, numberOfConjugatesUnitary,
     orthogonalSubgroup, numberOfConjugatesOrthogonal, epsilon;
@@ -276,7 +284,7 @@ C8SubgroupsSpecialLinearGroupGeneric := function(n, q)
     fi;
 
     return result;
-end;
+end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialLinearGroup,
 function(n, q, classes...)
@@ -438,7 +446,7 @@ function(n, q, classes...)
 end);
 
 # Return an element of GU(n, q) \ SU(n, q)
-InstallGlobalFunction("GUMinusSU",
+BindGlobal("GUMinusSU",
 function(n, q)
     local F, zeta, result, halfOfn;
     F := GF(q ^ 2);
@@ -455,7 +463,8 @@ function(n, q)
     return ImmutableMatrix(F, result);
 end);
 
-C1SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+BindGlobal("C1SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
     local result;
     # type P_k subgroups
     result := List([1..QuoInt(n, 2)], k -> SUStabilizerOfIsotropicSubspace(n, q, k));
@@ -464,9 +473,10 @@ C1SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
                             List([1..QuoCeil(n, 2) - 1], 
                                  k -> SUStabilizerOfNonDegenerateSubspace(n, q, k)));
     return result;
-end;
+end);
 
-C2SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+BindGlobal("C2SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
     local divisorListOfn, result;
     
     divisorListOfn := List(DivisorsInt(n));
@@ -484,9 +494,16 @@ C2SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     fi;
 
     return result;
-end;
+end);
 
-C4SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+BindGlobal("C3SubgroupsSpecialUnitaryGroupGeneric"
+function(n, q)
+    return List(Filtered(PrimeDivisors(n), IsOddInt), 
+                s -> GammaLMeetSU(n, q, s));
+end);
+
+BindGlobal("C4SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
     local divisorListOfn, result, n1, numberOfConjugates, generatorGUMinusSU,
     tensorProductSubgroup;
     
@@ -511,14 +528,10 @@ C4SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     od;
 
     return result;
-end;
+end);
 
-C3SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
-    return List(Filtered(PrimeDivisors(n), IsOddInt), 
-                s -> GammaLMeetSU(n, q, s));
-end;
-
-C5SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+BindGlobal("C5SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
     local factorisation, p, e, generatorGUMinusSU, primeDivisorsOfe,
     degreeOfExtension, f, subfieldGroup, numberOfConjugates, result, epsilon;
     
@@ -579,9 +592,10 @@ C5SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     fi;
 
     return result;
-end;
+end);
 
-C6SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+BindGlobal("C6SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
     generatorGUMinusSU, numberOfConjugates, extraspecialNormalizerSubgroup;
 
@@ -629,9 +643,10 @@ C6SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     fi;
 
     return result;
-end;
+end);
 
-C7SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
+BindGlobal("C7SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
     local m, t, factorisationOfn, factorisationOfnExponents, highestPowern,
     result, divisorsHighestPowern, numberOfConjugates, tensorInducedSubgroup, 
     generatorGUMinusSU;
@@ -665,7 +680,7 @@ C7SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
     od;
 
     return result;
-end;
+end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
 function(n, q, classes...)
