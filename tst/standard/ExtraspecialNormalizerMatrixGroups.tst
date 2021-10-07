@@ -1,26 +1,30 @@
 gap> TestExtraspecialNormalizerInSL := function(args)
->   local r, m, q, G;
+>   local r, m, q, G, hasSize;
 >   r := args[1];
 >   m := args[2];
 >   q := args[3];
 >   G := ExtraspecialNormalizerInSL(r, m, q);
+>   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
 >   return IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q);
+>          and DefaultFieldOfMatrixGroup(G) = GF(q)
+>          and hasSize;
 > end;;
 gap> testsExtraspecialNormalizerInSL := [[5, 1, 11], [3, 1, 7], [3, 2, 13], [2, 3, 5], [2, 2, 5], 
 >                                        [2, 2, 9], [2, 1, 9], [2, 1, 5], [2, 1, 7]];;
 gap> ForAll(testsExtraspecialNormalizerInSL, TestExtraspecialNormalizerInSL);
 true
 gap> TestExtraspecialNormalizerInSU := function(args)
->   local r, m, q, G;
+>   local r, m, q, G, hasSize;
 >   r := args[1];
 >   m := args[2];
 >   q := args[3];
 >   G := ExtraspecialNormalizerInSU(r, m, q);
+>   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
 >   return IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2);
+>          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
+>          and hasSize;
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsExtraspecialNormalizerInSU := [[5, 1, 4], [2, 3, 3], [2, 3, 7], [2, 2, 3], [2, 2, 7], 

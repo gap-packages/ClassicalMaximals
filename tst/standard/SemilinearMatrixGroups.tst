@@ -1,25 +1,29 @@
 gap> TestGammaLMeetSL := function(args)
->   local n, q, s, G;
+>   local n, q, s, G, hasSize;
 >   n := args[1];
 >   q := args[2];
 >   s := args[3];
 >   G := GammaLMeetSL(n, q, s);
+>   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
 >   return IsSubset(SL(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q);
+>          and DefaultFieldOfMatrixGroup(G) = GF(q)
+>          and hasSize;
 > end;;
 gap> testsGammaLMeetSL := [[4, 3, 2], [2, 2, 2], [6, 5, 3], [3, 4, 3]];;
 gap> ForAll(testsGammaLMeetSL, TestGammaLMeetSL);
 true
 gap> TestGammaLMeetSU := function(args)
->   local n, q, s, G;
+>   local n, q, s, G, hasSize;
 >   n := args[1];
 >   q := args[2];
 >   s := args[3];
 >   G := GammaLMeetSU(n, q, s);
+>   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
 >   return IsSubset(SU(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2);
+>          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
+>          and hasSize;
 > end;;
 gap> testsGammaLMeetSU := [[3, 5, 3], [6, 3, 3], [3, 7, 3]];;
 gap> ForAll(testsGammaLMeetSU, TestGammaLMeetSU);
