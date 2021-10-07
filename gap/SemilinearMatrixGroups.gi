@@ -143,7 +143,7 @@ end);
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, Y, AandB, C, D, i,
-    range, result, AsInGU, omega, generators, size;
+    range, AsInGU, omega, generators, size;
     if d mod s <> 0 or not IsPrime(s) or not IsOddInt(s) then
         ErrorNoReturn("<s> must be an odd prime and a divisor of <d> but <s> = ", s,
                       " and <n> = ", d);
@@ -175,9 +175,8 @@ function(d, q, s)
     if m = 1 then
         # note that we require s to be odd
         generators := [Bs, Cs];
-        result := MatrixGroupWithSize(F, generators, size);
         # conjugate the result so that it preserves the standard unitary form
-        return ConjugateToStandardForm(result, "U");
+        return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "U");
     fi;
 
     omega := PrimitiveElement(GF(q ^ (2 * s)));
@@ -193,7 +192,6 @@ function(d, q, s)
     od;
 
     generators := Concatenation(AandB, [C, D]);
-    result := MatrixGroupWithSize(F, generators, size);
     # conjugate the result so that it preserves the standard unitary form 
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "U");
 end);

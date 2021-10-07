@@ -12,11 +12,11 @@ function(d, q)
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
     C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);
+    generators := Concatenation(AandB, [C]);
 
     if IsEvenInt(q) or gcd / 2 = Gcd(q - 1, d / 2) then
         # Size according to Table 2.11 in [BHR13]
         size := gcd * SizePSp(d, q);
-        generators := Concatenation(AandB, [C]);
     else
         D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta),
                                        List([1..d / 2], i -> zeta ^ 0)));
@@ -29,7 +29,7 @@ function(d, q)
         #                        = |Sp(d, q)|,
         # since |CSp(d, q) : Sp(d, q)| = q - 1 according to Table 1.3 of [BHR13]
         size := gcd * SizeSp(d, q);
-        generators := Concatenation(AandB, [C, E]);
+        Add(generators, E);
     fi;
 
     return MatrixGroupWithSize(F, generators, size);
@@ -77,7 +77,7 @@ end);
 BindGlobal("OrthogonalNormalizerInSL",
 function(epsilon, d, q)
     local F, generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
-    result, i1, DEpsilon, EEpsilon, X, W, i2, k, size;
+    i1, DEpsilon, EEpsilon, X, W, i2, k, size;
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
     fi;
