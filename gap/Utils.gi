@@ -365,7 +365,12 @@ end);
  
 InstallGlobalFunction("MatrixGroup",
 function(F, gens)
-    return Group(List(gens, g -> ImmutableMatrix(F, g)));
+    if IsEmpty(gens) then
+        ErrorNoReturn("<gens> cannot be empty"); 
+    elif not IsField(F) then
+        ErrorNoReturn("<F> must be a field");
+    fi;
+    return Group(List(gens, g -> NewMatrix(IsObject, F, NrCols(g), g)));
 end);
 
 InstallGlobalFunction("MatrixGroupWithSize",
