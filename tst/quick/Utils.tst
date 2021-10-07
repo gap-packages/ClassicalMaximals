@@ -93,8 +93,8 @@ gap> TestMatrixGroup := function(args)
 >          and DefaultFieldOfMatrixGroup(GWithSize) = F
 >          and Size(GWithSize) = size;
 > end;;
-gap> testsMatrixGroup := [[GF(7 ^ 4), Z(7 ^ 3) * IdentityMat(2, GF(7)), 37],
->                         [CF(4), [[1, 2], [3, 4]], 73]];;
+gap> testsMatrixGroup := [[GF(3 ^ 2), Z(3) * IdentityMat(2, GF(3)), 37],
+>                         [GF(5 ^ 2), Z(5) * IdentityMat(2, GF(5)), 73]];;
 gap> ForAll(testsMatrixGroup, TestMatrixGroup);
 true
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSp(n, q) <> Size(Sp(n, q)) then Error("bad result for Sp(", n, ", ", q, ")"); fi; od; od;

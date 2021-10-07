@@ -362,27 +362,10 @@ function(epsilon, n, q)
     
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
-
-# This is a variation of the GAP code of the corresponding method of
-# GroupWithGenerators. 
+ 
 InstallGlobalFunction("MatrixGroup",
 function(F, gens)
-    local G, typ;
-
-    typ := MakeGroupyType(FamilyObj(gens),
-                          IsGroup and IsAttributeStoringRep
-                                  and HasGeneratorsOfMagmaWithInverses
-                                  and IsFinitelyGeneratedGroup
-                                  and HasIsEmpty
-                                  and IsFinite,
-                          gens, false, true);
-    gens := List(Immutable(gens), g -> ImmutableMatrix(F, g));
-
-    G := rec();
-    ObjectifyWithAttributes(G, typ, GeneratorsOfMagmaWithInverses, AsList(gens));
-    SetDefaultFieldOfMatrixGroup(G, F);
-
-    return G;
+    return Group(List(gens, g -> ImmutableMatrix(F, g)));
 end);
 
 InstallGlobalFunction("MatrixGroupWithSize",
