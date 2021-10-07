@@ -14,7 +14,7 @@ gap> TestSubfieldSL := function(args)
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsSubfieldSL := [[4, 2, 4, 2], [2, 3, 6, 2], [3, 7, 3, 1]];;
 #@else
-gap> testsSubfieldSL := [[4, 2, 4, 2], [3, 7, 3, 1]];;
+gap> testsSubfieldSL := [[4, 2, 4, 2]];;
 #@fi
 gap> ForAll(testsSubfieldSL, TestSubfieldSL);
 true
@@ -34,7 +34,7 @@ gap> TestUnitarySubfieldSU := function(args)
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS) 
 gap> testsUnitarySubfieldSU := [[2, 3, 6, 2], [3, 7, 3, 1], [3, 5, 3, 1]];;
 #@else
-gap> testsUnitarySubfieldSU := [[3, 7, 3, 1], [3, 5, 3, 1]];;
+gap> testsUnitarySubfieldSU := [];;
 #@fi
 gap> ForAll(testsUnitarySubfieldSU, TestUnitarySubfieldSU);
 true
