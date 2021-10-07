@@ -1,11 +1,14 @@
+# TODO
+BindGlobal("ConstructDefiningCharacteristicRepresentationOfAlmostSimpleGroup",
+function(q)
+    # TODO
+end);
+
+
 # Construction of group as in Table 5.6 row 4 from [BHR13]
 BindGlobal("l3qdim6",
-function(q)
+function(q, general)
     local A, G, M, MM, S, T, general, w;
-    general := ValueOption("general");
-    if general = fail then
-        general := false;
-    fi;
     Assert(1,IsOddInt(q));
     w := PrimitiveElement(GF(q));
     # rewritten select statement
@@ -27,16 +30,8 @@ end);
 
 # Construction of group as in Table 5.6 row 5 from [BHR13]
 BindGlobal("u3qdim6",
-function(q)
+function(q, general, normaliser)
     local A, G, M, MM, S, T, general, normaliser, w;
-    general := ValueOption("general");
-    if general = fail then
-        general := false;
-    fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then
-        normaliser := false;
-    fi;
     Assert(1,IsOddInt(q));
     if normaliser then
         general := true;
