@@ -1,3 +1,20 @@
+gap> TestClassicalMaximalsLinear := function(args)
+>   return Length(ClassicalMaximalsGeneric("L", args[1], args[2])) = args[3];
+> end;;
+gap> testsClassicalMaximalsLinear := [[2, 4, 3], [2, 5, 3], [2, 7, 3],
+>                                     [2, 8, 3], [2, 9, 3], [2, 11, 2],
+>                                     [2, 13, 4], [2, 16, 4], [2, 17, 5],
+>                                     [2, 19, 3],
+>                                     [3, 2, 3], [3, 3, 4], [3, 4, 6],
+>                                     [3, 5, 5], [3, 7, 8], [3, 8, 5],
+>                                     [3, 9, 7], [3, 11, 5], [3, 13, 8],
+>                                     [3, 16, 8], [3, 17, 5], [3, 19, 10],
+>                                     [4, 2, 5], [4, 3, 8], [4, 4, 8],
+>                                     [4, 5, 13], [4, 7, 10], [4, 8, 8],
+>                                     [4, 9, 18], [4, 11, 10], [4, 13, 14],
+>                                     [4, 16, 9], [4, 17, 16], [4, 19, 10]];;
+gap> ForAll(testsClassicalMaximalsLinear, TestClassicalMaximalsLinear);
+true
 gap> TestClassicalMaximalsUnitary := function(args)
 >   return Length(ClassicalMaximalsGeneric("U", args[1], args[2])) = args[3];
 > end;;
