@@ -36,7 +36,7 @@ function(type, n, q, classes...)
 end);
 
 # Return an element of GL(n, q) \ SL(n, q).
-BindGlobal("GLMinusSL",
+InstallGlobalFunction("GLMinusSL",
 function(n, q)
     local F, result;
     F := GF(q);
@@ -446,7 +446,7 @@ function(n, q, classes...)
 end);
 
 # Return an element of GU(n, q) \ SU(n, q)
-BindGlobal("GUMinusSU",
+InstallGlobalFunction("GUMinusSU",
 function(n, q)
     local F, zeta, result, halfOfn;
     F := GF(q ^ 2);
@@ -496,7 +496,7 @@ function(n, q)
     return result;
 end);
 
-BindGlobal("C3SubgroupsSpecialUnitaryGroupGeneric"
+BindGlobal("C3SubgroupsSpecialUnitaryGroupGeneric",
 function(n, q)
     return List(Filtered(PrimeDivisors(n), IsOddInt), 
                 s -> GammaLMeetSU(n, q, s));
