@@ -1,6 +1,4 @@
-# If <type> = "S" or type = "O" then <group> must have the attribute
-# InvariantBilinearForm.
-# Also, one need to ensure that the attribute DefaultFieldOfMatrixGroup is set
+# One need to ensure that the attribute DefaultFieldOfMatrixGroup is set
 # correctly for <group>; this can be done, for example, by making the
 # generators used during construction of the group immutable matrices over the
 # appropriate field.
@@ -14,20 +12,23 @@ function(group, type, gramMatrix)
     fi;
     field := DefaultFieldOfMatrixGroup(group);
     if type = "S" or type = "O" then
-        gapForm := BilinearFormByMatrix(InvariantBilinearForm(group).matrix, 
-                                        field);
+        formMatrix := BilinearForm(group, type);
+        if formMatrix = fail then
+            if type = "S" then
+                ErrorNoReturn("No preserved symplectic form found for <group>");
+            else
+                ErrorNoReturn("No preserved symmetric bilinear form found for", 
+                              " <group>");
+            fi;
+        fi;
+        gapForm := BilinearFormByMatrix(formMatrix, field);
         newForm := BilinearFormByMatrix(gramMatrix, field);
     else
-        if HasInvariantSesquilinearForm(group) then
-            gapForm := HermitianFormByMatrix(InvariantSesquilinearForm(group).matrix,
-                                             field);
-        else    
-            formMatrix := UnitaryForm(group);
-            if formMatrix = fail then
-                Error("No preserved unitary form found for <group>");
-            fi;
-            gapForm := HermitianFormByMatrix(formMatrix, field);
+        formMatrix := UnitaryForm(group);
+        if formMatrix = fail then
+            Error("No preserved unitary form found for <group>");
         fi;
+        gapForm := HermitianFormByMatrix(formMatrix, field);
         newForm := HermitianFormByMatrix(gramMatrix, field);
     fi;
     # the following if condition can only ever be fulfilled if <group> is an
@@ -42,15 +43,22 @@ function(group, type, gramMatrix)
     canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
                                              field);
     result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
+    
+    # Set useful attributes
     if HasSize(group) then
         SetSize(result, Size(group));
     fi;
+    if type = "S" or type = "O" then
+        SetInvariantBilinearForm(result, gramMatrix);
+    else
+        SetInvariantSesquilinearForm(result, gramMatrix);
+    fi;
+
     return result;
 end);
 
 # Can only deal with sesquilinear forms, not with quadratic forms as of yet.
-# If <type> is one of "S", "O+", "O-" or "O" then <group> must have the
-# attribute InvariantBilinearForm.
+#
 # Also, one need to ensure that the attribute DefaultFieldOfMatrixGroup is set
 # correctly for <group>; this can be done, for example, by making the
 # generators used during construction of the group immutable matrices over the
