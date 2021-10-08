@@ -120,7 +120,7 @@ end);
 BindGlobal("SUIsotropicImprimitives",
 function(d, q)
     local F, zeta, generators, J, generatorOfSL,
-    generator, C, D, size;
+    generator, C, D, size, result;
     if not IsEvenInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
@@ -169,5 +169,8 @@ function(d, q)
     # Size according to Table 2.5 of [BHR13]
     size := SizeSL(d / 2, q ^ 2) * (q - 1) * 2;
 
-    return MatrixGroupWithSize(F, generators, size);
+    result := MatrixGroupWithSize(F, generators, size);
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+
+    return ConjugateToStandardForm(result, "U");
 end);
