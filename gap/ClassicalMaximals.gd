@@ -1,9 +1,10 @@
 #
 # ClassicalMaximals: Maximal subgroups of classical groups
 #
+DeclareInfoClass("InfoClassicalMaximalsTests");
+
 #! @Chapter Maximal Subgroups of Classical Groups
 #! @Section The Main function
-
 #! @Arguments type, n, q
 #! @Description
 #! Return ...
