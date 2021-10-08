@@ -1,33 +1,34 @@
-# Construction as in Proposition 7.1 of [2]
+# Construction as in Proposition 7.1 of [HR05]
 BindGlobal("TensorProductStabilizerInSL",
 function(d1, d2, q)
-    local d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
-    diagonalGenerator1, diagonalGenerator2, solution, result;
+    local F, d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
+    diagonalGenerator1, diagonalGenerator2, solution, size;
     if not d1 > 1 or not d1 < d2 then
         ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
                       " and <d2> = ", d2);
     fi;
 
+    F := GF(q);
     d := d1 * d2;
     k := Gcd(d, q - 1);
     g := Gcd(d1, d2, q - 1);
     c := QuoInt(Gcd(d1, q - 1) * Gcd(d2, q - 1) * g, k);
-    zeta := PrimitiveElement(GF(q));
-    C := zeta^(QuoInt((q - 1), k)) * IdentityMat(d, GF(q)); # generates the center of SL(d, q)
+    zeta := PrimitiveElement(F);
+    C := zeta^(QuoInt((q - 1), k)) * IdentityMat(d, F); # generates the center of SL(d, q)
     Id1 := One(SL(d1 ,q));
     Id2 := One(SL(d2 ,q));
 
     gens := [C];
     SLd1Gens := GeneratorsOfGroup(SL(d1, q));
     SLd2Gens := GeneratorsOfGroup(SL(d2, q));
-    Add(gens,KroneckerProduct(SLd1Gens[1], Id2)); # corresponds to S in [2]
-    Add(gens,KroneckerProduct(SLd1Gens[2], Id2)); # corresponds to T in [2]
-    Add(gens,KroneckerProduct(Id1, SLd2Gens[1])); # corresponds to U in [2]
-    Add(gens,KroneckerProduct(Id1, SLd2Gens[2])); # corresponds to V in [2]
+    Add(gens,KroneckerProduct(SLd1Gens[1], Id2)); # corresponds to S in [HR05]
+    Add(gens,KroneckerProduct(SLd1Gens[2], Id2)); # corresponds to T in [HR05]
+    Add(gens,KroneckerProduct(Id1, SLd2Gens[1])); # corresponds to U in [HR05]
+    Add(gens,KroneckerProduct(Id1, SLd2Gens[2])); # corresponds to V in [HR05]
 
     if not c = 1 then
-        diagonalGenerator1 := GL(d1, q).1; # diagonal matrix [zeta, 1, ..., 1]
-        diagonalGenerator2 := GL(d2, q).1;
+        diagonalGenerator1 := GLMinusSL(d1, q); # diagonal matrix [zeta, 1, ..., 1]
+        diagonalGenerator2 := GLMinusSL(d2, q);
         # Solving the modular congruence d2 * x + d1 * y = 0 mod (q - 1) by
         # solving the matrix equation (d2, d1, q - 1) * (x, y, t) = 0 over the
         # integers.
@@ -38,18 +39,17 @@ function(d1, d2, q)
         od;
     fi;
 
-    result := Group(gens);
-    # Size according to Table 2.7 in [1]
-    SetSize(result, Size(SL(d1, q)) * Size(SL(d2, q)) * g);
-    return result;
+    # Size according to Table 2.7 in [BHR13]
+    size := SizeSL(d1, q) * SizeSL(d2, q) * g;
+    return MatrixGroupWithSize(F, gens, size);
 end);
 
-# Construction as in Proposition 7.3 of [2]
+# Construction as in Proposition 7.3 of [HR05]
 # We use the identity matrix as our hermitian form.
 BindGlobal("TensorProductStabilizerInSU",
 function(d1, d2, q)
     local d, F, zeta, generators, SUd1FormIdentityMat, SUd2FormIdentityMat, C,
-    c, eta, diagonalMat1, diagonalMat2, solution, result;
+    c, eta, diagonalMat1, diagonalMat2, solution, result, size;
     if not d1 < d2 or not d1 > 1 then
         ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
                       " and <d2> = ", d2);
@@ -61,8 +61,8 @@ function(d1, d2, q)
     generators := [];
 
     # generate the central product SU(d1, q) o SU(d2, q)
-    SUd1FormIdentityMat := ChangeFixedSesquilinearForm(SU(d1, q), "U", IdentityMat(d1, F));
-    SUd2FormIdentityMat := ChangeFixedSesquilinearForm(SU(d2, q), "U", IdentityMat(d2, F));
+    SUd1FormIdentityMat := ConjugateToSesquilinearForm(SU(d1, q), "U", IdentityMat(d1, F));
+    SUd2FormIdentityMat := ConjugateToSesquilinearForm(SU(d2, q), "U", IdentityMat(d2, F));
 
     generators := List(GeneratorsOfGroup(SUd1FormIdentityMat), 
                        g -> KroneckerProduct(g, IdentityMat(d2, F)));
@@ -91,12 +91,10 @@ function(d1, d2, q)
         od;
     fi;
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
+    # Size according to Table 2.7 in [BHR13]
+    size := SizeSU(d1, q) * SizeSU(d2, q) * Gcd(q + 1, d1, d2);
+    result := MatrixGroupWithSize(F, generators, size);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
-    result := ConjugateToStandardForm(result, "U");
-    # Size according to Table 2.7 in [1]
-    SetSize(result, Size(SU(d1, q)) * Size(SU(d2, q)) * Gcd(q + 1, d1, d2));
-    return result;
+    return ConjugateToStandardForm(result, "U");
 end);

@@ -1,5 +1,5 @@
-[![Build Status](https://github.com/ssiccha/ClassicalMaximals/workflows/CI/badge.svg?branch=main)](https://github.com/ssiccha/ClassicalMaximals/actions?query=workflow%3ACI+branch%3Amain)
-[![Code Coverage](https://codecov.io/github/ssiccha/ClassicalMaximals/coverage.svg?branch=main&token=)](https://codecov.io/gh/ssiccha/ClassicalMaximals)
+[![Build Status](https://github.com/gap-packages/ClassicalMaximals/workflows/CI/badge.svg?branch=main)](https://github.com/gap-packages/ClassicalMaximals/actions?query=workflow%3ACI+branch%3Amain)
+[![Code Coverage](https://codecov.io/github/gap-packages/ClassicalMaximals/coverage.svg?branch=main&token=)](https://codecov.io/gh/gap-packages/ClassicalMaximals)
 
 # The GAP package ClassicalMaximals
 
@@ -8,9 +8,8 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 
 ## Contact
 
-To report issues refer to our
-[issue tracker](https://github.com/ssiccha/ClassicalMaximals/issues)
-or send an email to `siccha@mathematik.uni-kl.de`.
+To report issues please use our
+[issue tracker](https://github.com/gap-packages/ClassicalMaximals/issues).
 
 ## License
 

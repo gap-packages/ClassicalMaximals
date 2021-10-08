@@ -35,9 +35,10 @@ end);
 # 1 / 2 in each trial.
 InstallGlobalFunction("SolveQuadraticCongruence",
 function(c, q)
-    local a, b;
-    for a in GF(q) do
-        b := RootFFE(GF(q), (c - a ^ 2) * Z(q) ^ 0, 2);
+    local F, a, b;
+    F := GF(q);
+    for a in F do
+        b := RootFFE(F, (c - a ^ 2) * Z(q) ^ 0, 2);
         if not b = fail then
             break;
         fi;
@@ -72,11 +73,13 @@ end);
 # If type = "S" then find a beta in GF(q ^ 2) with beta + beta ^ q = alpha.
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
-# Construction as in Lemma 2.2 of [2]
+# Construction as in Lemma 2.2 of [HR05]
 InstallGlobalFunction("SolveFrobeniusEquation",
 function(type, alpha, q)
-    local R, S, x, delta, polynomial, result;
-    if not alpha in GF(q) then
+    local F, R, S, x, delta, polynomial, result;
+
+    F := GF(q);
+    if not alpha in F then
         ErrorNoReturn("<alpha> must be an element of GF(<q>) but <alpha> = ",
                       alpha, " and <q> = ", q);
     fi;
@@ -90,16 +93,16 @@ function(type, alpha, q)
         return Z(q) ^ 0;
     fi;
 
-    R := PolynomialRing(GF(q), ["x"]);
+    R := PolynomialRing(F, ["x"]);
     S := PolynomialRing(GF(q ^ 2), ["x"]);
-    x := Indeterminate(GF(q), "x");
+    x := Indeterminate(F, "x");
 
     # A quick argument using the quadratic formula for q odd or some
     # algebraic manipulations and the non-surjectivity of the Artin-Schreier
     # map x -> x ^ 2 + x for q odd and alpha <> 0 shows that the construction
     # below always works.
     if type = "S" then
-        for delta in GF(q) do
+        for delta in F do
             polynomial := x ^ 2 - alpha * x + delta;
             if IsIrreducibleRingElement(R, polynomial) then
                 result := -CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
@@ -121,7 +124,7 @@ function(type, alpha, q)
     # contradiction for p >= 7 (we leave out the details); this leaves p = 3
     # and p = 5, which can easily be checked manually.
     elif type = "P" then
-        for delta in GF(q) do
+        for delta in F do
             polynomial := x ^ 2 + delta * x + alpha;
             if IsIrreducibleRingElement(R, polynomial) then
                 result := -CoefficientsOfUnivariatePolynomial(Factors(S, polynomial)[1])[1];
@@ -147,16 +150,123 @@ function(m, n)
     fi;
 end);
 
+
+# Compute the size of Sp(n, q) according to Theorem 1.6.22 in [BHR13]
+InstallGlobalFunction("SizeSp",
+function(n, q)
+    local m, result, powerOfq, i;
+    if IsOddInt(n) then
+        ErrorNoReturn("Dimension <n> must be even but ", n, " was given.");
+    fi;
+    m := QuoInt(n, 2);
+    result := q ^ (m * m);
+    powerOfq := 1;
+    for i in [1..m] do
+        powerOfq := powerOfq * q * q;
+        result := result * (powerOfq - 1);
+    od;
+    return result;
+end);
+
+
+# Compute the size of PSp(n, q) according to Table 1.3 in [BHR13],
+InstallGlobalFunction("SizePSp",
+function(n, q)
+    return QuoInt(SizeSp(n, q), Gcd(2, q - 1));
+end);
+
+
+# Compute the size of SU(n, q) according to Theorem 1.6.22 in [BHR13]
+# using the formula for GU(n, q) but starting with i = 2
+# because Table 1.3 gives [GU(n, q):SU(n, q)] = q + 1.
+InstallGlobalFunction("SizeSU",
+function(n, q)
+    local result, powerOfq, sign, i;
+    result := q ^ QuoInt(n * (n - 1), 2);
+    powerOfq := q;
+    sign := 1;
+    for i in [2..n] do
+        powerOfq := powerOfq * q;
+        sign := -sign;
+        result := result * (powerOfq + sign);
+    od;
+    return result;
+end);
+
+# Compute the size of PSU(n, q) according to Table 1.3 in [BHR13]
+# Namely, we have | G / Z(G) : S / Z(S) | = | G : S | * |Z(S)| / |Z(G)| so due
+# to | G : S | = q + 1, |Z(G)| = q + 1 and | G / Z(G) : S / Z(S) | = (q + 1, n), 
+# which are given in said table, this gives |Z(S)| = (q + 1, n). 
+InstallGlobalFunction("SizePSU",
+function(n, q)
+    return SizeSU(n, q) / Gcd(n, q + 1);
+end);
+
+# Compute the size of GU(n, q) according to Table 1.3 in [BHR13]
+InstallGlobalFunction("SizeGU",
+function(n, q)
+    return (q + 1) * SizeSU(n, q);
+end);
+
+
+# Compute the size of GO(epsilon, n, q) according to Theorem 1.6.22 in [BHR13]
+InstallGlobalFunction("SizeGO",
+function(epsilon, n, q)
+    local m, result, powerOfq, i;
+    if epsilon = 0 then
+
+        if IsEvenInt(n) then
+            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be odd but ", n, " was given.");
+        fi;
+
+        if IsEvenInt(q) then
+            return SizeSp(n - 1, q);
+        fi;
+
+        m := QuoInt(n - 1, 2);
+        result := 2 * q ^ (m * m);
+
+    elif epsilon in [-1, 1] then
+
+        if IsOddInt(n) then
+            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be even but ", n, " was given.");
+        fi;
+
+        m := QuoInt(n, 2);
+        result := 2 * q ^ (m * (m - 1)) * (q ^ m - epsilon);
+        m := m - 1;
+    else
+        ErrorNoReturn("<epsilon> must be in [-1, 0, 1] but ", epsilon, " was given.");
+    fi;
+
+    powerOfq := 1;
+    for i in [1..m] do
+        powerOfq := powerOfq * q * q;
+        result := result * (powerOfq - 1);
+    od;
+
+    return result;
+end);
+
+
+# Compute the size of SO(epsilon, n, q) according to Table 1.3 in [BHR13]
+InstallGlobalFunction("SizeSO",
+function(epsilon, n, q)
+    return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
+end);
+
+
 ReflectionMatrix := function(n, q, gramMatrix, v)
-    local reflectionMatrix, i, basisVector, reflectBasisVector, beta;
-    reflectionMatrix := NullMat(n, n, GF(q));
+    local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
+    F := GF(q);
+    reflectionMatrix := NullMat(n, n, F);
     beta := BilinearFormByMatrix(gramMatrix);
     if IsZero(EvaluateForm(beta, v, v)) then
         ErrorNoReturn("The vector <v> must have non-zero norm with respect to",
                       " the bilinear form given by <gramMatrix>");
     fi;
     for i in [1..n] do
-        basisVector := List([1..n], j -> 0 * Z(q));
+        basisVector := List([1..n], j -> Zero(F));
         basisVector[i] := Z(q) ^ 0;
         reflectBasisVector := basisVector 
                               - 2 * EvaluateForm(beta, v, basisVector) 
@@ -167,32 +277,33 @@ ReflectionMatrix := function(n, q, gramMatrix, v)
 end;
 
 # Construct generators for the orthogonal groups with the properties listed in
-# Lemma 2.4 of [2].
+# Lemma 2.4 of [HR05].
 # Construction as in: C. M. Roney-Dougal. "Conjugacy of Subgroups of the
 # General Linear Group." Experimental Mathematics, vol. 13 no. 2, 2004, pp.
 # 151-163. Lemma 2.4.
-# We take the notation from [2].
+# We take the notation from [HR05].
 InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
 function(epsilon, n, q)
-    local gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
+    local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
     solutionOfQuadraticCongruence;
     if IsEvenInt(q) then
         ErrorNoReturn("This function was only designed for <q> odd but <n> = ", 
                       n, "and <q> = ", q);
     fi;
 
-    zeta := PrimitiveElement(GF(q));
+    F := GF(q);
+    zeta := PrimitiveElement(F);
     if IsOddInt(n) then
-            gramMatrix := IdentityMat(n, GF(q));
-            generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+            gramMatrix := IdentityMat(n, F);
+            generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));
-            D := - IdentityMat(n, GF(q));
-            E := zeta * IdentityMat(n, GF(q));
+            D := - IdentityMat(n, F);
+            E := zeta * IdentityMat(n, F);
     else 
         if epsilon = 1 then
-            gramMatrix := AntidiagonalMat(n, GF(q));
-            generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+            gramMatrix := AntidiagonalMat(n, F);
+            generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));
             # Our standard bilinear form is given by the Gram matrix 
@@ -212,8 +323,8 @@ function(epsilon, n, q)
             b := solutionOfQuadraticCongruence.b;
 
             if IsOddInt(n * (q - 1) / 4) then
-                gramMatrix := IdentityMat(n, GF(q));
-                generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                gramMatrix := IdentityMat(n, F);
+                generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
@@ -224,13 +335,13 @@ function(epsilon, n, q)
                 D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
                 # Block diagonal matrix consisting of n / 2 blocks of the form 
                 # [[a, b], [b, -a]].
-                E := MatrixByEntries(GF(q), n, n, 
+                E := MatrixByEntries(F, n, n, 
                                      Concatenation(List([1..n], i -> [i, i, (-1) ^ (i + 1) * a]), 
                                                    List([1..n], i -> [i, i + (-1) ^ (i + 1), b])));
             else
                 gramMatrix := Z(q) ^ 0 * DiagonalMat(Concatenation([zeta],
                                                                    List([1..n - 1], i -> 1)));
-                generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
@@ -241,7 +352,7 @@ function(epsilon, n, q)
                 D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
                 # Block diagonal matrix consisting of one block [[0, zeta], [1, 0]]
                 # and n / 2 - 1 blocks of the form [[a, b], [b, -a]].
-                E := MatrixByEntries(GF(q), n, n, 
+                E := MatrixByEntries(F, n, n, 
                                      Concatenation([[1, 2, zeta], [2, 1, zeta ^ 0]],
                                                    List([3..n], i -> [i, i, (-1) ^ (i + 1) * a]), 
                                                    List([3..n], i -> [i, i + (-1) ^ (i + 1), b])));
@@ -251,4 +362,21 @@ function(epsilon, n, q)
     
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
+ 
+InstallGlobalFunction("MatrixGroup",
+function(F, gens)
+    if IsEmpty(gens) then
+        ErrorNoReturn("<gens> cannot be empty"); 
+    elif not IsField(F) then
+        ErrorNoReturn("<F> must be a field");
+    fi;
+    return Group(List(gens, g -> ImmutableMatrix(F, g)));
+end);
 
+InstallGlobalFunction("MatrixGroupWithSize",
+function(F, gens, size)
+    local result;
+    result := MatrixGroup(F, gens);
+    SetSize(result, size);
+    return result;
+end);

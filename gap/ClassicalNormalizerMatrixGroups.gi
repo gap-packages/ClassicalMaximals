@@ -1,44 +1,45 @@
-# Construction as in Proposition 11.1 of [2]
+# Construction as in Proposition 11.1 of [HR05]
 BindGlobal("SymplecticNormalizerInSL",
 function(d, q)
-    local zeta, gcd, A, B, C, D, i, E, result;
+    local F, zeta, gcd, AandB, C, D, i, E, size, generators;
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
 
-    zeta := PrimitiveElement(GF(q));
-    A := Sp(d, q).1;
-    B := Sp(d, q).2;
+    F := GF(q);
+    zeta := PrimitiveElement(F);
+    AandB := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
-    C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, GF(q));
+    C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);
+    generators := Concatenation(AandB, [C]);
 
     if IsEvenInt(q) or gcd / 2 = Gcd(q - 1, d / 2) then
-        result := Group([A, B, C]);
-        # Size according to Table in [1]
-        SetSize(result, gcd * Size(PSp(d, q)));
+        # Size according to Table 2.11 in [BHR13]
+        size := gcd * SizePSp(d, q);
     else
         D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta),
                                        List([1..d / 2], i -> zeta ^ 0)));
         # solving the congruence d * i = d / 2 mod q - 1 for i
         i := (d / 2) / gcd * (d / gcd) ^ (-1) mod ((q - 1) / gcd);
         E := zeta ^ (-i) * D;
-        result := Group([A, B, C, E]);
-        # Size according to Table 2.11 in [1]
+        # Size according to Table 2.11 in [BHR13]
         # Note that |PCSp(d, q)| = |CSp(d, q)| / (q - 1) 
         #                        = |Sp(d, q)| * |CSp(d, q) : Sp(d, q)| / (q - 1) 
         #                        = |Sp(d, q)|,
-        # since |CSp(d, q) : Sp(d, q)| = q - 1 according to Table 1.3 of [1]
-        SetSize(result, gcd * Size(Sp(d, q)));
+        # since |CSp(d, q) : Sp(d, q)| = q - 1 according to Table 1.3 of [BHR13]
+        size := gcd * SizeSp(d, q);
+        Add(generators, E);
     fi;
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);
 
-# Construction as in Proposition 11.3 of [2]
+# Construction as in Proposition 11.3 of [HR05]
 BindGlobal("UnitaryNormalizerInSL",
 function(d, q)
-    local qFactorization, e, p, q0, zeta, C, g, c, SUWithIdentityForm, SUGens, gens, D, zetaId, solution, result;
+    local F, qFactorization, e, p, q0, zeta, C, g, c, SUWithIdentityForm, 
+        SUGens, gens, D, zetaId, solution, size;
     qFactorization := PrimePowersInt(q);
     e := qFactorization[2];
     if IsOddInt(e) then
@@ -46,60 +47,61 @@ function(d, q)
     fi;
     p := qFactorization[1];
 
+    F := GF(q);
     q0 := p^(QuoInt(e, 2));
-    zeta := PrimitiveElement(GF(q));
-    C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, GF(q)); # generates the center of SL(d, q)
+    zeta := PrimitiveElement(F);
+    C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, F); # generates the center of SL(d, q)
     g := Gcd(q - 1, d);
     c := QuoInt(Gcd(q0 + 1, d) * (q - 1), Lcm(q0 + 1, QuoInt(q - 1, g)) * g);
-    SUWithIdentityForm := ChangeFixedSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
+    SUWithIdentityForm := ConjugateToSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
     SUGens := GeneratorsOfGroup(SUWithIdentityForm);
 
     gens := Concatenation(SUGens, [C]);
     if not IsOne(c) then
-        D := (GL(d, q).1) ^ (q0 - 1); # diagonal matrix [zeta^(q0 - 1), 1, ..., 1]
-        zetaId := zeta * IdentityMat(d, GF(q));
+        D := GLMinusSL(d, q) ^ (q0 - 1); # diagonal matrix [zeta^(q0 - 1), 1, ..., 1]
+        zetaId := zeta * IdentityMat(d, F);
         for solution in NullspaceIntMat([[q0 - 1], [d], [q - 1]]) do
             Add(gens, D ^ solution[1] * zetaId ^ solution[2]);
         od;
     fi;
 
-    result := Group(gens);
-    # Size according to Table 2.11 in [1]
-    SetSize(result, Size(SUWithIdentityForm) * Gcd(q0 - 1, d));
-    return result;
+    # Size according to Table 2.11 in [BHR13]
+    size := SizeSU(d, q0) * Gcd(q0 - 1, d);
+    return MatrixGroupWithSize(F, gens, size);
 end);
 
-# Construction as in Proposition 11.2 of [2]
+# Construction as in Proposition 11.2 of [HR05]
 # Note, though, that the construction of the matrix W as in Proposition 8.4 of
-# [2] does not lead to correct results here - we provide our own construction
+# [HR05] does not lead to correct results here - we provide our own construction
 # here instead.
 BindGlobal("OrthogonalNormalizerInSL",
 function(epsilon, d, q)
-    local generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
-    result, i1, DEpsilon, EEpsilon, X, W, i2, k;
+    local F, generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
+    i1, DEpsilon, EEpsilon, X, W, i2, k, size;
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
     fi;
     if d <= 2 then
         ErrorNoReturn("This function might not work with <d> <= 2 but <d> = ", d);
     fi;
-
-    zeta := PrimitiveElement(GF(q));
-    generatingScalar := zeta ^ QuoInt(q - 1, Gcd(q - 1, d)) * IdentityMat(d, GF(q));
+    
+    F := GF(q);
+    zeta := PrimitiveElement(F);
+    generatingScalar := zeta ^ QuoInt(q - 1, Gcd(q - 1, d)) * IdentityMat(d, F);
     generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
-    # These are A_epsilon, B_epsilon and C in [2]
+    # These are A_epsilon, B_epsilon and C in [HR05]
     generators := Concatenation(generatorsOfOrthogonalGroup.generatorsOfSO,
                                 [generatingScalar]);
     
     # We now construct an element W of determinant 1 in 
     # SL(d, q) - Z(SL(d, q)).SO(d, q) which has order 2 modulo 
-    # Z(SL(d, q)).SO(d, q) following Proposition 8.4 of [2]
+    # Z(SL(d, q)).SO(d, q) following Proposition 8.4 of [HR05]
     if IsEvenInt(d) then
         # det(DEpsilon) = -1
         DEpsilon := generatorsOfOrthogonalGroup.D;
         # det(EEpsilon) = (epsilon * omega) ^ (d / 2)
         EEpsilon := generatorsOfOrthogonalGroup.E;
-        X := zeta * IdentityMat(d, GF(q));
+        X := zeta * IdentityMat(d, F);
         k := Gcd(q - 1, d);
 
         # We deal with the cases epsilon = +1 and epsilon = -1 simultaneously
@@ -152,9 +154,8 @@ function(epsilon, d, q)
         Add(generators, W);
     fi;
 
-    result := Group(generators);
     # Size according to Table 2.11 in [1] (note that the structure given in
-    # Proposition 11.2 of [2] is wrong!)
-    SetSize(result, Gcd(q - 1, d) * Size(SO(epsilon, d, q)));
-    return result;
+    # Proposition 11.2 of [HR05] is wrong!)
+    size := Gcd(q - 1, d) * SizeSO(epsilon, d, q);
+    return MatrixGroupWithSize(F, generators, size);
 end);

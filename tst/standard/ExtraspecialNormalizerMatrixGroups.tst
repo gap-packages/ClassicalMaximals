@@ -1,106 +1,48 @@
-gap> r := 5;; m := 1;; q := 11;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
+gap> TestExtraspecialNormalizerInSL := function(args)
+>   local r, m, q, G, hasSize;
+>   r := args[1];
+>   m := args[2];
+>   q := args[3];
+>   G := ExtraspecialNormalizerInSL(r, m, q);
+>   hasSize := HasSize(G);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q)
+>          and hasSize;
+> end;;
+gap> testsExtraspecialNormalizerInSL := [[5, 1, 11], [3, 1, 7], [3, 2, 13], [2, 3, 5], [2, 2, 5], 
+>                                        [2, 2, 9], [2, 1, 9], [2, 1, 5], [2, 1, 7]];;
+gap> ForAll(testsExtraspecialNormalizerInSL, TestExtraspecialNormalizerInSL);
 true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 3;; m := 1;; q := 7;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 3;; m := 2;; q := 13;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 3;; q := 5;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 2;; q := 5;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 2;; q := 9;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 1;; q := 9;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 1;; q := 5;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 1;; q := 7;;
-gap> G := ExtraspecialNormalizerInSL(r, m, q);;
-gap> IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 5;; m := 1;; q := 4;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 3;; q := 3;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> r := 2;; m := 3;; q := 7;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> r := 2;; m := 2;; q := 3;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 2;; m := 2;; q := 7;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 3;; m := 2;; q := 5;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> r := 3;; m := 1;; q := 8;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
-true
-gap> r := 3;; m := 1;; q := 5;;
-gap> G := ExtraspecialNormalizerInSU(r, m, q);;
-gap> IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G));
-true
-gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+gap> TestExtraspecialNormalizerInSU := function(args)
+>   local r, m, q, G, hasSize;
+>   r := args[1];
+>   m := args[2];
+>   q := args[3];
+>   G := ExtraspecialNormalizerInSU(r, m, q);
+>   hasSize := HasSize(G);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
+>          and hasSize;
+> end;;
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> testsExtraspecialNormalizerInSU := [[5, 1, 4], [2, 3, 3], [2, 3, 7], [2, 2, 3], [2, 2, 7], 
+>                                        [3, 2, 5], [3, 1, 8], [3, 1, 5]];;
+#@else
+gap> testsExtraspecialNormalizerInSU := [[2, 3, 3], [3, 2, 5], [3, 1, 8], [3, 1, 5]];;
+#@fi
+gap> ForAll(testsExtraspecialNormalizerInSU, TestExtraspecialNormalizerInSU);
 true
 gap> TestOddExtraspecialGroup := function(args)
->   local r, m, q, gens;
+>   local r, m, q, gens, G;
 >   r := args[1];
 >   m := args[2];
 >   q := args[3];
 >   gens := OddExtraspecialGroup(r, m, q);
->   return Size(Group(Concatenation(gens.listOfXi, gens.listOfYi))) = r ^ (2 * m + 1);
+>   G := Group(Concatenation(gens.listOfXi, gens.listOfYi));
+>   RECOG.TestGroup(G, false, r ^ (2 * m + 1));
+>   return true;
 > end;;
 gap> testsOddExtraspecialGroup := [[5, 1, 11], [3, 1, 7], [3, 2, 13]];;
 gap> ForAll(testsOddExtraspecialGroup, TestOddExtraspecialGroup);

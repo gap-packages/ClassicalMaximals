@@ -1,28 +1,27 @@
 # Return the subgroup of <M>SL(n, q)</M> stabilizing the
 # <A>k</A>-dimensional subspace of <M>F^n</M>, where <C>F := GF(q)</C>,
 # consisting of all vectors whose first <C>n-k</C> entries are zero.
-# Construction as in Proposition 4.1 of [2]
+# Construction as in Proposition 4.1 of [HR05]
 BindGlobal("SLStabilizerOfSubspace",
 function(n, q, k)
-    local A5, dirProd, z, T, result;
-    z := PrimitiveElement(GF(q));
+    local F, A5, dirProd, z, T, size;
+    F := GF(q);
+    z := PrimitiveElement(F);
     A5 := DiagonalMat(
         Concatenation([z], List([2..n - 1], i -> z ^ 0), [z ^ -1])
     );
     dirProd := MatDirectProduct(SL(n - k, q), SL(k, q));
-    T := IdentityMat(n, GF(q)) + SquareSingleEntryMatrix(GF(q), n, 1, n - k + 1);
-    result := Group(Concatenation([A5], GeneratorsOfGroup(dirProd), [T]));
-    # Size according to Table 2.3 of [1]
-    SetSize(result,
-            q ^ (k * (n - k)) * Size(SL(k, q)) * Size(SL(n - k, q)) * (q-1));
-    return result;
+    T := IdentityMat(n, F) + SquareSingleEntryMatrix(F, n, 1, n - k + 1);
+    # Size according to Table 2.3 of [BHR13]
+    size := q ^ (k * (n - k)) * SizeSL(k, q) * SizeSL(n - k, q) * (q - 1);
+    return MatrixGroupWithSize(F, Concatenation([A5], GeneratorsOfGroup(dirProd), [T]), size);
 end);
 
-# Construction as in Proposition 4.5 of [2]
+# Construction as in Proposition 4.5 of [HR05]
 # The subspace stabilised is < e_1, e_2, ..., e_k >.
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
-    local F, zeta, generators, J, generator, nu, T1, T2, mu, D, result,
+    local F, zeta, generators, J, generator, nu, T1, T2, mu, D, size,
         generatorOfSL, generatorOfSU;
 
     if not k <= d / 2 then
@@ -37,7 +36,7 @@ function(d, q, k)
 
     # The following elements generate SL(k, q ^ 2) x SU(d - 2 * k, q).
     # Note that we actually do need SL(k, q ^ 2) here and not GL(k, q ^ 2) as
-    # claimed in the proof of Proposition 4.5 in [2] since some of the
+    # claimed in the proof of Proposition 4.5 in [HR05] since some of the
     # generators constructed below would not have determinant 1 otherwise.
     for generatorOfSL in GeneratorsOfGroup(SL(k, q ^ 2)) do
         generator := IdentityMat(d, F);
@@ -62,7 +61,7 @@ function(d, q, k)
     fi;
     T1 := IdentityMat(d, F) + nu * SquareSingleEntryMatrix(F, d, d, 1);
     if d - 2 * k > 1 then
-        # Note that in the proof of Proposition 4.5 in [2], there is a + sign
+        # Note that in the proof of Proposition 4.5 in [HR05], there is a + sign
         # instead of the - sign below, but this is wrong and will lead to T2
         # not being in SU(d, q).
         T2 := IdentityMat(d, F) + SquareSingleEntryMatrix(F, d, d, d - k)   
@@ -74,7 +73,7 @@ function(d, q, k)
                                             + SquareSingleEntryMatrix(F, d, QuoCeil(d, 2), 1);
         else
             mu := SolveFrobeniusEquation("P", -2 * zeta ^ 0, q);
-            # Again, note that in the proof of Proposition 4.5 in [2], there is
+            # Again, note that in the proof of Proposition 4.5 in [HR05], there is
             # a + sign instead of the - sign below, but this is wrong and will
             # lead to T2 not being in SU(d, q).
             T2 := IdentityMat(d, F) + SquareSingleEntryMatrix(F, d, d, 1)
@@ -106,26 +105,24 @@ function(d, q, k)
         Add(generators, D);
     fi;
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
-    # Size according to Table 2.3 of [1]
+    # Size according to Table 2.3 of [BHR13]
     if d - 2 * k > 0 then
-        SetSize(result, q ^ (k * (2 * d - 3 * k)) * Size(SL(k, q ^ 2)) 
-                                                  * Size(SU(d - 2 * k, q)) 
-                                                  * (q ^ 2 - 1));
+        size := q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2) 
+                                          * SizeSU(d - 2 * k, q) 
+                                          * (q ^ 2 - 1);
     else
-        SetSize(result, q ^ (k * (2 * d - 3 * k)) * Size(SL(k, q ^ 2))
-                                                  * (q - 1));
+        size := q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2)
+                                          * (q - 1);
     fi;
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);
 
-# Construction as in Proposition 4.6 of [2]
+# Construction as in Proposition 4.6 of [HR05]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
     local F, zeta, generators, kHalf, dHalf, generator, determinantShiftMatrix,
-        alpha, beta, result, generatorOfSUSubspace, generatorOfSUComplement;
+        alpha, beta, size, generatorOfSUSubspace, generatorOfSUComplement;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
         " and <d> = ", d);
@@ -340,7 +337,7 @@ function(d, q, k)
         # by sending w_1 to zeta ^ (q - 1) * w_1 and w_2 to zeta ^ (1 - q) * w_2.
         # Note that this choice differs from the original Magma code, but it
         # is much cleaner this way.
-        determinantShiftMatrix := IdentityMat(d, GF(q ^ 2));
+        determinantShiftMatrix := IdentityMat(d, F);
         determinantShiftMatrix[dHalf, dHalf] :=
             beta ^ q * (-alpha ^ q * beta) * zeta ^ (1 - q) 
                 + alpha * zeta ^ (q - 1);
@@ -356,10 +353,8 @@ function(d, q, k)
         Add(generators, determinantShiftMatrix);
     fi;
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
-    # Size according to Table 2.3 of [1]
-    SetSize(result, Size(SU(k, q)) * Size(SU(d - k, q)) * (q + 1));
+    # Size according to Table 2.3 of [BHR13]
+    size := SizeSU(k, q) * SizeSU(d - k, q) * (q + 1);
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);

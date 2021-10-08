@@ -3,10 +3,10 @@
 # where <C>F := GF(q)</C>, as a direct sum of vector spaces of equal
 # dimensions. Note that this means that <A>t</A> must be a divisor of <A>n</A>.
 # We demand that <A>t</A> be greater than 1.
-# Construction as in Proposition 5.1 of [2]
+# Construction as in Proposition 5.1 of [HR05]
 BindGlobal("ImprimitivesMeetSL", 
 function(n, q, t)
-    local det, E, gens, i, newGen, newGens, wreathProduct, z, m, result;
+    local det, E, gens, i, newGen, newGens, wreathProduct, z, F, m, size;
     if t = 1 or (n mod t) <> 0 then
         ErrorNoReturn("<t> must be greater than 1 and a divisor of <n> but <t> = ", t,
                       " and <n> = ", n);
@@ -14,7 +14,7 @@ function(n, q, t)
     m := QuoInt(n, t);
     wreathProduct := MatWreathProduct(SL(m, q), SymmetricGroup(t));
     gens := GeneratorsOfGroup(wreathProduct);
-    # newGens will be analogous to A, B, C, D in [2]
+    # newGens will be analogous to A, B, C, D in [HR05]
     newGens := [];
     for i in [1..Length(gens)] do
         det := Determinant(gens[i]);
@@ -27,26 +27,26 @@ function(n, q, t)
             Add(newGens, newGen);
         fi;
     od;
-    z := PrimitiveElement(GF(q));
+    F := GF(q);
+    z := PrimitiveElement(F);
     E := DiagonalMat(
         Concatenation([z], List([2..m], i -> z ^ 0),
                       [z ^ -1], List([m + 2..n], i -> z ^ 0))
     );
     Add(newGens, E);
-    result := Group(newGens);
-    # Size according to Table 2.5 of [1]
-    SetSize(result, Size(SL(n/t, q)) ^ t * (q-1) ^ (t-1) * Factorial(t));
-    return result;
+    # Size according to Table 2.5 of [BHR13]
+    size := SizeSL(n / t, q) ^ t * (q - 1) ^ (t - 1) * Factorial(t);
+    return MatrixGroupWithSize(F, newGens, size);
 end);
 
-# Construction as in Proposition 5.4 of [2]
+# Construction as in Proposition 5.4 of [HR05]
 # We stabilise the decomposition with the summands 
 # < e_1, e_2, ..., e_m >, < e_{m + 1}, ..., e_{2m} >, ..., 
 # < e_{d - m + 1}, ..., e_d > using the form I_d.
 BindGlobal("SUNonDegenerateImprimitives",
 function(d, q, t)
     local m, F, zeta, SUChangedForm, generators, generatorOfSU, generator, C, 
-    D1, D, E, result;
+    D1, D, E, result, size;
     if t = 1 or (d mod t) <> 0 then
         ErrorNoReturn("<t> must be greater than 1 and a divisor of <d> but <t> = ", t,
                       " and <d> = ", d);
@@ -61,7 +61,7 @@ function(d, q, t)
     # We have to exclude m = 1 since the Forms package has a bug in this case;
     # however, this case is trivial.
     if m > 1 then
-        SUChangedForm := ChangeFixedSesquilinearForm(SU(m, q), "U", IdentityMat(m, F));
+        SUChangedForm := ConjugateToSesquilinearForm(SU(m, q), "U", IdentityMat(m, F));
     else
         SUChangedForm := SU(m, q);
     fi;
@@ -80,7 +80,7 @@ function(d, q, t)
     C{[m + 1..2 * m]}{[1..m]} := - IdentityMat(m, F);
     # det(C) = (-1) ^ m (if we interchange the columns i and i + m for 
     # 1 <= i <= m, C turns into a diagonal matrix of determinant 1) so we fix
-    # the determinant if m is odd. Note that [2] forgets to do this.
+    # the determinant if m is odd. Note that [HR05] forgets to do this.
     if IsOddInt(m) then
         C := DiagonalMat(Concatenation([-zeta ^ 0], List([2..d], i -> zeta ^ 0))) * C;
     fi;
@@ -104,25 +104,23 @@ function(d, q, t)
                                    List([m + 2..d], i -> zeta ^ 0)));
     Add(generators, E);
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
+    # Size according to Table 2.5 of [BHR13]
+    size := SizeSU(m, q) ^ t * (q + 1) ^ (t - 1) * Factorial(t);
+    result := MatrixGroupWithSize(F, generators, size);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
-    result := ConjugateToStandardForm(result, "U");
-    # Size according to Table 2.5 of [1]
-    SetSize(result, Size(SU(m, q)) ^ t * (q + 1) ^ (t - 1) * Factorial(t));
-    
-    return result;
+
+    return ConjugateToStandardForm(result, "U");
 end);
 
-# Construction as in Proposition 5.5 of [2]
+# Construction as in Proposition 5.5 of [HR05]
 # The decomposition stabilized is given by the summands 
 # < e_1, ..., e_{d / 2} > and < f_{d / 2}, ..., f_1 >, 
 # where (e_1, ..., e_{d / 2}, f_{d / 2}, ..., f_1) is the standard basis.
 BindGlobal("SUIsotropicImprimitives",
 function(d, q)
     local F, zeta, generators, J, generatorOfSL,
-    generator, C, D, result;
+    generator, C, D, size;
     if not IsEvenInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
@@ -157,7 +155,7 @@ function(d, q)
 
     # Finally a diagonal matrix accounting for the fact that the determinants
     # of the two blocks can be anything as long as they multiply to 1
-    # Note that the original Magma code and [2] use
+    # Note that the original Magma code and [HR05] use
     #   D := DiagonalMat(Concatenation([zeta, zeta ^ q], 
     #                                  List([3..d - 2], i -> zeta ^ 0),
     #                                  [zeta ^ (-1), zeta ^ (-q)]));
@@ -168,10 +166,8 @@ function(d, q)
                                    [zeta ^ (-q - 1)]));
     Add(generators, D);
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
-    # Size according to Table 2.5 of [1]
-    SetSize(result, Size(SL(d / 2, q ^ 2)) * (q - 1) * 2);
+    # Size according to Table 2.5 of [BHR13]
+    size := SizeSL(d / 2, q ^ 2) * (q - 1) * 2;
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);

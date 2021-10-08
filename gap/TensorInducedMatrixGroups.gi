@@ -57,24 +57,25 @@
 ###############################################################################     
 
 
-# Construction as in Proposition 10.2 of [2]
+# Construction as in Proposition 10.2 of [HR05]
 BindGlobal("TensorInducedDecompositionStabilizerInSL",
 function(m, t, q)
-    local gensOfSLm, I, D, C, generatorsOfHInSL, gens, i, H, E, U, S, zeta, mu,
-    result, scalingMatrix, d, generator;
+    local F, gensOfSLm, I, D, C, generatorsOfHInSL, i, H, E, U, S, zeta, mu,
+    size, scalingMatrix, d, generator;
     if not t > 1 or not m > 1 then
         ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
                       t, " and <m> = ", m);
     fi;
 
+    F := GF(q);
     d := m ^ t;
-    zeta := PrimitiveElement(GF(q));
+    zeta := PrimitiveElement(F);
     D := DiagonalMat(Concatenation([zeta], List([1..m - 1], i -> zeta ^ 0)));
-    C := zeta ^ ((q - 1) / Gcd(q - 1, d)) * IdentityMat(d, GF(q));
+    C := zeta ^ ((q - 1) / Gcd(q - 1, d)) * IdentityMat(d, F);
 
     if t = 2 and m mod 4 = 2 and q mod 4 = 3 then
         gensOfSLm := GeneratorsOfGroup(SL(m, q));
-        I := IdentityMat(m, GF(q));
+        I := IdentityMat(m, F);
         # Let Z = Z(SL(d, q)). Then these generate the group 
         # Z.(SL(m, q) o SL(m, q)) (to see this, realize the first factor of the
         # central product as all Kronecker Products I * M with M in SL(m, q)
@@ -102,7 +103,7 @@ function(m, t, q)
                     # becomes (zeta ^ ((q - 1) / 2)) ^ (m / 2) = (-1) ^ (m / 2)
                     # and this is -1 due to m = 2 mod 4.
                     scalingMatrix := KroneckerProduct(D ^ QuoInt(q - 1, 4), 
-                                                      IdentityMat(m, GF(q)));
+                                                      IdentityMat(m, F));
                     # det(generator * scalingMatrix) = -1 * (-1) = 1
                     Add(generatorsOfHInSL,(generator * scalingMatrix));
                 fi;
@@ -112,12 +113,12 @@ function(m, t, q)
 
     U := KroneckerProduct(D, D ^ (-1));
     for i in [3..t] do
-        U := KroneckerProduct(U, IdentityMat(m, GF(q)));
+        U := KroneckerProduct(U, IdentityMat(m, F));
     od;
     # det(U) = 1
     E := D ^ QuoInt(Gcd(q - 1, d), Gcd(q - 1, m ^ (t - 1)));
     for i in [2..t] do
-        E := KroneckerProduct(E, IdentityMat(m, GF(q)));
+        E := KroneckerProduct(E, IdentityMat(m, F));
     od;
     # det(E) = zeta ^ (Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * m ^ (t - 1))
     #        = zeta ^ (Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * d / m)
@@ -129,33 +130,31 @@ function(m, t, q)
     # d / Gcd(q - 1, d) is invertible leading to 
     # k = 1 / (d / Gcd(q - 1, d)) mod ((q - 1) / Gcd(q - 1, d)).
     mu := zeta ^ (1 / (d / Gcd(q - 1, d)) mod ((q - 1) / Gcd(q - 1, d)));
-    S := mu ^ (- d / (Gcd(q - 1, d / m) * m)) * IdentityMat(d, GF(q));
+    S := mu ^ (- d / (Gcd(q - 1, d / m) * m)) * IdentityMat(d, F);
     # det(S) = det(mu * I_d) ^ (- d / (Gcd(q - 1, d / m) * m))
     #        = (zeta ^ Gcd(q - 1, d)) ^ (- d / (Gcd(q - 1, d / m) * m))
     #        = zeta ^ (- Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * d / m)
     #        = det(E) ^ (-1)
 
-    gens := Concatenation(generatorsOfHInSL, [C, U, S * E]);
-    result := Group(gens);
-    # Size according to Table 2.10 of [1]
+    # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 3 then
-        SetSize(result, Gcd(q - 1, m) * Size(PSL(m, q)) ^ 2 * Gcd(q - 1, m) ^ 2);
+        size := Gcd(q - 1, m) * SizePSL(m, q) ^ 2 * Gcd(q - 1, m) ^ 2;
     else
-        SetSize(result, Gcd(q - 1, m) * Size(PSL(m, q)) ^ t 
-                                      * Gcd(q - 1, m ^ (t - 1)) * Gcd(q - 1, m) ^ (t - 1) 
-                                      * Factorial(t));
+        size := Gcd(q - 1, m) * SizePSL(m, q) ^ t 
+                              * Gcd(q - 1, m ^ (t - 1)) * Gcd(q - 1, m) ^ (t - 1) 
+                              * Factorial(t);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, Concatenation(generatorsOfHInSL, [C, U, S * E]), size);
 end);
 
-# Construction as in Proposition 10.4 of [2]
+# Construction as in Proposition 10.4 of [HR05]
 # Note, though, that the structure of G / Z(G) given there is incorrect and
-# that one should rather consult Table 2.10 of [1] on that (which, however, 
+# that one should rather consult Table 2.10 of [BHR13] on that (which, however, 
 # gives the structure of G, not G / Z(G)!).
 BindGlobal("TensorInducedDecompositionStabilizerInSU",
 function(m, t, q)
-    local F, gensOfSUm, I, D, C, generatorsOfHInSU, gens, i, H, E, U, S, zeta, mu,
-    result, scalingMatrix, d, generator, k;
+    local F, gensOfSUm, I, D, C, generatorsOfHInSU, i, H, E, U, S, zeta, mu,
+    size, scalingMatrix, d, generator, k;
     if not t > 1 or not m > 1 then
         ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
                       t, " and <m> = ", m);
@@ -234,16 +233,13 @@ function(m, t, q)
     #        = zeta ^ ((q - 1) * Gcd(q + 1, d) / Gcd(q + 1, d / m) * d / m)
     #        = det(E) ^ (-1)
 
-    gens := Concatenation(generatorsOfHInSU, [C, U, S * E]);
-    gens := List(gens, M -> ImmutableMatrix(F, M));
-    result := Group(gens);
-    # Size according to Table 2.10 of [1]
+    # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 1 then
-        SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ 2 * Gcd(q + 1, m) ^ 2);
+        size := Gcd(q + 1, m) * SizePSU(m, q) ^ 2 * Gcd(q + 1, m) ^ 2;
     else
-        SetSize(result, Gcd(q + 1, m) * Size(PSU(m, q)) ^ t 
-                                      * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
-                                      * Factorial(t));
+        size := Gcd(q + 1, m) * SizePSU(m, q) ^ t 
+                              * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
+                              * Factorial(t);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
 end);
