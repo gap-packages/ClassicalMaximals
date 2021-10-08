@@ -146,6 +146,13 @@ function(G)
     fi;
     q := RootInt(Size(F));
 
+    if HasInvariantSesquilinearForm(G) then
+        formMatrix := InvariantSesquilinearForm(G).matrix;
+        if formMatrix = HermitianConjugate(formMatrix, q) then
+            return formMatrix;
+        fi;
+    fi;
+
     M := GModuleByMats(GeneratorsOfGroup(G), F);
     # An element A of G acts as A ^ (-T) in MTX.DualModule(M) and hence as 
     # HermitianConjugate(A, q) ^ (-1) in inverseHermitianConjugateM
@@ -176,8 +183,8 @@ function(G)
         if formMatrix <> fail then
             if formMatrix <> HermitianConjugate(formMatrix, q) then
                 # find a non-zero entry of formMatrix
-                row := First([1..NrRows(formMatrix)], x -> not IsZero(formMatrix[x]));
-                col := First([1..NrCols(formMatrix)], x -> not IsZero(formMatrix[row][x]));
+                row := First([1..d], x -> not IsZero(formMatrix[x]));
+                col := First([1..d], x -> not IsZero(formMatrix[row][x]));
                 if not IsZero(formMatrix[col, row]) then
                     # this must be 1 for formMatrix to be hermitian
                     x := formMatrix[row, col] * formMatrix[col, row] ^ (-q);
