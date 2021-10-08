@@ -149,7 +149,7 @@ function(G)
     if HasInvariantSesquilinearForm(G) then
         formMatrix := InvariantSesquilinearForm(G).matrix;
         if formMatrix = HermitianConjugate(formMatrix, q) then
-            return formMatrix;
+            return ImmutableMatrix(F, formMatrix);
         fi;
     fi;
 
@@ -208,7 +208,7 @@ function(G)
                 Error("UnitaryForm failed - group is not absolutely irreducible");
             fi;
 
-            return formMatrix;
+            return ImmutableMatrix(F, formMatrix);
         fi;
     od;
 
@@ -224,14 +224,15 @@ InstallGlobalFunction("SymplecticForm",
 function(G)
     local F, M, inverseTransposeM, counter, formMatrix;
 
+    F := DefaultFieldOfMatrixGroup(G);
+
     if HasInvariantBilinearForm(G) then
         formMatrix := InvariantBilinearForm(G).matrix;
         if formMatrix = - TransposedMat(formMatrix) then
-            return formMatrix;
+            return ImmutableMatrix(F, formMatrix);
         fi;
     fi;
     
-    F := DefaultFieldOfMatrixGroup(G);
     M := GModuleByMats(GeneratorsOfGroup(G), F);
 
     if not MTX.IsIrreducible(M) then
@@ -262,7 +263,7 @@ function(G)
 
         # check if formMatrix is antisymmetric
         if formMatrix = - TransposedMat(formMatrix) then
-            return formMatrix;
+            return ImmutableMatrix(F, formMatrix);
         fi;
         if not MTX.IsAbsolutelyIrreducible(M) then
             ErrorNoReturn("SymplecticForm failed - group is not absolutely irreducible");
