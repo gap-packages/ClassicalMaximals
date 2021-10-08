@@ -5,11 +5,12 @@
 InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
-        result;
+        result, d;
     if not type in ["S", "O", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O', but <type> = ",
                       type);
     fi;
+    d := DimensionOfMatrixGroup(group);
     field := DefaultFieldOfMatrixGroup(group);
     if type = "S" or type = "O" then
         formMatrix := BilinearForm(group, type);
@@ -31,23 +32,35 @@ function(group, type, gramMatrix)
         gapForm := HermitianFormByMatrix(formMatrix, field);
         newForm := HermitianFormByMatrix(gramMatrix, field);
     fi;
-    # the following if condition can only ever be fulfilled if <group> is an
-    # orthogonal group; there the case of even dimension is problematic since,
-    # in that case, there are two similarity classes of bilinear forms
-    if not WittIndex(gapForm) = WittIndex(newForm) then
-       ErrorNoReturn("The form preserved by <group> must be similar to the form ", 
-                     "described by the Gram matrix <gramMatrix>.");
-    fi;
-    gapToCanonical := BaseChangeHomomorphism(BaseChangeToCanonical(gapForm), 
-                                             field);
-    canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
-                                             field);
-    result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
+    # The Form package has a bug for d = 1 so we need to make this exception
+    if not d = 1 then
+        # the following if condition can only ever be fulfilled if <group> is an
+        # orthogonal group; there the case of even dimension is problematic since,
+        # in that case, there are two similarity classes of bilinear forms
+        if not WittIndex(gapForm) = WittIndex(newForm) then
+            ErrorNoReturn("The form preserved by <group> must be similar to the form ", 
+                          "described by the Gram matrix <gramMatrix>.");
+        fi;
+        gapToCanonical := BaseChangeHomomorphism(BaseChangeToCanonical(gapForm), 
+                                                 field);
+        canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
+                                                 field);
+        result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
     
-    # Set useful attributes
-    if HasSize(group) then
-        SetSize(result, Size(group));
+        # Set useful attributes
+        if HasSize(group) then
+            SetSize(result, Size(group));
+        fi;
+    else
+        # replaces the Witt index check above
+        if (gramMatrix[1, 1] = 0 and formMatrix[1, 1] <> 0) 
+           or (gramMatrix[1, 1] <> 0 and formMatrix[1, 1] = 0) then
+            ErrorNoReturn("The form preserved by <group> must be similar to the",
+                          " form described by the Gram matrix <gramMatrix>.");
+        fi;
+        result := group;
     fi;
+
     if type = "S" or type = "O" then
         SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
     else
