@@ -89,7 +89,7 @@ function(n, q, s)
                       " and <n> = ", n);
     fi;
     F := GF(q);
-    gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverFQ(s, q);
+    gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q);
     # Let w be a primitive element of GF(q ^ s) over GF(q). Since As is the
     # companion matrix of the minimal polynomial of w over GF(q), its
     # determinant is (-1) ^ s times the constant term of said minimal
