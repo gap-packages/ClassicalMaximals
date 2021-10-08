@@ -223,6 +223,14 @@ end);
 InstallGlobalFunction("SymplecticForm",
 function(G)
     local F, M, inverseTransposeM, counter, formMatrix;
+
+    if HasInvariantBilinearForm(G) then
+        formMatrix := InvariantBilinearForm(G).matrix;
+        if formMatrix = - TransposedMat(formMatrix) then
+            return formMatrix;
+        fi;
+    fi;
+    
     F := DefaultFieldOfMatrixGroup(G);
     M := GModuleByMats(GeneratorsOfGroup(G), F);
 
