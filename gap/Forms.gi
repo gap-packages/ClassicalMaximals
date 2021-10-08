@@ -207,3 +207,52 @@ function(G)
 
     return fail;
 end);
+
+# Assuming that the group G acts absolutely irreducibly, try to find a
+# symplectic form which is G-invariant or prove that no such form exists.
+#
+# In general, this function should only be used if one can be sure that <G>
+# preserves a symplectic form (but one does not know which one).
+InstallGlobalFunction("SymplecticForm",
+function(G)
+    local F, M, inverseTransposeM, counter, formMatrix;
+    F := DefaultFieldOfMatrixGroup(G);
+    M := GModuleByMats(GeneratorsOfGroup(G), F);
+
+    if not MTX.IsIrreducible(M) then
+        ErrorNoReturn("SymplecticForm failed - group is not irreducible");
+    fi;
+
+    # An element A of G acts as A ^ (-T) in MTX.DualModule(M) 
+    inverseTransposeM := MTX.DualModule(M);
+
+    counter := 0;
+    # As the MeatAxe is randomised, we might have to make some more trials to
+    # find a preserved symplectic form if there is one; breaking after 1000 trials
+    # is just a "safety net" in case a group <G> that does not preserve a
+    # unitary form is input.
+    while counter < 1000 do
+        counter := counter + 1;
+
+        # If f: M -> inverseTransposeM is an isomorphism, it must respect
+        # multiplication by group elements, i.e. for A in G
+        #       f(x * A) = f(x) * A ^ (-T)
+        # Let f be given by the matrix F, i.e. f: x -> x * F. Then we have
+        #       (x * A) * F = x * F * A ^ (-T)
+        # Putting these results together for all vectors x gives
+        #       A * F = F * A ^ (-T)
+        # <==>  A * F * A ^ T = F,
+        # which is what we need.
+        formMatrix := MTX.IsomorphismModules(M, inverseTransposeM);
+
+        # check if formMatrix is antisymmetric
+        if formMatrix = - TransposedMat(formMatrix) then
+            return formMatrix;
+        fi;
+        if not MTX.IsAbsolutelyIrreducible(M) then
+            ErrorNoReturn("SymplecticForm failed - group is not absolutely irreducible");
+        fi;
+    od;
+
+    return fail;
+end);
