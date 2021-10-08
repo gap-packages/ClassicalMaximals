@@ -85,7 +85,7 @@ end);
 BindGlobal("GammaLMeetSL",
 function(n, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, zeta, AandB, C, D, DBlock, ZBlock, i,
-    range, result;
+    range, size;
     if n mod s <> 0 or not IsPrime(s) then
         ErrorNoReturn("<s> must be prime and a divisor of <n> but <s> = ", s,
                       " and <n> = ", n);
@@ -103,19 +103,21 @@ function(n, q, s)
     # det(Cs) = det(As) ^ (q - 1) = w ^ (q ^ s - 1) = 1.
     Cs := As ^ (q - 1);
     m := QuoInt(n, s);
+
+    # Size according to Proposition 6.3 of [HR05]
+    size := SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s;
+
     if m = 1 then
         if n mod 2 = 1 then
-            result := Group(Bs, Cs);
+            return MatrixGroupWithSize(F, [Bs, Cs], size);
         elif q mod 2 = 1 then
             Fs := (As ^ QuoInt(q - 1, 2)) * Bs;
-            result := Group(Cs, Fs);
+            return MatrixGroupWithSize(F, [Cs, Fs], size);
         # n = s = 2 and q even
         else
             # In characteristic 2 we have det(Bs) = -1 = 1.
-            result := Group(Bs, Cs);
+            return MatrixGroupWithSize(F, [Bs, Cs], size);
         fi;
-        SetSize(result, SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s);
-        return result;
     fi;
 
     zeta := PrimitiveElement(GF(q ^ s));
@@ -135,17 +137,14 @@ function(n, q, s)
         D{range}{range} := DBlock;
     od;
 
-    result := Group(Concatenation(AandB, [C, D]));
-    # Size according to Proposition 6.3 of [HR05]
-    SetSize(result, SizeSL(n / s, q ^ s) * (q ^ s - 1) / (q - 1) * s);
-    return result;
+    return MatrixGroupWithSize(F, Concatenation(AandB, [C, D]), size);
 end);
 
 # Construction as in Proposition 6.6 of [HR05]
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, Y, AandB, C, D, i,
-    range, result, AsInGU, omega, generators;
+    range, AsInGU, omega, generators, size;
     if d mod s <> 0 or not IsPrime(s) or not IsOddInt(s) then
         ErrorNoReturn("<s> must be an odd prime and a divisor of <d> but <s> = ", s,
                       " and <n> = ", d);
@@ -170,15 +169,15 @@ function(d, q, s)
     # make the determinant 1. Cs has order (q ^ s + 1) / (q + 1).
     Cs := AsInGU ^ (q + 1);
     m := QuoInt(d, s);
+    
+    # Size according to Table 2.6 of [BHR13]
+    size := SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s;
+
     if m = 1 then
         # note that we require s to be odd
         generators := [Bs, Cs];
-        generators := List(generators, M -> ImmutableMatrix(F, M));
-        result := Group(generators);
-        # Size according to Table 2.6 of [BHR13]
-        SetSize(result, SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s);
         # conjugate the result so that it preserves the standard unitary form
-        return ConjugateToStandardForm(result, "U");
+        return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "U");
     fi;
 
     omega := PrimitiveElement(GF(q ^ (2 * s)));
@@ -194,10 +193,6 @@ function(d, q, s)
     od;
 
     generators := Concatenation(AandB, [C, D]);
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
-    # Size according to Table 2.6 of [BHR13]
-    SetSize(result, SizeSU(d / s, q ^ s) * (q ^ s + 1) / (q + 1) * s);
     # conjugate the result so that it preserves the standard unitary form 
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "U");
 end);

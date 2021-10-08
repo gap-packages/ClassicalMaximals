@@ -1,7 +1,7 @@
 # Construction as in Proposition 11.1 of [HR05]
 BindGlobal("SymplecticNormalizerInSL",
 function(d, q)
-    local F, zeta, gcd, AandB, C, D, i, E, result;
+    local F, zeta, gcd, AandB, C, D, i, E, size, generators;
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
@@ -12,34 +12,34 @@ function(d, q)
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
     C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);
+    generators := Concatenation(AandB, [C]);
 
     if IsEvenInt(q) or gcd / 2 = Gcd(q - 1, d / 2) then
-        result := Group(Concatenation(AandB, [C]));
-        # Size according to Table in [BHR13]
-        SetSize(result, gcd * SizePSp(d, q));
+        # Size according to Table 2.11 in [BHR13]
+        size := gcd * SizePSp(d, q);
     else
         D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta),
                                        List([1..d / 2], i -> zeta ^ 0)));
         # solving the congruence d * i = d / 2 mod q - 1 for i
         i := (d / 2) / gcd * (d / gcd) ^ (-1) mod ((q - 1) / gcd);
         E := zeta ^ (-i) * D;
-        result := Group(Concatenation(AandB, [C, E]));
         # Size according to Table 2.11 in [BHR13]
         # Note that |PCSp(d, q)| = |CSp(d, q)| / (q - 1) 
         #                        = |Sp(d, q)| * |CSp(d, q) : Sp(d, q)| / (q - 1) 
         #                        = |Sp(d, q)|,
         # since |CSp(d, q) : Sp(d, q)| = q - 1 according to Table 1.3 of [BHR13]
-        SetSize(result, gcd * SizeSp(d, q));
+        size := gcd * SizeSp(d, q);
+        Add(generators, E);
     fi;
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);
 
 # Construction as in Proposition 11.3 of [HR05]
 BindGlobal("UnitaryNormalizerInSL",
 function(d, q)
     local F, qFactorization, e, p, q0, zeta, C, g, c, SUWithIdentityForm, 
-        SUGens, gens, D, zetaId, solution, result;
+        SUGens, gens, D, zetaId, solution, size;
     qFactorization := PrimePowersInt(q);
     e := qFactorization[2];
     if IsOddInt(e) then
@@ -65,10 +65,9 @@ function(d, q)
         od;
     fi;
 
-    result := Group(gens);
     # Size according to Table 2.11 in [BHR13]
-    SetSize(result, SizeSU(d, q0) * Gcd(q0 - 1, d));
-    return result;
+    size := SizeSU(d, q0) * Gcd(q0 - 1, d);
+    return MatrixGroupWithSize(F, gens, size);
 end);
 
 # Construction as in Proposition 11.2 of [HR05]
@@ -78,7 +77,7 @@ end);
 BindGlobal("OrthogonalNormalizerInSL",
 function(epsilon, d, q)
     local F, generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
-    result, i1, DEpsilon, EEpsilon, X, W, i2, k;
+    i1, DEpsilon, EEpsilon, X, W, i2, k, size;
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
     fi;
@@ -155,9 +154,8 @@ function(epsilon, d, q)
         Add(generators, W);
     fi;
 
-    result := Group(generators);
     # Size according to Table 2.11 in [1] (note that the structure given in
     # Proposition 11.2 of [HR05] is wrong!)
-    SetSize(result, Gcd(q - 1, d) * SizeSO(epsilon, d, q));
-    return result;
+    size := Gcd(q - 1, d) * SizeSO(epsilon, d, q);
+    return MatrixGroupWithSize(F, generators, size);
 end);

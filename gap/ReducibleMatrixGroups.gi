@@ -4,7 +4,7 @@
 # Construction as in Proposition 4.1 of [HR05]
 BindGlobal("SLStabilizerOfSubspace",
 function(n, q, k)
-    local F, A5, dirProd, z, T, result;
+    local F, A5, dirProd, z, T, size;
     F := GF(q);
     z := PrimitiveElement(F);
     A5 := DiagonalMat(
@@ -12,18 +12,16 @@ function(n, q, k)
     );
     dirProd := MatDirectProduct(SL(n - k, q), SL(k, q));
     T := IdentityMat(n, F) + SquareSingleEntryMatrix(F, n, 1, n - k + 1);
-    result := Group(Concatenation([A5], GeneratorsOfGroup(dirProd), [T]));
     # Size according to Table 2.3 of [BHR13]
-    SetSize(result,
-            q ^ (k * (n - k)) * SizeSL(k, q) * SizeSL(n - k, q) * (q-1));
-    return result;
+    size := q ^ (k * (n - k)) * SizeSL(k, q) * SizeSL(n - k, q) * (q - 1);
+    return MatrixGroupWithSize(F, Concatenation([A5], GeneratorsOfGroup(dirProd), [T]), size);
 end);
 
 # Construction as in Proposition 4.5 of [HR05]
 # The subspace stabilised is < e_1, e_2, ..., e_k >.
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
-    local F, zeta, generators, J, generator, nu, T1, T2, mu, D, result,
+    local F, zeta, generators, J, generator, nu, T1, T2, mu, D, size,
         generatorOfSL, generatorOfSU;
 
     if not k <= d / 2 then
@@ -107,26 +105,24 @@ function(d, q, k)
         Add(generators, D);
     fi;
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
     # Size according to Table 2.3 of [BHR13]
     if d - 2 * k > 0 then
-        SetSize(result, q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2) 
-                                                  * SizeSU(d - 2 * k, q) 
-                                                  * (q ^ 2 - 1));
+        size := q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2) 
+                                          * SizeSU(d - 2 * k, q) 
+                                          * (q ^ 2 - 1);
     else
-        SetSize(result, q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2)
-                                                  * (q - 1));
+        size := q ^ (k * (2 * d - 3 * k)) * SizeSL(k, q ^ 2)
+                                          * (q - 1);
     fi;
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);
 
 # Construction as in Proposition 4.6 of [HR05]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
     local F, zeta, generators, kHalf, dHalf, generator, determinantShiftMatrix,
-        alpha, beta, result, generatorOfSUSubspace, generatorOfSUComplement;
+        alpha, beta, size, generatorOfSUSubspace, generatorOfSUComplement;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
         " and <d> = ", d);
@@ -357,10 +353,8 @@ function(d, q, k)
         Add(generators, determinantShiftMatrix);
     fi;
 
-    generators := List(generators, M -> ImmutableMatrix(F, M));
-    result := Group(generators);
     # Size according to Table 2.3 of [BHR13]
-    SetSize(result, SizeSU(k, q) * SizeSU(d - k, q) * (q + 1));
+    size := SizeSU(k, q) * SizeSU(d - k, q) * (q + 1);
 
-    return result;
+    return MatrixGroupWithSize(F, generators, size);
 end);

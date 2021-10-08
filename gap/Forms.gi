@@ -6,7 +6,8 @@
 # appropriate field.
 InstallGlobalFunction("ChangeFixedSesquilinearForm",
 function(group, type, gramMatrix)
-    local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix;
+    local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
+        result;
     if not type in ["S", "O", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O', but <type> = ",
                       type);
@@ -40,7 +41,11 @@ function(group, type, gramMatrix)
                                              field);
     canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
                                              field);
-    return Group(canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
+    result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
+    if HasSize(group) then
+        SetSize(result, Size(group));
+    fi;
+    return result;
 end);
 
 # Can only deal with sesquilinear forms, not with quadratic forms as of yet.

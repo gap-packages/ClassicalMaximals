@@ -60,8 +60,8 @@
 # Construction as in Proposition 10.2 of [HR05]
 BindGlobal("TensorInducedDecompositionStabilizerInSL",
 function(m, t, q)
-    local F, gensOfSLm, I, D, C, generatorsOfHInSL, gens, i, H, E, U, S, zeta, mu,
-    result, scalingMatrix, d, generator;
+    local F, gensOfSLm, I, D, C, generatorsOfHInSL, i, H, E, U, S, zeta, mu,
+    size, scalingMatrix, d, generator;
     if not t > 1 or not m > 1 then
         ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
                       t, " and <m> = ", m);
@@ -136,17 +136,15 @@ function(m, t, q)
     #        = zeta ^ (- Gcd(q - 1, d) / Gcd(q - 1, m ^ (t - 1)) * d / m)
     #        = det(E) ^ (-1)
 
-    gens := Concatenation(generatorsOfHInSL, [C, U, S * E]);
-    result := Group(gens);
     # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 3 then
-        SetSize(result, Gcd(q - 1, m) * SizePSL(m, q) ^ 2 * Gcd(q - 1, m) ^ 2);
+        size := Gcd(q - 1, m) * SizePSL(m, q) ^ 2 * Gcd(q - 1, m) ^ 2;
     else
-        SetSize(result, Gcd(q - 1, m) * SizePSL(m, q) ^ t 
-                                      * Gcd(q - 1, m ^ (t - 1)) * Gcd(q - 1, m) ^ (t - 1) 
-                                      * Factorial(t));
+        size := Gcd(q - 1, m) * SizePSL(m, q) ^ t 
+                              * Gcd(q - 1, m ^ (t - 1)) * Gcd(q - 1, m) ^ (t - 1) 
+                              * Factorial(t);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, Concatenation(generatorsOfHInSL, [C, U, S * E]), size);
 end);
 
 # Construction as in Proposition 10.4 of [HR05]
@@ -155,8 +153,8 @@ end);
 # gives the structure of G, not G / Z(G)!).
 BindGlobal("TensorInducedDecompositionStabilizerInSU",
 function(m, t, q)
-    local F, gensOfSUm, I, D, C, generatorsOfHInSU, gens, i, H, E, U, S, zeta, mu,
-    result, scalingMatrix, d, generator, k;
+    local F, gensOfSUm, I, D, C, generatorsOfHInSU, i, H, E, U, S, zeta, mu,
+    size, scalingMatrix, d, generator, k;
     if not t > 1 or not m > 1 then
         ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
                       t, " and <m> = ", m);
@@ -235,16 +233,13 @@ function(m, t, q)
     #        = zeta ^ ((q - 1) * Gcd(q + 1, d) / Gcd(q + 1, d / m) * d / m)
     #        = det(E) ^ (-1)
 
-    gens := Concatenation(generatorsOfHInSU, [C, U, S * E]);
-    gens := List(gens, M -> ImmutableMatrix(F, M));
-    result := Group(gens);
     # Size according to Table 2.10 of [BHR13]
     if t = 2 and m mod 4 = 2 and q mod 4 = 1 then
-        SetSize(result, Gcd(q + 1, m) * SizePSU(m, q) ^ 2 * Gcd(q + 1, m) ^ 2);
+        size := Gcd(q + 1, m) * SizePSU(m, q) ^ 2 * Gcd(q + 1, m) ^ 2;
     else
-        SetSize(result, Gcd(q + 1, m) * SizePSU(m, q) ^ t 
-                                      * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
-                                      * Factorial(t));
+        size := Gcd(q + 1, m) * SizePSU(m, q) ^ t 
+                              * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
+                              * Factorial(t);
     fi;
-    return result;
+    return MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
 end);
