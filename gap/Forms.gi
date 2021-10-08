@@ -26,7 +26,7 @@ function(group, type, gramMatrix)
     else
         formMatrix := UnitaryForm(group);
         if formMatrix = fail then
-            Error("No preserved unitary form found for <group>");
+            ErrorNoReturn("No preserved unitary form found for <group>");
         fi;
         gapForm := HermitianFormByMatrix(formMatrix, field);
         newForm := HermitianFormByMatrix(gramMatrix, field);
@@ -204,7 +204,7 @@ function(G)
 
                 if IsZero(formMatrix[col, row]) or scalar = fail then
                     if not MTX.IsAbsolutelyIrreducible(M) then
-                        Error("UnitaryForm failed - group is not absolutely irreducible");
+                        ErrorNoReturn("UnitaryForm failed - group is not absolutely irreducible");
                     fi;
                     continue;
                 fi;
@@ -214,7 +214,7 @@ function(G)
             fi;
 
             if formMatrix <> HermitianConjugate(formMatrix, q) and not MTX.IsAbsolutelyIrreducible(M) then
-                Error("UnitaryForm failed - group is not absolutely irreducible");
+                ErrorNoReturn("UnitaryForm failed - group is not absolutely irreducible");
             fi;
 
             return ImmutableMatrix(F, formMatrix);
