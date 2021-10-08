@@ -4,6 +4,117 @@
 #       Write functions which output the generators for the functions below?
 #       Talk with Sergio about this
 
+
+
+####################################################################################
+############################# OverSmallerField #####################################
+####################################################################################
+
+
+# The following functions are from the Recog Package.
+# Since some functions call other functions from the Recog Package, one
+# needs to load the Recog Package.
+
+
+# From the Recog Package but slightly modified (by DR).
+# "write over a smaller field with same degree",
+ReduceOverSmallerField := function(ri, G)
+    # We assume G to be absolutely irreducible, although this is not
+    # necessary:
+    local Gprime,H,b,dim,f,hom,mo,newgens,pf,r;
+    RECOG.SetPseudoRandomStamp(G,"Subfield");
+    f := ri!.field;
+    if IsPrimeField(f) then
+        return NeverApplicable;     # nothing to do
+    elif not IsBound(ri!.meataxemodule) then
+        ri!.meataxemodule := GModuleByMats(GeneratorsOfGroup(G),f);
+    fi;
+    if not MTX.IsIrreducible(ri!.meataxemodule) then
+        return NeverApplicable;     # not our case
+    fi;
+    dim := ri!.dimension;
+    pf := PrimeField(f);
+    b := RECOG.BaseChangeForSmallestPossibleField(G,ri!.meataxemodule,f);
+    if b <> fail then
+        Info(InfoRecog, 2, StringFormatted(
+             "Conjugating group from GL({},{}) into GL({},{}).",
+             dim, f, dim, b.field));
+        # Do base change isomorphism:
+        H := GroupWithGenerators(b.newgens);
+        hom := GroupHomByFuncWithData(G,H,RECOG.HomDoBaseAndFieldChange,b);
+        SetIsInjective(hom,true);
+        SetIsSurjective(hom,true);
+        # Now report back, it is an isomorphism:
+        SetHomom(ri,hom);
+        findgensNmeth(ri).method := FindKernelDoNothing;
+        return H;
+    fi;
+
+    # nothing more to do for us, C3C5 takes care of the rest!
+    return NeverApplicable;
+end;
+
+
+
+OverSmallerField := function(T,G)
+    local ri;
+
+    ri := EmptyRecognitionInfoRecord(T,G,true);
+    return ReduceOverSmallerField(ri,G);
+
+end;
+
+
+
+####################################################################################
+############################# SL2, GU2, GL2 ########################################
+####################################################################################
+
+
+# Find a replacment in GAP for the following functions:
+# * SL2, GU2, GL2 can be found in "gl2.m"
+
+# TODO
+GL2 := function(n,q)
+
+end;
+
+
+# TODO
+SL2 := function(n,q)
+
+end;
+
+
+#TODO
+GU2 := function(n,q)
+
+end;
+
+
+# TODO
+SU2 := function(n,q)
+
+end;
+
+
+####################################################################################
+#################################### Step 2 ########################################
+####################################################################################
+
+# Functions got replaced as follows
+# * GModule -> GModuleByMats(mats,fld)
+# * TensorProduct -> TensorProductGModule
+# * Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=i)[1]; ->
+#   Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = i)[1];
+# * SubStructure(GL(2,q),SL(2,q),#TODO CLOSURE DiagonalMat(GF(q),[w,1])); ->
+#   Group(Concatenation(GeneratorsOfGroup(A),[S]));
+# * A := A^TransformForm(A); -> A := ConjugateToStandardForm(A,type)
+# * A:=ActionGroup(MM); -> A := Group(MTX.Generators(MM));
+# * ModToQ -> ConjugateModule(M,q) [M module, q power]
+# * IsOverSmallerField -> OverSmallerField (Recog Package, Solved by Anna and me) [see above]
+
+
 # TODO
 BindGlobal("ConstructDefiningCharacteristicRepresentationOfAlmostSimpleGroup",
 function(q)
@@ -82,7 +193,7 @@ function(q, general, normaliser)
 end);
 
 
-BindGlobal("OrthogSL2@",
+BindGlobal("OrthogSL2",
 function(d,q,special,general,normaliser)
     #  /out: construct SL(2,q) in O(d,q) for d odd
     local A,G,M,MM,S,T,i,w;
@@ -118,7 +229,7 @@ function(d,q,special,general,normaliser)
 end);
 
 
-BindGlobal("SymplecticSL2@",
+BindGlobal("SymplecticSL2",
 function(d,q,normaliser)
     #  /out: construct SL(2,q) in Sp(d,q) for d even
     local A,DA,G,M,MM,S,T,form,i,isit,tmat,w,MDA;
@@ -154,7 +265,7 @@ function(d,q,normaliser)
 end);
 
 
-BindGlobal("l5qdim10@",
+BindGlobal("l5qdim10",
 function(q,general)
     local A,G,M,MM,S,T,w;
     w:=PrimitiveElement(GF(q));
@@ -176,7 +287,7 @@ function(q,general)
 end);
 
 
-BindGlobal("u5qdim10@",
+BindGlobal("u5qdim10",
 function(q,general,normaliser)
     local A,G,M,MM,S,T,w;
     if normaliser then
@@ -205,79 +316,7 @@ function(q,general,normaliser)
 end);
 
 
-####################################################################################
-############################# OverSmallerField #####################################
-####################################################################################
-
-
-# The following functions are from the Recog Package.
-# Since some functions call other functions from the Recog Package, one
-# needs to load the Recog Package.
-
-
-# From the Recog Package but slightly modified (by DR).
-# "write over a smaller field with same degree",
-ReduceOverSmallerField := function(ri, G)
-    # We assume G to be absolutely irreducible, although this is not
-    # necessary:
-    local Gprime,H,b,dim,f,hom,mo,newgens,pf,r;
-    RECOG.SetPseudoRandomStamp(G,"Subfield");
-    f := ri!.field;
-    if IsPrimeField(f) then
-        return NeverApplicable;     # nothing to do
-    elif not IsBound(ri!.meataxemodule) then
-        ri!.meataxemodule := GModuleByMats(GeneratorsOfGroup(G),f);
-    fi;
-    if not MTX.IsIrreducible(ri!.meataxemodule) then
-        return NeverApplicable;     # not our case
-    fi;
-    dim := ri!.dimension;
-    pf := PrimeField(f);
-    b := RECOG.BaseChangeForSmallestPossibleField(G,ri!.meataxemodule,f);
-    if b <> fail then
-        Info(InfoRecog, 2, StringFormatted(
-             "Conjugating group from GL({},{}) into GL({},{}).",
-             dim, f, dim, b.field));
-        # Do base change isomorphism:
-        H := GroupWithGenerators(b.newgens);
-        hom := GroupHomByFuncWithData(G,H,RECOG.HomDoBaseAndFieldChange,b);
-        SetIsInjective(hom,true);
-        SetIsSurjective(hom,true);
-        # Now report back, it is an isomorphism:
-        SetHomom(ri,hom);
-        findgensNmeth(ri).method := FindKernelDoNothing;
-        return H;
-    fi;
-
-    # nothing more to do for us, C3C5 takes care of the rest!
-    return NeverApplicable;
-end;
-
-
-
-OverSmallerField := function(T,G)
-    local ri;
-
-    ri := EmptyRecognitionInfoRecord(T,G,true);
-    return ReduceOverSmallerField(ri,G);
-
-end;
-
-
-
-####################################################################################
-############################### TODO STEP 1 ########################################
-####################################################################################
-
-
-# TODO: Make sure that the following functions work in GAP.
-
-# Find a replacment in GAP for the following functions:
-# * ModToQ -> ConjugateModule
-# * IsOverSmallerField -> OverSmallerField (Recog Package, Solved by Anna and me) [see above]
-# * SL2, GU2, GL2 can be found in "gl2.m"
-
-BindGlobal("l2q3dim8@",
+BindGlobal("l2q3dim8",
 function(q,normaliser)
     #  /out:SL(2,q^3).3 <= Sp(8,q);
     local G,M,M1,M2,T,varX,iso,u,w,GG;
@@ -291,31 +330,29 @@ function(q,normaliser)
     u:=PermutationMat((2,3,5)(4,7,6),8,GF(q^3));
     #  induces field automorphism
     varX:= GroupByGenerators(Concatenation(MTX.Generators(T),[u]));
-    # =v= MULTIASSIGN =v=
-    G:=IsOverSmallerField(varX);
-    iso:=G.val1;
-    G:=G.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,iso);
-    GG := GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G8)[2]]);
-    G:=G^TransformForm(SubStructure(G,G.1,G.2));
+    G:=OverSmallerField(GModuleByMats(GeneratorsOfGroup(varX),GF(q^3)),varX);
+    # MAGMA G:=G^TransformForm(SubStructure(G,G.1,G.2));
+    # Write a function to realise this in GAP
+    GG := GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2]]);
+    G:=ConjugateToStandardForm(G,"L");
+    ########
     if normaliser then
         return G;
     fi;
-    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G8)[2],GeneratorsOfGroup(G8)[4]]);
+    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],GeneratorsOfGroup(G)[4]]);
 end);
 
 
-BindGlobal("l3qdim8@",
+BindGlobal("l3qdim8",
 function(q, special, general, normaliser)
     #  /out:SL(3,q)(.3) <= O+(8,q), q mod 3 = 1 or O-(8,q), q mod 3 = 2
     local C,G,G8,M,M8,T,w;
     w:=PrimitiveElement(GF(q));
-    G:=GL2@(3,q);
+    G:=GL2(3,q);
     M:=GModuleByMats(GeneratorsOfGroup(G),GF(q));
     T:=TensorProductGModule(M,M);
     M8:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 8)[1];
-    G8:=Group(MTX.Generators(MM));
+    G8:=Group(MTX.Generators(M8));
     G8:=ConjugateToStandardForm(G8, "S");
     if normaliser then
         return GroupByGenerators(Concatenation(GeneratorsOfGroup(G8),[w*IdentityMat(8,GF(q))]));
@@ -331,403 +368,399 @@ function(q, special, general, normaliser)
 end);
 
 
-BindGlobal("u3qdim8@",
+BindGlobal("u3qdim8",
 function(q,special,general,normaliser)
     #  /out:SU(3,q)(.3) <= O+(8,q), q mod 3 = 2 or O-(8,q), q mod 3 = 1
     local C,G,G8,G8q,M,M8,T,isit,w;
     w:=PrimitiveElement(GF(q));
-    G:=GU2@(3,q);
-    A := ComputeActionGroupOfConstitutionsByDim(G,GF(q),8);
-    # =v= MULTIASSIGN =v=
-    G8q:=IsOverSmallerField(G8);
-    isit:=G8q.val1;
-    G8q:=G8q.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    G8q:=G8q^TransformForm(G8q);
+    G:=GU2(3,q);
+    G8 := ComputeActionGroupOfConstitutionsByDim(G,GF(q),8);
+    G8q:=OverSmallerField(GModuleByMats(GeneratorsOfGroup(G),GF(q)),G8);
+    G8q:=ConjugateToStandardForm(G8q,"U");
     if normaliser then
-        return SubStructure(GL(8,q),G8q,#TODO CLOSURE
-        ScalarMat(8,w));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(G8q),[w*IdentityMat(8,GF(q))]));
     elif general and IsOddInt(q) then
-        return SubStructure(GL(8,q),G8q,#TODO CLOSURE
-        ScalarMat(8,-1));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(G8q),[-1*IdentityMat(8,GF(q))]));
     elif (special or general) and IsEvenInt(q) then
-        return SubStructure(GL(8,q),G8q);
+        return G8q;
     elif special or q mod 3=2 then
-        return SubStructure(GL(8,q),G8q.1,#TODO CLOSURE
-        G8q.2,ScalarMat(8,-1));
+        return GroupByGenerators([GeneratorsOfGroup(G8q)[1],GeneratorsOfGroup(G8q)[2],-1*IdentityMat(8,GF(q))]);
     else
-        return SubStructure(GL(8,q),G8q.1,#TODO CLOSURE
-        G8q.2);
+        return GroupByGenerators([GeneratorsOfGroup(G8q)[1],GeneratorsOfGroup(G8q)[2]]);
     fi;
 end);
 
 
-BindGlobal("l2q2dim9@",
+BindGlobal("l2q2dim9",
 function(q,special,general,normaliser)
     #  /out:L(2,q^2).2 <= O(9,q);
-    local C,G,M,M1,T,varX,form,g3,g4,gg,isit,iso,rt,scal,tform,u,w,z;
+    local C,G,M,M1,T,varX,form,g3,g4,gg,isit,iso,rt,scal,tform,u,w,z,MG;
     w:=PrimitiveElement(GF(q^2));
     z:=w^(q+1);
-    G:=SubStructure(GL(2,q^2),SL(2,q^2),#TODO CLOSURE
-        DiagonalMat(GF(q^2),[w,1]));
-    M:=GModule(G);
-    M1:=ModToQ@(M,q);
-    T:=TensorProduct(M,M1);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q^2)),[One(GF(q^2))* DiagonalMat([w,1])]));
+    M:=GModuleByMats(G,GF(q^2));
+    M1:=ConjugateModule(M,q);
+    T:=TensorProductGModule(M,M1);
     Assert(1,IsIrreducible(T));
-    u:=PermutationMatrix@(GF(q^2),Tuple([2,3]) #CAST SymmetricGroup(4)
-        ) #CAST GL(4,q^2)
-        ;
+    u:=PermutationMat((2,3),4,GF(q^2));
     #  induces field automorphism
-    varX:=SubStructure(GL(4,q^2),ActionGroup(T),#TODO CLOSURE
-        u);
-    # =v= MULTIASSIGN =v=
-    G:=IsOverSmallerField(varX);
-    iso:=G.val1;
-    G:=G.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,iso);
-    M:=GModule(G);
-    T:=TensorProduct(M,M);
-    C:=Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=9)[1];
-    G:=ActionGroup(C);
-    G:=G^TransformForm(SubStructure(G,G.1,#TODO CLOSURE
-        G.2));
+    varX:=GroupByGenerators(Concatenation(MTX.Generators(T),[u]));
+    G:=OverSmallerField(GModuleByMats(Concatenation(MTX.Generators(T),[u]),GF(q^2)),varX);
+    M:=GModuleByMats(GeneratorsOfGroup(G),GF(q^2));
+    T:=TensorProductGModule(M,M);
+    C:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 9)[1];
+    G:=Group(MTX.Generators(C));
+    
+    # MAGMA     G:=G^TransformForm(SubStructure(G,G.1,G.2));
+    # Write a function to realise this in GAP
+    MG := GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2]]);
+    G:=ConjugateToStandardForm(G,"L");
+    
+    # TODO: How to do this in GAP?
     #  adjust G.3 to fix form and G.4 to have determinant 1
     # =v= MULTIASSIGN =v=
-    form:=SymmetricBilinearForm(SubStructure(G,G.1,#TODO CLOSURE
-        G.2));
-    isit:=form.val1;
-    form:=form.val2;
+    # form:=SymmetricBilinearForm(SubStructure(G,G.1,#TODO CLOSURE G.2));
+    # isit:=form.val1;
+    # form:=form.val2;
     # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    tform:=G.3*form*TransposedMat(G.3);
-    scal:=form[1][9]/tform[1][9];
+    # tform:=G.3*form*TransposedMat(G.3);
+    # scal:=form[1][9]/tform[1][9];
     # =v= MULTIASSIGN =v=
-    rt:=IsPower(scal,2);
-    isit:=rt.val1;
-    rt:=rt.val2;
+    # rt:=IsPower(scal,2);
+    # isit:=rt.val1;
+    # rt:=rt.val2;
     # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    g3:=G.3*ScalarMat(9,rt);
+    # Assert(1,isit);
+    # g3:=G.3*ScalarMat(9,rt);
     # rewritten select statement
+    
+    g3 := GeneratorsOfGroup(G)[3];
     if DeterminantMat(g3)=1 then
         g3:=g3;
     else
         g3:=-g3;
     fi;
     # rewritten select statement
-    if DeterminantMat(G.4)=1 then
-        g4:=G.4;
+    if DeterminantMat(GeneratorsOfGroup(G)[4])=1 then
+        g4:=GeneratorsOfGroup(G)[4];
     else
-        g4:=-G.4;
+        g4:=-GeneratorsOfGroup(G)[4];
     fi;
-    G:=SubStructure(GL(9,q),G.1,#TODO CLOSURE
-        G.2,g3,g4);
+    G:=GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3,g4]);
     if normaliser then
-        return SubStructure(GL(9,q),G,#TODO CLOSURE
-        ScalarMat(9,z));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(G),[z*IdentityMat(9,GF(q))]));
     elif general then
-        return SubStructure(GL(9,q),G,#TODO CLOSURE
-        ScalarMat(9,-1));
+        return GroupByGenerators(Concatenation(GeneratorsOfGroup(G),[-1*IdentityMat(9,GF(q))]));
     elif special then
         return G;
     else
         # rewritten select statement
-        if InOmega@(g3,9,q,0) then
+        if g3 in Omega(0,9,q) then
             gg:=g3;
         else
             # rewritten select statement
-            if InOmega@(g4,9,q,0) then
+            if g4 in Omega(0,9,q) then
                 gg:=g4;
             else
                 gg:=g3*g4;
             fi;
         fi;
-        return (SubStructure(G,G.1,#TODO CLOSURE
-        G.2,gg));
+        return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],gg]);
     fi;
 end);
 
 
-BindGlobal("l3q2dim9l@",
+BindGlobal("l3q2dim9l",
 function(q,general)
     #  /out:(3.)L(3,q^2)(.3).2 <= L(9,q)
-    local G,M,M1,T,varX,g4,iso,u,w,z;
+    local G,M,M1,T,varX,g4,iso,u,w,z,g3;
     w:=PrimitiveElement(GF(q^2));
     z:=w^(q+1);
-    G:=SubStructure(GL(3,q^2),SL(3,q^2),#TODO CLOSURE
-        DiagonalMat(GF(q^2),[w,1,1]));
-    M:=GModule(G);
-    M1:=ModToQ@(M,q);
-    T:=TensorProduct(M,M1);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),[One(GF(q^2))* DiagonalMat([w,1,1])]));
+    M:=GModuleByMats(G,GF(q^2));
+    M1:=ConjugateModule(M,q);
+    T:=TensorProductGModule(M,M1);
     Assert(1,IsIrreducible(T));
-    u:=PermutationMatrix@(GF(q^2),(2,4)(3,7)(6,8) #CAST SymmetricGroup(9)
-        ) #CAST GL(9,q^2)
-        ;
+    u:=PermutationMat((2,4)(3,7)(6,8),9,GF(q^2));
     #  induces field automorphism
-    varX:=SubStructure(GL(9,q^2),ActionGroup(T),#TODO CLOSURE
-        u);
-    # =v= MULTIASSIGN =v=
-    G:=IsOverSmallerField(varX);
-    iso:=G.val1;
-    G:=G.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,iso);
+    varX:=GroupByGenerators(Concatenation(MTX.Generators(T),[u]));
+    G:=OverSmallerField(GModuleByMats(Concatenation(MTX.Generators(T),[u]),GF(q^2)),varX);
     #  adjust G.4 to have determinant 1
     # rewritten select statement
-    if DeterminantMat(G.4)=1 then
-        g4:=G.4;
+    if DeterminantMat(GeneratorsOfGroup(G)[4])=1 then
+        g4:=GeneratorsOfGroup(G)[4];
     else
-        g4:=-G.4;
+        g4:=-GeneratorsOfGroup(G)[4];
     fi;
-    G:=SubStructure(GL(9,q),G.1,#TODO CLOSURE
-        G.2,G.3,g4);
+    G:=GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],GeneratorsOfGroup(G)[3],g4]);
     if general then
-        return SubStructure(GL(9,q),G,#TODO CLOSURE
-        ScalarMat(9,z));
+        return Group(Concatenation(GeneratorsOfGroup(G),[z*IdentityMat(9,GF(q))]));
     else
         #  get power of G.3 with determinant 1
-        return (SubStructure(G,G.1,#TODO CLOSURE
-        G.2,G.3^Order(DeterminantMat(G.3)),G.4));
+        g3 := GeneratorsOfGroup(G)[3];
+        return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3^DeterminantMat(g3),g4]);
     fi;
 end);
 
 
-BindGlobal("l3q2dim9u@",
+BindGlobal("l3q2dim9u",
 function(q,general,normaliser)
     #  /out:(3.)L(3,q^2)(.3).2 <= L(9,q)
-    local G,M,M1,T,g4,u,w,z;
+    local G,M,M1,T,g4,u,w,z, MG, gens;
     w:=PrimitiveElement(GF(q^2));
     z:=w^(q-1);
-    G:=SubStructure(GL(3,q^2),SL(3,q^2),#TODO CLOSURE
-        DiagonalMat(GF(q^2),[w,1,1]));
-    M:=GModule(G);
-    M1:=ModToQ@(M,q);
-    T:=TensorProduct(Dual(M),M1);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),[One(GF(q^2))* DiagonalMat([w,1,1])]));
+    M:=GModuleByMats(G,GF(q^2));
+    M1:=ConjugateModule(M,q);
+    # Dual(M)?
+    T:=TensorProductGModule(DualGModule(M),M1);
     Assert(1,IsIrreducible(T));
-    u:=PermutationMatrix@(GF(q^2),(2,4)(3,7)(6,8) #CAST SymmetricGroup(9)
-        ) #CAST GL(9,q^2)
-        ;
+    u:=PermutationMat((2,4)(3,7)(6,8),9,GF(q^2));
     #  induces field automorphism
-    G:=SubStructure(GL(9,q^2),ActionGroup(T),#TODO CLOSURE
-        u);
-    G:=G^TransformForm(SubStructure(G,G.1,#TODO CLOSURE
-        G.2));
+    G:=GroupByGenerators(Concatenation(MTX.Generators(T),[u]));
+    # Magma   G:=G^TransformForm(SubStructure(G,G.1,#TODO CLOSURE G.2));
+    # Write a function to realise this in GAP
+    MG := GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2]]);
+    G:=ConjugateToStandardForm(G,"L");
+  
     #  adjust G.4 to have determinant 1
     # rewritten select statement
-    if DeterminantMat(G.4)=1 then
-        g4:=G.4;
+    if DeterminantMat(GeneratorsOfGroup(G)[4])=1 then
+        g4:=GeneratorsOfGroup(G)[4];
     else
-        g4:=-G.4;
+        g4:=-GeneratorsOfGroup(G)[4];
     fi;
-    G:=SubStructure(GL(9,q^2),G.1,#TODO CLOSURE
-        G.2,G.3,g4);
+    G:=GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],GeneratorsOfGroup(G)[3],g4]);
     if normaliser then
-        return SubStructure(GL(9,q^2),G,#TODO CLOSURE
-        ScalarMat(9,w));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w*IdentityMat(9,GF(q))]));
     elif general then
-        return SubStructure(GL(9,q^2),G,#TODO CLOSURE
-        ScalarMat(9,z));
+        return Group(Concatenation(GeneratorsOfGroup(G),[z*IdentityMat(9,GF(q))]));
         #  get power of G.3 with determinant 1
     else
-        return (SubStructure(G,G.1,#TODO CLOSURE
-        G.2,G.3^Order(DeterminantMat(G.3)),G.4));
+        gens := GeneratorsOfGroup(G);
+        return GroupByGenerators([gens[1],gens[2],gens[3]^(DeterminantMat(gens[3])),gens[4]]);
     fi;
 end);
 
 
-BindGlobal("l3qdim10@",
+BindGlobal("l3qdim10",
 function(q,general)
     local A,G,M,MM,S,T,g3,isit,o,rt,tp,w;
-    Assert(1,CollectedFactors(q)[1][1] >= 5);
+    # Assert(1,CollectedFactors(q)[1][1] >= 5);
     w:=PrimitiveElement(GF(q));
-    G:=SubStructure(GL(3,q),SL(3,q),#TODO CLOSURE
-        DiagonalMat(GF(q),[w,1,1]));
-    M:=GModule(G);
-    T:=TensorPower(M,3);
-    MM:=Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=10)[1];
-    G:=ActionGroup(MM);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q)),[One(GF(q))* DiagonalMat([w,1,1])]));
+    M:=GModuleByMats(G,GF(q));
+    # Magma T:=TensorPower(M,3); Correct GAP Code?
+    T := TensorProductGModule(TensorProductGModule(M,M),M);
+    MM:= Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 10)[1];
+    G:=Group(MTX.Generators(MM));
     if general then
-        return SubStructure(GL(10,q),G,#TODO CLOSURE
-        ScalarMat(10,w));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w*IdentityMat(10,GF(q))]));
     fi;
     #  get intersection with SL
-    o:=Order(DeterminantMat(G.3));
-    tp:=3^Valuation(o,3);
-    g3:=G.3^(QuoInt(o,tp));
+    o:=Order(DeterminantMat(GeneratorsOfGroup(G)[3]));
+    
+    # Transform into GAP Code
+    #tp:=3^Valuation(o,3);
+    tp := 1;
+    #####
+    
+    g3:=GeneratorsOfGroup(G)[3]^(QuoInt(o,tp));
     # =v= MULTIASSIGN =v=
-    rt:=IsPower(DeterminantMat(g3),10);
-    isit:=rt.val1;
-    rt:=rt.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    g3:=g3*ScalarMat(10,rt^-1);
-    S:=ScalarMat(10,w^(QuoInt((q-1),Gcd(10,q-1))));
-    return SubStructure(GL(10,q),G.1,#TODO CLOSURE
-        G.2,g3,S);
+    
+    # Transform into GAP Code
+    # rt:=IsPower(DeterminantMat(g3),10);
+    # isit:=rt.val1;
+    # rt:=rt.val2;
+    # Assert(1,isit);
+    rt := 1;
+    #####
+    
+    g3:=g3*(rt^-1*IdentityMat(10,GF(q)));
+    S:=w^(QuoInt((q-1),Gcd(10,q-1)))*IdentityMat(10,GF(q));
+    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3,S]);
 end);
 
 
-BindGlobal("u3qdim10@",
+BindGlobal("u3qdim10",
 function(q,general,normaliser)
     local A,G,M,MM,S,T,g3,isit,o,rt,tp,w;
-    Assert(1,CollectedFactors(q)[1][1] >= 5);
+    # Assert(1,CollectedFactors(q)[1][1] >= 5);
     if normaliser then
         general:=true;
     fi;
     w:=PrimitiveElement(GF(q^2));
-    G:=SubStructure(GL(3,q^2),SU(3,q),#TODO CLOSURE
-        GU(3,q).1);
-    M:=GModule(G);
-    T:=TensorPower(M,3);
-    MM:=Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=10)[1];
-    A:=ActionGroup(MM);
-    G:=A^TransformForm(A);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SU(3,q)),GeneratorsOfGroup(GU(3,q))[1]));
+    M:=GModuleByMats(G,GF(q^2));
+    # T:=TensorPower(M,3);
+    T := TensorProductGModule(TensorProductGModule(M,M),M);
+    MM:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 10)[1];
+    A:=Group(MTX.Generators(MM));
+    G:=ConjugateToStandardForm(A,"U");
     if normaliser then
-        return SubStructure(GL(10,q^2),G,#TODO CLOSURE
-        ScalarMat(10,w));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w*IdentityMat(10,GF(q^2))]));
     fi;
     if general then
-        return SubStructure(GL(10,q^2),G,#TODO CLOSURE
-        ScalarMat(10,w^(q-1)));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w^(q-1)*IdentityMat(10,GF(q))]));
     fi;
     #  get intersection with SU
-    o:=Order(DeterminantMat(G.3));
-    tp:=3^Valuation(o,3);
-    g3:=G.3^(QuoInt(o,tp));
+    o:=Order(DeterminantMat(GeneratorsOfGroup(G)[3]));
+    
+    # How to do this in GAP?
+    # tp:=3^Valuation(o,3);
+    
+    tp := 1;
+    g3:=GeneratorsOfGroup[3]^(QuoInt(o,tp));
+    
+    # How to do this in GAP?
     # =v= MULTIASSIGN =v=
-    rt:=IsPower(DeterminantMat(g3),10*(q-1));
-    isit:=rt.val1;
-    rt:=rt.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    g3:=g3*ScalarMat(10,rt^-(q-1));
-    S:=ScalarMat(10,(w^(q-1))^(QuoInt((q+1),Gcd(10,q+1))));
-    return SubStructure(GL(10,q^2),G.1,#TODO CLOSURE
-        G.2,g3,S);
+    # rt:=IsPower(DeterminantMat(g3),10*(q-1));
+    # isit:=rt.val1;
+    # rt:=rt.val2;
+    # Assert(1,isit);
+    rt := 1;
+    
+    g3:=g3*(rt^-(q-1)*IdentityMat(10,GF(q^2)));
+    S:=(w^(q-1))^(QuoInt((q+1),Gcd(10,q+1)))*IdentityMat(10,GF(q^2));
+    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3,S]);
 end);
 
 
-BindGlobal("l4qdim10@",
+BindGlobal("l4qdim10",
 function(q,general)
     local A,G,M,MM,S,T,g3,isit,o,rt,tp,w;
-    Assert(1,CollectedFactors(q)[1][1] >= 3);
+    # Assert(1,CollectedFactors(q)[1][1] >= 3);
     w:=PrimitiveElement(GF(q));
-    G:=SubStructure(GL(4,q),SL(4,q),#TODO CLOSURE
-        DiagonalMat(GF(q),[w,1,1,1]));
-    M:=GModule(G);
-    T:=TensorPower(M,2);
-    MM:=Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=10)[1];
-    G:=ActionGroup(MM);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(4,q)),[One(GF(q))* DiagonalMat([w,1,1,1])]));
+    M:=GModuleByMats(G,GF(q));
+    # Magma T:=TensorPower(M,2);
+    T := TensorProductGModule(M,M);
+    MM:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 10)[1];
+    G:=Group(MTX.Generators(MM));
     if general then
-        return SubStructure(GL(10,q),G,#TODO CLOSURE
-        ScalarMat(10,w));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w*IdentityMat(10,GF(q))]));
     fi;
     #  get intersection with SL
-    o:=Order(DeterminantMat(G.3));
-    tp:=2^Valuation(o,2);
-    g3:=G.3^(QuoInt(2*o,tp));
+    o:=Order(DeterminantMat(GeneratorsOfGroup(G)[3]));
+    
+    # Magma tp:=2^Valuation(o,2);
+    tp := 1;
+    
+    g3:=GeneratorsOfGroup(G)[3]^(QuoInt(2*o,tp));
+    
+    # How to do this in Magma
     # =v= MULTIASSIGN =v=
-    rt:=IsPower(DeterminantMat(g3),10);
-    isit:=rt.val1;
-    rt:=rt.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    g3:=g3*ScalarMat(10,rt^-1);
-    S:=ScalarMat(10,w^(QuoInt((q-1),Gcd(10,q-1))));
-    return SubStructure(GL(10,q),G.1,#TODO CLOSURE
-        G.2,g3,S);
+    # rt:=IsPower(DeterminantMat(g3),10);
+    # isit:=rt.val1;
+    # rt:=rt.val2;
+    # Assert(1,isit);
+    rt := 1;
+    
+    g3:=g3*((rt^-1)*IdentityMat(10,GF(q)));
+    S:=w^(QuoInt((q-1),Gcd(10,q-1)))*IdentityMat(10,GF(q));
+    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3,S]);
 end);
 
 
-BindGlobal("u4qdim10@",
+BindGlobal("u4qdim10",
 function(q,general,normaliser)
     local A,G,M,MM,S,T,g3,isit,o,rt,tp,w;
-    Assert(1,CollectedFactors(q)[1][1] >= 3);
+    # Assert(1,CollectedFactors(q)[1][1] >= 3);
     if normaliser then
         general:=true;
     fi;
     w:=PrimitiveElement(GF(q^2));
-    G:=SubStructure(GL(4,q^2),SU(4,q),#TODO CLOSURE
-        GU(4,q).1);
-    M:=GModule(G);
-    T:=TensorPower(M,2);
-    MM:=Filtered(Constituents(T),c->DimensionOfMatrixGroup(c)=10)[1];
-    A:=ActionGroup(MM);
-    G:=A^TransformForm(A);
+    G:=GroupByGenerators(Concatenation(GeneratorsOfGroup(SU(4,q)),GeneratorsOfGroup(GU(4,q))[1]));
+    M:=GModuleByMats(G,GF(q^2));
+    # Magma T:=TensorPower(M,2);
+    T := TensorProductGModule(M,M);
+    MM:=Filtered(MTX.CompositionFactors(T),c->MTX.Dimension(c) = 10)[1];
+    A:=Group(MTX.Generators(MM));
+    G:=ConjugateToStandardForm(A,"U");
     if normaliser then
-        return SubStructure(GL(10,q^2),G,#TODO CLOSURE
-        ScalarMat(10,w));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w*IdentityMat(10,GF(q^2))]));
     fi;
     if general then
-        return SubStructure(GL(10,q^2),G,#TODO CLOSURE
-        ScalarMat(10,w^(q-1)));
+        return Group(Concatenation(GeneratorsOfGroup(G),[w^(q-1)*IdentityMat(10,GF(q^2))]));
     fi;
     #  get intersection with SU
-    o:=Order(DeterminantMat(G.3));
-    tp:=2^Valuation(o,2);
-    g3:=G.3^(QuoInt(2*o,tp));
+    o:=Order(DeterminantMat(GeneratorsOfGroup(G)[3]));
+    
+    # Magma tp:=2^Valuation(o,2);
+    tp := 1;
+    
+    g3:=GeneratorsOfGroup(G)[3]^(QuoInt(2*o,tp));
+    
+    # How to do this in Magma
     # =v= MULTIASSIGN =v=
-    rt:=IsPower(DeterminantMat(g3),10*(q-1));
-    isit:=rt.val1;
-    rt:=rt.val2;
-    # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    g3:=g3*ScalarMat(10,rt^-(q-1));
-    S:=ScalarMat(10,(w^(q-1))^(QuoInt((q+1),Gcd(10,q+1))));
-    return SubStructure(GL(10,q^2),G.1,#TODO CLOSURE
-        G.2,g3,S);
+    # rt:=IsPower(DeterminantMat(g3),10*(q-1));
+    # isit:=rt.val1;
+    # rt:=rt.val2;
+    # Assert(1,isit);
+    rt := 1;
+    
+    g3:=g3*((rt^-(q-1))*IdentityMat(10,GF(q^2)));
+    S:=(w^(q-1))^(QuoInt((q+1),Gcd(10,q+1)))*IdentityMat(10,GF(q^2));
+    return GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3,S]);
 end);
 
 
-BindGlobal("sp4qdim10@",
+BindGlobal("sp4qdim10",
 function(q,special,general,normaliser)
     #  /out:Sp4q <= O^+(10,q) (q=1 mod 4) or O^-(10,q) (q=3 mod 4)
-    local C,G,M,M10,form,g3,isit,rt,scal,sign,tform,w;
+    local C,G,M,M10,form,g3,isit,rt,scal,sign,tform,w,MG;
     Assert(1,IsOddInt(q));
     w:=PrimitiveElement(GF(q));
-    G:=SubStructure(GL(4,q),SP(4,q),#TODO CLOSURE
-        NormSpMinusSp@(4,q));
-    M:=GModule(G);
-    C:=Constituents(TensorProduct(M,M));
-    M10:=Filtered(C,c->DimensionOfMatrixGroup(c)=10)[1];
-    G:=ActionGroup(M10);
-    G:=G^TransformForm(SubStructure(G,G.1,#TODO CLOSURE
-        G.2));
+    
+    # Magma
+    # G:=SubStructure(GL(4,q),SP(4,q),NormSpMinusSp@(4,q));
+    G := Sp(4,q);  #See line above
+    
+    M:=GModuleByMats(G,GF(q));
+    C:=MTX.CompositionFactors(TensorProductGModule(M,M));
+    M10:=Filtered(C,c->MTX.Dimension(c) = 10)[1];
+    G:=Group(MTX.Generators(M10));
+    
+    # MAGMA      G:=G^TransformForm(SubStructure(G,G.1,#TODO CLOSURE G.2));
+    # Write a function to realise this in GAP
+    MG := GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2]]);
+    G:=ConjugateToStandardForm(G,"L");
+    
+    # TODO: How to do this in GAP?
+    #  adjust G.3 to fix form and G.4 to have determinant 1
     # =v= MULTIASSIGN =v=
-    form:=SymmetricBilinearForm(SubStructure(G,G.1,#TODO CLOSURE
-        G.2));
-    isit:=form.val1;
-    form:=form.val2;
+    # form:=SymmetricBilinearForm(SubStructure(G,G.1,#TODO CLOSURE G.2));
+    # isit:=form.val1;
+    # form:=form.val2;
     # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    tform:=G.3*form*TransposedMat(G.3);
-    scal:=form[1][10]/tform[1][10];
+    # Assert(1,isit);
+    # tform:=G.3*form*TransposedMat(G.3);
+    # scal:=form[1][10]/tform[1][10];
     # =v= MULTIASSIGN =v=
-    rt:=IsPower(scal,2);
-    isit:=rt.val1;
-    rt:=rt.val2;
+    # rt:=IsPower(scal,2);
+    # isit:=rt.val1;
+    # rt:=rt.val2;
     # =^= MULTIASSIGN =^=
-    Assert(1,isit);
-    g3:=G.3*ScalarMat(10,rt);
-    G:=SubStructure(GL(10,q),G.1,#TODO CLOSURE
-        G.2,g3);
+    # Assert(1,isit);
+    # g3:=G.3*ScalarMat(9,rt);
+    # rewritten select statement
+    rt := 1;
+    
+    g3:=GeneratorsOfGroup(G)[3]*(rt*IdentityMat(10,GF(q)));
+    G:=GroupByGenerators([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],g3]);
     # rewritten select statement
     if q mod 4=1 then
         sign:=1;
     else
         sign:=-1;
     fi;
-    Assert(1,DeterminantMat(g3)=1 and not InOmega@(g3,10,q,sign));
+    Assert(1,DeterminantMat(g3)=1 and not(g3 in Omega(sign,10,q)));
     if normaliser then
-        return SubStructure(GL(10,q),G,#TODO CLOSURE
-        ScalarMat(10,w));
+        return Group(Concatenation(GeneratorsOfGroup(G),w*IdentityMat(10,GF(q))));
     elif special or general then
-        return SubStructure(GL(10,q),G,#TODO CLOSURE
-        ScalarMat(10,-1));
+        return Group(Concatenation(GeneratorsOfGroup(G),-1*IdentityMat(10,GF(q))));
     else
-        return SubStructure(GL(10,q),G.1,#TODO CLOSURE
-        G.2,ScalarMat(10,-1));
+        return Group([GeneratorsOfGroup(G)[1],GeneratorsOfGroup(G)[2],-1*IdentityMat(10,GF(q))]);
     fi;
 end);
+
