@@ -146,6 +146,7 @@ function(G)
     fi;
     q := RootInt(Size(F));
 
+    # Return stored sesquilinear form if it exists and is hermitian
     if HasInvariantSesquilinearForm(G) then
         formMatrix := InvariantSesquilinearForm(G).matrix;
         if formMatrix = HermitianConjugate(formMatrix, q) then
@@ -216,19 +217,33 @@ function(G)
 end);
 
 # Assuming that the group G acts absolutely irreducibly, try to find a
-# symplectic form which is G-invariant or prove that no such form exists.
+#   * symplectic form (if <type> = S) or a 
+#   * symmetric bilinear form (if <type> = O)
+# which is G-invariant or prove that no such form exists.
 #
 # In general, this function should only be used if one can be sure that <G>
 # preserves a symplectic form (but one does not know which one).
-InstallGlobalFunction("SymplecticForm",
-function(G)
-    local F, M, inverseTransposeM, counter, formMatrix;
+InstallGlobalFunction("BilinearForm",
+function(G, type)
+    local F, M, inverseTransposeM, counter, formMatrix, condition;
+
+    if not type in ["S", "O"] then
+        ErrorNoReturn("<type> must be one of 'S', 'O'");
+    fi;
+    # Set the condition the Gram matrix needs to satisfy for each of the
+    # possible types.
+    if type = "S" then
+        condition := x -> (x = - TransposedMat(x));
+    elif type = "O" then
+        condition := x -> (x = TransposedMat(x));
+    fi;
 
     F := DefaultFieldOfMatrixGroup(G);
 
+    # Return stored bilinear form if it exists and is symplectic / symmetric
     if HasInvariantBilinearForm(G) then
         formMatrix := InvariantBilinearForm(G).matrix;
-        if formMatrix = - TransposedMat(formMatrix) then
+        if condition(formMatrix) then
             return ImmutableMatrix(F, formMatrix);
         fi;
     fi;
@@ -236,7 +251,7 @@ function(G)
     M := GModuleByMats(GeneratorsOfGroup(G), F);
 
     if not MTX.IsIrreducible(M) then
-        ErrorNoReturn("SymplecticForm failed - group is not irreducible");
+        ErrorNoReturn("BilinearForm failed - group is not irreducible");
     fi;
 
     # An element A of G acts as A ^ (-T) in MTX.DualModule(M) 
@@ -244,9 +259,9 @@ function(G)
 
     counter := 0;
     # As the MeatAxe is randomised, we might have to make some more trials to
-    # find a preserved symplectic form if there is one; breaking after 1000 trials
-    # is just a "safety net" in case a group <G> that does not preserve a
-    # unitary form is input.
+    # find a preserved symplectic / symmetric bilinear form if there is one; 
+    # breaking after 1000 trials is just a "safety net" in case a group <G> 
+    # that does not preserve a symplectic / symmetric bilinear form is input.
     while counter < 1000 do
         counter := counter + 1;
 
@@ -262,13 +277,24 @@ function(G)
         formMatrix := MTX.IsomorphismModules(M, inverseTransposeM);
 
         # check if formMatrix is antisymmetric
-        if formMatrix = - TransposedMat(formMatrix) then
+        if condition(formMatrix) then
             return ImmutableMatrix(F, formMatrix);
         fi;
         if not MTX.IsAbsolutelyIrreducible(M) then
-            ErrorNoReturn("SymplecticForm failed - group is not absolutely irreducible");
+            ErrorNoReturn("BilinearForm failed - group is not absolutely irreducible");
         fi;
     od;
 
     return fail;
 end);
+
+InstallGlobalFunction("SymplecticForm",
+function(G)
+    return BilinearForm(G, "S");
+end);
+
+InstallGlobalFunction("SymmetricBilinearForm",
+function(G)
+    return BilinearForm(G, "O");
+end);
+
