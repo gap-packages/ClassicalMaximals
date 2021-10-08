@@ -1,5 +1,9 @@
 gap> UnitaryForm(SU(4, 3)) = InvariantSesquilinearForm(SU(4, 3)).matrix;
 true
+gap> SymplecticForm(Sp(6, 7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
+true
+gap> SymmetricBilinearForm(SO(5, 9)) = InvariantBilinearForm(SO(5, 9)).matrix;
+true
 gap> TestFormChangingFunctions := function(args)
 >   local n, q, type, gramMatrix, standardGroup, conjugatedGroup, broadType,
 >   standardGramMatrix, twiceConjugatedGroup;
@@ -26,10 +30,8 @@ gap> TestFormChangingFunctions := function(args)
 >   conjugatedGroup := ConjugateToSesquilinearForm(standardGroup, broadType, gramMatrix);
 >   if type = "U" then
 >       standardGramMatrix := InvariantSesquilinearForm(standardGroup).matrix;
->       SetInvariantSesquilinearForm(conjugatedGroup, rec(matrix := gramMatrix));
 >   else
 >       standardGramMatrix := InvariantBilinearForm(standardGroup).matrix;
->       SetInvariantBilinearForm(conjugatedGroup, rec(matrix := gramMatrix));
 >   fi;
 >   twiceConjugatedGroup := ConjugateToStandardForm(conjugatedGroup, type);
 >   if type = "U" then

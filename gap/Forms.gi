@@ -49,9 +49,9 @@ function(group, type, gramMatrix)
         SetSize(result, Size(group));
     fi;
     if type = "S" or type = "O" then
-        SetInvariantBilinearForm(result, gramMatrix);
+        SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
     else
-        SetInvariantSesquilinearForm(result, gramMatrix);
+        SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix));
     fi;
 
     return result;
