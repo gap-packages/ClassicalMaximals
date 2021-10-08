@@ -61,7 +61,7 @@ function(d, q, t)
     # We have to exclude m = 1 since the Forms package has a bug in this case;
     # however, this case is trivial.
     if m > 1 then
-        SUChangedForm := ChangeFixedSesquilinearForm(SU(m, q), "U", IdentityMat(m, F));
+        SUChangedForm := ConjugateToSesquilinearForm(SU(m, q), "U", IdentityMat(m, F));
     else
         SUChangedForm := SU(m, q);
     fi;

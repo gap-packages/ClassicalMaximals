@@ -4,7 +4,7 @@
 # correctly for <group>; this can be done, for example, by making the
 # generators used during construction of the group immutable matrices over the
 # appropriate field.
-InstallGlobalFunction("ChangeFixedSesquilinearForm",
+InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
         result;
@@ -107,7 +107,7 @@ function(group, type)
         broadType := type;
     fi;
 
-    return ChangeFixedSesquilinearForm(group, broadType, gapForm);
+    return ConjugateToSesquilinearForm(group, broadType, gapForm);
 end);
 
 

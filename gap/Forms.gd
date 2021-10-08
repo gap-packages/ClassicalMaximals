@@ -1,3 +1,3 @@
-DeclareGlobalFunction("ChangeFixedSesquilinearForm");
+DeclareGlobalFunction("ConjugateToSesquilinearForm");
 DeclareGlobalFunction("ConjugateToStandardForm");
 DeclareGlobalFunction("UnitaryForm");

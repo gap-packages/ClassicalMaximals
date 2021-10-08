@@ -295,7 +295,7 @@ function(epsilon, n, q)
     zeta := PrimitiveElement(F);
     if IsOddInt(n) then
             gramMatrix := IdentityMat(n, F);
-            generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+            generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));
             D := - IdentityMat(n, F);
@@ -303,7 +303,7 @@ function(epsilon, n, q)
     else 
         if epsilon = 1 then
             gramMatrix := AntidiagonalMat(n, F);
-            generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+            generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                             "O",
                                                                             gramMatrix));
             # Our standard bilinear form is given by the Gram matrix 
@@ -324,7 +324,7 @@ function(epsilon, n, q)
 
             if IsOddInt(n * (q - 1) / 4) then
                 gramMatrix := IdentityMat(n, F);
-                generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
@@ -341,7 +341,7 @@ function(epsilon, n, q)
             else
                 gramMatrix := Z(q) ^ 0 * DiagonalMat(Concatenation([zeta],
                                                                    List([1..n - 1], i -> 1)));
-                generatorsOfSO := GeneratorsOfGroup(ChangeFixedSesquilinearForm(SO(epsilon, n, q),
+                generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 

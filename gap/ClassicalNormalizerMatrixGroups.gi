@@ -53,7 +53,7 @@ function(d, q)
     C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, F); # generates the center of SL(d, q)
     g := Gcd(q - 1, d);
     c := QuoInt(Gcd(q0 + 1, d) * (q - 1), Lcm(q0 + 1, QuoInt(q - 1, g)) * g);
-    SUWithIdentityForm := ChangeFixedSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
+    SUWithIdentityForm := ConjugateToSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
     SUGens := GeneratorsOfGroup(SUWithIdentityForm);
 
     gens := Concatenation(SUGens, [C]);

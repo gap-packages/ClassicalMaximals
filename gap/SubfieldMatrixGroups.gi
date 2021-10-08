@@ -163,7 +163,7 @@ function(epsilon, d, q)
     size := SizeSO(epsilon, d, q) * Gcd(q + 1, d);
 
     if IsOddInt(d) then
-        SOChangedForm := ChangeFixedSesquilinearForm(SO(d, q),
+        SOChangedForm := ConjugateToSesquilinearForm(SO(d, q),
                                                      "O",
                                                      AntidiagonalMat(d, F));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));

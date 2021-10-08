@@ -61,8 +61,8 @@ function(d1, d2, q)
     generators := [];
 
     # generate the central product SU(d1, q) o SU(d2, q)
-    SUd1FormIdentityMat := ChangeFixedSesquilinearForm(SU(d1, q), "U", IdentityMat(d1, F));
-    SUd2FormIdentityMat := ChangeFixedSesquilinearForm(SU(d2, q), "U", IdentityMat(d2, F));
+    SUd1FormIdentityMat := ConjugateToSesquilinearForm(SU(d1, q), "U", IdentityMat(d1, F));
+    SUd2FormIdentityMat := ConjugateToSesquilinearForm(SU(d2, q), "U", IdentityMat(d2, F));
 
     generators := List(GeneratorsOfGroup(SUd1FormIdentityMat), 
                        g -> KroneckerProduct(g, IdentityMat(d2, F)));
