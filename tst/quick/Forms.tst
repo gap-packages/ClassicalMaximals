@@ -4,6 +4,10 @@ gap> SymplecticForm(Sp(6, 7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
 true
 gap> SymmetricBilinearForm(SO(5, 9)) = InvariantBilinearForm(SO(5, 9)).matrix;
 true
+gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)));
+Error, No preserved unitary form found for <group>
+gap> ConjugateToSesquilinearForm(SL(3, 5), "O", IdentityMat(3, GF(5)));
+Error, No preserved symmetric bilinear form found for <group>
 gap> TestFormChangingFunctions := function(args)
 >   local n, q, type, gramMatrix, standardGroup, conjugatedGroup, broadType,
 >   standardGramMatrix, twiceConjugatedGroup;

@@ -284,12 +284,14 @@ function(G, type)
         # which is what we need.
         formMatrix := MTX.IsomorphismModules(M, inverseTransposeM);
 
-        # check if formMatrix is antisymmetric
-        if condition(formMatrix) then
-            return ImmutableMatrix(F, formMatrix);
-        fi;
-        if not MTX.IsAbsolutelyIrreducible(M) then
-            ErrorNoReturn("BilinearForm failed - group is not absolutely irreducible");
+        if formMatrix <> fail then
+            # check if formMatrix is antisymmetric
+            if condition(formMatrix) then
+                return ImmutableMatrix(F, formMatrix);
+            fi;
+            if not MTX.IsAbsolutelyIrreducible(M) then
+                ErrorNoReturn("BilinearForm failed - group is not absolutely irreducible");
+            fi;
         fi;
     od;
 
