@@ -315,5 +315,7 @@ function (d, p, e, f)
     # C is in the Normalizer of Sp(d, q) of Sp(d, q0).
     C := DiagonalMat(Concatenation(List([1..l], i -> omega * zetaPower), List([1..l], i -> zetaPower)));
     Add(gens, C);
+
+    # Size according to Table 2.8 in [BHR13]
     return MatrixGroupWithSize(F, gens, SizeSp(d, q0) * 2);
 end);
