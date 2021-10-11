@@ -49,7 +49,7 @@ gap> testsSUStabilizerOfNonDegenerateSubspace := [[5, 3, 2], [6, 3, 2], [4, 5, 1
 gap> ForAll(testsSUStabilizerOfNonDegenerateSubspace, TestSUStabilizerOfNonDegenerateSubspace);
 true
 gap> TestSpStabilizerOfIsotropicSubspace := function(args)
->   local n, q, k, G;
+>   local n, q, k, G, hasSize;
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
@@ -64,7 +64,7 @@ gap> testsSpStabilizerOfIsotropicSubspace := [];;
 gap> ForAll(testsSpStabilizerOfIsotropicSubspace, TestSpStabilizerOfIsotropicSubspace);
 true
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
->   local n, q, k, G;
+>   local n, q, k, G, hasSize;
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
