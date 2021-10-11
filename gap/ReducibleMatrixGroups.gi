@@ -408,7 +408,7 @@ function(d, q, k)
     Add(gens, I + SquareSingleEntryMatrix(field, d, d, d - k) - SquareSingleEntryMatrix(field, d, k + 1, 1));
 
     # Size according to Table 2.3 of [BHR13]
-    return MatrixGroupWithSize(gens, field, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
+    return MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
 end);
 
 
@@ -448,5 +448,5 @@ function(d, q, k)
     od;
 
     # Size according to Table 2.3 of [BHR13]
-    return MatrixGroupWithSize(gens, field, SizeSp(k, q) * SizeSp(d - k, q));
+    return MatrixGroupWithSize(field, gens, SizeSp(k, q) * SizeSp(d - k, q));
 end);

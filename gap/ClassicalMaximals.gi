@@ -829,7 +829,8 @@ function(n, q, classes...)
 end);
 
 
-C1SubgroupsSymplecticGroupGeneric := function(n, q)
+BindGlobal("C1SubgroupsSymplecticGroupGeneric",
+function(n, q)
     local result;
     # type P_k subgroups
     result := List([1..QuoInt(n, 2) - 1], k -> SpStabilizerOfIsotropicSubspace(n, q, k));
@@ -838,4 +839,4 @@ C1SubgroupsSymplecticGroupGeneric := function(n, q)
                             List([2, 4..2 * QuoInt(n - 2, 4)], 
                                 k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
     return result;
-end;
+end);
