@@ -71,3 +71,19 @@ gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [-1, 2, 3], [-1, 4, 3]]
 #@fi
 gap> ForAll(testsOrthogonalSubfieldSU, TestOrthogonalSubfieldSU);
 true
+gap> TestSubfieldSp := function(args)
+>   local n, p, e, f, G, hasSize;
+>   n := args[1];
+>   p := args[2];
+>   e := args[3];
+>   f := args[4];
+>   G := SubfieldSp(n, p, e, f);
+>   hasSize := HasSize(G);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(Sp(n, p ^ e), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
+>          and hasSize;
+> end;;
+gap> testsSubfieldSp := [];;
+gap> ForAll(testsSubfieldSp, TestSubfieldSp);
+true
