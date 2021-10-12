@@ -379,9 +379,15 @@ function(d, q, k)
     I := IdentityMat(d, field);
     J := AntidiagonalMat(k, field);
 
-    # These two generators are lower triangular block matrices
-    # with 3x3 blocks that generate a subgroup of Sp(d, q)
-    # corresponding to GL(k, q).
+    # For either generator of Sp(d,q), we take an
+    # invertable matrix GLgen which acts on
+    # the first k basis vectors and puts it in
+    # a matrix with another invertable matrix acting
+    # on the last d - k basis vectors.
+    # This way, we preserve the decomposition into
+    # two isotropic subspaces.
+    # With the way we construct the second block matrix,
+    # the form is also preserved.
     for GLgen in GeneratorsOfGroup(GL(k, q)) do
         Xi := IdentityMat(d, field);
         Xi{[1..k]}{[1..k]} := GLgen;
@@ -429,8 +435,8 @@ function(d, q, k)
     field := GF(q);
     gens := [];
 
-    # These generators are block matrices of the form [[A 0 B], [0 C 0], [D 0 E]],
-    # which corresponds to a subgroup corresponding to Sp(2 * k, q).
+    # These generators are bidagonal block matrices
+    # which generate a subgroup corresponding to Sp(2 * k, q).
     for Spgen in GeneratorsOfGroup(Sp(2 * k, q)) do
         Xi := IdentityMat(d, field);
         Xi{[1..k]}{[1..k]} := Spgen{[1..k]}{[1..k]};
@@ -439,8 +445,9 @@ function(d, q, k)
         Xi{[d - k + 1 .. d]}{[d - k + 1 .. d]} := Spgen{[k + 1 .. 2 * k]}{[k + 1 .. 2 * k]};
         Add(gens, Xi);
     od;
-    # These generators are block matrices with 2x2 blocks which generate a
-    # subgroup corresponding to Sp(d - 2 * k, q). 
+
+    # These generators are 2x2 block matrices with blocks which
+    # generate a subgroup corresponding to Sp(d - 2 * k, q). 
     for Spgen in GeneratorsOfGroup(Sp(d - 2 * k, q)) do
         Yi := IdentityMat(d, field);
         Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
