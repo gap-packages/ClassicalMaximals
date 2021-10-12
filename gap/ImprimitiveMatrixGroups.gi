@@ -171,3 +171,99 @@ function(d, q)
 
     return MatrixGroupWithSize(F, generators, size);
 end);
+
+
+# Construction as in Proposition 5.2 of [HR05]
+# We stabilise the decomposition with the t summands 
+# < e_1, ..., e_k, f_k, ..., f_1 >,
+# < e_{k + 1}, ..., e_{2k}, f_{2k}, ..., f_{k + 1} >, ...
+# < e_{l - k + 1}, ..., e_{d / 2}, f_{d / 2}, ..., f_{l - k + 1} >,
+# where l = d / 2, m = d / t and k = m / 2.
+BindGlobal("SpNonDegenerateImprimitives",
+function(d, q, t)
+    local m, l, k, field, one, gens, Spgen, Xi, C, D;
+
+    if IsOddInt(d) then
+        ErrorNoReturn("Dimension <d> must be even but ", d, " was given.");
+    fi;
+
+    m := QuoInt(d, t);
+
+    if not m * t = d then
+        ErrorNoReturn("The number <t> of subspaces must divide the dimension <d> but <d> = ", d, ", <t> = ", t, " was given.");
+    fi;
+
+    if IsOddInt(m) then
+        ErrorNoReturn("The dimension <m> = <d> / <t> must be even but <m> = ", m, ".");
+    fi;
+
+    l := QuoInt(d, 2);
+    k := QuoInt(m, 2);
+
+    field := GF(q);
+    one := One(field);
+    gens := [];
+
+    # This construction is the same as in Proposition 4.4 of [HR05]
+    # and is also used in the reducible case (C1). This could therefore
+    # be refactored into a Util-function at a later date.
+    # These generators are block matrices of the form [[A 0 B], [0 C 0], [D 0 E]],
+    # which corresponds to a subgroup corresponding to Sp(m, q).
+    for Spgen in GeneratorsOfGroup(Sp(m, q)) do
+        Xi := IdentityMat(d, field);
+        Xi{[1..k]}{[1..k]} := Spgen{[1..k]}{[1..k]};
+        Xi{[1..k]}{[d - k + 1 .. d]} := Spgen{[1..k]}{[k + 1 .. 2 * k]};
+        Xi{[d - k + 1 .. d]}{[1..k]} := Spgen{[k + 1 .. 2 * k]}{[1..k]};
+        Xi{[d - k + 1 .. d]}{[d - k + 1 .. d]} := Spgen{[k + 1 .. 2 * k]}{[k + 1 .. 2 * k]};
+        Add(gens, Xi);
+    od;
+
+    # This Matrix will swap the vectors e_i with e_{i + k} and
+    # f_i with f_{i + k} for 1 <= i <= k respectively,
+    # which corresponds to the product of m transpositions in Sym(t).
+    # Since m is even, this permutation has signum 1 and det(C) = 1.
+    # One can easily check that this preserves the form.
+    C := NullMat(d, d, field);
+
+    # The central 2 * (l - m) = (d - 2m) basis vectors should be
+    # unaffected, so an identity matrix as a block works nicely.
+    C{[m + 1..d - m]}{[m + 1..d - m]} := IdentityMat(2 * (l - m), field);
+    
+    # This block matrix magic is just a
+    # fancy way of swapping the correct entries.
+    C{[1..k]}{[k + 1..m]} := IdentityMat(k, field);
+    C{[k + 1..m]}{[1..k]} := IdentityMat(k, field);
+    C{[d - k + 1..d]}{[d - m + 1..d - k]} := IdentityMat(k, field);
+    C{[d - m + 1..d - k]}{[d - k + 1..d]} := IdentityMat(k, field);
+
+    Add(gens, C);
+
+    # This Matrix will map the basis vectors
+    # e_i -> e_{((i + k -1) mod l) + 1} and
+    # f_i -> f_{((i + k -1) mod l) + 1} 
+    # which corresponds to a t-cycle in Sym(t).
+    # Althoug this permutation has signum -1, we still have 
+    # det(C) = 1 because we are effectively swapping an even
+    # number of rows/colums.
+    # One can easily check that this preserves the form.
+    D := NullMat(d, d, field);
+
+    # This block matrix magic is again just a
+    # fancy way of swapping the correct entries.
+    # Effectively, we are shifting t k x k - blocks
+    # by k row/colums each.
+    D{[1..l - k]}{[k + 1..l]} := IdentityMat(l - k, field);
+    D{[l - k + 1..l]}{[1..k]} := IdentityMat(k, field);
+    D{[l + 1..l + k]}{[d - k + 1..d]} := IdentityMat(k, field);
+    D{[l + k + 1..d]}{[l + 1..d - k]} := IdentityMat(l - k, field);
+
+    Add(gens, D);
+
+    return MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
+
+end);
+
+
+BindGlobal("SpIsotropicImprimitives",
+function(d, q)
+end);
