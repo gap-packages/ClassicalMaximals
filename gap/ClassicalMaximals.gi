@@ -847,6 +847,43 @@ function(n, q)
     return ImmutableMatrix(F, result);
 end);
 
+BindGlobal("C1SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local listOfks, result;
+    listOfks := [1..QuoInt(n, 2) - 1];
+    # type P_k subgroups
+    result := List(listOfks, k -> SpStabilizerOfIsotropicSubspace(n, q, k));
+    # type Sp(k, q) _|_ Sp(n - k, q) subgroups
+    result := Concatenation(result, 
+                            List(listOfks, 
+                                k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
+    return result;
+end);
+
+BindGlobal("C2SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local result, divisorListOfn, t;
+    
+    result := [];
+
+    divisorListOfn := List(DivisorsInt(n));
+    Remove(divisorListOfn, 1);
+
+    # type Sp(m, q) \wr Sym(t) subgroups
+    for t in divisorListOfn do
+        if IsEvenInt(QuoInt(n, t)) then
+            Add(result, SpNonDegenerateImprimitives(n, q, t));
+        fi;
+    od;
+
+    # type GL(n / 2, q).2 subgroups
+    if IsEvenInt(n) then
+        Add(result, SpIsotropicImprimitives(n, q));
+    fi;
+
+    return result;
+end);
+
 BindGlobal("C6SubgroupsSymplecticGroupGeneric",
 function(n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
@@ -879,18 +916,5 @@ function(n, q)
                                            numberOfConjugates); 
     fi;
 
-    return result;
-end);
-
-BindGlobal("C1SubgroupsSymplecticGroupGeneric",
-function(n, q)
-    local listOfks, result;
-    listOfks := [1..QuoInt(n, 2) - 1];
-    # type P_k subgroups
-    result := List(listOfks, k -> SpStabilizerOfIsotropicSubspace(n, q, k));
-    # type Sp(k, q) _|_ Sp(n - k, q) subgroups
-    result := Concatenation(result, 
-                            List(listOfks, 
-                                k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
     return result;
 end);

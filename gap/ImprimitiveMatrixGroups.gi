@@ -236,26 +236,34 @@ function(d, q, t)
 
     Add(gens, C);
 
-    # This Matrix will map the basis vectors
-    # e_i -> e_{((i + k -1) mod l) + 1} and
-    # f_i -> f_{((i + k -1) mod l) + 1} 
-    # which corresponds to a t-cycle in Sym(t).
-    # Althoug this permutation has signum -1, we still have 
-    # det(C) = 1 because we are effectively swapping an even
-    # number of rows/colums.
-    # One can easily check that this preserves the form.
-    D := NullMat(d, d, field);
+    # In the case t = 2, we only need one element to generate Sym(t),
+    # since 2-cycles (matrix C) and t-cycles (matrix D) are the same.
+    # Analogously, the construction for D would just yield a copy of C,
+    # so we do not need to do it again.
+    if t <> 2 then
 
-    # This block matrix magic is again just a
-    # fancy way of swapping the correct entries.
-    # Effectively, we are shifting t k x k - blocks
-    # by k row/colums each.
-    D{[1..l - k]}{[k + 1..l]} := IdentityMat(l - k, field);
-    D{[l - k + 1..l]}{[1..k]} := IdentityMat(k, field);
-    D{[l + 1..l + k]}{[d - k + 1..d]} := IdentityMat(k, field);
-    D{[l + k + 1..d]}{[l + 1..d - k]} := IdentityMat(l - k, field);
+        # This Matrix will map the basis vectors
+        # e_i -> e_{((i + k -1) mod l) + 1} and
+        # f_i -> f_{((i + k -1) mod l) + 1} 
+        # which corresponds to a t-cycle in Sym(t).
+        # Althoug this permutation has signum -1, we still have 
+        # det(C) = 1 because we are effectively swapping an even
+        # number of rows/colums.
+        # One can easily check that this preserves the form.
+        D := NullMat(d, d, field);
 
-    Add(gens, D);
+        # This block matrix magic is again just a
+        # fancy way of swapping the correct entries.
+        # Effectively, we are shifting t k x k - blocks
+        # by k row/colums each.
+        D{[1..l - k]}{[k + 1..l]} := IdentityMat(l - k, field);
+        D{[l - k + 1..l]}{[1..k]} := IdentityMat(k, field);
+        D{[l + 1..l + k]}{[d - k + 1..d]} := IdentityMat(k, field);
+        D{[l + k + 1..d]}{[l + 1..d - k]} := IdentityMat(l - k, field);
+
+        Add(gens, D);
+
+    fi;
 
     return MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
 
