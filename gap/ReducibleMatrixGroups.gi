@@ -421,7 +421,7 @@ end);
 # Construction as in Proposition 4.4 of [HR05]
 BindGlobal("SpStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
-    local field, gens, Spgen, Xi, Yi;
+    local field, gens, twok, Spgen, Xi, Yi;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must even but ", d, " was given.");
@@ -434,26 +434,28 @@ function(d, q, k)
 
     field := GF(q);
     gens := [];
+    twok := 2 * k;
 
     # These generators are bidagonal block matrices
     # which generate a subgroup corresponding to Sp(2 * k, q).
-    for Spgen in GeneratorsOfGroup(Sp(2 * k, q)) do
+    for Spgen in GeneratorsOfGroup(Sp(twok, q)) do
         Xi := IdentityMat(d, field);
         Xi{[1..k]}{[1..k]} := Spgen{[1..k]}{[1..k]};
-        Xi{[1..k]}{[d - k + 1 .. d]} := Spgen{[1..k]}{[k + 1 .. 2 * k]};
+        Xi{[1..k]}{[d - k + 1 .. d]} := Spgen{[1..k]}{[k + 1 .. twok]};
         Xi{[d - k + 1 .. d]}{[1..k]} := Spgen{[k + 1 .. 2 * k]}{[1..k]};
-        Xi{[d - k + 1 .. d]}{[d - k + 1 .. d]} := Spgen{[k + 1 .. 2 * k]}{[k + 1 .. 2 * k]};
+        Xi{[d - k + 1 .. d]}{[d - k + 1 .. d]} := Spgen{[k + 1 .. twok]}{[k + 1 .. twok]};
         Add(gens, Xi);
     od;
 
     # These generators are 2x2 block matrices with blocks which
     # generate a subgroup corresponding to Sp(d - 2 * k, q). 
-    for Spgen in GeneratorsOfGroup(Sp(d - 2 * k, q)) do
+    for Spgen in GeneratorsOfGroup(Sp(d - twok, q)) do
         Yi := IdentityMat(d, field);
         Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
         Add(gens, Yi);
     od;
 
-    # Size according to Table 2.3 of [BHR13]
-    return MatrixGroupWithSize(field, gens, SizeSp(k, q) * SizeSp(d - k, q));
+    # Size according to Table 2.3 of [BHR13], except we replace
+    # k with 2k because [BHR13] seems to have this wrong
+    return MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
 end);
