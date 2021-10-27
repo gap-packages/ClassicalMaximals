@@ -60,7 +60,7 @@ gap> TestSpStabilizerOfIsotropicSubspace := function(args)
 >          DefaultFieldOfMatrixGroup(G) = GF(q) and
 >          hasSize;
 > end;;
-gap> testsSpStabilizerOfIsotropicSubspace := [];;
+gap> testsSpStabilizerOfIsotropicSubspace := [[4, 2, 1], [4, 9, 1], [6, 4, 1], [6, 7, 2]];;
 gap> ForAll(testsSpStabilizerOfIsotropicSubspace, TestSpStabilizerOfIsotropicSubspace);
 true
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
@@ -75,6 +75,6 @@ gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
 >          DefaultFieldOfMatrixGroup(G) = GF(q) and
 >          hasSize;
 > end;;
-gap> testsSpStabilizerOfNonDegenerateSubspace := [];;
+gap> testsSpStabilizerOfNonDegenerateSubspace := [[4, 2, 1], [4, 9, 1], [6, 4, 1], [6, 7, 2]];;
 gap> ForAll(testsSpStabilizerOfNonDegenerateSubspace, TestSpStabilizerOfNonDegenerateSubspace);
 true
