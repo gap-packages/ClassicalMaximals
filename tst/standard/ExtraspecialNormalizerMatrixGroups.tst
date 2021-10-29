@@ -1,5 +1,6 @@
 gap> TestExtraspecialNormalizerInSL := function(args)
 >   local r, m, q, G, hasSize;
+>   Info(InfoClassicalMaximalsTests, 1, args);
 >   r := args[1];
 >   m := args[2];
 >   q := args[3];

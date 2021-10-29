@@ -652,7 +652,7 @@ function(r, m, q)
         return SymplecticTypeNormalizerInSL(m, q);
     else
         # r = 2 and m = 1
-        return Extraspecial2MinusTypeNormalizerInSL(q);
+        return Extraspecial2MinusTypeNormalizerInSL(m, q);
     fi;
 end);
 
