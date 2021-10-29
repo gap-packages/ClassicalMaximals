@@ -30,7 +30,7 @@ gap> TestExtraspecialNormalizerInSU := function(args)
 gap> testsExtraspecialNormalizerInSU := [[5, 1, 4], [2, 3, 3], [2, 3, 7], [2, 2, 3], [2, 2, 7], 
 >                                        [3, 2, 5], [3, 1, 8], [3, 1, 5]];;
 #@else
-gap> testsExtraspecialNormalizerInSU := [[2, 3, 3], [3, 2, 5], [3, 1, 8], [3, 1, 5]];;
+gap> testsExtraspecialNormalizerInSU := [];;
 #@fi
 gap> ForAll(testsExtraspecialNormalizerInSU, TestExtraspecialNormalizerInSU);
 true
