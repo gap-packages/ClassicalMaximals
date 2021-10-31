@@ -84,6 +84,6 @@ gap> TestSubfieldSp := function(args)
 >          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
 >          and hasSize;
 > end;;
-gap> testsSubfieldSp := [];;
+gap> testsSubfieldSp := [[6, 2, 2, 1], [4, 3, 2, 1], [4, 3, 4, 2], [4, 7, 2, 1]];;
 gap> ForAll(testsSubfieldSp, TestSubfieldSp);
 true
