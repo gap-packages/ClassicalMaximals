@@ -839,5 +839,5 @@ function(n, q)
 
     # For each prime divisor of e, there is exactly one of these subgroups,
     # so this is sufficient.
-    return List(PrimeDivisors(e), b -> SubfieldSp(n, p, e, QuoInt(e ,b)));
+    return List(PrimeDivisors(e), b -> SubfieldSp(n, p, e, QuoInt(e, b)));
 end);

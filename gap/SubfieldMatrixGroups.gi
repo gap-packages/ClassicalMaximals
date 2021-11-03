@@ -285,18 +285,22 @@ function (d, p, e, f)
     local F, q0, b, gens, l, zeta, omega, zetaPower, C, gen;
 
     if IsOddInt(d) then
-    	ErrorNoReturn("<d> must even but ", d, " was given.");
+    	ErrorNoReturn("Dimension <d> must be even.");
+    fi;
+
+    if e mod f <> 0 then
+        ErrorNoReturn("<f> must be a divisor of <e>");
+    fi;
+
+    b := QuoInt(e, f);
+
+    if not IsPrime(b) then
+        ErrorNoReturn("The quotient of <f> by <e> must be a prime");
     fi;
 
     F := GF(p ^ e);
     q0 := p ^ f;
-    b := QuoInt(e, f);
     gens := List(GeneratorsOfGroup(Sp(d, q0)));
-
-    if e mod f <> 0 or not IsPrime(b) then
-        ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be a prime but <e> = ", 
-                      e, " and <f> = ", f);
-    fi;
 
     # In this case the embedding of Sp(d, q0) in Sp(d, q) is already
     # the C5-subgroup, so we just need to adjust the base field.
@@ -312,8 +316,8 @@ function (d, p, e, f)
     # This matrix C preserves the form and is constructed to
     # have determinant 1, but it is not in Sp(d, q0). Therefore it is
     # our missing generator to extend Sp(d, q0) to a C5-subgroup, since
-    # C is in the Normalizer of Sp(d, q) of Sp(d, q0).
-    C := DiagonalMat(Concatenation(List([1..l], i -> omega * zetaPower), List([1..l], i -> zetaPower)));
+    # C is in the normalizer of Sp(d, q0) in Sp(d, q).
+    C := DiagonalMat(Concatenation(ListWithIdenticalEntries(l, omega * zetaPower), ListWithIdenticalEntries(l, zetaPower)));
     Add(gens, C);
 
     # Size according to Table 2.8 in [BHR13]
