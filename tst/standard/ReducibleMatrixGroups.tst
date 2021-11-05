@@ -1,5 +1,6 @@
 gap> TestSLStabilizerOfSubspace := function(args)
 >   local n, q, k, G, hasSize;
+>   Info(InfoClassicalMaximalsTests, 1, args);
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];

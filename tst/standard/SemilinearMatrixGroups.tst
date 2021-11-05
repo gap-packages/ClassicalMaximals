@@ -28,13 +28,13 @@ gap> TestGammaLMeetSU := function(args)
 gap> testsGammaLMeetSU := [[3, 5, 3], [6, 3, 3], [3, 7, 3]];;
 gap> ForAll(testsGammaLMeetSU, TestGammaLMeetSU);
 true
-gap> TestGammaLDimension1 := function(args)
+gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ := function(args)
 >   local q, s, gens;
 >   q := args[1];
 >   s := args[2];
->   gens := CLASSICALMAXIMALS_GammaLDimension1(s, q);
+>   gens := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q);
 >   return Order(gens.A) = (q ^ s - 1) and Order(gens.B) = s;
 > end;;
-gap> testsGammaLDimension1 := [[3, 2], [2, 2], [5, 3], [4, 3]];;
-gap> ForAll(testsGammaLDimension1, TestGammaLDimension1);
+gap> testsMatricesInducingGaloisGroupOfGFQToSOverGFQ := [[3, 2], [2, 2], [5, 3], [4, 3]];;
+gap> ForAll(testsMatricesInducingGaloisGroupOfGFQToSOverGFQ, TestMatricesInducingGaloisGroupOfGFQToSOverGFQ);
 true
