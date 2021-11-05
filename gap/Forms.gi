@@ -32,8 +32,11 @@ function(group, type, gramMatrix)
         gapForm := HermitianFormByMatrix(formMatrix, field);
         newForm := HermitianFormByMatrix(gramMatrix, field);
     fi;
-    # The Form package has a bug for d = 1 so we need to make this exception
-    if not d = 1 then
+    if gapForm = newForm then
+        # nothing to be done
+        result := group;
+    # The Forms package has a bug for d = 1 so we need to make this exception
+    elif d <> 1 then
         # the following if condition can only ever be fulfilled if <group> is an
         # orthogonal group; there the case of even dimension is problematic since,
         # in that case, there are two similarity classes of bilinear forms
@@ -48,13 +51,10 @@ function(group, type, gramMatrix)
         result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
     
         # Set useful attributes
-        if HasSize(group) then
-            SetSize(result, Size(group));
-        fi;
+        UseIsomorphismRelation(group, result);
     else
         # replaces the Witt index check above
-        if (gramMatrix[1, 1] = 0 and formMatrix[1, 1] <> 0) 
-           or (gramMatrix[1, 1] <> 0 and formMatrix[1, 1] = 0) then
+        if IsZero(gramMatrix) <> IsZero(formMatrix) then
             ErrorNoReturn("The form preserved by <group> must be similar to the",
                           " form described by the Gram matrix <gramMatrix>.");
         fi;
@@ -241,6 +241,10 @@ end);
 #   * symplectic form (if <type> = S) or a 
 #   * symmetric bilinear form (if <type> = O)
 # which is G-invariant or prove that no such form exists.
+#
+# We use this function instead of PreservedBilinearForms form the Forms package
+# since PreservedBilinearForms seems to be buggy and unreliable (see also
+# comment above UnitaryForm).
 #
 # In general, this function should only be used if one can be sure that <G>
 # preserves a symplectic form (but one does not know which one).

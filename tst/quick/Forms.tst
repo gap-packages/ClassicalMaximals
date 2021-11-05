@@ -32,7 +32,11 @@ gap> TestFormChangingFunctions := function(args)
 >       broadType := type;
 >   fi;
 >   conjugatedGroup := ConjugateToSesquilinearForm(standardGroup, broadType, gramMatrix);
->   conjugatedGroup := Group(GeneratorsOfGroup(conjugatedGroup));
+>   if not IsEmpty(GeneratorsOfGroup(conjugatedGroup)) then
+>       conjugatedGroup := Group(GeneratorsOfGroup(conjugatedGroup));
+>   else
+>       conjugatedGroup := Group(One(conjugatedGroup));
+>   fi;
 >   if type = "U" then
 >       standardGramMatrix := InvariantSesquilinearForm(standardGroup).matrix;
 >   else
@@ -56,6 +60,8 @@ gap> testsFormChangingFunctions := [[3, 7, "U", IdentityMat(3, GF(7))],
 >                                   [5, 5, "O", IdentityMat(5, GF(5))],
 >                                   [4, 7, "O+", AntidiagonalMat(4, GF(7))],
 >                                   [4, 7, "O-", Z(7) ^ 0 * DiagonalMat([Z(7), 1, 1, 1])],
->                                   [6, 7, "O-", IdentityMat(6, GF(7))]];;
+>                                   [6, 7, "O-", IdentityMat(6, GF(7))],
+>                                   [1, 5, "O", IdentityMat(1, GF(5))],
+>                                   [1, 5, "O", Z(5) * IdentityMat(1, GF(5))]];;
 gap> ForAll(testsFormChangingFunctions, TestFormChangingFunctions);
 true
