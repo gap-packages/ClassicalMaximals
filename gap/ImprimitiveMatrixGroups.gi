@@ -184,17 +184,17 @@ function(d, q, t)
     local m, l, k, field, one, gens, Spgen, Xi, C, D;
 
     if IsOddInt(d) then
-        ErrorNoReturn("Dimension <d> must be even but ", d, " was given.");
+        ErrorNoReturn("<d> must be even.");
     fi;
 
     m := QuoInt(d, t);
 
     if not m * t = d then
-        ErrorNoReturn("The number <t> of subspaces must divide the dimension <d> but <d> = ", d, ", <t> = ", t, " was given.");
+        ErrorNoReturn("<t> must divide <d>.");
     fi;
 
     if IsOddInt(m) then
-        ErrorNoReturn("The dimension <m> = <d> / <t> must be even but <m> = ", m, ".");
+        ErrorNoReturn("<m> = <d> / <t> must be even.");
     fi;
 
     l := QuoInt(d, 2);
@@ -205,8 +205,9 @@ function(d, q, t)
     gens := [];
 
     # This construction is the same as in Proposition 4.4 of [HR05]
-    # These generators are bidiagonal block matrices,
-    # which generate a subgroup corresponding to Sp(m, q).
+    # These generators are block matrices of the form
+    # [[A 0 B], [0 C 0], [D 0 E]], which generate a subgroup
+    # corresponding to Sp(m, q).
     for Spgen in GeneratorsOfGroup(Sp(m, q)) do
         Xi := IdentityMat(d, field);
         Xi{[1..k]}{[1..k]} := Spgen{[1..k]}{[1..k]};
@@ -216,7 +217,7 @@ function(d, q, t)
         Add(gens, Xi);
     od;
 
-    # This Matrix will swap the vectors e_i with e_{i + k} and
+    # This matrix will swap the vectors e_i with e_{i + k} and
     # f_i with f_{i + k} for 1 <= i <= k respectively,
     # which corresponds to the product of m transpositions in Sym(t).
     # Since m is even, this permutation has signum 1 and det(C) = 1.
@@ -246,9 +247,8 @@ function(d, q, t)
         # e_i -> e_{((i + k -1) mod l) + 1} and
         # f_i -> f_{((i + k -1) mod l) + 1} 
         # which corresponds to a t-cycle in Sym(t).
-        # Althoug this permutation has signum -1, we still have 
-        # det(C) = 1 because we are effectively swapping an even
-        # number of rows/colums.
+        # We have det(C) = 1 because we are effectively
+        # swapping an even number of rows/colums.
         # One can easily check that this preserves the form.
         D := NullMat(d, d, field);
 
@@ -278,11 +278,11 @@ function(d, q)
     local l, field, one, gens, J, GLgen, AorB, C;
 
     if IsOddInt(d) then
-        ErrorNoReturn("Dimension <d> must be even but ", d, " was given.");
+        ErrorNoReturn("<d> must be even.");
     fi;
 
     if IsEvenInt(q) then
-        ErrorNoReturn("Characteristic <q> must be odd but ", q, " was given.");
+        ErrorNoReturn("<q> must be odd.");
     fi;
 
     l := QuoInt(d, 2);
@@ -293,11 +293,11 @@ function(d, q)
     J := AntidiagonalMat(l, field);
     
     # For either generator of Sp(d,q), we take an
-    # invertable matrix AorB_1 which acts on
-    # the first l basis vectors and puts it in
-    # a matrix with another invertable matrix such
-    # that the form is preserved. This way, the
-    # decomposition must also be preserved.
+    # invertible matrix AorB_1 which acts on
+    # the first l basis vectors and put it in
+    # a diagonal 2 x 2 block matrix with another
+    # invertible matrix such that the form is preserved.
+    # This way, the decomposition must also be preserved.
     for GLgen in GeneratorsOfGroup(GL(l, q)) do
         AorB := IdentityMat(d, field);
         AorB{[1..l]}{[1..l]} := GLgen;
