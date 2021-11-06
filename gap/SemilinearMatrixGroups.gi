@@ -245,3 +245,37 @@ function(d, q)
     if q mod 2 = 0 then
         ErrorNoReturn("<q> must be odd but <q> = ", q);
     fi;
+    if not IsEvenInt(QuoInt(d, 2)) then
+        ErrorNoReturn("The quotient <d> / 2 must be even but <d> = ", d);
+    fi;
+
+    F := GF(q);
+    gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(2, q);
+    # Let w be a primitive element of GF(q ^ 2) over GF(q). Since A2 is the
+    # companion matrix of the minimal polynomial of w over GF(q), its
+    # determinant is (-1) ^ 2 times the constant term of said minimal
+    # polynomial. By Vieta, this constant term is (-1) ^ 2 * the product of
+    # all Galois conjugates of w. Hence, det(A2) = w ^ ((q ^ s - 1) / (q - 1))
+    #                                            = w ^ (q + 1).
+    A2 := gammaL1.A;
+    # By Lemma 6.2 det(B2) = (-1) ^ (s - 1) = -1.
+    B2 := gammaL1.B;
+
+    omega := PrimitiveElement(GF(q ^ 2));
+    AandB := List(GeneratorsOfGroup(GU(d / 2, q)), g -> MapGammaLToGL(g, A2, omega));
+
+    # Choose i such that (q + 1) / 2 ^ i is odd
+    i := PValuation(q + 1, 2);
+    # Note that det(A2 ^ m) = -1, i.e. det(B2 * A2 ^ m) = 1
+    m := (q ^ 2 - 1) / (2 ^ (i + 1));
+    C := IdentityMat(d, F);
+    for j in [0..d / 2 - 1] do
+        C{[2 * j + 1, 2 * j + 2]}{[2 * j + 1, 2 * j + 2]} := B2 * A2 ^ m;
+    od;
+
+    generators := Concatenation(AandB, [C]);
+    # Size according to Table 2.6 of [BHR13]
+    size := SizeGU(d / 2, q) * 2;
+    # conjugate the result so that it preserves the standard symplectic form 
+    return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "S");
+end);
