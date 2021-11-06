@@ -366,12 +366,11 @@ function(d, q, k)
     local field, gens, I, J, GLgen, Xi, Spgen, Yi;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must even but ", d, " was given.");
+        ErrorNoReturn("<d> must be even.");
     fi;
 
     if k >= d / 2 then
-        ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
-        " and <d> = ", d);
+        ErrorNoReturn("<k> must be less than <d> / 2.");
     fi;
 
     field := GF(q);
@@ -379,11 +378,11 @@ function(d, q, k)
     I := IdentityMat(d, field);
     J := AntidiagonalMat(k, field);
 
-    # For either generator of Sp(d,q), we take an
-    # invertable matrix GLgen which acts on
-    # the first k basis vectors and puts it in
-    # a matrix with another invertable matrix acting
-    # on the last d - k basis vectors.
+    # For each generator of Sp(d,q), we take an
+    # invertible matrix GLgen which acts on
+    # the first k basis vectors and put that generator
+    # into a diagonal block matrix with another invertible
+    # matrix which acts on the last d - k basis vectors.
     # This way, we preserve the decomposition into
     # two isotropic subspaces.
     # With the way we construct the second block matrix,
@@ -404,7 +403,7 @@ function(d, q, k)
     od;
 
     # This generator is mapped to matrices "with 1s down the diagonal,
-    # a (k x k) block in the middle that is symetric about the anti-diagonal,
+    # a (k x k) block in the middle that is symmetric about the anti-diagonal,
     # and zeros elsewhere" (cf. [HR05]) by GL(k, q) while also being fixed
     # by Sp(d - 2k, q).
     Add(gens, I + SquareSingleEntryMatrix(field, d, d, 1));
@@ -424,20 +423,20 @@ function(d, q, k)
     local field, gens, twok, Spgen, Xi, Yi;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must even but ", d, " was given.");
+        ErrorNoReturn("<d> must be even.");
     fi;
 
     if k >= d / 2 then
-        ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
-        " and <d> = ", d);
+        ErrorNoReturn("<k> must be less than <d> / 2.");
     fi;
 
     field := GF(q);
     gens := [];
     twok := 2 * k;
 
-    # These generators are bidagonal block matrices
-    # which generate a subgroup corresponding to Sp(2 * k, q).
+    # These generators are block matrices of the form
+    # [[A 0 B], [0 C 0], [D 0 E]] which generate
+    # a subgroup corresponding to Sp(2 * k, q).
     for Spgen in GeneratorsOfGroup(Sp(twok, q)) do
         Xi := IdentityMat(d, field);
         Xi{[1..k]}{[1..k]} := Spgen{[1..k]}{[1..k]};
@@ -448,7 +447,7 @@ function(d, q, k)
     od;
 
     # These generators are 2x2 block matrices with blocks which
-    # generate a subgroup corresponding to Sp(d - 2 * k, q). 
+    # generate a subgroup corresponding to Sp(d - 2 * k, q).
     for Spgen in GeneratorsOfGroup(Sp(d - twok, q)) do
         Yi := IdentityMat(d, field);
         Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
@@ -456,6 +455,6 @@ function(d, q, k)
     od;
 
     # Size according to Table 2.3 of [BHR13], except we replace
-    # k with 2k because [BHR13] seems to have this wrong
+    # k with 2k because [BHR13] seems to have this wrong.
     return MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
 end);

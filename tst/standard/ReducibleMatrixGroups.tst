@@ -63,6 +63,10 @@ gap> TestSpStabilizerOfIsotropicSubspace := function(args)
 gap> testsSpStabilizerOfIsotropicSubspace := [[4, 2, 1], [4, 9, 1], [6, 4, 1], [6, 7, 2]];;
 gap> ForAll(testsSpStabilizerOfIsotropicSubspace, TestSpStabilizerOfIsotropicSubspace);
 true
+gap> SpStabilizerOfIsotropicSubspace(5, 2, 1);
+Error, <d> must be even.
+gap> SpStabilizerOfIsotropicSubspace(4, 2, 3);
+Error, <k> must be less than <d> / 2.
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
 >   local n, q, k, G, hasSize;
 >   n := args[1];
@@ -78,3 +82,7 @@ gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
 gap> testsSpStabilizerOfNonDegenerateSubspace := [[4, 2, 1], [4, 9, 1], [6, 4, 1], [6, 7, 2]];;
 gap> ForAll(testsSpStabilizerOfNonDegenerateSubspace, TestSpStabilizerOfNonDegenerateSubspace);
 true
+gap> SpStabilizerOfNonDegenerateSubspace(5, 2, 1);
+Error, <d> must be even.
+gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
+Error, <k> must be less than <d> / 2.
