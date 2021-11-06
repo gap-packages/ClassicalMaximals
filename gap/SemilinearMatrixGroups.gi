@@ -245,9 +245,6 @@ function(d, q)
     if q mod 2 = 0 then
         ErrorNoReturn("<q> must be odd but <q> = ", q);
     fi;
-    if not IsEvenInt(QuoInt(d, 2)) then
-        ErrorNoReturn("The quotient <d> / 2 must be even but <d> = ", d);
-    fi;
 
     F := GF(q);
     gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(2, q);

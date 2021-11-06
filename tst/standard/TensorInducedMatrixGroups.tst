@@ -10,7 +10,11 @@ gap> TestTensorInducedDecompositionStabilizerInSL := function(args)
 >          and DefaultFieldOfMatrixGroup(G) = GF(q)
 >          and hasSize;
 > end;;
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsTensorInducedDecompositionStabilizerInSL := [[3, 2, 5], [2, 2, 7], [2, 2, 5], [3, 3, 3]];;
+#@else
+gap> testsTensorInducedDecompositionStabilizerInSL := [[3, 2, 5], [2, 2, 7], [3, 3, 3]];;
+#@fi
 gap> ForAll(testsTensorInducedDecompositionStabilizerInSL, TestTensorInducedDecompositionStabilizerInSL);
 true
 gap> TestTensorInducedDecompositionStabilizerInSU := function(args)

@@ -54,7 +54,7 @@ gap> TestUnitarySemilinearSp := function(args)
 >          and DefaultFieldOfMatrixGroup(G) = GF(q)
 >          and hasSize;
 > end;;
-gap> testsUnitarySemilinearSp := [[4, 7], [8, 5], [4, 5]];;
+gap> testsUnitarySemilinearSp := [[4, 7], [8, 5], [6, 5]];;
 gap> ForAll(testsUnitarySemilinearSp, TestUnitarySemilinearSp);
 true
 gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ := function(args)
