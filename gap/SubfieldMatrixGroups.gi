@@ -285,17 +285,17 @@ function (d, p, e, f)
     local F, q0, b, gens, l, zeta, omega, zetaPower, C, gen;
 
     if IsOddInt(d) then
-    	ErrorNoReturn("Dimension <d> must be even.");
+    	ErrorNoReturn("<d> must be even.");
     fi;
 
     if e mod f <> 0 then
-        ErrorNoReturn("<f> must be a divisor of <e>");
+        ErrorNoReturn("<f> must be a divisor of <e>.");
     fi;
 
     b := QuoInt(e, f);
 
     if not IsPrime(b) then
-        ErrorNoReturn("The quotient of <f> by <e> must be a prime");
+        ErrorNoReturn("the quotient of <f> by <e> must be a prime.");
     fi;
 
     F := GF(p ^ e);

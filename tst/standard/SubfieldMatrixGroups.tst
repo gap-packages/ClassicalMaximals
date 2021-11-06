@@ -87,3 +87,9 @@ gap> TestSubfieldSp := function(args)
 gap> testsSubfieldSp := [[6, 2, 2, 1], [4, 3, 2, 1], [4, 3, 4, 2], [4, 7, 2, 1]];;
 gap> ForAll(testsSubfieldSp, TestSubfieldSp);
 true
+gap> SubfieldSp(3, 2, 2, 1);
+Error, <d> must be even.
+gap> SubfieldSp(4, 2, 1, 2);
+Error, <f> must be a divisor of <e>.
+gap> SubfieldSp(4, 2, 4, 1);
+Error, the quotient of <f> by <e> must be a prime.
