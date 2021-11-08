@@ -98,3 +98,65 @@ function(d1, d2, q)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
     return ConjugateToStandardForm(result, "U");
 end);
+
+# Construction as in Proposition 7.2 of [HR05]
+BindGlobal("TensorProductStabilizerInSp",
+function(epsilon, d1, d2, q)
+    local field, I_d1, I_d2, gens, size, Spgen, orthogonalGens, SOgen, Z_1, Z, E, result;
+
+    if IsOddInt(d1) then
+        ErrorNoReturn("<d1> must be even.");
+    fi;
+
+    if IsEvenInt(q) then
+        ErrorNoReturn("<q> must be odd.");
+    fi;
+
+    if d2 < 3 then
+        ErrorNoReturn("<d2> must be at least 3.");
+    fi;
+
+    if IsOddInt(d2) then
+        if epsilon <> 0 then
+            ErrorNoReturn("<epsilon> must be 0 since <d2> is odd.");
+        fi;
+    else
+        if not epsilon in [-1, 1] then
+            ErrorNoReturn("<epsilon> must be +1 or -1 since <d2> is even.");
+        fi;
+    fi;
+
+    field := GF(q);
+    I_d1 := IdentityMat(d1, field);
+    I_d2 := IdentityMat(d2, field);
+    gens := [];
+
+    # Size according to Table 2.7 in [BHR13], a factor of 2
+    # will be added in case d2 is even.
+    size := SizeSp(d1, q) * SizeGO(epsilon, d2, q);
+
+    for Spgen in GeneratorsOfGroup(Sp(d1, q)) do
+        Add(gens, KroneckerProduct(Spgen, I_d2));
+    od;
+
+    orthogonalGens := GeneratorsOfOrthogonalGroup(epsilon, d2, q);
+
+    for SOgen in orthogonalGens.generatorsOfSO do
+        Add(gens, KroneckerProduct(I_d1, SOgen));
+    od;
+
+    # TODO: This matrix does not do what it's supposed to
+    Add(gens, KroneckerProduct(I_d1, orthogonalGens.D));
+
+    # NormSpMinusSp requires #74
+    if IsEvenInt(d2) then
+        Z_1 := NormSpMinusSp(d2, q);
+        Z := KroneckerProduct(I_d1, Z_1);
+        E := KroneckerProduct(I_d1, gens.E);
+        Add(gens, Inverse(Z) * E);
+        size := 2 * size;
+    fi;
+
+    result := MatrixGroupWithSize(field, gens, size);
+    return ConjugateToStandardForm(result, "S");
+end);
