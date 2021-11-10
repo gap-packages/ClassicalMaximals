@@ -8,7 +8,7 @@
 # Construction as in Proposition 8.1 of [HR05] 
 BindGlobal("SubfieldSL", 
 function(n, p, e, f)
-    local F, AandB, C, D, c, k, matrixForCongruence, lambda, zeta, omega, z, X,
+    local F, AandB, C, D, c, k, lambda, zeta, omega, z, X,
         size;
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) then
         ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be a prime but <e> = ", 
@@ -34,9 +34,8 @@ function(n, p, e, f)
 
     # solving the congruence lambda * n = z (mod p ^ e - 1) by solving the
     # matrix equation (n, p ^ e - 1) * (lambda, t) ^ T = z over the integers
-    matrixForCongruence := [[n], [p ^ e - 1]];
     z := c * QuoInt(p ^ e - 1, p ^ f - 1);
-    lambda := SolutionMat(matrixForCongruence, [z])[1];
+    lambda := SolutionIntMat([[n], [p ^ e - 1]], [z])[1];
     X := zeta ^ (-lambda) * IdentityMat(n, F);
 
     return MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);

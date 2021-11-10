@@ -1,18 +1,14 @@
-# TODO
-# This does not seem to construct the full GammaL(1, q ^ s): to get the full
-# GammaL(1, q ^ s), we would need the Frobenius x -> x ^ p as a generator, but
-# we only take x -> x ^ q. However, the results of the other functions are as
-# expected -- so it seems that we do not construct the full GammaL here, but
-# that we don't need it anyway?
-# See Issue #39.
-# TODO
+# Return a subgroup of <M>GL(s, q)</M> isomorphic to the subgroup of
+# <M>\Gamma L(1, q ^ s)</M> consisting of all <C>GF(q)</C>-linear and 
+# <C>GF(q ^ s)</C>-semilinear transformations of the vector space 
+# <M>F'^1</M> over the field <C>F' := GF(q ^ s)</C>. 
+# See <Ref Func="GammaLMeetSL"/> for further details.
 #
-# Return a subgroup of <M>GL(s, q)</M> isomorphic to the group <M>\Gamma L(1,
-# q ^ s)</M> of semilinear transformations of the vector space <M>F'^1</M>
-# over the field <C>F' := GF(q ^ s)</C>. See <Ref Func="GammaLMeetSL"/> for
-# further details.
 # Construction as in Lemma 6.1 of [HR05]
-BindGlobal("CLASSICALMAXIMALS_GammaLDimension1",
+# Note that in [HR05], it is falsely claimed that the group constructed is
+# isomorphic to GammaL(1, q ^ s) when in fact it is only isomorphic to the
+# subgroup of GammaL(1, q ^ s) consisting of all GF(q)-linear transformations.
+BindGlobal("MatricesInducingGaloisGroupOfGFQToSOverGFQ",
 function(s, q)
     local F, primitivePolynomial, A, x, xq, B, row, i;
     F := GF(q);
@@ -70,17 +66,19 @@ function(M, A, omega)
     return result;
 end);
 
-# Return the subgroup of <M>SL(n, q)</M> induced by the group of semilinear
+# Return the subgroup of <M>SL(n, q)</M> induced by the group of all 
+# <C>GF(q)</C>-linear and <C>GF(q ^ s)</C>-semilinear
 # transformations of the vector space <M>F'^m</M> over the field 
 # <C>F' := GF(q ^ s)</C>, where <M>m := n / s</M>. (More precisely, there is
 # an isomorphism of <M>F</M>-vector spaces, where <C>F := GF(q)</C>, between
 # <M>F'</M> and <M>F ^ s</M>, which in turn induces an <M>F</M>-vector space
 # isomorphism between <M>F'^m</M> and <M>F^n</M> and consequently an embedding
-# of <M>\Gamma L(m, q ^ s)</M> into <M>GL(n, q)</M>; the intersection of the
-# image of this embedding with <M>SL(n, q)</M> is a subgroup of <M>SL(n,
-# q)</M>.) Note that this means <A>s</A> must be a divisor of <A>n</A>. We
-# further demand that <A>s</A> be a prime number, i.e. <M>F'</M> is a prime
-# extension of <M>F</M>.
+# of the subgroup of <M>\Gamma L(m, q ^ s)</M> consisting of all
+# <C>GF(q)</C>-linear transformations of <M>F'^m</M> into <M>GL(n, q)</M>; 
+# the intersection of the image of this embedding with <M>SL(n, q)</M> is a 
+# subgroup of <M>SL(n, q)</M>.) Note that this means <A>s</A> must be a divisor 
+# of <A>n</A>. We further demand that <A>s</A> be a prime number, i.e. <M>F'</M> 
+# is a prime extension of <M>F</M>.
 # Construction as in Proposition 6.3 of [HR05]
 BindGlobal("GammaLMeetSL",
 function(n, q, s)
@@ -91,7 +89,7 @@ function(n, q, s)
                       " and <n> = ", n);
     fi;
     F := GF(q);
-    gammaL1 := CLASSICALMAXIMALS_GammaLDimension1(s, q);
+    gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q);
     # Let w be a primitive element of GF(q ^ s) over GF(q). Since As is the
     # companion matrix of the minimal polynomial of w over GF(q), its
     # determinant is (-1) ^ s times the constant term of said minimal
@@ -150,7 +148,7 @@ function(d, q, s)
                       " and <n> = ", d);
     fi;
     F := GF(q ^ 2);
-    gammaL1 := CLASSICALMAXIMALS_GammaLDimension1(s, q ^ 2);
+    gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q ^ 2);
     # Let w be a primitive element of GF(q ^ (2 * s)) over GF(q ^ 2). Since As is the
     # companion matrix of the minimal polynomial of w over GF(q ^ 2), its
     # determinant is (-1) ^ s times the constant term of said minimal

@@ -33,7 +33,7 @@ end);
 # should in principle almost always terminate quickly: Assuming that - 1 - a ^ 2 
 # is evenly distributed in GF(q), the chance to hit a quadratic residue is about 
 # 1 / 2 in each trial.
-InstallGlobalFunction("SolveQuadraticCongruence",
+BindGlobal("SolveQuadraticCongruence",
 function(c, q)
     local F, a, b;
     F := GF(q);
@@ -46,7 +46,8 @@ function(c, q)
     return rec(a := a, b := b);
 end);
 
-InstallGlobalFunction("ApplyFunctionToEntries",
+# Return a matrix N with the property that N[i, j] = func(M[i, j]).
+BindGlobal("ApplyFunctionToEntries",
 function(M, func)
     local numberRows, numberColumns, i, j, result;
     if not IsMatrix(M) or Length(M) = 0 then
@@ -65,7 +66,9 @@ function(M, func)
     return result;
 end);
 
-InstallGlobalFunction("HermitianConjugate",
+# Return a matrix N obtained from M by first raising each entry to the q-th
+# power and then transposing the result.
+BindGlobal("HermitianConjugate",
 function(M, q)
     return TransposedMat(ApplyFunctionToEntries(M, x -> x ^ q));
 end);
@@ -74,7 +77,7 @@ end);
 # If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
 # Construction as in Lemma 2.2 of [HR05]
-InstallGlobalFunction("SolveFrobeniusEquation",
+BindGlobal("SolveFrobeniusEquation",
 function(type, alpha, q)
     local F, R, S, x, delta, polynomial, result;
 
@@ -134,14 +137,14 @@ function(type, alpha, q)
     fi;
 end);
 
-# An n x n - matrix of zeroes with a 1 in position (row, column)
-InstallGlobalFunction("SquareSingleEntryMatrix",
+# An n x n - matrix of zeroes over <field> with a 1 in position (<row>, <column>)
+BindGlobal("SquareSingleEntryMatrix",
 function(field, n, row, column)
     return MatrixByEntries(field, n, n, [[row, column, 1]]);
 end);
 
 # Compute Ceil(m / n) for two integers m, n
-InstallGlobalFunction("QuoCeil",
+BindGlobal("QuoCeil",
 function(m, n)
     if m mod n = 0 then
         return QuoInt(m, n);
@@ -255,8 +258,10 @@ function(epsilon, n, q)
     return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
 end);
 
-
-ReflectionMatrix := function(n, q, gramMatrix, v)
+# Return the reflection matrix in the space GF(q) ^ n determined by the
+# bilinear form given by the argument <gramMatrix> and the vector <v>.
+BindGlobal("ReflectionMatrix",
+function(n, q, gramMatrix, v)
     local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
     F := GF(q);
     reflectionMatrix := NullMat(n, n, F);
@@ -274,7 +279,7 @@ ReflectionMatrix := function(n, q, gramMatrix, v)
         reflectionMatrix[i]{[1..n]} := reflectBasisVector;
     od;
     return reflectionMatrix;
-end;
+end);
 
 # Construct generators for the orthogonal groups with the properties listed in
 # Lemma 2.4 of [HR05].
@@ -282,7 +287,7 @@ end;
 # General Linear Group." Experimental Mathematics, vol. 13 no. 2, 2004, pp.
 # 151-163. Lemma 2.4.
 # We take the notation from [HR05].
-InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
+BindGlobal("GeneratorsOfOrthogonalGroup",
 function(epsilon, n, q)
     local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
     solutionOfQuadraticCongruence;
