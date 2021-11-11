@@ -64,6 +64,8 @@ gap> TestSpIsotropicImprimitives := function(args)
 gap> testsSpIsotropicImprimitives := [[4, 3], [4, 7], [6, 5], [8, 3]];;
 gap> ForAll(testsSpIsotropicImprimitives, TestSpIsotropicImprimitives);
 true
+
+# Test error handling
 gap> SpIsotropicImprimitives(3, 3);
 Error, <d> must be even.
 gap> SpIsotropicImprimitives(4, 2);
@@ -83,6 +85,8 @@ gap> TestSpNonDegenerateImprimitives := function(args)
 gap> testsSpNonDegenerateImprimitives := [[4, 2, 2], [6, 5, 3], [10, 3, 5], [12, 3, 3]];;
 gap> ForAll(testsSpNonDegenerateImprimitives, TestSpNonDegenerateImprimitives);
 true
+
+# Test error handling
 gap> SpNonDegenerateImprimitives(3, 3, 3);
 Error, <d> must be even.
 gap> SpNonDegenerateImprimitives(4, 3, 3);

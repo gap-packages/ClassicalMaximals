@@ -869,6 +869,11 @@ function(n, q)
     divisorListOfn := List(DivisorsInt(n));
     Remove(divisorListOfn, 1);
 
+    # Cf. Proposition 2.3.6 in [BHR13]
+    if q = 2 then
+        RemoveSet(divisorListOfn, QuoInt(n, 2));
+    fi;
+
     # type Sp(m, q) \wr Sym(t) subgroups
     for t in divisorListOfn do
         if IsEvenInt(QuoInt(n, t)) then
@@ -877,7 +882,7 @@ function(n, q)
     od;
 
     # type GL(n / 2, q).2 subgroups
-    if IsEvenInt(n) then
+    if IsOddInt(q) then
         Add(result, SpIsotropicImprimitives(n, q));
     fi;
 

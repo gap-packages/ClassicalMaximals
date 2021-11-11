@@ -217,8 +217,8 @@ function(d, q, t)
         Add(gens, Xi);
     od;
 
-    # This matrix will swap the vectors e_i with e_{i + k} and
-    # f_i with f_{i + k} for 1 <= i <= k respectively,
+    # The matrix C we construct next will swap the vectors e_i with
+    # e_{i + k} and f_i with f_{i + k} for 1 <= i <= k respectively,
     # which corresponds to the product of m transpositions in Sym(t).
     # Since m is even, this permutation has signum 1 and det(C) = 1.
     # One can easily check that this preserves the form.
@@ -243,11 +243,11 @@ function(d, q, t)
     # so we do not need to do it again.
     if t <> 2 then
 
-        # This Matrix will map the basis vectors
+        # The matrix D will map the basis vectors
         # e_i -> e_{((i + k -1) mod l) + 1} and
         # f_i -> f_{((i + k -1) mod l) + 1} 
         # which corresponds to a t-cycle in Sym(t).
-        # We have det(C) = 1 because we are effectively
+        # We have det(D) = 1 because we are effectively
         # swapping an even number of rows/colums.
         # One can easily check that this preserves the form.
         D := NullMat(d, d, field);
