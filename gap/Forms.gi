@@ -5,7 +5,7 @@
 InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
-        result, d;
+        result, d, q;
     if not type in ["S", "O", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O', but <type> = ",
                       type);
@@ -25,6 +25,10 @@ function(group, type, gramMatrix)
         gapForm := BilinearFormByMatrix(formMatrix, field);
         newForm := BilinearFormByMatrix(gramMatrix, field);
     else
+        if IsOddInt(DegreeOverPrimeField(field)) then
+            q := Size(field);
+            field := GF(q ^ 2);
+        fi;
         formMatrix := UnitaryForm(group);
         if formMatrix = fail then
             ErrorNoReturn("No preserved unitary form found for <group>");
@@ -104,8 +108,11 @@ function(group, type)
         if IsSquareInt(Size(F)) then
             q := RootInt(Size(F));
         else
-            ErrorNoReturn("<group> must have a base field of square order", 
-                          " when <type> = 'U'");
+            # It might be that G is to be understood as a matrix group over 
+            # GF(q ^ 2), but the matrices can actually be represented over a
+            # smaller field, which causes DefaultFieldOfMatrixGroup to return GF(q)
+            # instead of GF(q ^ 2) - we have to remedy this somehow ...
+            q := Size(F);
         fi;
     fi;
     if type in ["O", "O+", "O-"] and IsEvenInt(q) then
@@ -168,9 +175,14 @@ function(G)
         ErrorNoReturn("The base field of <G> must be finite");
     fi;
     if not IsEvenInt(DegreeOverPrimeField(F)) then
-        return fail;
+        # It might be that G is to be understood as a matrix group over 
+        # GF(q ^ 2), but the matrices can actually be represented over a
+        # smaller field, which causes DefaultFieldOfMatrixGroup to return GF(q)
+        # instead of GF(q ^ 2) - we have to remedy this somehow ...
+        q := Size(F);
+    else
+        q := RootInt(Size(F));
     fi;
-    q := RootInt(Size(F));
 
     # Return stored sesquilinear form if it exists and is hermitian
     if HasInvariantSesquilinearForm(G) then
