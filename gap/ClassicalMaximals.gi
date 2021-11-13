@@ -847,6 +847,38 @@ function(n, q)
     return ImmutableMatrix(F, result);
 end);
 
+BindGlobal("C4SubgroupsSymplecticGeneric",
+function(n, q)
+    local result, l, halfOfEvenFactorsOfn, n_1, n_2;
+
+    result := [];
+    if IsEvenInt(q) then
+        return result;
+    fi;
+
+    # Instead of computing all the factors of n and
+    # then only using the even ones, we factor n / 2
+    # and multiply these factors by 2 when we use them.
+    l := QuoInt(n, 2);
+    halfOfEvenFactorsOfn := List(DivisorsInt(l));
+
+    # This ensures n_2 >= 3
+    RemoveSet(halfOfEvenFactorsOfn, l);
+    RemoveSet(halfOfEvenFactorsOfn, l / 2);
+
+    for n_1 in 2 * halfOfEvenFactorsOfn do
+        n_2 := QuoInt(n, n_1);
+        if IsOddInt(n_2) then
+            Add(result, TensorProductStabilizerInSp(0, n_1, n_2, q));
+        else
+            Add(result, TensorProductStabilizerInSp(1, n_1, n_2, q));
+            Add(result, TensorProductStabilizerInSp(-1, n_1, n_2, q));
+        fi;
+    od;
+    
+    return result;
+end);
+
 BindGlobal("C6SubgroupsSymplecticGroupGeneric",
 function(n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
