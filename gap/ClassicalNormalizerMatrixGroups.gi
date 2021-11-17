@@ -1,14 +1,20 @@
 # Construction as in Proposition 11.1 of [HR05]
 BindGlobal("SymplecticNormalizerInSL",
 function(d, q)
-    local F, zeta, gcd, AandB, C, D, i, E, size, generators;
+    local F, zeta, gcd, AandB, C, D, i, E, size, generators, standardForm;
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even but <d> = ", d);
     fi;
 
     F := GF(q);
     zeta := PrimitiveElement(F);
-    AandB := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
+    standardForm := AntidiagonalMat(Concatenation(List([1..d / 2], i -> - zeta ^ 0),
+                                                  List([1..d / 2], i -> zeta ^ 0)), 
+                                    F);
+
+    AandB := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
+                                                                       "S", 
+                                                                       standardForm)));
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
     C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);

@@ -24,7 +24,6 @@ gap> TestTensorInducedDecompositionStabilizerInSU := function(args)
 >   q := args[3];
 >   G := TensorInducedDecompositionStabilizerInSU(m, t, q);
 >   hasSize := HasSize(G);
->   RECOG.TestGroup(G, false, Size(G));
 >   return IsSubset(SU(m ^ t, q), GeneratorsOfGroup(G))
 >          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
 >          and hasSize;

@@ -48,7 +48,7 @@ gap> TestExtraspecialNormalizerInSp := function(args)
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> testsExtraspecialNormalizerInSp := [[2, 3], [2, 5], [2, 7], [3, 3], [3, 5], [3, 7]];;
 #@else
-gap> testsExtraspecialNormalizerInSp := [[2, 3], [2, 5], [3, 3], [3, 5]];;
+gap> testsExtraspecialNormalizerInSp := [[2, 3], [2, 5], [3, 5]];;
 #@fi
 gap> ForAll(testsExtraspecialNormalizerInSp, TestExtraspecialNormalizerInSp);
 true

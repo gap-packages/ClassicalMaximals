@@ -154,7 +154,7 @@ end);
 BindGlobal("TensorInducedDecompositionStabilizerInSU",
 function(m, t, q)
     local F, gensOfSUm, I, D, C, generatorsOfHInSU, i, H, E, U, S, zeta, mu,
-    size, scalingMatrix, d, generator, k;
+    size, scalingMatrix, d, generator, k, result;
     if not t > 1 or not m > 1 then
         ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
                       t, " and <m> = ", m);
@@ -181,7 +181,10 @@ function(m, t, q)
                               KroneckerProduct(I, gensOfSUm[1]),
                               KroneckerProduct(I, gensOfSUm[2])];
     else
-        H := TensorWreathProduct(SU(m, q), SymmetricGroup(t));
+        H := TensorWreathProduct(ConjugateToSesquilinearForm(SU(m, q),
+                                                             "U",
+                                                             AntidiagonalMat(m, F)), 
+                                 SymmetricGroup(t));
         generatorsOfHInSU := [];
         for generator in GeneratorsOfGroup(H) do
             if DeterminantMat(generator) = zeta ^ 0 then
@@ -241,5 +244,8 @@ function(m, t, q)
                               * Gcd(q + 1, m ^ (t - 1)) * Gcd(q + 1, m) ^ (t - 1) 
                               * Factorial(t);
     fi;
-    return MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
+
+    result := MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+    return ConjugateToStandardForm(result, "U");
 end);

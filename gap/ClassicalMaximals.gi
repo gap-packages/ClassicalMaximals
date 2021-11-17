@@ -847,6 +847,102 @@ function(n, q)
     return ImmutableMatrix(F, result);
 end);
 
+BindGlobal("C1SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local listOfks, result;
+    listOfks := [1..QuoInt(n, 2) - 1];
+    # type P_k subgroups
+    result := List(listOfks, k -> SpStabilizerOfIsotropicSubspace(n, q, k));
+    # type Sp(k, q) _|_ Sp(n - k, q) subgroups
+    result := Concatenation(result, 
+                            List(listOfks, 
+                                k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
+    return result;
+end);
+
+BindGlobal("C2SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local result, divisorListOfn, t;
+    
+    result := [];
+
+    divisorListOfn := List(DivisorsInt(n));
+    Remove(divisorListOfn, 1);
+
+    # Cf. Proposition 2.3.6 in [BHR13]
+    if q = 2 then
+        RemoveSet(divisorListOfn, QuoInt(n, 2));
+    fi;
+
+    # type Sp(m, q) \wr Sym(t) subgroups
+    for t in divisorListOfn do
+        if IsEvenInt(QuoInt(n, t)) then
+            Add(result, SpNonDegenerateImprimitives(n, q, t));
+        fi;
+    od;
+
+    # type GL(n / 2, q).2 subgroups
+    if IsOddInt(q) then
+        Add(result, SpIsotropicImprimitives(n, q));
+    fi;
+
+    return result;
+end);
+
+BindGlobal("C3SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local primeDivisorsOfn, s, result;
+
+    primeDivisorsOfn := PrimeDivisors(n);
+    result := [];
+
+    # symplectic type subgroups
+    for s in primeDivisorsOfn do
+        if IsEvenInt(n / s) then
+            Add(result, SymplecticSemilinearSp(n, q, s));
+        fi;
+    od;
+
+    # unitary type subgroups
+    if IsEvenInt(n) then
+        Add(result, UnitarySemilinearSp(n, q));
+    fi;
+
+    return result;
+end);
+
+BindGlobal("C4SubgroupsSymplecticGeneric",
+function(n, q)
+    local result, l, halfOfEvenFactorsOfn, n_1, n_2;
+
+    result := [];
+    if IsEvenInt(q) then
+        return result;
+    fi;
+
+    # Instead of computing all the factors of n and
+    # then only using the even ones, we factor n / 2
+    # and multiply these factors by 2 when we use them.
+    l := QuoInt(n, 2);
+    halfOfEvenFactorsOfn := List(DivisorsInt(l));
+
+    # This ensures n_2 >= 3
+    RemoveSet(halfOfEvenFactorsOfn, l);
+    RemoveSet(halfOfEvenFactorsOfn, l / 2);
+
+    for n_1 in 2 * halfOfEvenFactorsOfn do
+        n_2 := QuoInt(n, n_1);
+        if IsOddInt(n_2) then
+            Add(result, TensorProductStabilizerInSp(0, n_1, n_2, q));
+        else
+            Add(result, TensorProductStabilizerInSp(1, n_1, n_2, q));
+            Add(result, TensorProductStabilizerInSp(-1, n_1, n_2, q));
+        fi;
+    od;
+    
+    return result;
+end);
+
 BindGlobal("C6SubgroupsSymplecticGroupGeneric",
 function(n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
@@ -877,42 +973,6 @@ function(n, q)
         result := ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
                                            generatorNormSpMinusSp, 
                                            numberOfConjugates); 
-    fi;
-
-    return result;
-end);
-
-BindGlobal("C1SubgroupsSymplecticGroupGeneric",
-function(n, q)
-    local listOfks, result;
-    listOfks := [1..QuoInt(n, 2) - 1];
-    # type P_k subgroups
-    result := List(listOfks, k -> SpStabilizerOfIsotropicSubspace(n, q, k));
-    # type Sp(k, q) _|_ Sp(n - k, q) subgroups
-    result := Concatenation(result, 
-                            List(listOfks, 
-                                k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
-    
-    return result;
-end);
-
-BindGlobal("C3SubgroupsSymplecticGroupGeneric",
-function(n, q)
-    local primeDivisorsOfn, s, result;
-
-    primeDivisorsOfn := PrimeDivisors(n);
-    result := [];
-
-    # symplectic type subgroups
-    for s in primeDivisorsOfn do
-        if IsEvenInt(n / s) then
-            Add(result, SymplecticSemilinearSp(n, q, s));
-        fi;
-    od;
-
-    # unitary type subgroups
-    if IsEvenInt(n) then
-        Add(result, UnitarySemilinearSp(n, q));
     fi;
 
     return result;
