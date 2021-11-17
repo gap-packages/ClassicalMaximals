@@ -1,3 +1,6 @@
+gap> START_TEST("SubfieldMatrixGroups.tst");
+
+#
 gap> TestSubfieldSL := function(args)
 >   local n, p, e, f, G, hasSize;
 >   n := args[1];
@@ -71,3 +74,6 @@ gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [-1, 2, 3], [-1, 4, 3]]
 #@fi
 gap> ForAll(testsOrthogonalSubfieldSU, TestOrthogonalSubfieldSU);
 true
+
+#
+gap> STOP_TEST("SubfieldMatrixGroups.tst", 0);

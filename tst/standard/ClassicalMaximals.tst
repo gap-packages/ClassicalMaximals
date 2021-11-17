@@ -1,3 +1,6 @@
+gap> START_TEST("ClassicalMaximals.tst");
+
+#
 gap> TestClassicalMaximalsLinear := function(args)
 >   return Length(ClassicalMaximalsGeneric("L", args[1], args[2])) = args[3];
 > end;;
@@ -75,3 +78,6 @@ gap> testsClassicalMaximalsUnitary := [[3, 3, 3], [3, 4, 4], [3, 5, 2],
 >                                      [12, 2, 21], [12, 3, 27]];;
 gap> ForAll(testsClassicalMaximalsUnitary, TestClassicalMaximalsUnitary);
 true
+
+#
+gap> STOP_TEST("ClassicalMaximals.tst", 0);

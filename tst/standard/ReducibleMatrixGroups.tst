@@ -1,3 +1,6 @@
+gap> START_TEST("ReducibleMatrixGroups.tst");
+
+#
 gap> TestSLStabilizerOfSubspace := function(args)
 >   local n, q, k, G, hasSize;
 >   Info(InfoClassicalMaximalsTests, 1, args);
@@ -86,3 +89,6 @@ gap> SpStabilizerOfNonDegenerateSubspace(5, 2, 1);
 Error, <d> must be even.
 gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
 Error, <k> must be less than <d> / 2.
+
+#
+gap> STOP_TEST("ReducibleMatrixGroups.tst", 0);

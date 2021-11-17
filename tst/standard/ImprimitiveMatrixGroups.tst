@@ -1,3 +1,6 @@
+gap> START_TEST("ImprimitiveMatrixGroups.tst");
+
+#
 gap> TestImprimitivesMeetSL := function(args)
 >   local n, q, t, G, hasSize;
 >   n := args[1];
@@ -93,3 +96,6 @@ gap> SpNonDegenerateImprimitives(4, 3, 3);
 Error, <t> must divide <d>.
 gap> SpNonDegenerateImprimitives(6, 3, 2);
 Error, <m> = <d> / <t> must be even.
+
+#
+gap> STOP_TEST("ImprimitiveMatrixGroups.tst", 0);

@@ -1,3 +1,6 @@
+gap> START_TEST("ClassicalNormalizerMatrixGroups.tst");
+
+#
 gap> TestSymplecticNormalizerInSL := function(args)
 >   local n, q, G, hasSize;
 >   n := args[1];
@@ -42,3 +45,6 @@ gap> testsOrthogonalNormalizerInSL := [[0, 3, 5], [-1, 6, 5], [1, 6, 5], [-1, 4,
 >                                      [-1, 4, 5], [1, 4, 5], [-1, 6, 3]];;
 gap> ForAll(testsOrthogonalNormalizerInSL, TestOrthogonalNormalizerInSL);
 true
+
+#
+gap> STOP_TEST("ClassicalNormalizerMatrixGroups.tst", 0);

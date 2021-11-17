@@ -1,3 +1,6 @@
+gap> START_TEST("ExtraspecialNormalizerMatrixGroups.tst");
+
+#
 gap> TestExtraspecialNormalizerInSL := function(args)
 >   local r, m, q, G, hasSize;
 >   r := args[1];
@@ -131,3 +134,6 @@ gap> TestExtraspecial2MinusTypeNormalizerInGL := function(args)
 gap> testsExtraspecial2MinusTypeNormalizerInGL := [[1, 9], [1, 5], [1, 7], [2, 5]];;
 gap> ForAll(testsExtraspecial2MinusTypeNormalizerInGL, TestExtraspecial2MinusTypeNormalizerInGL);
 true
+
+#
+gap> STOP_TEST("ExtraspecialNormalizerMatrixGroups.tst", 0);
