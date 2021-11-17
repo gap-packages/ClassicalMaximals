@@ -1,3 +1,6 @@
+gap> START_TEST("Forms.tst");
+
+#
 gap> UnitaryForm(SU(4, 3)) = InvariantSesquilinearForm(SU(4, 3)).matrix;
 true
 gap> SymplecticForm(Sp(6, 7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
@@ -65,3 +68,6 @@ gap> testsFormChangingFunctions := [[3, 7, "U", IdentityMat(3, GF(7))],
 >                                   [1, 5, "O", Z(5) * IdentityMat(1, GF(5))]];;
 gap> ForAll(testsFormChangingFunctions, TestFormChangingFunctions);
 true
+
+#
+gap> STOP_TEST("Forms.tst", 0);

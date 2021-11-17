@@ -1,3 +1,6 @@
+gap> START_TEST("SemilinearMatrixGroups.tst");
+
+#
 gap> TestGammaLMeetSL := function(args)
 >   local n, q, s, G, hasSize;
 >   n := args[1];
@@ -38,3 +41,6 @@ gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ := function(args)
 gap> testsMatricesInducingGaloisGroupOfGFQToSOverGFQ := [[3, 2], [2, 2], [5, 3], [4, 3]];;
 gap> ForAll(testsMatricesInducingGaloisGroupOfGFQToSOverGFQ, TestMatricesInducingGaloisGroupOfGFQToSOverGFQ);
 true
+
+#
+gap> STOP_TEST("SemilinearMatrixGroups.tst", 0);

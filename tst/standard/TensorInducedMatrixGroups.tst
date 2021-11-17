@@ -1,3 +1,6 @@
+gap> START_TEST("TensorInducedMatrixGroups.tst");
+
+#
 gap> TestTensorInducedDecompositionStabilizerInSL := function(args)
 >   local m, t, q, G, hasSize;
 >   m := args[1];
@@ -31,3 +34,6 @@ gap> TestTensorInducedDecompositionStabilizerInSU := function(args)
 gap> testsTensorInducedDecompositionStabilizerInSU := [[2, 2, 7], [2, 2, 5], [3, 2, 3], [3, 3, 3], [3, 2, 5]];;
 gap> ForAll(testsTensorInducedDecompositionStabilizerInSU, TestTensorInducedDecompositionStabilizerInSU);
 true
+
+#
+gap> STOP_TEST("TensorInducedMatrixGroups.tst", 0);

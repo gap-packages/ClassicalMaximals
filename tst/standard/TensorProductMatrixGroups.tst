@@ -1,3 +1,6 @@
+gap> START_TEST("TensorProductMatrixGroups.tst");
+
+#
 gap> TestTensorProductStabilizerInSL := function(args)
 >   local d1, d2, q, G, hasSize;
 >   d1 := args[1];
@@ -60,3 +63,6 @@ gap> TensorProductStabilizerInSp(1, 2, 3, 3);
 Error, <epsilon> must be 0 since <d2> is odd.
 gap> TensorProductStabilizerInSp(0, 2, 4, 3);
 Error, <epsilon> must be +1 or -1 since <d2> is even.
+
+#
+gap> STOP_TEST("TensorProductMatrixGroups.tst", 0);
