@@ -30,9 +30,27 @@ gap> TestExtraspecialNormalizerInSU := function(args)
 gap> testsExtraspecialNormalizerInSU := [[5, 1, 4], [2, 3, 3], [2, 3, 7], [2, 2, 3], [2, 2, 7], 
 >                                        [3, 2, 5], [3, 1, 8], [3, 1, 5]];;
 #@else
-gap> testsExtraspecialNormalizerInSU := [[2, 3, 3], [3, 2, 5], [3, 1, 8], [3, 1, 5]];;
+gap> testsExtraspecialNormalizerInSU := [];;
 #@fi
 gap> ForAll(testsExtraspecialNormalizerInSU, TestExtraspecialNormalizerInSU);
+true
+gap> TestExtraspecialNormalizerInSp := function(args)
+>   local m, q, G, hasSize;
+>   m := args[1];
+>   q := args[2];
+>   G := ExtraspecialNormalizerInSp(m, q);
+>   hasSize := HasSize(G);
+>   RECOG.TestGroup(G, false, Size(G));
+>   return IsSubset(Sp(2 ^ m, q), GeneratorsOfGroup(G))
+>          and DefaultFieldOfMatrixGroup(G) = GF(q)
+>          and hasSize;
+> end;;
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> testsExtraspecialNormalizerInSp := [[2, 3], [2, 5], [2, 7], [3, 3], [3, 5], [3, 7]];;
+#@else
+gap> testsExtraspecialNormalizerInSp := [[2, 3], [2, 5], [3, 5]];;
+#@fi
+gap> ForAll(testsExtraspecialNormalizerInSp, TestExtraspecialNormalizerInSp);
 true
 gap> TestOddExtraspecialGroup := function(args)
 >   local r, m, q, gens, G;

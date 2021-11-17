@@ -23,3 +23,4 @@ DeclareGlobalFunction("MaximalSubgroupClassRepsSpecialUnitaryGroup");
 
 DeclareGlobalFunction("GLMinusSL");
 DeclareGlobalFunction("GUMinusSU");
+DeclareGlobalFunction("NormSpMinusSp");

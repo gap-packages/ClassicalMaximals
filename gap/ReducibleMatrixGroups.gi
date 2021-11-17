@@ -22,7 +22,7 @@ end);
 BindGlobal("SUStabilizerOfIsotropicSubspace",
 function(d, q, k)
     local F, zeta, generators, J, generator, nu, T1, T2, mu, D, size,
-        generatorOfSL, generatorOfSU;
+        generatorOfSL, generatorOfSU, result;
 
     if not k <= d / 2 then
         ErrorNoReturn("<k> must not be larger than <d> / 2 but <k> = ", k, 
@@ -46,7 +46,11 @@ function(d, q, k)
         Add(generators, generator);
     od;
     if d - 2 * k > 0 then
-        for generatorOfSU in GeneratorsOfGroup(SU(d - 2 * k, q)) do
+        for generatorOfSU in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - 2 * k, q), 
+                                                                           "U", 
+                                                                           AntidiagonalMat(d - 2 * k,
+                                                                                           F))) 
+        do
             generator := IdentityMat(d, F);
             generator{[k + 1..d - k]}{[k + 1..d - k]} := generatorOfSU;
             Add(generators, generator);
@@ -115,14 +119,17 @@ function(d, q, k)
                                           * (q - 1);
     fi;
 
-    return MatrixGroupWithSize(F, generators, size);
+    result := MatrixGroupWithSize(F, generators, size);
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+    return ConjugateToStandardForm(result, "U");
 end);
 
 # Construction as in Proposition 4.6 of [HR05]
 BindGlobal("SUStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
     local F, zeta, generators, kHalf, dHalf, generator, determinantShiftMatrix,
-        alpha, beta, size, generatorOfSUSubspace, generatorOfSUComplement;
+        alpha, beta, size, generatorOfSUSubspace, generatorOfSUComplement,
+        standardFormSUk, standardFormSUdMinusk, result;
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
         " and <d> = ", d);
@@ -133,6 +140,8 @@ function(d, q, k)
     generators := [];
     kHalf := QuoInt(k, 2);
     dHalf := QuoInt(d, 2);
+    standardFormSUk := AntidiagonalMat(k, F);
+    standardFormSUdMinusk := AntidiagonalMat(d - k, F);
 
     if IsEvenInt(k) then
         # We stabilise the subspace < e_1, ..., e_{kHalf}, f_{kHalf}, ..., f_1 >  
@@ -140,7 +149,10 @@ function(d, q, k)
         # the standard basis).
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
-        for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
+        for generatorOfSUSubspace in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(k, q), 
+                                                                                   "U",
+                                                                                   standardFormSUk)) 
+        do
             generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
@@ -152,7 +164,10 @@ function(d, q, k)
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1..k]};
             Add(generators, generator);
         od;
-        for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
+        for generatorOfSUComplement in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - k, q),
+                                                                                     "U",
+                                                                                     standardFormSUdMinusk)) 
+        do
             generator := IdentityMat(d, F);
             generator{[kHalf + 1..d - kHalf]}{[k / 2 + 1..d - kHalf]} := 
                 generatorOfSUComplement;
@@ -176,7 +191,10 @@ function(d, q, k)
         # division here).
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
-        for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
+        for generatorOfSUSubspace in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(k, q), 
+                                                                                   "U",
+                                                                                   standardFormSUk)) 
+        do
             generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
@@ -198,7 +216,10 @@ function(d, q, k)
                 generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
             Add(generators, generator);
         od;
-        for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
+        for generatorOfSUComplement in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - k, q), 
+                                                                                     "U",
+                                                                                     standardFormSUdMinusk)) 
+        do
             generator := IdentityMat(d, F);
             generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
                 generatorOfSUComplement{[1..(d - k) / 2]}{[1..(d - k) / 2]};
@@ -241,7 +262,10 @@ function(d, q, k)
         # again, as needed.
         #
         # The following matrices generate SU(k, q) x SU(d - k, q).
-        for generatorOfSUSubspace in GeneratorsOfGroup(SU(k, q)) do
+        for generatorOfSUSubspace in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(k, q), 
+                                                                                   "U",
+                                                                                   standardFormSUk)) 
+        do
             generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
                 generatorOfSUSubspace{[1..kHalf]}{[1..kHalf]};
@@ -286,7 +310,10 @@ function(d, q, k)
                     - alpha * beta ^ q * beta;
             Add(generators, generator);
         od;
-        for generatorOfSUComplement in GeneratorsOfGroup(SU(d - k, q)) do
+        for generatorOfSUComplement in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - k, q), 
+                                                                                     "U",
+                                                                                     standardFormSUdMinusk)) 
+        do
             generator := IdentityMat(d, F); 
             generator{[kHalf + 1..dHalf - 1]}{[kHalf + 1..dHalf - 1]} := 
                 generatorOfSUComplement{[1..dHalf - kHalf - 1]}{[1..dHalf - kHalf - 1]};
@@ -356,5 +383,108 @@ function(d, q, k)
     # Size according to Table 2.3 of [BHR13]
     size := SizeSU(k, q) * SizeSU(d - k, q) * (q + 1);
 
-    return MatrixGroupWithSize(F, generators, size);
+    result := MatrixGroupWithSize(F, generators, size);
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+
+    return ConjugateToStandardForm(result, "U");
+end);
+
+
+# Construction as in Proposition 4.3 of [HR05]
+BindGlobal("SpStabilizerOfIsotropicSubspace",
+function(d, q, k)
+    local field, gens, I, J, GLgen, Xi, Spgen, Yi;
+
+    if IsOddInt(d) then
+        ErrorNoReturn("<d> must be even.");
+    fi;
+
+    if k >= d / 2 then
+        ErrorNoReturn("<k> must be less than <d> / 2.");
+    fi;
+
+    field := GF(q);
+    gens := [];
+    I := IdentityMat(d, field);
+    J := AntidiagonalMat(k, field);
+
+    # For each generator of Sp(d,q), we take an
+    # invertible matrix GLgen which acts on
+    # the first k basis vectors and put that generator
+    # into a diagonal block matrix with another invertible
+    # matrix which acts on the last d - k basis vectors.
+    # This way, we preserve the decomposition into
+    # two isotropic subspaces.
+    # With the way we construct the second block matrix,
+    # the form is also preserved.
+    for GLgen in GeneratorsOfGroup(GL(k, q)) do
+        Xi := IdentityMat(d, field);
+        Xi{[1..k]}{[1..k]} := GLgen;
+        Xi{[d - k + 1 .. d]}{[d - k + 1 .. d]} := J * TransposedMat(GLgen ^ (-1)) * J;
+        Add(gens, Xi);
+    od;
+
+    # These two generators are diagonal block matrices with 2x2 blocks
+    # that generate a subgroup of Sp(d, q) corresponding to Sp(d - 2 * k, q).
+    for Spgen in GeneratorsOfGroup(Sp(d - 2 * k, q)) do
+        Yi := IdentityMat(d, field);
+        Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
+        Add(gens, Yi);
+    od;
+
+    # This generator is mapped to matrices "with 1s down the diagonal,
+    # a (k x k) block in the middle that is symmetric about the anti-diagonal,
+    # and zeros elsewhere" (cf. [HR05]) by GL(k, q) while also being fixed
+    # by Sp(d - 2k, q).
+    Add(gens, I + SquareSingleEntryMatrix(field, d, d, 1));
+
+    # This generator is in Sp(d, q) and stabilises the group generated by
+    # the first k unit vectors.
+    Add(gens, I + SquareSingleEntryMatrix(field, d, d, d - k) - SquareSingleEntryMatrix(field, d, k + 1, 1));
+
+    # Size according to Table 2.3 of [BHR13]
+    return MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
+end);
+
+
+# Construction as in Proposition 4.4 of [HR05]
+BindGlobal("SpStabilizerOfNonDegenerateSubspace",
+function(d, q, k)
+    local field, gens, twok, Spgen, Xi, Yi;
+
+    if IsOddInt(d) then
+        ErrorNoReturn("<d> must be even.");
+    fi;
+
+    if k >= d / 2 then
+        ErrorNoReturn("<k> must be less than <d> / 2.");
+    fi;
+
+    field := GF(q);
+    gens := [];
+    twok := 2 * k;
+
+    # These generators are block matrices of the form
+    # [[A 0 B], [0 C 0], [D 0 E]] which generate
+    # a subgroup corresponding to Sp(2 * k, q).
+    for Spgen in GeneratorsOfGroup(Sp(twok, q)) do
+        Xi := IdentityMat(d, field);
+        Xi{[1..k]}{[1..k]} := Spgen{[1..k]}{[1..k]};
+        Xi{[1..k]}{[d - k + 1 .. d]} := Spgen{[1..k]}{[k + 1 .. twok]};
+        Xi{[d - k + 1 .. d]}{[1..k]} := Spgen{[k + 1 .. 2 * k]}{[1..k]};
+        Xi{[d - k + 1 .. d]}{[d - k + 1 .. d]} := Spgen{[k + 1 .. twok]}{[k + 1 .. twok]};
+        Add(gens, Xi);
+    od;
+
+    # These generators are 2x2 block matrices with blocks which
+    # generate a subgroup corresponding to Sp(d - 2 * k, q).
+    for Spgen in GeneratorsOfGroup(Sp(d - twok, q)) do
+        Yi := IdentityMat(d, field);
+        Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
+        Add(gens, Yi);
+    od;
+
+    # Size according to Table 2.3 of [BHR13], except we replace
+    # k with 2k because [BHR13] seems to have this wrong.
+    return MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
 end);

@@ -18,6 +18,10 @@ function(r, m, q)
     # It is a straightforward calculation to show that these matrices preserve
     # the unitary form given by the matrix I_d if one uses the fact that r | q + 1
     # in the unitary case.
+    #
+    # In the symplectic case, we have r = 2 and therefore omega = -1 and it is
+    # also straightforward to check that these matrices preserve the symplectic
+    # form given by the block-diagonal matrix consisting of blocks [[0, 1], [-1, 0]]
     listOfXi := List([1..m], i ->
     KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), X),
     IdentityMat(r ^ (i - 1), F)));
@@ -56,6 +60,10 @@ function(r, m, q, type...)
 
     # Similarly to above, it is a straightforward calculation to show that the
     # matrices Ui preserve the unitary form given by the identity matrix
+    #
+    # Again, in the symplectic case, one can easily check that the Ui preserve
+    # the symplectic form given by the block-diagonal matrix consisting of
+    # blocks [[0, 1], [-1, 0]] (recall that r = 2 in this case!)
     listOfUi := List([1..m], i ->
     KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), U),
     IdentityMat(r ^ (i - 1), F)));
@@ -64,6 +72,10 @@ function(r, m, q, type...)
     # straightforward to see Vi * I_d * HermitianConjugate(Vi) = r * I_d. This
     # "problem" will be taken care of eventually when we normalize determinants
     # in the function ExtraspecialNormalizerInSL.
+    #
+    # In the same way, the matrices Vi scale the symplectic form given by the
+    # block-diagonal matrix consisting of blocks [[0, 1], [-1, 0]] by a factor
+    # of r = 2. This will be corrected later once we fix determinants.
     listOfVi := List([1..m], i ->
     KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - i), F), V),
     IdentityMat(r ^ (i - 1), F)));
@@ -82,6 +94,10 @@ function(r, m, q, type...)
         W := Z(q) ^ 0 * PermutationMat(w, r ^ 2);
         # These matrices preserve the unitary form given by the identity matrix
         # as W is a permutation matrix.
+        #
+        # Similarly, one can check that they also preserve the symplectic form
+        # given by the block-diagonal matrix consisting of blocks [[0, 1], [-1, 0]] 
+        # (remember r = 2 in this case!)
         listOfWi := List([1..m - 1], 
                          i -> KroneckerProduct(KroneckerProduct(IdentityMat(r ^ (m - 1 - i), 
                                                                             F), 
@@ -97,7 +113,10 @@ function(r, m, q, type...)
         # so this is actually q
         rootOfq := RootInt(q);
         generatingScalar := (zeta ^ (rootOfq - 1)) * IdentityMat(r ^ m, F);
+    elif type = "S" then
+        generatingScalar := -IdentityMat(r ^ m, F);
     fi;
+
     result := OddExtraspecialGroup(r, m, q);
     result.generatingScalar := generatingScalar;
     result.listOfUi := listOfUi;
@@ -153,7 +172,7 @@ end);
 
 # Construction as in Lemma 9.4 of [HR05]
 BindGlobal("Extraspecial2MinusTypeNormalizerInGL",
-function(m, q)
+function(m, q, type...)
     local F, solutionQuadraticCongruence, a, b, kroneckerFactorX1, kroneckerFactorY1, 
     kroneckerFactorU1, kroneckerFactorV1, kroneckerFactorW1, result, p;
 
@@ -161,7 +180,13 @@ function(m, q)
         ErrorNoReturn("<q> must be odd but <q> = ", q);
     fi;
 
-    result := OddExtraspecialNormalizerInGL(2, m, q);
+    if Length(type) = 0 then
+        type := "L";
+    else
+        type := type[1];
+    fi;
+
+    result := OddExtraspecialNormalizerInGL(2, m, q, type);
    
     F := GF(q);
     p := PrimeDivisors(q)[1];
@@ -170,23 +195,34 @@ function(m, q)
     b := solutionQuadraticCongruence.b;
 
     # This has determinant 1 by construction of a and b
+    # 
+    # It preserves the symplectic form given by the block-diagonal matrix
+    # consisting of blocks [[0, -1], [1, 0]]
     kroneckerFactorX1 := Z(q) ^ 0 * [[a, b], [b, -a]];
     # Determinant 1
+    #
+    # Preserves the aforementioned symplectic form
     kroneckerFactorY1 := Z(q) ^ 0 * [[0, -1], [1, 0]];
     # Determinant 2
+    #
+    # Scales the aforementioned symplectic form by 2; this will be corrected
+    # once we fix determinants later on
     kroneckerFactorU1 := Z(q) ^ 0 * [[1, 1], [-1, 1]];
     # Determinant 4
+    #
+    # Scales the aforementioned symplectic form by 4; this will be corrected
+    # once we fix determinants later on
     kroneckerFactorV1 := Z(q) ^ 0 * [[1 + a + b, 1 - a + b], 
                                      [-1 - a + b, 1 - a - b]];
     if m <> 1 then
         # Determinant 4
+        #
+        # Scales the aforementioned symplectic form by 2; this will be
+        # corrected once we fix determinants later on
         kroneckerFactorW1 := Z(q) ^ 0 * [[1, 0, 1, 0], [0, 1, 0, 1], 
                                          [0, 1, 0, -1], [-1, 0, 1, 0]];
     fi;
 
-    # TODO
-    # It seems we don't need the Ui here, but just U1? 
-    # --> Check this with the Magma code!
     result.listOfUi := [];
     # Determinant 1
     result.listOfXi[1] := KroneckerProduct(IdentityMat(2 ^ (m - 1), F),
@@ -500,13 +536,22 @@ function(m, q, type...)
 end);
 
 # Construction as in Proposition 9.5 of [HR05]
-# Only for d = 2
+# Only built for m = 1 if type = "L"
 BindGlobal("Extraspecial2MinusTypeNormalizerInSL",
-function(q)
+function(m, q, type...)
     local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
-    factorization, generators, size, scalarMultiplierV1, scalarMultiplierU1,
-    zeta;
+    factorization, generators, size, scalarMultiplier, zeta, listOfVi, listOfWi;
     
+    if Length(type) = 0 then
+        type := "L";
+    else
+        type := type[1];
+    fi;
+
+    if type = "L" and m > 1 then
+        ErrorNoReturn("If <type> = 'L', we must have <m> = 1 but <m> = ", m);
+    fi;
+
     F := GF(q);
     # q = p ^ e with p prime
     factorization := PrimePowersInt(q);
@@ -514,47 +559,85 @@ function(q)
     e := factorization[2];
     zeta := PrimitiveElement(F);
 
-    generatorsOfNormalizerInGL := Extraspecial2MinusTypeNormalizerInGL(1, q);
-    # Note that we only have the matrices X1, Y1, U1, V1
+    generatorsOfNormalizerInGL := Extraspecial2MinusTypeNormalizerInGL(m, q, type);
     U1 := generatorsOfNormalizerInGL.listOfUi[1];
-    V1 := generatorsOfNormalizerInGL.listOfVi[1];
+    listOfVi := generatorsOfNormalizerInGL.listOfVi;
+    listOfWi := generatorsOfNormalizerInGL.listOfWi;
 
-    # We always need a generating element of Z(SL(d, q))
-    generatingScalar := zeta ^ (QuoInt(q - 1, Gcd(q - 1, 2))) *
-    IdentityMat(2, F);
+    # We always need a generating scalar
+    if type = "L" then
+        generatingScalar := zeta ^ (QuoInt(q - 1, Gcd(q - 1, 2))) *
+                            IdentityMat(2 ^ m, F);
+    elif type = "S" then
+        generatingScalar := -IdentityMat(2 ^ m, F);
+    fi;
 
-    # Note that det(X1) = det(Y1) = 1, so we do not need to rescale these to
-    # determinant 1. Furthermore, det(V1) = 4 and this is always a square, so
-    # we can always rescale V1 to determinant 1.
-    scalarMultiplierV1 := ScalarToNormalizeDeterminant(V1, 2, F);
-    V1 := scalarMultiplierV1 * V1;
+    # Note that det(Xi) = det(Yi) = 1, so we do not need to rescale these to
+    # determinant 1. Similarly, det(Wi) = 1 for i >= 2.
+    #
+    # Furthermore, det(V1) = 2 ^ (2 ^ m) so we just have to rescale this by a
+    # factor of 1 / 2; this also leads to V1 preserving the symplectic form
+    # given by the block-diagonal matrix consisting of blocks [[0, 1], [-1, 0]]
+    listOfVi[1] := 1 / 2 * listOfVi[1];
 
+    # If type = "L", we have m = 1 and the only generator not considered yet is
+    # U1. Then det(U1) = 2 and we need to find a square root of 2 in GF(q).
+    #
+    # If type = "S", we still have to consider U1, the Vi for i >= 2 and W1.
+    # All these scale the symplectic form given by the block-diagonal matrix
+    # consisting of blocks [[0, 1], [-1, 0]] by a factor of 2 so we need to
+    # find a square root of 2 in GF(q) to fix this; this will also take care of
+    # the determinants.
     if IsEvenInt(e) or (p - 1) mod 8 = 0 or (p - 7) mod 8 = 0 then
-        # These are the cases where we can find a square root of det(U1) = 2 in
-        # GF(q) to rescale U1 to determinant 1.
-        scalarMultiplierU1 := ScalarToNormalizeDeterminant(U1, 2, F);
-        U1 := scalarMultiplierU1 * U1;
+        # These are the cases where we can find a square root of 2 (by quadratic
+        # reciprocity).
+        scalarMultiplier := 1 / RootFFE(F, 2 * zeta ^ 0, 2);
+        U1 := scalarMultiplier * U1;
+        listOfVi{[2..m]} := List(listOfVi{[2..m]}, Vi -> scalarMultiplier * Vi);
+        if m >= 2 then
+            listOfWi[1] := scalarMultiplier * listOfWi[1];
+        fi;
 
         generators := Concatenation([generatingScalar],
                                     generatorsOfNormalizerInGL.listOfXi,
                                     generatorsOfNormalizerInGL.listOfYi,
-                                    [U1, V1]);
+                                    [U1],
+                                    listOfVi,
+                                    listOfWi);
 
     else
-        # According to the Magma code, there is no need to take another
-        # generator instead of U1 if we cannot rescale it to determinant 1 - we
-        # simply discard U1 as a generator.
+        # Comparing with the Magma code, we can simply take 
+        # U1 ^ (-1) * V2, U1 ^ (-1) * V3, ..., U1 ^ (-1) * Vm, U1 ^ (-1) * W1
+        # in this case. 
+        #
+        # Observe that these all indeed have determinant 1 and
+        # that they all preserve the symplectic form given by the
+        # block-diagonal matrix consisting of blocks [[0, 1], [-1, 0]].
+        listOfVi{[2..m]} := List(listOfVi{[2..m]}, Vi -> U1 ^ (-1) * Vi);
+        if m >= 2 then
+            listOfWi[1] := U1 ^ (-1) * listOfWi[1];
+        fi;
+
         generators := Concatenation([generatingScalar],
                                     generatorsOfNormalizerInGL.listOfXi,
                                     generatorsOfNormalizerInGL.listOfYi,
-                                    [V1]);
+                                    listOfVi,
+                                    listOfWi);
     fi;
 
     # Size according to Table 2.9 of [BHR13]
-    if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
-        size := 2 * Factorial(4);
-    else
-        size := Factorial(4);
+    if type = "L" then
+        if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
+            size := 2 * Factorial(4);
+        else
+            size := Factorial(4);
+        fi;
+    elif type = "S" then
+        if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
+            size := 2 ^ (1 + 2 * m) * SizeSO(-1, 2 * m, 2);
+        else
+            size := 2 ^ (2 * m) * SizeSO(-1, 2 * m, 2);
+        fi;
     fi;
 
     return MatrixGroupWithSize(F, generators, size);
@@ -569,7 +652,7 @@ function(r, m, q)
         return SymplecticTypeNormalizerInSL(m, q);
     else
         # r = 2 and m = 1
-        return Extraspecial2MinusTypeNormalizerInSL(q);
+        return Extraspecial2MinusTypeNormalizerInSL(m, q);
     fi;
 end);
 
@@ -598,6 +681,34 @@ function(r, m, q)
     # Antidiag(1, ..., 1). 
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, F)));
     result := ConjugateToStandardForm(result, "U");
+
+    return result;
+end);
+
+# Construction as in Proposition 9.5 of [HR05]
+BindGlobal("ExtraspecialNormalizerInSp",
+function(m, q)
+    local F, result, gramMatrix;
+    if not 2 ^ m > 2 then
+        ErrorNoReturn("2 ^ <m> must be at least 4 in the symplectic case, but",
+                      " <m> = ", m);
+    fi;
+
+    F := GF(q);
+    result := Extraspecial2MinusTypeNormalizerInSL(m, q, "S");
+
+    # This group now preserves the symplectic form given by the block-diagonal
+    # matrix consisting of blocks [[0, 1], [-1, 0]] (see the constructor
+    # functions above for more info).
+    # We conjugate the group so that it preserves the standard GAP form
+    # Antidiag(1, ..., 1, -1, ..., -1).
+    gramMatrix := MatrixByEntries(F, 2 ^ m, 2 ^ m, 
+                                  Concatenation(List([1..2 ^ (m - 1)], 
+                                                     i -> [2 * i - 1, 2 * i, 1]),
+                                                List([1..2 ^ (m - 1)],
+                                                     i -> [2 * i, 2 * i - 1, -1])));
+    SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
+    result := ConjugateToStandardForm(result, "S");
 
     return result;
 end);

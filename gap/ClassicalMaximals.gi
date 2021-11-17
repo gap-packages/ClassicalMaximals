@@ -616,7 +616,7 @@ function(n, q)
     if IsOddInt(r) then
         if 2 * e = OrderMod(p, r) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(r, m, q);
-            # Cf. Tables 3.5.A and 3.5.G in [KL90]
+            # Cf. Tables 3.5.B and 3.5.G in [KL90]
             numberOfConjugates := Gcd(n, q + 1);
             if n = 3 and ((q - 2) mod 9 = 0 or (q - 5) mod 9 = 0) then
                 numberOfConjugates := 1;
@@ -630,7 +630,7 @@ function(n, q)
         # n = 2 ^ m >= 4
         if e = 1 and 2 * e = OrderMod(p, 4) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(2, m, q);
-            # Cf. Tables 3.5.A and 3.5.G in [KL90]
+            # Cf. Tables 3.5.B and 3.5.G in [KL90]
             numberOfConjugates := Gcd(n, q + 1);
             if n = 4 and (q - 3) mod 8 = 0 then
                 numberOfConjugates := 2;
@@ -828,6 +828,98 @@ function(n, q, classes...)
     return maximalSubgroups;
 end);
 
+# Return an element of the normalizer of Sp(n, q) in GL(n, q) that is not
+# already contained in Sp(n, q), i.e. which preserves the symplectic form
+# modulo a scalar
+InstallGlobalFunction("NormSpMinusSp",
+function(n, q)
+    local F, zeta, result, halfOfn;
+    
+    if IsOddInt(n) then
+        ErrorNoReturn("<n> must be even but <n> = ", n);
+    fi;
+
+    F := GF(q);
+    zeta := PrimitiveElement(F);
+    halfOfn := QuoInt(n, 2);
+    result := DiagonalMat(Concatenation(List([1..halfOfn], i -> zeta),
+                                        List([1..halfOfn], i -> zeta ^ 0)));
+    return ImmutableMatrix(F, result);
+end);
+
+BindGlobal("C1SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local listOfks, result;
+    listOfks := [1..QuoInt(n, 2) - 1];
+    # type P_k subgroups
+    result := List(listOfks, k -> SpStabilizerOfIsotropicSubspace(n, q, k));
+    # type Sp(k, q) _|_ Sp(n - k, q) subgroups
+    result := Concatenation(result, 
+                            List(listOfks, 
+                                k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
+    return result;
+end);
+
+BindGlobal("C2SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local result, divisorListOfn, t;
+    
+    result := [];
+
+    divisorListOfn := List(DivisorsInt(n));
+    Remove(divisorListOfn, 1);
+
+    # Cf. Proposition 2.3.6 in [BHR13]
+    if q = 2 then
+        RemoveSet(divisorListOfn, QuoInt(n, 2));
+    fi;
+
+    # type Sp(m, q) \wr Sym(t) subgroups
+    for t in divisorListOfn do
+        if IsEvenInt(QuoInt(n, t)) then
+            Add(result, SpNonDegenerateImprimitives(n, q, t));
+        fi;
+    od;
+
+    # type GL(n / 2, q).2 subgroups
+    if IsOddInt(q) then
+        Add(result, SpIsotropicImprimitives(n, q));
+    fi;
+
+    return result;
+end);
+
+BindGlobal("C4SubgroupsSymplecticGeneric",
+function(n, q)
+    local result, l, halfOfEvenFactorsOfn, n_1, n_2;
+
+    result := [];
+    if IsEvenInt(q) then
+        return result;
+    fi;
+
+    # Instead of computing all the factors of n and
+    # then only using the even ones, we factor n / 2
+    # and multiply these factors by 2 when we use them.
+    l := QuoInt(n, 2);
+    halfOfEvenFactorsOfn := List(DivisorsInt(l));
+
+    # This ensures n_2 >= 3
+    RemoveSet(halfOfEvenFactorsOfn, l);
+    RemoveSet(halfOfEvenFactorsOfn, l / 2);
+
+    for n_1 in 2 * halfOfEvenFactorsOfn do
+        n_2 := QuoInt(n, n_1);
+        if IsOddInt(n_2) then
+            Add(result, TensorProductStabilizerInSp(0, n_1, n_2, q));
+        else
+            Add(result, TensorProductStabilizerInSp(1, n_1, n_2, q));
+            Add(result, TensorProductStabilizerInSp(-1, n_1, n_2, q));
+        fi;
+    od;
+    
+    return result;
+end);
 
 BindGlobal("C5SubgroupsSymplecticGroupGeneric",
 function(n, q)
@@ -840,4 +932,39 @@ function(n, q)
     # For each prime divisor of e, there is exactly one of these subgroups,
     # so this is sufficient.
     return List(PrimeDivisors(e), b -> SubfieldSp(n, p, e, QuoInt(e, b)));
+end);
+
+BindGlobal("C6SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local factorisationOfq, p, e, factorisationOfn, r, m, result,
+    generatorNormSpMinusSp, numberOfConjugates, extraspecialNormalizerSubgroup;
+
+    result := [];
+    if not IsPrimePowerInt(n) then
+        return result;
+    fi;
+    
+    factorisationOfq := PrimePowersInt(q);
+    p := factorisationOfq[1];
+    e := factorisationOfq[2];
+    factorisationOfn := PrimePowersInt(n);
+    r := factorisationOfn[1];
+    m := factorisationOfn[2];
+    generatorNormSpMinusSp := NormSpMinusSp(n, q);
+
+    # Cf. Table 4.6.B and the corresponding definition in [KL90]
+    if r = 2 and e = 1 then
+        extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSp(m, q);
+        # Cf. Tables 3.5.C and 3.5.G in [KL90]
+        if (q - 1) = 0 mod 8 or (q - 7) = 0 mod 8 then
+            numberOfConjugates := 2;
+        else
+            numberOfConjugates := 1;
+        fi;
+        result := ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
+                                           generatorNormSpMinusSp, 
+                                           numberOfConjugates); 
+    fi;
+
+    return result;
 end);

@@ -45,7 +45,7 @@ end);
 BindGlobal("UnitarySubfieldSU",
 function(d, p, e, f)
     local F, AandB, C, D, c, k, q, matrixForCongruence, lambda, zeta, omega, z, X,
-        size;
+        size, result;
 
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) or not IsOddInt(QuoInt(e, f)) then
         ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be",
@@ -54,7 +54,9 @@ function(d, p, e, f)
 
     q := p ^ e;
     F := GF(q ^ 2);
-    AandB := ShallowCopy(GeneratorsOfGroup(SU(d, p ^ f)));
+    AandB := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d, p ^ f),
+                                                                       "U",
+                                                                       AntidiagonalMat(d, F))));
     zeta := PrimitiveElement(F);
     k := Gcd(q + 1, d);
     c := QuoInt(k * Lcm(p ^ f + 1, QuoInt(q + 1, k)), q + 1);
@@ -65,7 +67,9 @@ function(d, p, e, f)
     size := SizeSU(d, p ^ f) * Gcd(QuoInt(q + 1, p ^ f + 1), d);
 
     if c = Gcd(p ^ f + 1, d) then
-        return MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
+        result := MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
+        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+        return ConjugateToStandardForm(result, "U");
     fi;
 
     # a primitive element of GF(p ^ (2 * f))
@@ -82,7 +86,9 @@ function(d, p, e, f)
     # det(X) = 1 by construction of lambda
     X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, F);
 
-    return MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
+    result := MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+    return ConjugateToStandardForm(result, "U");
 end);
 
 # Construction as in Proposition 8.5 of [HR05]
@@ -98,7 +104,9 @@ function(d, q)
     form := AntidiagonalMat(Concatenation(List([1..d / 2], i -> One(F)),
                                           List([1..d / 2], i -> -1)) * Z(q ^ 2)^0,
                             F);
-    generators := ShallowCopy(GeneratorsOfGroup(Sp(d, q)));
+    generators := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
+                                                                            "S", 
+                                                                            form)));
     zeta := PrimitiveElement(F);
     k := Gcd(q + 1, d);
     # generates the center of SU(d, q)
@@ -123,13 +131,16 @@ function(d, q)
         # The result preserves the unitary form given by 
         # - zeta ^ ((q + 1) / 2) * Antidiag(1, ..., 1, -1, ..., -1);
         # we conjugate it to preserve the standard unitary form given by
-        # Antidiag(1, ..., 1). (If q is even, this is not necessary.)
+        # Antidiag(1, ..., 1).
         SetInvariantSesquilinearForm(result, 
                                      rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form));
-        result := ConjugateToStandardForm(result, "U");
+    else
+        # The result preserves the unitary form given by
+        # Antidiag(1, ..., 1).
+        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
     fi;
     
-    return result;
+    return ConjugateToStandardForm(result, "U");
 end);
 
 # Construction as in Proposition 8.4 of [HR05]
@@ -167,6 +178,8 @@ function(epsilon, d, q)
                                                      AntidiagonalMat(d, F));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
         result := MatrixGroupWithSize(F, generators, size);
+        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+        result := ConjugateToStandardForm(result, "U");
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
         generators := Concatenation(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
@@ -222,11 +235,10 @@ function(epsilon, d, q)
                 W := zeta ^ (-i) * D * E;
             fi;
             Add(generators, W);
-
-            # the standard orthogonal form in this case is Antidiag(1, ..., 1),
-            # i.e. has the same form matrix as the unitary form we want, so we
-            # do not need to conjugate the result
+            
             result := MatrixGroupWithSize(F, generators, size);
+            SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+            result := ConjugateToStandardForm(result, "U");
 
         elif epsilon = -1 then
 
@@ -263,15 +275,14 @@ function(epsilon, d, q)
                 # the matrix Diag(zeta ^ (q + 1), 1, ..., 1).
                 form := DiagonalMat(Concatenation([zeta ^ (q + 1)],
                                                   List([2..d], i -> zeta ^ 0)));
-                SetInvariantSesquilinearForm(result, rec(matrix := form));
-                result := ConjugateToStandardForm(result, "U");
             else
                 # The form preserved by the constructed subgroup is given by
                 # the identity matrix.
                 form := IdentityMat(d, F);
-                SetInvariantSesquilinearForm(result, rec(matrix := form));
-                result := ConjugateToStandardForm(result, "U");
             fi;
+
+            SetInvariantSesquilinearForm(result, rec(matrix := form));
+            result := ConjugateToStandardForm(result, "U");
         fi;
     fi;
  
