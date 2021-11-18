@@ -165,3 +165,16 @@ function(epsilon, d, q)
     size := Gcd(q - 1, d) * SizeSO(epsilon, d, q);
     return MatrixGroupWithSize(F, generators, size);
 end);
+
+# Construction as in Proposition 11.4 of [HR05]
+BindGlobal("OrthogonalInSp",
+function(epsilon, d, q)
+    if IsOddInt(d) then
+    	ErrorNoReturn("<d> must be even.");
+    fi;
+    if IsOddInt(q) then
+        ErrorNoReturn("<q> must be even.");
+    fi;
+
+    return ConjugateToStandardForm(SO(epsilon, d, q), "S");
+end);

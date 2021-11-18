@@ -45,6 +45,24 @@ gap> testsOrthogonalNormalizerInSL := [[0, 3, 5], [-1, 6, 5], [1, 6, 5], [-1, 4,
 >                                      [-1, 4, 5], [1, 4, 5], [-1, 6, 3]];;
 gap> ForAll(testsOrthogonalNormalizerInSL, TestOrthogonalNormalizerInSL);
 true
+gap> TestOrthogonalInSp := function(args)
+>   local epsilon, n, q, G, hasSize;
+>   epsilon := args[1];
+>   n := args[2];
+>   q := args[3];
+>   G := OrthogonalInSp(epsilon, n, q);
+>   hasSize := HasSize(G);
+>   RECOG.TestGroup(G, false, Size(G));
+>   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
+> end;;
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestOrthogonalInSp([1, 4, 8]);
+gap> TestOrthogonalInSp([-1, 6, 2]);
+#@fi
+gap> TestOrthogonalInSp([-1, 4, 4]);
+gap> TestOrthogonalInSp([1, 6, 2]);
 
 #
 gap> STOP_TEST("ClassicalNormalizerMatrixGroups.tst", 0);

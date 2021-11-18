@@ -990,3 +990,8 @@ function(n, q)
 
     return result;
 end);
+
+BindGlobal("C8SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    return [OrthogonalInSp(1, n, q), OrthogonalInSp(-1, n, q)];
+end);
