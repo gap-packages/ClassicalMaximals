@@ -55,11 +55,11 @@ gap> TestTensorInducedDecompositionStabilizerInSp([2, 5, 3]);
 
 # Test error handling
 gap> TensorInducedDecompositionStabilizerInSp(3, 3, 3);
-Error, <m> must be even.
+Error, <m> must be even
 gap> TensorInducedDecompositionStabilizerInSp(2, 2, 5);
-Error, <t> must be odd.
+Error, <t> must be odd
 gap> TensorInducedDecompositionStabilizerInSp(2, 3, 4);
-Error, <q> must be odd.
+Error, <q> must be odd
 
 #
 gap> STOP_TEST("TensorInducedMatrixGroups.tst", 0);

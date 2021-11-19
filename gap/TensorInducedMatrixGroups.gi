@@ -256,15 +256,15 @@ function(m, t, q)
     local field, I, gens, D, result;
 
     if IsOddInt(m) then
-        ErrorNoReturn("<m> must be even.");
+        ErrorNoReturn("<m> must be even");
     fi;
 
     if IsEvenInt(t) then
-        ErrorNoReturn("<t> must be odd.");
+        ErrorNoReturn("<t> must be odd");
     fi;
 
     if IsEvenInt(q) then
-        ErrorNoReturn("<q> must be odd.");
+        ErrorNoReturn("<q> must be odd");
     fi;
 
     field := GF(q);
