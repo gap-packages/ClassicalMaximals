@@ -991,6 +991,26 @@ function(n, q)
     return result;
 end);
 
+BindGlobal("C7SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local primeDivs, listOfts;
+
+    if IsEvenInt(q) then
+        return [];
+    fi;
+
+    primeDivs := PrimePowersInt(n);
+    if not Length(primeDivs) = 2 then
+        return [];
+    fi;
+
+
+    listOfts := Filtered(DivisorsInt(primeDivs[2]), IsOddInt);
+    RemoveSet(listOfts, 1);
+
+    return List(listOfts, t -> TensorInducedDecompositionStabilizerInSp(primeDivs[1] ^ QuoInt(primeDivs[2], t), t, q));
+end);
+
 BindGlobal("C8SubgroupsSymplecticGroupGeneric",
 function(n, q)
     return [OrthogonalInSp(1, n, q), OrthogonalInSp(-1, n, q)];
