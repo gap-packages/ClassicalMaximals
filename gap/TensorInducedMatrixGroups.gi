@@ -249,3 +249,34 @@ function(m, t, q)
     SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
     return ConjugateToStandardForm(result, "U");
 end);
+
+# Construction as in Proposition 10.2 in [HR05]
+BindGlobal("TensorInducedDecompositionStabilizerInSp",
+function(m, t, q)
+    local field, I, gens, D, result;
+
+    if IsOddInt(m) then
+        ErrorNoReturn("<m> must be even.");
+    fi;
+
+    if IsEvenInt(t) then
+        ErrorNoReturn("<t> must be odd.");
+    fi;
+
+    if IsEvenInt(q) then
+        ErrorNoReturn("<q> must be odd.");
+    fi;
+
+    field := GF(q);
+    I := IdentityMat(m ^ (t - 2), field);
+
+    gens := List(GeneratorsOfGroup(TensorWreathProduct(Sp(m, q), SymmetricGroup(t))));
+    
+    D := NormSpMinusSp(m, q);
+    Add(gens, KroneckerProduct(KroneckerProduct(D, Inverse(D)), I));
+
+    # Size according to the aforementioned proposition, but we add a
+    # factor of 2 because we want the size of G, not of G / Z(G)
+    result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
+    return ConjugateToStandardForm(result, "S");
+end);
