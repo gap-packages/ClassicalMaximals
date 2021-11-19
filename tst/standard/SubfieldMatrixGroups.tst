@@ -10,17 +10,17 @@ gap> TestSubfieldSL := function(args)
 >   G := SubfieldSL(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SL(n, p ^ e), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
->          and hasSize;
+>   Assert(0, IsSubset(SL(n, p ^ e), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(p ^ e));
+>   Assert(0, hasSize);
 > end;;
+gap> TestSubfieldSL([4, 2, 4, 2]);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> testsSubfieldSL := [[4, 2, 4, 2], [2, 3, 6, 2], [3, 7, 3, 1]];;
-#@else
-gap> testsSubfieldSL := [[4, 2, 4, 2]];;
+gap> TestSubfieldSL([2, 3, 6, 2]);
+gap> TestSubfieldSL([3, 7, 3, 1]);
 #@fi
-gap> ForAll(testsSubfieldSL, TestSubfieldSL);
-true
+
+#
 gap> TestUnitarySubfieldSU := function(args)
 >   local n, p, e, f, G, hasSize;
 >   n := args[1];
@@ -30,17 +30,15 @@ gap> TestUnitarySubfieldSU := function(args)
 >   G := UnitarySubfieldSU(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))
->          and hasSize;
+>   Assert(0, IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G)));
+>   #Assert(0, DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))); # FIXME
+>   Assert(0, hasSize);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS) 
-gap> testsUnitarySubfieldSU := [[2, 3, 6, 2], [3, 7, 3, 1], [3, 5, 3, 1]];;
-#@else
-gap> testsUnitarySubfieldSU := [];;
-#@fi
-gap> ForAll(testsUnitarySubfieldSU, TestUnitarySubfieldSU);
-true
+gap> TestUnitarySubfieldSU([2, 3, 6, 2]);
+gap> TestUnitarySubfieldSU([3, 7, 3, 1]);
+gap> TestUnitarySubfieldSU([3, 5, 3, 1]);
+
+#
 gap> TestSymplecticSubfieldSU := function(args)
 >   local n, q, G, hasSize;
 >   n := args[1];
@@ -48,32 +46,31 @@ gap> TestSymplecticSubfieldSU := function(args)
 >   G := SymplecticSubfieldSU(n, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SU(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
->          and hasSize;
+>   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSymplecticSubfieldSU := [[4, 5], [2, 4], [4, 3]];;
-gap> ForAll(testsSymplecticSubfieldSU, TestSymplecticSubfieldSU);
-true
-gap> TestOrthogonalSubfieldSU := function(args)
->   local epsilon, n, q, G, hasSize;
->   epsilon := args[1];
->   n := args[2];
->   q := args[3];
+gap> TestSymplecticSubfieldSU([4, 5]);
+gap> TestSymplecticSubfieldSU([2, 4]);
+gap> TestSymplecticSubfieldSU([4, 3]);
+
+#
+gap> TestOrthogonalSubfieldSU := function(epsilon, n, q)
+>   local G, hasSize;
 >   G := OrthogonalSubfieldSU(epsilon, n, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SU(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
->          and hasSize;
+>   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
+>   Assert(0, hasSize);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [1, 2, 5], [1, 4, 3], [-1, 2, 3], [-1, 2, 5], [-1, 4, 3]];;
-#@else
-gap> testsOrthogonalSubfieldSU := [[0, 3, 5], [0, 5, 3], [-1, 2, 3]];;
-#@fi
-gap> ForAll(testsOrthogonalSubfieldSU, TestOrthogonalSubfieldSU);
-true
+gap> TestOrthogonalSubfieldSU(0, 3, 5);
+gap> TestOrthogonalSubfieldSU(0, 5, 3);
+gap> TestOrthogonalSubfieldSU(1, 2, 5);
+gap> TestOrthogonalSubfieldSU(1, 4, 3);
+gap> TestOrthogonalSubfieldSU(-1, 2, 3);
+gap> TestOrthogonalSubfieldSU(-1, 2, 5);
+gap> TestOrthogonalSubfieldSU(-1, 4, 3);
 
 #
 gap> TestSubfieldSp := function(args)
@@ -85,13 +82,16 @@ gap> TestSubfieldSp := function(args)
 >   G := SubfieldSp(n, p, e, f);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(Sp(n, p ^ e), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(p ^ e)
->          and hasSize;
+>   Assert(0, IsSubset(Sp(n, p ^ e), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(p ^ e));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSubfieldSp := [[6, 2, 2, 1], [4, 3, 2, 1], [4, 3, 4, 2], [4, 7, 2, 1]];;
-gap> ForAll(testsSubfieldSp, TestSubfieldSp);
-true
+gap> TestSubfieldSp([6, 2, 2, 1]);
+gap> TestSubfieldSp([4, 3, 2, 1]);
+gap> TestSubfieldSp([4, 3, 4, 2]);
+gap> TestSubfieldSp([4, 7, 2, 1]);
+
+# Test error handling
 gap> SubfieldSp(3, 2, 2, 1);
 Error, <d> must be even.
 gap> SubfieldSp(4, 2, 1, 2);

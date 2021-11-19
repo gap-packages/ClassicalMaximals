@@ -9,13 +9,19 @@ gap> TestTensorProductStabilizerInSL := function(args)
 >   G := TensorProductStabilizerInSL(d1, d2, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SL(d1 * d2, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q)
->          and hasSize;
+>   Assert(0, IsSubset(SL(d1 * d2, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsTensorProductStabilizerInSL := [[2, 3, 2], [2, 3, 3], [2, 3, 4], [2, 3, 5], [2, 4, 3], [3, 4, 2], [3, 4, 3]];;
-gap> ForAll(testsTensorProductStabilizerInSL, TestTensorProductStabilizerInSL);
-true
+gap> TestTensorProductStabilizerInSL([2, 3, 2]);
+gap> TestTensorProductStabilizerInSL([2, 3, 3]);
+gap> TestTensorProductStabilizerInSL([2, 3, 4]);
+gap> TestTensorProductStabilizerInSL([2, 3, 5]);
+gap> TestTensorProductStabilizerInSL([2, 4, 3]);
+gap> TestTensorProductStabilizerInSL([3, 4, 2]);
+gap> TestTensorProductStabilizerInSL([3, 4, 3]);
+
+#
 gap> TestTensorProductStabilizerInSU := function(args)
 >   local d1, d2, q, G, hasSize;
 >   d1 := args[1];
@@ -24,17 +30,18 @@ gap> TestTensorProductStabilizerInSU := function(args)
 >   G := TensorProductStabilizerInSU(d1, d2, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SU(d1 * d2, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q ^ 2)
->          and hasSize;
+>   Assert(0, IsSubset(SU(d1 * d2, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
+>   Assert(0, hasSize);
 > end;;
+gap> TestTensorProductStabilizerInSU([2, 3, 2]);
+gap> TestTensorProductStabilizerInSU([2, 3, 3]);
+gap> TestTensorProductStabilizerInSU([2, 3, 4]);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> testsTensorProductStabilizerInSU := [[2, 3, 2], [2, 3, 3], [2, 3, 4], [2, 4, 3]];;
-#@else
-gap> testsTensorProductStabilizerInSU := [[2, 3, 2], [2, 3, 3]];;
+gap> TestTensorProductStabilizerInSU([2, 4, 3]); # FIXME: see https://github.com/gap-packages/recog/issues/302
 #@fi
-gap> ForAll(testsTensorProductStabilizerInSU, TestTensorProductStabilizerInSU);
-true
+
+#
 gap> TestTensorProductStabilizerInSp := function(args)
 >   local epsilon, d1, d2, q, G, hasSize;
 >   epsilon := args[1];
@@ -44,13 +51,14 @@ gap> TestTensorProductStabilizerInSp := function(args)
 >   G := TensorProductStabilizerInSp(epsilon, d1, d2, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(Sp(d1 * d2, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q)
->          and hasSize;
+>   Assert(0, IsSubset(Sp(d1 * d2, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsTensorProductStabilizerInSp := [[0, 2, 3, 3], [0, 4, 3, 5], [1, 2, 4, 5], [-1, 2, 4, 5]];;
-gap> ForAll(testsTensorProductStabilizerInSp, TestTensorProductStabilizerInSp);
-true
+gap> TestTensorProductStabilizerInSp([0, 2, 3, 3]);
+gap> TestTensorProductStabilizerInSp([0, 4, 3, 5]);
+gap> TestTensorProductStabilizerInSp([1, 2, 4, 5]);
+gap> TestTensorProductStabilizerInSp([-1, 2, 4, 5]);
 
 # Test error handling
 gap> TensorProductStabilizerInSp(0, 1, 3, 3);

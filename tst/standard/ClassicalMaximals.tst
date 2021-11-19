@@ -2,82 +2,204 @@ gap> START_TEST("ClassicalMaximals.tst");
 
 #
 gap> TestClassicalMaximalsLinear := function(args)
->   return Length(ClassicalMaximalsGeneric("L", args[1], args[2])) = args[3];
+>   Assert(0, Length(ClassicalMaximalsGeneric("L", args[1], args[2])) = args[3]);
 > end;;
-gap> testsClassicalMaximalsLinear := [[2, 4, 3], [2, 5, 3], [2, 7, 3],
->                                     [2, 8, 3], [2, 9, 3], [2, 11, 2],
->                                     [2, 13, 4], [2, 16, 4], [2, 17, 5],
->                                     [2, 19, 3],
->                                     [3, 2, 3], [3, 3, 4], [3, 4, 6],
->                                     [3, 5, 5], [3, 7, 8], [3, 8, 5],
->                                     [3, 9, 7], [3, 11, 5], [3, 13, 8],
->                                     [3, 16, 8], [3, 17, 5], [3, 19, 10],
->                                     [4, 2, 5], [4, 3, 8], [4, 4, 8],
->                                     [4, 5, 13], [4, 7, 10], [4, 8, 8],
->                                     [4, 9, 18], [4, 11, 10], [4, 13, 14],
->                                     [4, 16, 9], [4, 17, 16], [4, 19, 10],
->                                     [5, 2, 5], [5, 3, 6], [5, 4, 7],
->                                     [5, 5, 7], [5, 7, 7], [5, 8, 7],
->                                     [5, 9, 9], [5, 11, 16], [5, 13, 7],
->                                     [5, 16, 12], [5, 17, 7], [5, 19, 7],
->                                     [6, 2, 9], [6, 3, 13], [6, 4, 17],
->                                     [6, 5, 14], [6, 7, 20], [6, 8, 13],
->                                     [6, 9, 18], [6, 11, 14], [6, 13, 20], 
->                                     [6, 16, 18], [6, 17, 14], [6, 19, 20],
->                                     [7, 2, 7], [7, 3, 8], [7, 4, 9],
->                                     [7, 5, 9], [7, 7, 9], [7, 8, 22],
->                                     [7, 9, 11], [7, 11, 9], [7, 13, 9],
->                                     [7, 16, 10], [7, 17, 9], [7, 19, 9],
->                                     [8, 2, 10], [8, 3, 16], [8, 4, 14],
->                                     [8, 5, 25], [8, 7, 17], [8, 8, 14],
->                                     [8, 9, 31], [8, 11, 17], [8, 13, 25],
->                                     [8, 16, 15], [8, 17, 33], [8, 19, 17],
->                                     [9, 2, 11], [9, 3, 12], [9, 4, 17],
->                                     [9, 5, 13], [9, 7, 20], [9, 8, 13],
->                                     [9, 9, 15], [9, 11, 13], [9, 13, 20],
->                                     [9, 16, 18], [9, 17, 13], [9, 19, 32],
->                                     [10, 2, 13], [10, 3, 17], [10, 4, 17],
->                                     [10, 5, 18], [10, 7, 18], [10, 8, 17],
->                                     [10, 9, 22], [10, 11, 30], [10, 13, 18],
->                                     [10, 16, 26], [10, 17, 18], [10, 19, 18],
->                                     [11, 2, 11], [11, 3, 12], [11, 4, 13], 
->                                     [11, 5, 13], [11, 7, 13], [11, 8, 13],
->                                     [11, 9, 15], [11, 11, 13], [11, 13, 13],
->                                     [11, 16, 14], [11, 17, 13], [11, 19, 13],
->                                     [12, 2, 18], [12, 3, 24], [12, 4, 26],
->                                     [12, 5, 27], [12, 7, 33], [12, 8, 22],
->                                     [12, 9, 33], [12, 11, 25], [12, 13, 39],
->                                     [12, 16, 27], [12, 17, 27], [12, 19, 33]];;
-gap> ForAll(testsClassicalMaximalsLinear, TestClassicalMaximalsLinear);
-true
+gap> TestClassicalMaximalsLinear([2, 4, 3]);
+gap> TestClassicalMaximalsLinear([2, 5, 3]);
+gap> TestClassicalMaximalsLinear([2, 7, 3]);
+gap> TestClassicalMaximalsLinear([2, 8, 3]);
+gap> TestClassicalMaximalsLinear([2, 9, 3]);
+gap> TestClassicalMaximalsLinear([2, 11, 2]);
+gap> TestClassicalMaximalsLinear([2, 13, 4]);
+gap> TestClassicalMaximalsLinear([2, 16, 4]);
+gap> TestClassicalMaximalsLinear([2, 17, 5]);
+gap> TestClassicalMaximalsLinear([2, 19, 3]);
+gap> TestClassicalMaximalsLinear([3, 2, 3]);
+gap> TestClassicalMaximalsLinear([3, 3, 4]);
+gap> TestClassicalMaximalsLinear([3, 4, 6]);
+gap> TestClassicalMaximalsLinear([3, 5, 5]);
+gap> TestClassicalMaximalsLinear([3, 7, 8]);
+gap> TestClassicalMaximalsLinear([3, 8, 5]);
+gap> TestClassicalMaximalsLinear([3, 9, 7]);
+gap> TestClassicalMaximalsLinear([3, 11, 5]);
+gap> TestClassicalMaximalsLinear([3, 13, 8]);
+gap> TestClassicalMaximalsLinear([3, 16, 8]);
+gap> TestClassicalMaximalsLinear([3, 17, 5]);
+gap> TestClassicalMaximalsLinear([3, 19, 10]);
+gap> TestClassicalMaximalsLinear([4, 2, 5]);
+gap> TestClassicalMaximalsLinear([4, 3, 8]);
+gap> TestClassicalMaximalsLinear([4, 4, 8]);
+gap> TestClassicalMaximalsLinear([4, 5, 13]);
+gap> TestClassicalMaximalsLinear([4, 7, 10]);
+gap> TestClassicalMaximalsLinear([4, 8, 8]);
+gap> TestClassicalMaximalsLinear([4, 9, 18]);
+gap> TestClassicalMaximalsLinear([4, 11, 10]);
+gap> TestClassicalMaximalsLinear([4, 13, 14]);
+gap> TestClassicalMaximalsLinear([4, 16, 9]);
+gap> TestClassicalMaximalsLinear([4, 17, 16]);
+gap> TestClassicalMaximalsLinear([4, 19, 10]);
+gap> TestClassicalMaximalsLinear([5, 2, 5]);
+gap> TestClassicalMaximalsLinear([5, 3, 6]);
+gap> TestClassicalMaximalsLinear([5, 4, 7]);
+gap> TestClassicalMaximalsLinear([5, 5, 7]);
+gap> TestClassicalMaximalsLinear([5, 7, 7]);
+gap> TestClassicalMaximalsLinear([5, 8, 7]);
+gap> TestClassicalMaximalsLinear([5, 9, 9]);
+gap> TestClassicalMaximalsLinear([5, 11, 16]);
+gap> TestClassicalMaximalsLinear([5, 13, 7]);
+gap> TestClassicalMaximalsLinear([5, 16, 12]);
+gap> TestClassicalMaximalsLinear([5, 17, 7]);
+gap> TestClassicalMaximalsLinear([5, 19, 7]);
+gap> TestClassicalMaximalsLinear([6, 2, 9]);
+gap> TestClassicalMaximalsLinear([6, 3, 13]);
+gap> TestClassicalMaximalsLinear([6, 4, 17]);
+gap> TestClassicalMaximalsLinear([6, 5, 14]);
+gap> TestClassicalMaximalsLinear([6, 7, 20]);
+gap> TestClassicalMaximalsLinear([6, 8, 13]);
+gap> TestClassicalMaximalsLinear([6, 9, 18]);
+gap> TestClassicalMaximalsLinear([6, 11, 14]);
+gap> TestClassicalMaximalsLinear([6, 13, 20]);
+gap> TestClassicalMaximalsLinear([6, 16, 18]);
+gap> TestClassicalMaximalsLinear([6, 17, 14]);
+gap> TestClassicalMaximalsLinear([6, 19, 20]);
+gap> TestClassicalMaximalsLinear([7, 2, 7]);
+gap> TestClassicalMaximalsLinear([7, 3, 8]);
+gap> TestClassicalMaximalsLinear([7, 4, 9]);
+gap> TestClassicalMaximalsLinear([7, 5, 9]);
+gap> TestClassicalMaximalsLinear([7, 7, 9]);
+gap> TestClassicalMaximalsLinear([7, 8, 22]);
+gap> TestClassicalMaximalsLinear([7, 9, 11]);
+gap> TestClassicalMaximalsLinear([7, 11, 9]);
+gap> TestClassicalMaximalsLinear([7, 13, 9]);
+gap> TestClassicalMaximalsLinear([7, 16, 10]);
+gap> TestClassicalMaximalsLinear([7, 17, 9]);
+gap> TestClassicalMaximalsLinear([7, 19, 9]);
+gap> TestClassicalMaximalsLinear([8, 2, 10]);
+gap> TestClassicalMaximalsLinear([8, 3, 16]);
+gap> TestClassicalMaximalsLinear([8, 4, 14]);
+gap> TestClassicalMaximalsLinear([8, 5, 25]);
+gap> TestClassicalMaximalsLinear([8, 7, 17]);
+gap> TestClassicalMaximalsLinear([8, 8, 14]);
+gap> TestClassicalMaximalsLinear([8, 9, 31]);
+gap> TestClassicalMaximalsLinear([8, 11, 17]);
+gap> TestClassicalMaximalsLinear([8, 13, 25]);
+gap> TestClassicalMaximalsLinear([8, 16, 15]);
+gap> TestClassicalMaximalsLinear([8, 17, 33]);
+gap> TestClassicalMaximalsLinear([8, 19, 17]);
+gap> TestClassicalMaximalsLinear([9, 2, 11]);
+gap> TestClassicalMaximalsLinear([9, 3, 12]);
+gap> TestClassicalMaximalsLinear([9, 4, 17]);
+gap> TestClassicalMaximalsLinear([9, 5, 13]);
+gap> TestClassicalMaximalsLinear([9, 7, 20]);
+gap> TestClassicalMaximalsLinear([9, 8, 13]);
+gap> TestClassicalMaximalsLinear([9, 9, 15]);
+gap> TestClassicalMaximalsLinear([9, 11, 13]);
+gap> TestClassicalMaximalsLinear([9, 13, 20]);
+gap> TestClassicalMaximalsLinear([9, 16, 18]);
+gap> TestClassicalMaximalsLinear([9, 17, 13]);
+gap> TestClassicalMaximalsLinear([9, 19, 32]);
+gap> TestClassicalMaximalsLinear([10, 2, 13]);
+gap> TestClassicalMaximalsLinear([10, 3, 17]);
+gap> TestClassicalMaximalsLinear([10, 4, 17]);
+gap> TestClassicalMaximalsLinear([10, 5, 18]);
+gap> TestClassicalMaximalsLinear([10, 7, 18]);
+gap> TestClassicalMaximalsLinear([10, 8, 17]);
+gap> TestClassicalMaximalsLinear([10, 9, 22]);
+gap> TestClassicalMaximalsLinear([10, 11, 30]);
+gap> TestClassicalMaximalsLinear([10, 13, 18]);
+gap> TestClassicalMaximalsLinear([10, 16, 26]);
+gap> TestClassicalMaximalsLinear([10, 17, 18]);
+gap> TestClassicalMaximalsLinear([10, 19, 18]);
+gap> TestClassicalMaximalsLinear([11, 2, 11]);
+gap> TestClassicalMaximalsLinear([11, 3, 12]);
+gap> TestClassicalMaximalsLinear([11, 4, 13]);
+gap> TestClassicalMaximalsLinear([11, 5, 13]);
+gap> TestClassicalMaximalsLinear([11, 7, 13]);
+gap> TestClassicalMaximalsLinear([11, 8, 13]);
+gap> TestClassicalMaximalsLinear([11, 9, 15]);
+gap> TestClassicalMaximalsLinear([11, 11, 13]);
+gap> TestClassicalMaximalsLinear([11, 13, 13]);
+gap> TestClassicalMaximalsLinear([11, 16, 14]);
+gap> TestClassicalMaximalsLinear([11, 17, 13]);
+gap> TestClassicalMaximalsLinear([11, 19, 13]);
+gap> TestClassicalMaximalsLinear([12, 2, 18]);
+gap> TestClassicalMaximalsLinear([12, 3, 24]);
+gap> TestClassicalMaximalsLinear([12, 4, 26]);
+gap> TestClassicalMaximalsLinear([12, 5, 27]);
+gap> TestClassicalMaximalsLinear([12, 7, 33]);
+gap> TestClassicalMaximalsLinear([12, 8, 22]);
+gap> TestClassicalMaximalsLinear([12, 9, 33]);
+gap> TestClassicalMaximalsLinear([12, 11, 25]);
+gap> TestClassicalMaximalsLinear([12, 13, 39]);
+gap> TestClassicalMaximalsLinear([12, 16, 27]);
+gap> TestClassicalMaximalsLinear([12, 17, 27]);
+gap> TestClassicalMaximalsLinear([12, 19, 33]);
+
+#
 gap> TestClassicalMaximalsUnitary := function(args)
->   return Length(ClassicalMaximalsGeneric("U", args[1], args[2])) = args[3];
+>   Assert(0, Length(ClassicalMaximalsGeneric("U", args[1], args[2])) = args[3]);
 > end;;
-gap> testsClassicalMaximalsUnitary := [[3, 3, 3], [3, 4, 4], [3, 5, 2], 
->                                      [3, 7, 5], [3, 8, 7], [3, 9, 5], 
->                                      [3, 11, 8], [3, 13, 5], [3, 16, 4],
->                                      [3, 17, 10], [3, 19, 5],
->                                      [4, 2, 5], [4, 3, 10], [4, 4, 7],
->                                      [4, 5, 10], [4, 7, 16], [4, 8, 8],
->                                      [4, 9, 10], [4, 11, 14], [4, 13, 10],
->                                      [4, 16, 7], [4, 17, 10], [4, 19, 14],
->                                      [5, 2, 5], [5, 3, 7], [5, 4, 11], 
->                                      [5, 5, 7], [5, 7, 7], [5, 8, 7],
->                                      [5, 9, 16], [5, 11, 7], [5, 13, 7], 
->                                      [5, 16, 6], [5, 17, 7], [5, 19, 16],
->                                      [6, 2, 10], [6, 3, 14], [6, 4, 12],
->                                      [6, 5, 20], [6, 7, 14], [6, 8, 17],
->                                      [7, 2, 8], [7, 3, 9], [7, 8, 9],
->                                      [7, 13, 22],
->                                      [8, 2, 11], [8, 3, 25], [8, 4, 13],
->                                      [8, 5, 17], [8, 8, 14],
->                                      [9, 2, 14], [9, 3, 13], [9, 4, 12],
->                                      [9, 5, 20], [9, 8, 17],
->                                      [10, 2, 14], [10, 3, 18],
->                                      [11, 2, 12], [11, 3, 13],
->                                      [12, 2, 21], [12, 3, 27]];;
-gap> ForAll(testsClassicalMaximalsUnitary, TestClassicalMaximalsUnitary);
-true
+gap> TestClassicalMaximalsUnitary([3, 3, 3]);
+gap> TestClassicalMaximalsUnitary([3, 4, 4]);
+gap> TestClassicalMaximalsUnitary([3, 5, 2]);
+gap> TestClassicalMaximalsUnitary([3, 7, 5]);
+gap> TestClassicalMaximalsUnitary([3, 8, 7]);
+gap> TestClassicalMaximalsUnitary([3, 9, 5]);
+gap> TestClassicalMaximalsUnitary([3, 11, 8]);
+gap> TestClassicalMaximalsUnitary([3, 13, 5]);
+gap> TestClassicalMaximalsUnitary([3, 16, 4]);
+gap> TestClassicalMaximalsUnitary([3, 17, 10]);
+gap> TestClassicalMaximalsUnitary([3, 19, 5]);
+gap> TestClassicalMaximalsUnitary([4, 2, 5]);
+gap> TestClassicalMaximalsUnitary([4, 3, 10]);
+gap> TestClassicalMaximalsUnitary([4, 4, 7]);
+gap> TestClassicalMaximalsUnitary([4, 5, 10]);
+gap> TestClassicalMaximalsUnitary([4, 7, 16]);
+gap> TestClassicalMaximalsUnitary([4, 8, 8]);
+gap> TestClassicalMaximalsUnitary([4, 9, 10]);
+gap> TestClassicalMaximalsUnitary([4, 11, 14]);
+gap> TestClassicalMaximalsUnitary([4, 13, 10]);
+gap> TestClassicalMaximalsUnitary([4, 16, 7]);
+gap> TestClassicalMaximalsUnitary([4, 17, 10]);
+gap> TestClassicalMaximalsUnitary([4, 19, 14]);
+gap> TestClassicalMaximalsUnitary([5, 2, 5]);
+gap> TestClassicalMaximalsUnitary([5, 3, 7]);
+gap> TestClassicalMaximalsUnitary([5, 4, 11]);
+gap> TestClassicalMaximalsUnitary([5, 5, 7]);
+gap> TestClassicalMaximalsUnitary([5, 7, 7]);
+gap> TestClassicalMaximalsUnitary([5, 8, 7]);
+gap> TestClassicalMaximalsUnitary([5, 9, 16]);
+gap> TestClassicalMaximalsUnitary([5, 11, 7]);
+gap> TestClassicalMaximalsUnitary([5, 13, 7]);
+gap> TestClassicalMaximalsUnitary([5, 16, 6]);
+gap> TestClassicalMaximalsUnitary([5, 17, 7]);
+gap> TestClassicalMaximalsUnitary([5, 19, 16]);
+gap> TestClassicalMaximalsUnitary([6, 2, 10]);
+gap> TestClassicalMaximalsUnitary([6, 3, 14]);
+gap> TestClassicalMaximalsUnitary([6, 4, 12]);
+gap> TestClassicalMaximalsUnitary([6, 5, 20]);
+gap> TestClassicalMaximalsUnitary([6, 7, 14]);
+gap> TestClassicalMaximalsUnitary([6, 8, 17]);
+gap> TestClassicalMaximalsUnitary([7, 2, 8]);
+gap> TestClassicalMaximalsUnitary([7, 3, 9]);
+gap> TestClassicalMaximalsUnitary([7, 8, 9]);
+gap> TestClassicalMaximalsUnitary([7, 13, 22]);
+gap> TestClassicalMaximalsUnitary([8, 2, 11]);
+gap> TestClassicalMaximalsUnitary([8, 3, 25]);
+gap> TestClassicalMaximalsUnitary([8, 4, 13]);
+gap> TestClassicalMaximalsUnitary([8, 5, 17]);
+gap> TestClassicalMaximalsUnitary([8, 8, 14]);
+gap> TestClassicalMaximalsUnitary([9, 2, 14]);
+gap> TestClassicalMaximalsUnitary([9, 3, 13]);
+gap> TestClassicalMaximalsUnitary([9, 4, 12]);
+gap> TestClassicalMaximalsUnitary([9, 5, 20]);
+gap> TestClassicalMaximalsUnitary([9, 8, 17]);
+gap> TestClassicalMaximalsUnitary([10, 2, 14]);
+gap> TestClassicalMaximalsUnitary([10, 3, 18]);
+gap> TestClassicalMaximalsUnitary([11, 2, 12]);
+gap> TestClassicalMaximalsUnitary([11, 3, 13]);
+gap> TestClassicalMaximalsUnitary([12, 2, 21]);
+gap> TestClassicalMaximalsUnitary([12, 3, 27]);
 
 #
 gap> STOP_TEST("ClassicalMaximals.tst", 0);

@@ -8,13 +8,15 @@ gap> TestSymplecticNormalizerInSL := function(args)
 >   G := SymplecticNormalizerInSL(n, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SL(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q)
->          and hasSize;
+>   Assert(0, IsSubset(SL(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSymplecticNormalizerInSL := [[4, 3], [4, 5], [6, 4]];;
-gap> ForAll(testsSymplecticNormalizerInSL, TestSymplecticNormalizerInSL);
-true
+gap> TestSymplecticNormalizerInSL([4, 3]);
+gap> TestSymplecticNormalizerInSL([4, 5]);
+gap> TestSymplecticNormalizerInSL([6, 4]);
+
+#
 gap> TestUnitaryNormalizerInSL := function(args)
 >   local n, q, G, hasSize;
 >   n := args[1];
@@ -22,13 +24,15 @@ gap> TestUnitaryNormalizerInSL := function(args)
 >   G := UnitaryNormalizerInSL(n, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SL(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q)
->          and hasSize;
+>   Assert(0, IsSubset(SL(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsUnitaryNormalizerInSL := [[4, 9], [3, 9], [4, 4]];;
-gap> ForAll(testsUnitaryNormalizerInSL, TestUnitaryNormalizerInSL);
-true
+gap> TestUnitaryNormalizerInSL([4, 9]);
+gap> TestUnitaryNormalizerInSL([3, 9]);
+gap> TestUnitaryNormalizerInSL([4, 4]);
+
+#
 gap> TestOrthogonalNormalizerInSL := function(args)
 >   local epsilon, n, q, G, hasSize;
 >   epsilon := args[1];
@@ -37,14 +41,20 @@ gap> TestOrthogonalNormalizerInSL := function(args)
 >   G := OrthogonalNormalizerInSL(epsilon, n, q);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SL(n, q), GeneratorsOfGroup(G))
->          and DefaultFieldOfMatrixGroup(G) = GF(q)
->          and hasSize;
+>   Assert(0, IsSubset(SL(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsOrthogonalNormalizerInSL := [[0, 3, 5], [-1, 6, 5], [1, 6, 5], [-1, 4, 3], [1, 4, 3], 
->                                      [-1, 4, 5], [1, 4, 5], [-1, 6, 3]];;
-gap> ForAll(testsOrthogonalNormalizerInSL, TestOrthogonalNormalizerInSL);
-true
+gap> TestOrthogonalNormalizerInSL([0, 3, 5]);
+gap> TestOrthogonalNormalizerInSL([-1, 6, 5]);
+gap> TestOrthogonalNormalizerInSL([1, 6, 5]);
+gap> TestOrthogonalNormalizerInSL([-1, 4, 3]);
+gap> TestOrthogonalNormalizerInSL([1, 4, 3]);
+gap> TestOrthogonalNormalizerInSL([-1, 4, 5]);
+gap> TestOrthogonalNormalizerInSL([1, 4, 5]);
+gap> TestOrthogonalNormalizerInSL([-1, 6, 3]);
+
+#
 gap> TestOrthogonalInSp := function(args)
 >   local epsilon, n, q, G, hasSize;
 >   epsilon := args[1];

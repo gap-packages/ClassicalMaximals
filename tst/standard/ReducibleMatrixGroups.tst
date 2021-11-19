@@ -10,17 +10,17 @@ gap> TestSLStabilizerOfSubspace := function(args)
 >   G := SLStabilizerOfSubspace(n, q, k);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SL(n, q), GeneratorsOfGroup(G)) and
->          DefaultFieldOfMatrixGroup(G) = GF(q) and
->          hasSize;
+>   Assert(0, IsSubset(SL(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS) 
-gap> testsSLStabilizerOfSubspace := [[4, 3, 2], [3, 8, 2], [2, 7, 1]];;
-#@else
-gap> testsSLStabilizerOfSubspace := [[4, 3, 2], [2, 7, 1]];;
+gap> TestSLStabilizerOfSubspace([4, 3, 2]);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestSLStabilizerOfSubspace([3, 8, 2]); # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
 #@fi
-gap> ForAll(testsSLStabilizerOfSubspace, TestSLStabilizerOfSubspace);
-true
+gap> TestSLStabilizerOfSubspace([2, 7, 1]);
+
+#
 gap> TestSUStabilizerOfIsotropicSubspace := function(args)
 >   local n, q, k, G, hasSize;
 >   n := args[1];
@@ -29,13 +29,16 @@ gap> TestSUStabilizerOfIsotropicSubspace := function(args)
 >   G := SUStabilizerOfIsotropicSubspace(n, q, k);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SU(n, q), GeneratorsOfGroup(G)) and
->          DefaultFieldOfMatrixGroup(G) = GF(q ^ 2) and
->          hasSize;
+>   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSUStabilizerOfIsotropicSubspace := [[4, 3, 2], [3, 5, 1], [3, 4, 1], [4, 3, 1]];;
-gap> ForAll(testsSUStabilizerOfIsotropicSubspace, TestSUStabilizerOfIsotropicSubspace);
-true
+gap> TestSUStabilizerOfIsotropicSubspace([4, 3, 2]);
+gap> TestSUStabilizerOfIsotropicSubspace([3, 5, 1]);
+gap> TestSUStabilizerOfIsotropicSubspace([3, 4, 1]);
+gap> TestSUStabilizerOfIsotropicSubspace([4, 3, 1]);
+
+#
 gap> TestSUStabilizerOfNonDegenerateSubspace := function(args)
 >   local n, q, k, G, hasSize;
 >   n := args[1];
@@ -44,13 +47,16 @@ gap> TestSUStabilizerOfNonDegenerateSubspace := function(args)
 >   G := SUStabilizerOfNonDegenerateSubspace(n, q, k);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(SU(n, q), GeneratorsOfGroup(G)) and
->          DefaultFieldOfMatrixGroup(G) = GF(q ^ 2) and
->          hasSize;
+>   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSUStabilizerOfNonDegenerateSubspace := [[5, 3, 2], [6, 3, 2], [4, 5, 1], [5, 4, 1]];;
-gap> ForAll(testsSUStabilizerOfNonDegenerateSubspace, TestSUStabilizerOfNonDegenerateSubspace);
-true
+gap> TestSUStabilizerOfNonDegenerateSubspace([5, 3, 2]);
+gap> TestSUStabilizerOfNonDegenerateSubspace([6, 3, 2]);
+gap> TestSUStabilizerOfNonDegenerateSubspace([4, 5, 1]);
+gap> TestSUStabilizerOfNonDegenerateSubspace([5, 4, 1]);
+
+#
 gap> TestSpStabilizerOfIsotropicSubspace := function(args)
 >   local n, q, k, G, hasSize;
 >   n := args[1];
@@ -59,13 +65,16 @@ gap> TestSpStabilizerOfIsotropicSubspace := function(args)
 >   G := SpStabilizerOfIsotropicSubspace(n, q, k);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(Sp(n, q), GeneratorsOfGroup(G)) and
->          DefaultFieldOfMatrixGroup(G) = GF(q) and
->          hasSize;
+>   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSpStabilizerOfIsotropicSubspace := [[4, 2, 1], [4, 9, 1], [6, 4, 1], [6, 7, 2]];;
-gap> ForAll(testsSpStabilizerOfIsotropicSubspace, TestSpStabilizerOfIsotropicSubspace);
-true
+gap> TestSpStabilizerOfIsotropicSubspace([4, 2, 1]);
+gap> TestSpStabilizerOfIsotropicSubspace([4, 9, 1]);
+gap> TestSpStabilizerOfIsotropicSubspace([6, 4, 1]);
+gap> TestSpStabilizerOfIsotropicSubspace([6, 7, 2]);
+
+#
 gap> SpStabilizerOfIsotropicSubspace(5, 2, 1);
 Error, <d> must be even.
 gap> SpStabilizerOfIsotropicSubspace(4, 2, 3);
@@ -78,13 +87,16 @@ gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
 >   G := SpStabilizerOfNonDegenerateSubspace(n, q, k);
 >   hasSize := HasSize(G);
 >   RECOG.TestGroup(G, false, Size(G));
->   return IsSubset(Sp(n, q), GeneratorsOfGroup(G)) and
->          DefaultFieldOfMatrixGroup(G) = GF(q) and
->          hasSize;
+>   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
 > end;;
-gap> testsSpStabilizerOfNonDegenerateSubspace := [[4, 2, 1], [4, 9, 1], [6, 4, 1], [6, 7, 2]];;
-gap> ForAll(testsSpStabilizerOfNonDegenerateSubspace, TestSpStabilizerOfNonDegenerateSubspace);
-true
+gap> TestSpStabilizerOfNonDegenerateSubspace([4, 2, 1]);
+gap> TestSpStabilizerOfNonDegenerateSubspace([4, 9, 1]);
+gap> TestSpStabilizerOfNonDegenerateSubspace([6, 4, 1]);
+gap> TestSpStabilizerOfNonDegenerateSubspace([6, 7, 2]);
+
+# Test error handling
 gap> SpStabilizerOfNonDegenerateSubspace(5, 2, 1);
 Error, <d> must be even.
 gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
