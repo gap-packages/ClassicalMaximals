@@ -6,8 +6,7 @@ function(r, m, q)
     local F, zeta, omega, X, Y, listOfXi, listOfYi;
 
     if (q - 1) mod r <> 0 or not IsPrime(r) then
-        ErrorNoReturn("<r> must be prime and a divisor of <q> - 1 but <r> = ", r,
-                      " and <q> = ", q);
+        ErrorNoReturn("<r> must be prime and a divisor of <q> - 1");
     fi;
     F := GF(q);
     zeta := PrimitiveElement(F);
@@ -133,8 +132,7 @@ function(m, q, type...)
     local F, listOfUi, U, result, zeta, psi; 
 
     if (q - 1) mod 4 <> 0 or m < 2 then
-        ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2 but <q> = ",
-                      q, " and <m> = ", m);
+        ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2");
     fi;
 
     if Length(type) = 0 then
@@ -177,7 +175,7 @@ function(m, q, type...)
     kroneckerFactorU1, kroneckerFactorV1, kroneckerFactorW1, result, p;
 
     if (q - 1) mod 2 <> 0 then
-        ErrorNoReturn("<q> must be odd but <q> = ", q);
+        ErrorNoReturn("<q> must be odd");
     fi;
 
     if Length(type) = 0 then
@@ -387,8 +385,7 @@ function(m, q, type...)
     factorization, generators, size, zeta, U1InGL, rootOfq;
     
     if (q - 1) mod 4 <> 0 or m < 2 then
-        ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2 but <q> = ",
-                      q, " and <m> = ", m);
+        ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2");
     fi;
 
     if Length(type) = 0 then
@@ -549,7 +546,7 @@ function(m, q, type...)
     fi;
 
     if type = "L" and m > 1 then
-        ErrorNoReturn("If <type> = 'L', we must have <m> = 1 but <m> = ", m);
+        ErrorNoReturn("If <type> = 'L', we must have <m> = 1");
     fi;
 
     F := GF(q);
@@ -661,11 +658,10 @@ BindGlobal("ExtraspecialNormalizerInSU",
 function(r, m, q)
     local F, result;
     if not r ^ m > 2 then
-        ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case, but",
-                      " <r> = ", r, " and <m> = ", m);
+        ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case,");
     elif not (q + 1) mod r = 0 or (IsEvenInt(r) and not (q + 1) mod 4 = 0) then
         ErrorNoReturn("<q> + 1 must be divisible by r (or 4 if r = 2) in the ",
-                      "unitary case, but <q> =", q, " and <r> =", r);
+                      "unitary case,");
     fi;
 
     F := GF(q ^ 2);
@@ -690,8 +686,7 @@ BindGlobal("ExtraspecialNormalizerInSp",
 function(m, q)
     local F, result, gramMatrix;
     if not 2 ^ m > 2 then
-        ErrorNoReturn("2 ^ <m> must be at least 4 in the symplectic case, but",
-                      " <m> = ", m);
+        ErrorNoReturn("2 ^ <m> must be at least 4 in the symplectic case");
     fi;
 
     F := GF(q);

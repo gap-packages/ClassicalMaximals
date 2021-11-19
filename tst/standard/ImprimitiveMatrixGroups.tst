@@ -71,9 +71,9 @@ gap> TestSpIsotropicImprimitives([8, 3]);
 
 # Test error handling
 gap> SpIsotropicImprimitives(3, 3);
-Error, <d> must be even.
+Error, <d> must be even
 gap> SpIsotropicImprimitives(4, 2);
-Error, <q> must be odd.
+Error, <q> must be odd
 
 #
 gap> TestSpNonDegenerateImprimitives := function(args)
@@ -95,11 +95,11 @@ gap> TestSpNonDegenerateImprimitives([12, 3, 3]);
 
 # Test error handling
 gap> SpNonDegenerateImprimitives(3, 3, 3);
-Error, <d> must be even.
+Error, <d> must be even
 gap> SpNonDegenerateImprimitives(4, 3, 3);
-Error, <t> must divide <d>.
+Error, <t> must divide <d>
 gap> SpNonDegenerateImprimitives(6, 3, 2);
-Error, <m> = <d> / <t> must be even.
+Error, <m> = <d> / <t> must be even
 
 #
 gap> STOP_TEST("ImprimitiveMatrixGroups.tst", 0);

@@ -51,7 +51,7 @@ BindGlobal("ApplyFunctionToEntries",
 function(M, func)
     local numberRows, numberColumns, i, j, result;
     if not IsMatrix(M) or Length(M) = 0 then
-        ErrorNoReturn("<M> must be a matrix but <M> = ", M);
+        ErrorNoReturn("<M> must be a matrix");
     fi;
 
     numberRows := NrRows(M);
@@ -83,11 +83,10 @@ function(type, alpha, q)
 
     F := GF(q);
     if not alpha in F then
-        ErrorNoReturn("<alpha> must be an element of GF(<q>) but <alpha> = ",
-                      alpha, " and <q> = ", q);
+        ErrorNoReturn("<alpha> must be an element of GF(<q>)");
     fi;
     if not type in ["S", "P"] then
-        ErrorNoReturn("<type> must be one of 'S' or 'P' but <type> = ", type);
+        ErrorNoReturn("<type> must be one of 'S' or 'P'");
     fi;
     # We have to make an exception for this case since the construction below
     # does not work here: x ^ 2 + delta is never irreducible over GF(q) since
@@ -159,7 +158,7 @@ InstallGlobalFunction("SizeSp",
 function(n, q)
     local m, result, powerOfq, i;
     if IsOddInt(n) then
-        ErrorNoReturn("Dimension <n> must be even but ", n, " was given.");
+        ErrorNoReturn("Dimension <n> must be even");
     fi;
     m := QuoInt(n, 2);
     result := q ^ (m * m);
@@ -219,7 +218,7 @@ function(epsilon, n, q)
     if epsilon = 0 then
 
         if IsEvenInt(n) then
-            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be odd but ", n, " was given.");
+            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be odd");
         fi;
 
         if IsEvenInt(q) then
@@ -232,14 +231,14 @@ function(epsilon, n, q)
     elif epsilon in [-1, 1] then
 
         if IsOddInt(n) then
-            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be even but ", n, " was given.");
+            ErrorNoReturn("for <epsilon> = ", epsilon, " the dimension <n> must be even");
         fi;
 
         m := QuoInt(n, 2);
         result := 2 * q ^ (m * (m - 1)) * (q ^ m - epsilon);
         m := m - 1;
     else
-        ErrorNoReturn("<epsilon> must be in [-1, 0, 1] but ", epsilon, " was given.");
+        ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
     fi;
 
     powerOfq := 1;
@@ -292,8 +291,7 @@ function(epsilon, n, q)
     local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
     solutionOfQuadraticCongruence;
     if IsEvenInt(q) then
-        ErrorNoReturn("This function was only designed for <q> odd but <n> = ", 
-                      n, "and <q> = ", q);
+        ErrorNoReturn("This function was only designed for <q> odd");
     fi;
 
     F := GF(q);

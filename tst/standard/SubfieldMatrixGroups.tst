@@ -20,6 +20,14 @@ gap> TestSubfieldSL([2, 3, 6, 2]);
 gap> TestSubfieldSL([3, 7, 3, 1]);
 #@fi
 
+# Test error handling
+gap> SubfieldSL(1, 1, 1, 1);
+Error, the quotient of <e> by <f> must be a prime
+gap> SubfieldSL(1, 1, 4, 1);
+Error, the quotient of <e> by <f> must be a prime
+gap> SubfieldSL(1, 1, 1, 4);
+Error, the quotient of <e> by <f> must be a prime
+
 #
 gap> TestUnitarySubfieldSU := function(args)
 >   local n, p, e, f, G, hasSize;
@@ -38,6 +46,14 @@ gap> TestUnitarySubfieldSU([2, 3, 6, 2]);
 gap> TestUnitarySubfieldSU([3, 7, 3, 1]);
 gap> TestUnitarySubfieldSU([3, 5, 3, 1]);
 
+# Test error handling
+gap> UnitarySubfieldSU(1, 1, 1, 1);
+Error, the quotient of <e> by <f> must be an odd prime
+gap> UnitarySubfieldSU(1, 1, 2, 1);
+Error, the quotient of <e> by <f> must be an odd prime
+gap> UnitarySubfieldSU(1, 1, 1, 2);
+Error, the quotient of <e> by <f> must be an odd prime
+
 #
 gap> TestSymplecticSubfieldSU := function(args)
 >   local n, q, G, hasSize;
@@ -53,6 +69,10 @@ gap> TestSymplecticSubfieldSU := function(args)
 gap> TestSymplecticSubfieldSU([4, 5]);
 gap> TestSymplecticSubfieldSU([2, 4]);
 gap> TestSymplecticSubfieldSU([4, 3]);
+
+# Test error handling
+gap> SymplecticSubfieldSU(3, 3);
+Error, <d> must be even
 
 #
 gap> TestOrthogonalSubfieldSU := function(epsilon, n, q)
@@ -93,11 +113,11 @@ gap> TestSubfieldSp([4, 7, 2, 1]);
 
 # Test error handling
 gap> SubfieldSp(3, 2, 2, 1);
-Error, <d> must be even.
+Error, <d> must be even
 gap> SubfieldSp(4, 2, 1, 2);
-Error, <f> must be a divisor of <e>.
+Error, <f> must be a divisor of <e>
 gap> SubfieldSp(4, 2, 4, 1);
-Error, the quotient of <f> by <e> must be a prime.
+Error, the quotient of <f> by <e> must be a prime
 
 #
 gap> STOP_TEST("SubfieldMatrixGroups.tst", 0);

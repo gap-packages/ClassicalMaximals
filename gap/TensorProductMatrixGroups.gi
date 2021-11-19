@@ -4,8 +4,7 @@ function(d1, d2, q)
     local F, d, c, k, g, zeta, C, Id1, Id2, gens, SLd1Gens, SLd2Gens,
     diagonalGenerator1, diagonalGenerator2, solution, size;
     if not d1 > 1 or not d1 < d2 then
-        ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
-                      " and <d2> = ", d2);
+        ErrorNoReturn("<d1> must be strictly between 1 and <d2>");
     fi;
 
     F := GF(q);
@@ -51,8 +50,7 @@ function(d1, d2, q)
     local d, F, zeta, generators, SUd1FormIdentityMat, SUd2FormIdentityMat, C,
     c, eta, diagonalMat1, diagonalMat2, solution, result, size;
     if not d1 < d2 or not d1 > 1 then
-        ErrorNoReturn("<d1> must be strictly between 1 and <d2> but <d1> = ", d1, 
-                      " and <d2> = ", d2);
+        ErrorNoReturn("<d1> must be strictly between 1 and <d2>");
     fi;
 
     d := d1 * d2;
@@ -105,24 +103,24 @@ function(epsilon, d1, d2, q)
     local field, I_d1, I_d2, gens, size, Spgen, orthogonalGens, SOgen, Z_1, Z, E, result;
 
     if IsOddInt(d1) then
-        ErrorNoReturn("<d1> must be even.");
+        ErrorNoReturn("<d1> must be even");
     fi;
 
     if IsEvenInt(q) then
-        ErrorNoReturn("<q> must be odd.");
+        ErrorNoReturn("<q> must be odd");
     fi;
 
     if d2 < 3 then
-        ErrorNoReturn("<d2> must be at least 3.");
+        ErrorNoReturn("<d2> must be at least 3");
     fi;
 
     if IsOddInt(d2) then
         if epsilon <> 0 then
-            ErrorNoReturn("<epsilon> must be 0 since <d2> is odd.");
+            ErrorNoReturn("<epsilon> must be 0 since <d2> is odd");
         fi;
     else
         if not epsilon in [-1, 1] then
-            ErrorNoReturn("<epsilon> must be +1 or -1 since <d2> is even.");
+            ErrorNoReturn("<epsilon> must be +1 or -1 since <d2> is even");
         fi;
     fi;
 

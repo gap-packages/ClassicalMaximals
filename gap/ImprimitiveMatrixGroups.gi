@@ -8,8 +8,7 @@ BindGlobal("ImprimitivesMeetSL",
 function(n, q, t)
     local det, E, gens, i, newGen, newGens, wreathProduct, z, F, m, size;
     if t = 1 or (n mod t) <> 0 then
-        ErrorNoReturn("<t> must be greater than 1 and a divisor of <n> but <t> = ", t,
-                      " and <n> = ", n);
+        ErrorNoReturn("<t> must be greater than 1 and a divisor of <n>");
     fi;
     m := QuoInt(n, t);
     wreathProduct := MatWreathProduct(SL(m, q), SymmetricGroup(t));
@@ -48,8 +47,7 @@ function(d, q, t)
     local m, F, zeta, SUChangedForm, generators, generatorOfSU, generator, C, 
     D1, D, E, result, size;
     if t = 1 or (d mod t) <> 0 then
-        ErrorNoReturn("<t> must be greater than 1 and a divisor of <d> but <t> = ", t,
-                      " and <d> = ", d);
+        ErrorNoReturn("<t> must be greater than 1 and a divisor of <d>");
     fi;
     m := QuoInt(d, t);
     generators := [];
@@ -122,7 +120,7 @@ function(d, q)
     local F, zeta, generators, J, generatorOfSL,
     generator, C, D, size, result;
     if not IsEvenInt(d) then
-        ErrorNoReturn("<d> must be even but <d> = ", d);
+        ErrorNoReturn("<d> must be even");
     fi;
 
     F := GF(q ^ 2);
@@ -187,17 +185,17 @@ function(d, q, t)
     local m, l, k, field, one, gens, Spgen, Xi, C, D;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must be even.");
+        ErrorNoReturn("<d> must be even");
     fi;
 
     m := QuoInt(d, t);
 
     if not m * t = d then
-        ErrorNoReturn("<t> must divide <d>.");
+        ErrorNoReturn("<t> must divide <d>");
     fi;
 
     if IsOddInt(m) then
-        ErrorNoReturn("<m> = <d> / <t> must be even.");
+        ErrorNoReturn("<m> = <d> / <t> must be even");
     fi;
 
     l := QuoInt(d, 2);
@@ -281,11 +279,11 @@ function(d, q)
     local l, field, one, gens, J, GLgen, AorB, C;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must be even.");
+        ErrorNoReturn("<d> must be even");
     fi;
 
     if IsEvenInt(q) then
-        ErrorNoReturn("<q> must be odd.");
+        ErrorNoReturn("<q> must be odd");
     fi;
 
     l := QuoInt(d, 2);

@@ -74,11 +74,13 @@ gap> TestSpStabilizerOfIsotropicSubspace([4, 9, 1]);
 gap> TestSpStabilizerOfIsotropicSubspace([6, 4, 1]);
 gap> TestSpStabilizerOfIsotropicSubspace([6, 7, 2]);
 
-#
+# Test error handling
 gap> SpStabilizerOfIsotropicSubspace(5, 2, 1);
-Error, <d> must be even.
+Error, <d> must be even
 gap> SpStabilizerOfIsotropicSubspace(4, 2, 3);
-Error, <k> must be less than <d> / 2.
+Error, <k> must be less than <d> / 2
+
+#
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
 >   local n, q, k, G, hasSize;
 >   n := args[1];
@@ -98,9 +100,9 @@ gap> TestSpStabilizerOfNonDegenerateSubspace([6, 7, 2]);
 
 # Test error handling
 gap> SpStabilizerOfNonDegenerateSubspace(5, 2, 1);
-Error, <d> must be even.
+Error, <d> must be even
 gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
-Error, <k> must be less than <d> / 2.
+Error, <k> must be less than <d> / 2
 
 #
 gap> STOP_TEST("ReducibleMatrixGroups.tst", 0);

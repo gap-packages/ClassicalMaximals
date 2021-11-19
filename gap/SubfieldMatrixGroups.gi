@@ -11,8 +11,7 @@ function(n, p, e, f)
     local F, AandB, C, D, c, k, lambda, zeta, omega, z, X,
         size;
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) then
-        ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be a prime but <e> = ", 
-                      e, " and <f> = ", f);
+        ErrorNoReturn("the quotient of <e> by <f> must be a prime");
     fi;
 
     F := GF(p ^ e);
@@ -48,8 +47,7 @@ function(d, p, e, f)
         size, result;
 
     if e mod f <> 0 or not IsPrimeInt(QuoInt(e, f)) or not IsOddInt(QuoInt(e, f)) then
-        ErrorNoReturn("<f> must be a divisor of <e> and their quotient must be",
-                      "an odd prime but <e> = ", e, " and <f> = ", f);
+        ErrorNoReturn("the quotient of <e> by <f> must be an odd prime");
     fi;
 
     q := p ^ e;
@@ -97,7 +95,7 @@ function(d, q)
     local F, generators, zeta, k, C, c, result, D, form, size;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must be even but <d> = ", d);
+        ErrorNoReturn("<d> must be even");
     fi;
 
     F := GF(q ^ 2);
@@ -150,16 +148,13 @@ function(epsilon, d, q)
     generatorsOfOrthogonalGroup, D, E, i, W, n, form, size;
 
     if IsEvenInt(q) then
-        ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
+        ErrorNoReturn("<q> must be an odd integer");
     elif epsilon = 0 and IsEvenInt(d) then
-        ErrorNoReturn("<epsilon> cannot be zero if <d> is even but", 
-                      "<epsilon> = ", epsilon, " and <d> = ", d);
+        ErrorNoReturn("<epsilon> cannot be zero if <d> is even");
     elif epsilon <> 0 and IsOddInt(d) then
-        ErrorNoReturn("<epsilon> must be zero if <d> is odd but",
-                      "<epsilon> = ", epsilon, " and <d> = ", d);
+        ErrorNoReturn("<epsilon> must be zero if <d> is odd");
     elif not epsilon in [-1, 0, 1] then
-        ErrorNoReturn("<epsilon> must be one of -1, 0, 1 but",
-                      "<epsilon> = ", epsilon);
+        ErrorNoReturn("<epsilon> must be one of -1, 0, 1");
     fi;
 
     F := GF(q ^ 2);
@@ -296,17 +291,17 @@ function (d, p, e, f)
     local F, q0, b, gens, l, zeta, omega, zetaPower, C, gen;
 
     if IsOddInt(d) then
-    	ErrorNoReturn("<d> must be even.");
+    	ErrorNoReturn("<d> must be even");
     fi;
 
     if e mod f <> 0 then
-        ErrorNoReturn("<f> must be a divisor of <e>.");
+        ErrorNoReturn("<f> must be a divisor of <e>");
     fi;
 
     b := QuoInt(e, f);
 
     if not IsPrime(b) then
-        ErrorNoReturn("the quotient of <f> by <e> must be a prime.");
+        ErrorNoReturn("the quotient of <f> by <e> must be a prime");
     fi;
 
     F := GF(p ^ e);

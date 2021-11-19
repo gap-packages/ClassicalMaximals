@@ -25,8 +25,7 @@ function(d, q, k)
         generatorOfSL, generatorOfSU, result;
 
     if not k <= d / 2 then
-        ErrorNoReturn("<k> must not be larger than <d> / 2 but <k> = ", k, 
-                      " and <d> = ", d);
+        ErrorNoReturn("<k> must not be larger than <d> / 2");
     fi;
 
     F := GF(q ^ 2);
@@ -131,8 +130,7 @@ function(d, q, k)
         alpha, beta, size, generatorOfSUSubspace, generatorOfSUComplement,
         standardFormSUk, standardFormSUdMinusk, result;
     if k >= d / 2 then
-        ErrorNoReturn("<k> must be less than <d> / 2 but <k> = ", k, 
-        " and <d> = ", d);
+        ErrorNoReturn("<k> must be less than <d> / 2");
     fi;
 
     F := GF(q ^ 2);
@@ -396,11 +394,11 @@ function(d, q, k)
     local field, gens, I, J, GLgen, Xi, Spgen, Yi;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must be even.");
+        ErrorNoReturn("<d> must be even");
     fi;
 
     if k >= d / 2 then
-        ErrorNoReturn("<k> must be less than <d> / 2.");
+        ErrorNoReturn("<k> must be less than <d> / 2");
     fi;
 
     field := GF(q);
@@ -453,11 +451,11 @@ function(d, q, k)
     local field, gens, twok, Spgen, Xi, Yi;
 
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must be even.");
+        ErrorNoReturn("<d> must be even");
     fi;
 
     if k >= d / 2 then
-        ErrorNoReturn("<k> must be less than <d> / 2.");
+        ErrorNoReturn("<k> must be less than <d> / 2");
     fi;
 
     field := GF(q);

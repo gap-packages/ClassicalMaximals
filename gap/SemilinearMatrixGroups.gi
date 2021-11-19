@@ -44,7 +44,7 @@ function(M, A, omega)
     local result, i, j, exponent, dimensionOfA;
 
     if not NumberRows(A) = NumberColumns(A) then
-        ErrorNoReturn("<A> must be a square matrix but <A> = ", A);
+        ErrorNoReturn("<A> must be a square matrix");
     fi;
 
     dimensionOfA := NumberRows(A);
@@ -85,8 +85,7 @@ function(n, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, zeta, AandB, C, D, DBlock, ZBlock, i,
     range, size;
     if n mod s <> 0 or not IsPrime(s) then
-        ErrorNoReturn("<s> must be prime and a divisor of <n> but <s> = ", s,
-                      " and <n> = ", n);
+        ErrorNoReturn("<s> must be prime and a divisor of <n>");
     fi;
     F := GF(q);
     gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q);
@@ -144,8 +143,7 @@ function(d, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, Y, AandB, C, D, i,
     range, AsInGU, omega, generators, size;
     if d mod s <> 0 or not IsPrime(s) or not IsOddInt(s) then
-        ErrorNoReturn("<s> must be an odd prime and a divisor of <d> but <s> = ", s,
-                      " and <n> = ", d);
+        ErrorNoReturn("<s> must be an odd prime and a divisor of <d>");
     fi;
     F := GF(q ^ 2);
     gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q ^ 2);
@@ -200,12 +198,10 @@ BindGlobal("SymplecticSemilinearSp",
 function(d, q, s)
     local F, gammaL1, As, Bs, m, omega, AandB, C, i, range, generators, size;
     if d mod s <> 0 or not IsPrime(s) then
-        ErrorNoReturn("<s> must be prime and a divisor of <d> but <s> = ", s,
-                      " and <d> = ", d);
+        ErrorNoReturn("<s> must be prime and a divisor of <d>");
     fi;
     if not IsEvenInt(QuoInt(d, s)) then
-        ErrorNoReturn("The quotient <d> / <s> must be even but <d> = ", d, 
-                      " and <s> = ", s);
+        ErrorNoReturn("The quotient <d> / <s> must be even");
     fi;
     F := GF(q);
     gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(s, q);
@@ -240,10 +236,10 @@ BindGlobal("UnitarySemilinearSp",
 function(d, q)
     local F, gammaL1, A2, B2, omega, AandB, i, m, C, j, range, generators, size;
     if d mod 2 <> 0 then
-        ErrorNoReturn("<d> must be divisible by 2 but <d> = ", d);
+        ErrorNoReturn("<d> must be divisible by 2");
     fi;
     if q mod 2 = 0 then
-        ErrorNoReturn("<q> must be odd but <q> = ", q);
+        ErrorNoReturn("<q> must be odd");
     fi;
 
     F := GF(q);

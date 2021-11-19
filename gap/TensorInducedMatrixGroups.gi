@@ -63,8 +63,7 @@ function(m, t, q)
     local F, gensOfSLm, I, D, C, generatorsOfHInSL, i, H, E, U, S, zeta, mu,
     size, scalingMatrix, d, generator;
     if not t > 1 or not m > 1 then
-        ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
-                      t, " and <m> = ", m);
+        ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1");
     fi;
 
     F := GF(q);
@@ -156,8 +155,7 @@ function(m, t, q)
     local F, gensOfSUm, I, D, C, generatorsOfHInSU, i, H, E, U, S, zeta, mu,
     size, scalingMatrix, d, generator, k, result;
     if not t > 1 or not m > 1 then
-        ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1 but <t> = ", 
-                      t, " and <m> = ", m);
+        ErrorNoReturn("<t> must be greater than 1 and <m> must be greater than 1");
     fi;
 
     F := GF(q ^ 2);

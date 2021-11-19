@@ -62,15 +62,15 @@ gap> TestTensorProductStabilizerInSp([-1, 2, 4, 5]);
 
 # Test error handling
 gap> TensorProductStabilizerInSp(0, 1, 3, 3);
-Error, <d1> must be even.
+Error, <d1> must be even
 gap> TensorProductStabilizerInSp(0, 2, 3, 2);
-Error, <q> must be odd.
+Error, <q> must be odd
 gap> TensorProductStabilizerInSp(0, 2, 2, 3);
-Error, <d2> must be at least 3.
+Error, <d2> must be at least 3
 gap> TensorProductStabilizerInSp(1, 2, 3, 3);
-Error, <epsilon> must be 0 since <d2> is odd.
+Error, <epsilon> must be 0 since <d2> is odd
 gap> TensorProductStabilizerInSp(0, 2, 4, 3);
-Error, <epsilon> must be +1 or -1 since <d2> is even.
+Error, <epsilon> must be +1 or -1 since <d2> is even
 
 #
 gap> STOP_TEST("TensorProductMatrixGroups.tst", 0);

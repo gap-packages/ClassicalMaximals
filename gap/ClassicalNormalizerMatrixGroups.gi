@@ -3,7 +3,7 @@ BindGlobal("SymplecticNormalizerInSL",
 function(d, q)
     local F, zeta, gcd, AandB, C, D, i, E, size, generators, standardForm;
     if IsOddInt(d) then
-        ErrorNoReturn("<d> must be even but <d> = ", d);
+        ErrorNoReturn("<d> must be even");
     fi;
 
     F := GF(q);
@@ -49,7 +49,7 @@ function(d, q)
     qFactorization := PrimePowersInt(q);
     e := qFactorization[2];
     if IsOddInt(e) then
-        ErrorNoReturn("No such subrgoups exist since <q> is not square.");
+        ErrorNoReturn("<q> must be a square");
     fi;
     p := qFactorization[1];
 
@@ -85,10 +85,10 @@ function(epsilon, d, q)
     local F, generatingScalar, zeta, generatorsOfOrthogonalGroup, generators,
     i1, DEpsilon, EEpsilon, X, W, i2, k, size;
     if IsEvenInt(q) then
-        ErrorNoReturn("<q> must be an odd integer but <q> = ", q);
+        ErrorNoReturn("<q> must be an odd integer");
     fi;
     if d <= 2 then
-        ErrorNoReturn("This function might not work with <d> <= 2 but <d> = ", d);
+        ErrorNoReturn("This function might not work with <d> <= 2");
     fi;
     
     F := GF(q);
@@ -170,10 +170,10 @@ end);
 BindGlobal("OrthogonalInSp",
 function(epsilon, d, q)
     if IsOddInt(d) then
-    	ErrorNoReturn("<d> must be even.");
+    	ErrorNoReturn("<d> must be even");
     fi;
     if IsOddInt(q) then
-        ErrorNoReturn("<q> must be even.");
+        ErrorNoReturn("<q> must be even");
     fi;
 
     return ConjugateToStandardForm(SO(epsilon, d, q), "S");

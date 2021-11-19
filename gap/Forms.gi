@@ -7,8 +7,7 @@ function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
         result, d, q;
     if not type in ["S", "O", "U"] then
-        ErrorNoReturn("<type> must be one of 'S', 'U', 'O', but <type> = ",
-                      type);
+        ErrorNoReturn("<type> must be one of 'S', 'U', 'O'");
     fi;
     d := DimensionOfMatrixGroup(group);
     field := DefaultFieldOfMatrixGroup(group);
@@ -91,8 +90,7 @@ function(group, type)
     # determining d (dimension of matrix group), F (base field) and q (order of
     # F) plus some sanity checks
     if not type in ["S", "O+", "O-", "O", "U"] then
-        ErrorNoReturn("<type> must be one of 'S', 'U', 'O+', 'O-', 'O'",
-                      " but <type> =", type);
+        ErrorNoReturn("<type> must be one of 'S', 'U', 'O+', 'O-', 'O'");
     fi;
     F := DefaultFieldOfMatrixGroup(group);
     d := DimensionOfMatrixGroup(group);

@@ -23,8 +23,7 @@ function(type, n, q, classes...)
         classes := classes[1];
     fi;
     if not IsSubset([1..9], classes) then
-        ErrorNoReturn("<classes> must be a subset of [1..9] but <classes> = ",
-                      classes);
+        ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
     if type = "L" then
@@ -296,8 +295,7 @@ function(n, q, classes...)
         classes := classes[1];
     fi;
     if not IsSubset([1..9], classes) then
-        ErrorNoReturn("<classes> must be a subset of [1..9] but <classes> = ",
-                      classes);
+        ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
     maximalSubgroups := [];
@@ -693,8 +691,7 @@ function(n, q, classes...)
         classes := classes[1];
     fi;
     if not IsSubset([1..9], classes) then
-        ErrorNoReturn("<classes> must be a subset of [1..9] but <classes> = ",
-                      classes);
+        ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
 
@@ -836,7 +833,7 @@ function(n, q)
     local F, zeta, result, halfOfn;
     
     if IsOddInt(n) then
-        ErrorNoReturn("<n> must be even but <n> = ", n);
+        ErrorNoReturn("<n> must be even");
     fi;
 
     F := GF(q);
