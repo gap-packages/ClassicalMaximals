@@ -486,3 +486,124 @@ function(d, q, k)
     # k with 2k because [BHR13] seems to have this wrong.
     return MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
 end);
+
+# Construction as in Lemma 4.4 of [HR10]
+BindGlobal("OmegaStabilizerOfNonSingularVector",
+function(epsilon, d, q)
+    local field, m, one, zero, gamma, F, Q, w, L, HStar, N, H, j, wj,
+        matForLinSys, rightSideForLinSys, particularSol, nullspace, basisVector, z,
+        alpha, gens, result;
+    
+    if not epsilon in [-1, 1] then
+        ErrorNoReturn("<epsilon> must be 1 or -1");
+    elif not IsEvenInt(q) then
+        ErrorNoReturn("<q> must be even");
+    elif not IsEvenInt(d) then
+        ErrorNoReturn("<d> must be even");
+    fi;
+
+    field := GF(q);
+    m := QuoInt(d, 2);
+    one := One(field);
+    zero := Zero(field);
+
+    # Q and F are the matrices of the quadratic form and corresponding polar
+    # bilinear form we will use in what follows
+    if epsilon = 1 then
+        F := AntidiagonalMat(d, field);
+        Q := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m, one), 
+                                           ListWithIdenticalEntries(m, zero)), 
+                             field);
+    else
+        gamma := FindGamma(q);
+        F := AntidiagonalMat(d, field);
+        Q := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m, one),
+                                           ListWithIdenticalEntries(m, zero)),
+                             field);
+        Q[m, m] := one;
+        Q[m + 1, m + 1] := gamma;
+    fi;
+
+    # This is the vector we will stabilise; we have w * Q * w^T = 1
+    w := Concatenation([one], ListWithIdenticalEntries(d - 2, zero), [one]);
+
+    gens := [];
+    for L in GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d - 2, q),
+                                                           "S", 
+                                                           AntidiagonalMat(d - 2, field))) do
+        HStar := NullMat(d, d, field);
+        HStar{[2..d - 1]}{[2..d - 1]} := L;
+        N := Q + HStar * Q * TransposedMat(HStar);
+
+        # H will be the element of the subgroup to construct corresponding to
+        # the generator L of Sp(d - 2, q)
+        H := NullMat(d, d, field);
+
+        # The element L of Sp(d - 2, q) acts canonically on the quotient 
+        # <w, v_2, ..., v_{d - 2}> / <w>.
+        # To lift this action to the vector space <v_1, ..., v_d>, we construct
+        # an image wj for v_j, 2 <= j <= d - 1, with wj in (vj + W) * L and 
+        # wj * Q * wj^T = vj * Q * vj^T. 
+        for j in [2..d - 1] do
+            # It is a straightforward calculation to show that this does the job
+            wj := HStar[j] + RootFFE(field, N[j, j], 2) * w;
+            H[j] := wj;
+        od;
+
+        # Build a matrix with the wj^T in the first d - 2 columns and with w^T
+        # in the last column
+        matForLinSys := NullMat(d, d - 1, field);
+        matForLinSys{[1..d]}{[1..d - 2]} := TransposedMat(H{[2..d - 1]});
+        matForLinSys[1][d - 1] := one;
+        matForLinSys[d][d - 1] := one;
+
+        rightSideForLinSys := Concatenation(ListWithIdenticalEntries(d - 2, zero), 
+                                            [one]);
+
+        # We want a vector z with z * F * wj^T = 0 for all j and z * F * w^T = 1,
+        # i.e. we need z * F * matForLinSys = rightSideForLinSys.
+        particularSol := SolutionMat(F * matForLinSys, rightSideForLinSys);
+        nullspace := NullspaceMat(F * matForLinSys);
+
+        # We need z to not be in <w, v_2, ..., v_{d - 1}>, i.e. z[1] not equal
+        # to z[d].
+        if particularSol[1] <> particularSol[d] then
+            z := particularSol;
+        else
+            for basisVector in nullspace do
+                if basisVector[1] <> basisVector[d] then
+                    z := particularSol + basisVector;
+                    break;
+                fi;
+            od;
+        fi;
+
+        if not IsBound(z) then
+            ErrorNoReturn("This should not have happened");
+        fi;
+
+
+        alpha := SolveQuadraticEquation(field, one, one, z * Q * z);
+        # Now we can choose images for v_1, v_d
+        H[d] := z + alpha * w;
+        H[1] := (z + alpha * w) + w;
+
+        # Adjust the spinor norm of H to be 1 by adding a reflection in w if
+        # necessary
+        if FancySpinorNorm(F, field, H) = -1 then
+            H := H * ReflectionMatrix(d, q, Q, "Q", w);
+        fi;
+
+        Add(gens, H);
+    od;
+
+    # Size according to Table 2.3 of [BHR13]
+    result := MatrixGroupWithSize(field, gens, SizeSp(d - 2, q));
+    SetInvariantQuadraticForm(result, rec(matrix := Q));
+
+    if epsilon = 1 then
+        return ConjugateToStandardForm(result, "O+");
+    else
+        return ConjugateToStandardForm(result, "O-");
+    fi;
+end);

@@ -4,3 +4,4 @@ DeclareGlobalFunction("UnitaryForm");
 DeclareGlobalFunction("BilinearForm");
 DeclareGlobalFunction("SymplecticForm");
 DeclareGlobalFunction("SymmetricBilinearForm");
+DeclareGlobalFunction("QuadraticForm");

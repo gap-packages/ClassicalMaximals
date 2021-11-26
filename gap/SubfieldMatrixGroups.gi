@@ -169,7 +169,7 @@ function(epsilon, d, q)
 
     if IsOddInt(d) then
         SOChangedForm := ConjugateToSesquilinearForm(SO(d, q),
-                                                     "O",
+                                                     "O-B",
                                                      AntidiagonalMat(d, F));
         generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
         result := MatrixGroupWithSize(F, generators, size);

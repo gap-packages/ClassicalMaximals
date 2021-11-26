@@ -22,7 +22,7 @@ function(entries, field)
     for i in [1..d] do
         m[i, d - i + 1] := entries[i];
     od;
-    return ImmutableMatrix(field, m);
+    return m;
 end);
 
 # Solving the congruence a ^ 2 + b ^ 2 = c in F_q by trial and error.
@@ -134,6 +134,67 @@ function(type, alpha, q)
             fi;
         od;
     fi;
+end);
+
+# Find gamma in GF(q) such that x ^ 2 + x + gamma is irreducible for q a power
+# of two.
+BindGlobal("FindGamma",
+function(q)
+    local F, R, x, gamma, polynomial;
+
+    if not IsEvenInt(q) then
+        ErrorNoReturn("<q> must be even");
+    elif not IsPrimePowerInt(q) then
+        ErrorNoReturn("<q> must be a power of 2");
+    fi;
+
+    F := GF(q);
+    R := PolynomialRing(F, ["x"]);
+    x := Indeterminate(F, "x");
+
+    for gamma in F do
+        polynomial := x ^ 2 + x + gamma;
+        if IsIrreducibleRingElement(R, polynomial) then
+            return gamma;
+        fi;
+    od;
+end);
+
+# Return a root of a * x ^ 2 + b * x + c = 0 over a finite field GF(q) of
+# characteristic 2.
+BindGlobal("SolveQuadraticEquation",
+function(F, a, b, c)
+    local primeField, e, d, V, B, M, t;
+
+    if not Characteristic(F) = 2 then
+        ErrorNoReturn("<F> must be a field of characteristic 2");
+    elif IsZero(a) then
+        ErrorNoReturn("<a> must be non-zero");
+    fi;
+
+    if b = 0 then
+        return RootFFE(F, -c / a, 2);
+    fi;
+    
+    primeField := GF(2);
+    e := DegreeOverPrimeField(F);
+
+    # We have (a / b ^ 2) * (a * x ^ 2 + b * x + c) 
+    #       = (a / b * x) ^ 2 + (a / b * x) + (c * a / b ^ 2) 
+    # Hence we find a solution of t ^ 2 + t + c * a / b ^ 2 = 0.
+    d := c * a / b ^ 2; 
+
+    # Note that the map t --> t ^ 2 + t is linear so we can express it via a
+    # representation matrix and find a pre-image of -d (if one exists) by
+    # solving a linear system 
+    V := AsVectorSpace(primeField, F);
+    B := Basis(V);
+    M := List([1..e], i -> Coefficients(B, B[i] + B[i] ^ 2));
+
+    # Solve v * M = Coefficients(B, d) and express v as an element of F again
+    t := LinearCombination(B, SolutionMat(M, Coefficients(B, d)));
+
+    return b / a * t;
 end);
 
 # An n x n - matrix of zeroes over <field> with a 1 in position (<row>, <column>)
@@ -257,26 +318,49 @@ function(epsilon, n, q)
     return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
 end);
 
-# Return the reflection matrix in the space GF(q) ^ n determined by the
-# bilinear form given by the argument <gramMatrix> and the vector <v>.
+# Return the matrix corresponding to the reflection in the vector <v> of the 
+# space GF(q) ^ n equipped with the bilinear or quadratic form given by the 
+# argument <gramMatrix>, depending on whether type = "B" or type = "Q".
+# Note that, if q is even, we require type = "Q".
 BindGlobal("ReflectionMatrix",
-function(n, q, gramMatrix, v)
-    local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta;
+function(n, q, gramMatrix, type, v)
+    local F, reflectionMatrix, i, basisVector, reflectBasisVector, beta, Q,
+    halfOfbeta;
     F := GF(q);
     reflectionMatrix := NullMat(n, n, F);
-    beta := BilinearFormByMatrix(gramMatrix);
-    if IsZero(EvaluateForm(beta, v, v)) then
-        ErrorNoReturn("The vector <v> must have non-zero norm with respect to",
-                      " the bilinear form given by <gramMatrix>");
+
+    if type = "B" and IsEvenInt(q) then
+        ErrorNoReturn("If <q> is even, <type> must be 'Q'");
     fi;
+
+    if type = "B" then
+        beta := BilinearFormByMatrix(gramMatrix);
+        # We have to divide by 2 here as the function
+        # QuadraticFormByBilinearForm returns a quadratic form with 
+        # Q(v) = halfOfbeta(v, v) = 1 / 2 * beta(v, v)
+        halfOfbeta := BilinearFormByMatrix(1 / 2 * gramMatrix);
+        Q := QuadraticFormByBilinearForm(halfOfbeta);
+    elif type = "Q" then
+        Q := QuadraticFormByMatrix(gramMatrix);
+        beta := AssociatedBilinearForm(Q);
+    else
+        ErrorNoReturn("<type> must be 'B' or 'Q'");
+    fi;
+
+    if IsZero(EvaluateForm(Q, v)) then
+        ErrorNoReturn("The vector <v> must have non-zero norm with respect to",
+                      " the form given by <gramMatrix>");
+    fi;
+
     for i in [1..n] do
-        basisVector := List([1..n], j -> Zero(F));
-        basisVector[i] := Z(q) ^ 0;
+        basisVector := ListWithIdenticalEntries(n, Zero(F));
+        basisVector[i] := One(F);
         reflectBasisVector := basisVector 
-                              - 2 * EvaluateForm(beta, v, basisVector) 
-                              / EvaluateForm(beta, v, v) * v;
-        reflectionMatrix[i]{[1..n]} := reflectBasisVector;
+                              - EvaluateForm(beta, v, basisVector) 
+                              / EvaluateForm(Q, v) * v;
+        reflectionMatrix[i] := reflectBasisVector;
     od;
+
     return reflectionMatrix;
 end);
 
@@ -299,7 +383,7 @@ function(epsilon, n, q)
     if IsOddInt(n) then
             gramMatrix := IdentityMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
-                                                                            "O",
+                                                                            "O-B",
                                                                             gramMatrix));
             D := - IdentityMat(n, F);
             E := zeta * IdentityMat(n, F);
@@ -307,7 +391,7 @@ function(epsilon, n, q)
         if epsilon = 1 then
             gramMatrix := AntidiagonalMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
-                                                                            "O",
+                                                                            "O-B",
                                                                             gramMatrix));
             # Our standard bilinear form is given by the Gram matrix 
             # Antidiag(1, ..., 1). The norm of [1, 0, ..., 0, 2] under this
@@ -315,7 +399,7 @@ function(epsilon, n, q)
             vectorOfSquareNorm := zeta ^ 0 * Concatenation([1], 
                                                            List([1..n - 2], i -> 0), 
                                                            [2]);
-            D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
+            D := ReflectionMatrix(n, q, gramMatrix, "B", vectorOfSquareNorm);
             E := DiagonalMat(Concatenation(List([1..n / 2], i -> zeta), 
                                            List([1..n / 2], i -> zeta ^ 0)));
         elif epsilon = -1 then
@@ -328,14 +412,14 @@ function(epsilon, n, q)
             if IsOddInt(n * (q - 1) / 4) then
                 gramMatrix := IdentityMat(n, F);
                 generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
-                                                                                "O",
+                                                                                "O-B",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
                 # Diag(1, ..., 1). The norm of [1, 0, ..., 0] under this bilinear
                 # form is 1, i.e. a square.
                 vectorOfSquareNorm := zeta ^ 0 * Concatenation([1], 
                                                                List([1..n - 1], i -> 0));
-                D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
+                D := ReflectionMatrix(n, q, gramMatrix, "B", vectorOfSquareNorm);
                 # Block diagonal matrix consisting of n / 2 blocks of the form 
                 # [[a, b], [b, -a]].
                 E := MatrixByEntries(F, n, n, 
@@ -345,14 +429,14 @@ function(epsilon, n, q)
                 gramMatrix := Z(q) ^ 0 * DiagonalMat(Concatenation([zeta],
                                                                    List([1..n - 1], i -> 1)));
                 generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
-                                                                                "O",
+                                                                                "O-B",
                                                                                 gramMatrix));
                 # Our standard bilinear form is given by the Gram matrix 
                 # Diag(zeta, 1, ..., 1). The norm of [0, ..., 0, 1] under this
                 # bilinear form is 1, i.e. a square.
                 vectorOfSquareNorm := zeta ^ 0 * Concatenation(List([1..n - 1], i -> 0), 
                                                                [1]);
-                D := ReflectionMatrix(n, q, gramMatrix, vectorOfSquareNorm);
+                D := ReflectionMatrix(n, q, gramMatrix, "B", vectorOfSquareNorm);
                 # Block diagonal matrix consisting of one block [[0, zeta], [1, 0]]
                 # and n / 2 - 1 blocks of the form [[a, b], [b, -a]].
                 E := MatrixByEntries(F, n, n, 
@@ -365,7 +449,28 @@ function(epsilon, n, q)
     
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
- 
+
+# Compute the spinor norm of an element of an orthogonal group.
+# We use Lemma 3.5 (2) from [HR10] for q even.
+BindGlobal("FancySpinorNorm",
+function(form, F, M)
+    # Don't fool yourself and return One(F) and -One(F) here ... - they are the
+    # same in even characteristic!
+    if IsOddInt(Characteristic(F)) then
+        if IsOne(SpinorNorm(form, F, M)) then
+            return 1;
+        else 
+            return -1;
+        fi;
+    else
+        if IsEvenInt(RankMat(M + IdentityMat(NrRows(M), F))) then
+            return 1;
+        else
+            return -1;
+        fi;
+    fi;
+end);
+
 InstallGlobalFunction("MatrixGroup",
 function(F, gens)
     if IsEmpty(gens) then

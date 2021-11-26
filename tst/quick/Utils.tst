@@ -22,7 +22,7 @@ gap> IsZero(M ^ 2);
 true
 gap> QuoCeil(5, 3) = QuoCeil(6, 3);
 true
-gap> M := ReflectionMatrix(5, 9, AntidiagonalMat(5, GF(9)), Z(9) ^ 0 * [1, 1, 1, 1, 1]);; 
+gap> M := ReflectionMatrix(5, 9, AntidiagonalMat(5, GF(9)), "B", Z(9) ^ 0 * [1, 1, 1, 1, 1]);; 
 gap> IsOne(M ^ 2);
 true
 gap> x := SolveFrobeniusEquation("S", - Z(7) ^ 0, 7);;

@@ -6,12 +6,12 @@ InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
         result, d, q;
-    if not type in ["S", "O", "U"] then
+    if not type in ["S", "O-B", "O-Q", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O'");
     fi;
     d := DimensionOfMatrixGroup(group);
     field := DefaultFieldOfMatrixGroup(group);
-    if type = "S" or type = "O" then
+    if type = "S" or type = "O-B" then
         formMatrix := BilinearForm(group, type);
         if formMatrix = fail then
             if type = "S" then
@@ -23,7 +23,7 @@ function(group, type, gramMatrix)
         fi;
         gapForm := BilinearFormByMatrix(formMatrix, field);
         newForm := BilinearFormByMatrix(gramMatrix, field);
-    else
+    elif type = "U" then
         if IsOddInt(DegreeOverPrimeField(field)) then
             q := Size(field);
             field := GF(q ^ 2);
@@ -34,6 +34,14 @@ function(group, type, gramMatrix)
         fi;
         gapForm := HermitianFormByMatrix(formMatrix, field);
         newForm := HermitianFormByMatrix(gramMatrix, field);
+    else
+        # This is the case type = "O-Q"
+        formMatrix := QuadraticForm(group);
+        if formMatrix = fail then
+            ErrorNoReturn("No preserved quadratic form found for <group>");
+        fi;
+        gapForm := QuadraticFormByMatrix(formMatrix, field);
+        newForm := QuadraticFormByMatrix(gramMatrix, field);
     fi;
     if gapForm = newForm then
         # nothing to be done
@@ -64,10 +72,12 @@ function(group, type, gramMatrix)
         result := group;
     fi;
 
-    if type = "S" or type = "O" then
+    if type = "S" or type = "O-B" then
         SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
-    else
+    elif type = "U" then
         SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix));
+    else
+        SetInvariantQuadraticForm(result, rec(matrix := gramMatrix));
     fi;
 
     return result;
@@ -76,8 +86,6 @@ end);
 # If <group> preserves a sesquilinear form of type <type> (one of "S", "U", "O"
 # (in odd dimension), "O+" or "O-" (both in even dimension), return a group
 # conjugate to <group> preserving the standard form of that type.
-#
-# Can only deal with sesquilinear forms, not with quadratic forms as of yet.
 #
 # Also, one need to ensure that the attribute DefaultFieldOfMatrixGroup is set
 # correctly for <group>; this can be done, for example, by making the
@@ -99,6 +107,9 @@ function(group, type)
     elif type in ["O+", "O-"] and IsOddInt(d) then
         ErrorNoReturn("<type> cannot be 'O+' or 'O-' if the dimension of",
                       " <group> is odd");
+    elif IsEvenInt(Size(F)) and IsOddInt(d) and type in ["O+", "O-", "O"] then
+        ErrorNoReturn("It <type> is 'O+', 'O-' or 'O' and the size of <F> is",
+                      " even, <d> must be even");
     fi;
     if type in ["S", "O", "O+", "O-"] then
         q := Size(F);
@@ -113,10 +124,6 @@ function(group, type)
             q := Size(F);
         fi;
     fi;
-    if type in ["O", "O+", "O-"] and IsEvenInt(q) then
-        ErrorNoReturn("ConjugateToGAPForm cannot deal with orthogonal groups in",
-                      " even characteristic yet");
-    fi;
     
     # get standard GAP form
     if type = "S" then
@@ -124,15 +131,27 @@ function(group, type)
     elif type = "U" then
         gapForm := InvariantSesquilinearForm(GU(d, q)).matrix;
     elif type = "O" then
-        gapForm := InvariantBilinearForm(GO(d, q)).matrix;
+        gapForm := InvariantBilinearForm(Omega(d, q)).matrix;
     elif type = "O+" then
-        gapForm := InvariantBilinearForm(GO(1, d, q)).matrix;
+        if Characteristic(F) = 2 then
+            gapForm := InvariantQuadraticForm(Omega(1, d, q)).matrix;
+        else
+            gapForm := InvariantBilinearForm(Omega(1, d, q)).matrix;
+        fi;
     elif type = "O-" then
-        gapForm := InvariantBilinearForm(GO(-1, d, q)).matrix;
+        if Characteristic(F) = 2 then
+            gapForm := InvariantQuadraticForm(Omega(-1, d, q)).matrix;
+        else
+            gapForm := InvariantBilinearForm(Omega(-1, d, q)).matrix;
+        fi;
     fi;
 
     if type in ["O", "O+", "O-"] then
-        broadType := "O";
+        if Characteristic(F) = 2 then
+            broadType := "O-Q";
+        else
+            broadType := "O-B";
+        fi;
     else
         broadType := type;
     fi;
@@ -340,3 +359,16 @@ function(G)
     return BilinearForm(G, "O");
 end);
 
+InstallGlobalFunction("QuadraticForm",
+function(G)
+    local F, formMatrix;
+
+    F := DefaultFieldOfMatrixGroup(G);
+
+    if HasInvariantQuadraticForm(G) then
+        formMatrix := InvariantQuadraticForm(G).matrix;
+        return ImmutableMatrix(F, formMatrix);
+    else
+        ErrorNoReturn("Someone should really implement this");
+    fi;
+ end);
