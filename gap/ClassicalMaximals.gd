@@ -21,6 +21,8 @@ DeclareGlobalFunction("MaximalSubgroupClassRepsSpecialLinearGroup");
 
 DeclareGlobalFunction("MaximalSubgroupClassRepsSpecialUnitaryGroup");
 
+DeclareGlobalFunction("MaximalSubgroupClassRepsSymplecticGroup");
+
 DeclareGlobalFunction("GLMinusSL");
 DeclareGlobalFunction("GUMinusSU");
 DeclareGlobalFunction("NormSpMinusSp");

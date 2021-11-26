@@ -908,7 +908,7 @@ function(n, q)
     return result;
 end);
 
-BindGlobal("C4SubgroupsSymplecticGeneric",
+BindGlobal("C4SubgroupsSymplecticGroupGeneric",
 function(n, q)
     local result, l, halfOfEvenFactorsOfn, n_1, n_2;
 
@@ -1011,4 +1011,113 @@ end);
 BindGlobal("C8SubgroupsSymplecticGroupGeneric",
 function(n, q)
     return [OrthogonalInSp(1, n, q), OrthogonalInSp(-1, n, q)];
+end);
+
+InstallGlobalFunction(MaximalSubgroupClassRepsSymplecticGroup,
+function(n, q, classes...)
+    local maximalSubgroups;
+
+    if Length(classes) = 0 then
+        classes := [1..9];
+    elif IsList(classes[1]) then
+        classes := classes[1];
+    fi;
+    if not IsSubset([1..9], classes) then
+        ErrorNoReturn("<classes> must be a subset of [1..9]");
+    fi;
+
+
+    if n = 2 then
+        Error("We assume <n> to be greater or equal to 4 in case 'S' since",
+              "Sp(2, q) and SL(2, q) are isomorphic");
+    fi;
+
+    if n = 4 and q = 2 then
+        Error("Sp(4, 2) is not quasisimple");
+    fi;
+
+    maximalSubgroups := [];
+
+    if 1 in classes then
+        # Class C1 subgroups ######################################################
+        # Cf. Propositions 3.3.1 (n = 4), 3.5.1 (n = 6), 3.7.1 (n = 8),
+        #                  3.9.1 (n = 10), 3.11.1 (n = 12) in [BHR13]
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C1SubgroupsSymplecticGroupGeneric(n, q));
+    fi;
+
+    if 2 in classes then
+        # Class C2 subgroups ######################################################
+        # Cf. Propositions 3.3.3 (n = 4), 3.5.3, 3.5.4 (all n = 6),
+        #                  3.7.3, 3.7.4 (all n = 8), 3.9.3, 3.9.4 (all n = 10),
+        #                  3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12)
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                              C2SubgroupsSymplecticGroupGeneric(n, q));
+    fi;
+
+    if 3 in classes then
+        # Class C3 subgroups ######################################################
+        # Cf. Propositions 3.3.4 (n = 4), 3.5.5 (n = 6), 3.7.5 (n = 8),
+        #                  3.9.5 (n = 10), 3.11.7 (n = 12) in [BHR13]
+        if not (n = 4 and q = 3) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C3SubgroupsSymplecticGroupGeneric(n, q));
+        else
+            Add(maximalSubgroups, SymplecticSemilinearSp(n, q));
+        fi;
+    fi;
+
+    if 4 in classes then
+        # Class C4 subgroups ######################################################
+        # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10)
+        #                  3.11.8 (n = 12) in [BHR13]
+        # For n = 4, class C4 is empty.
+        if n = 8 then
+            # Cf. Lemma 3.7.6 in [BHR13]
+            if q <> 2 then
+                Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 4, q));
+            fi;
+        elif n = 12 and q = 3 then
+            Add(maximalSubgroups, TensorProductStabilizerInSp(1, 2, 6, q));
+            Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 6, q));
+        elif not (n = 6 and q <= 3) and not (n = 10 and q = 2) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C4SubgroupsSymplecticGroupGeneric(n, q));
+        fi;
+    fi;
+
+    if 5 in classes then
+        # Class C5 subgroups ######################################################
+        # Cf. Propositions 3.3.5 (n = 4), 3.5.7 (n = 6), 3.7.8 (n = 8),
+        #                  3.9.7 (n = 10), 3.11.9 (n = 12) in [BHR13]
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C5SubgroupsSymplecticGroupGeneric(n, q));
+    fi;
+
+    if 6 in classes then
+        # Class C6 subgroups ######################################################
+        # Cf. Propositions 3.3.6 (n = 4), 3.7.9 (n = 8) in [BHR13]
+        # For all other n, class C6 is empty.
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C6SubgroupsSymplecticGroupGeneric(n, q));
+    fi;
+
+    if 7 in classes then
+        # Class C7 subgroups ######################################################
+        # Cf. Proposition 3.7.10 (n = 8) in [BHR13]
+        # For all other n, class C7 is empty.
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C7SubgroupsSymplecticGroupGeneric(n, q));
+    fi;
+
+    if 8 in classes then
+        # Class C8 subgroups ######################################################
+        # Cf. Propositions 3.3.7 (n = 4), 3.5.8 (n = 6), 3.7.11 (n = 8),
+        #                  3.9.8 (n = 10), 3.11.10 (n = 12) in [BHR13]
+        maximalSubgroups := Concatenation(maximalSubgroups,
+                                          C8SubgroupsSymplecticGroupGeneric(n, q));
+    fi;
+
+    return maximalSubgroups;
+
 end);
