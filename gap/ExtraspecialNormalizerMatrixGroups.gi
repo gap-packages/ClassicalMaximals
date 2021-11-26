@@ -658,10 +658,10 @@ BindGlobal("ExtraspecialNormalizerInSU",
 function(r, m, q)
     local F, result;
     if not r ^ m > 2 then
-        ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case,");
+        ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case");
     elif not (q + 1) mod r = 0 or (IsEvenInt(r) and not (q + 1) mod 4 = 0) then
         ErrorNoReturn("<q> + 1 must be divisible by r (or 4 if r = 2) in the ",
-                      "unitary case,");
+                      "unitary case");
     fi;
 
     F := GF(q ^ 2);
