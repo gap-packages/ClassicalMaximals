@@ -9,7 +9,7 @@ gap> SymmetricBilinearForm(SO(5, 9)) = InvariantBilinearForm(SO(5, 9)).matrix;
 true
 gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)));
 Error, No preserved unitary form found for <group>
-gap> ConjugateToSesquilinearForm(SL(3, 5), "O", IdentityMat(3, GF(5)));
+gap> ConjugateToSesquilinearForm(SL(3, 5), "O-B", IdentityMat(3, GF(5)));
 Error, No preserved symmetric bilinear form found for <group>
 gap> TestFormChangingFunctions := function(args)
 >   local n, q, type, gramMatrix, standardGroup, conjugatedGroup, broadType,
@@ -23,14 +23,14 @@ gap> TestFormChangingFunctions := function(args)
 >   elif type = "S" then
 >       standardGroup := Sp(n, q);
 >   elif type = "O" then
->       standardGroup := SO(n, q);
+>       standardGroup := Omega(n, q);
 >   elif type = "O+" then
->       standardGroup := SO(1, n, q);
+>       standardGroup := Omega(1, n, q);
 >   elif type = "O-" then
->       standardGroup := SO(-1, n, q);
+>       standardGroup := Omega(-1, n, q);
 >   fi;
 >   if type in ["O", "O+", "O-"] then
->       broadType := "O";
+>       broadType := "O-B";
 >   else
 >       broadType := type;
 >   fi;

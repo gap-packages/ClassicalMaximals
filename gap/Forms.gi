@@ -5,14 +5,19 @@
 InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix)
     local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
-        result, d, q;
+        result, d, q, broadType;
     if not type in ["S", "O-B", "O-Q", "U"] then
-        ErrorNoReturn("<type> must be one of 'S', 'U', 'O'");
+        ErrorNoReturn("<type> must be one of 'S', 'U', 'O-B', 'O-Q'");
     fi;
     d := DimensionOfMatrixGroup(group);
     field := DefaultFieldOfMatrixGroup(group);
     if type = "S" or type = "O-B" then
-        formMatrix := BilinearForm(group, type);
+        if type = "S" then
+            broadType := type;
+        else
+            broadType := "O";
+        fi;
+        formMatrix := BilinearForm(group, broadType);
         if formMatrix = fail then
             if type = "S" then
                 ErrorNoReturn("No preserved symplectic form found for <group>");
