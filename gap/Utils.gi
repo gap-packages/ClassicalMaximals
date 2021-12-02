@@ -189,7 +189,7 @@ function(F, a, b, c)
     # solving a linear system 
     V := AsVectorSpace(primeField, F);
     B := Basis(V);
-    M := List([1..e], i -> Coefficients(B, B[i] + B[i] ^ 2));
+    M := List(B, b -> Coefficients(B, b + b ^ 2));
 
     # Solve v * M = Coefficients(B, d) and express v as an element of F again
     t := LinearCombination(B, SolutionMat(M, Coefficients(B, d)));
