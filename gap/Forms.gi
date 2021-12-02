@@ -113,7 +113,7 @@ function(group, type)
         ErrorNoReturn("<type> cannot be 'O+' or 'O-' if the dimension of",
                       " <group> is odd");
     elif IsEvenInt(Size(F)) and IsOddInt(d) and type in ["O+", "O-", "O"] then
-        ErrorNoReturn("It <type> is 'O+', 'O-' or 'O' and the size of <F> is",
+        ErrorNoReturn("If <type> is 'O+', 'O-' or 'O' and the size of <F> is",
                       " even, <d> must be even");
     fi;
     if type in ["S", "O", "O+", "O-"] then
