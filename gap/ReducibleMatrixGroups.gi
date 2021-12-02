@@ -509,17 +509,12 @@ function(epsilon, d, q)
 
     # Q and F are the matrices of the quadratic form and corresponding polar
     # bilinear form we will use in what follows
-    if epsilon = 1 then
-        F := AntidiagonalMat(d, field);
-        Q := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m, one), 
-                                           ListWithIdenticalEntries(m, zero)), 
-                             field);
-    else
+    F := AntidiagonalMat(d, field);
+    Q := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m, one),
+                                       ListWithIdenticalEntries(m, zero)),
+                         field);
+    if epsilon = -1 then
         gamma := FindGamma(q);
-        F := AntidiagonalMat(d, field);
-        Q := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m, one),
-                                           ListWithIdenticalEntries(m, zero)),
-                             field);
         Q[m, m] := one;
         Q[m + 1, m + 1] := gamma;
     fi;
