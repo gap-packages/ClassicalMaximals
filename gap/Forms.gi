@@ -82,7 +82,7 @@ function(group, type, gramMatrix)
     elif type = "U" then
         SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix));
     else
-        SetInvariantQuadraticForm(result, rec(matrix := gramMatrix));
+        SetInvariantQuadraticFormFromMatrix(result, gramMatrix);
     fi;
 
     return result;

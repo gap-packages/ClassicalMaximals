@@ -140,7 +140,7 @@ end);
 # of two.
 BindGlobal("FindGamma",
 function(q)
-    local F, R, x, gamma, polynomial;
+    local F, B, M, i;
 
     if not IsEvenInt(q) then
         ErrorNoReturn("<q> must be even");
@@ -149,22 +149,23 @@ function(q)
     fi;
 
     F := GF(q);
-    R := PolynomialRing(F, ["x"]);
-    x := Indeterminate(F, "x");
+    
+    # It suffices to find gamma not in the image of x ^ 2 + x. Notice that this
+    # is a linear transformation of the GF(2)-vector space GF(q).
+    B := CanonicalBasis(F);
+    M := List(B, b -> Coefficients(B, b + b ^ 2));
+    ConvertToMatrixRep(M);
+    M := RREF(M);
+    i := First([1..Length(M)], i -> IsZero(M[i, i]));
 
-    for gamma in F do
-        polynomial := x ^ 2 + x + gamma;
-        if IsIrreducibleRingElement(R, polynomial) then
-            return gamma;
-        fi;
-    od;
+    return B[i];
 end);
 
 # Return a root of a * x ^ 2 + b * x + c = 0 over a finite field GF(q) of
 # characteristic 2.
 BindGlobal("SolveQuadraticEquation",
 function(F, a, b, c)
-    local primeField, e, d, V, B, M, t;
+    local d, V, B, M, t;
 
     if not Characteristic(F) = 2 then
         ErrorNoReturn("<F> must be a field of characteristic 2");
@@ -175,9 +176,6 @@ function(F, a, b, c)
     if b = 0 then
         return RootFFE(F, -c / a, 2);
     fi;
-    
-    primeField := GF(2);
-    e := DegreeOverPrimeField(F);
 
     # We have (a / b ^ 2) * (a * x ^ 2 + b * x + c) 
     #       = (a / b * x) ^ 2 + (a / b * x) + (c * a / b ^ 2) 
@@ -187,8 +185,7 @@ function(F, a, b, c)
     # Note that the map t --> t ^ 2 + t is linear so we can express it via a
     # representation matrix and find a pre-image of -d (if one exists) by
     # solving a linear system 
-    V := AsVectorSpace(primeField, F);
-    B := Basis(V);
+    B := CanonicalBasis(F);
     M := List(B, b -> Coefficients(B, b + b ^ 2));
 
     # Solve v * M = Coefficients(B, d) and express v as an element of F again
