@@ -500,6 +500,8 @@ function(epsilon, d, q)
         ErrorNoReturn("<q> must be even");
     elif not IsEvenInt(d) then
         ErrorNoReturn("<d> must be even");
+    elif d <= 2 then
+        ErrorNoReturn("<d> must be greater than 2");
     fi;
 
     field := GF(q);

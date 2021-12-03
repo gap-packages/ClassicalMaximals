@@ -105,4 +105,34 @@ gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
 Error, <k> must be less than <d> / 2
 
 #
+gap> TestOmegaStabilizerOfNonSingularVector := function(args)
+>   local epsilon, d, q, hasSize, G;
+>   epsilon := args[1];
+>   d := args[2];
+>   q := args[3];
+>   G := OmegaStabilizerOfNonSingularVector(epsilon, d, q);
+>   hasSize := HasSize(G);
+>   RECOG.TestGroup(G, false, Size(G));
+>   Assert(0, IsSubset(Omega(epsilon, d, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+>   Assert(0, hasSize);
+> end;;
+gap> TestOmegaStabilizerOfNonSingularVector([1, 6, 4]);
+gap> TestOmegaStabilizerOfNonSingularVector([-1, 6, 4]);
+gap> TestOmegaStabilizerOfNonSingularVector([1, 8, 2]);
+gap> TestOmegaStabilizerOfNonSingularVector([-1, 8, 2]);
+gap> TestOmegaStabilizerOfNonSingularVector([1, 4, 8]);
+gap> TestOmegaStabilizerOfNonSingularVector([-1, 4, 8]);
+
+# Test error handling
+gap> OmegaStabilizerOfNonSingularVector(0, 2, 4);
+Error, <epsilon> must be 1 or -1
+gap> OmegaStabilizerOfNonSingularVector(-1, 6, 3);
+Error, <q> must be even
+gap> OmegaStabilizerOfNonSingularVector(-1, 5, 4);
+Error, <d> must be even
+gap> OmegaStabilizerOfNonSingularVector(-1, 2, 4);
+Error, <d> must be greater than 2
+
+#
 gap> STOP_TEST("ReducibleMatrixGroups.tst", 0);

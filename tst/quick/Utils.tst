@@ -31,6 +31,44 @@ true
 gap> x := SolveFrobeniusEquation("P", - Z(7) ^ 0, 7);;
 gap> x * x ^ 7 = - Z(7) ^ 0;
 true
+gap> TestFindGamma := function(q)
+>   local gamma, R, x;
+>   gamma := FindGamma(q);
+>   R := PolynomialRing(GF(q), ["x"]);
+>   x := Indeterminate(GF(q), "x");
+>   Assert(0, IsIrreducibleRingElement(R, x ^ 2 + x + gamma));
+> end;;
+gap> TestFindGamma(8);
+gap> TestFindGamma(2 ^ 7);
+gap> TestFindGamma(2 ^ 13);
+gap> TestSolveQuadraticEquation := function(args)
+>   local F, a, b, c;
+>   F := args[1];
+>   a := args[2];
+>   b := args[3];
+>   c := args[4];
+>   x := SolveQuadraticEquation(F, a, b, c);
+>   Assert(0, IsZero(a * x ^ 2 + b * x + c));
+> end;;
+gap> TestSolveQuadraticEquation([GF(2), Z(2), 0 * Z(2), Z(2)]);
+gap> TestSolveQuadraticEquation([GF(4), Z(4), Z(4) ^ 3, Z(4) ^ 2]);
+gap> TestSolveQuadraticEquation([GF(2 ^ 19), Z(2 ^ 19) ^ 0, Z(2 ^ 19) ^ 113, Z(2 ^ 19) ^ (-1)]);
+gap> TestFancySpinorNorm := function(args)
+>   local epsilon, d, q, GroupOmega, GroupSO;
+>   epsilon := args[1];
+>   d := args[2];
+>   q := args[3];
+>   GroupOmega := Omega(epsilon, d, q);
+>   GroupSO := SO(epsilon, d, q);
+>   Assert(0, ForAll(GeneratorsOfGroup(GroupOmega), 
+>                    gen -> FancySpinorNorm(InvariantBilinearForm(GroupOmega).matrix, GF(q), gen) = 1));
+>   Assert(0, not ForAll(GeneratorsOfGroup(GroupSO), 
+>                        gen -> FancySpinorNorm(InvariantBilinearForm(GroupSO).matrix, GF(q), gen) = -1));
+> end;;
+gap> TestFancySpinorNorm([0, 3, 7]);
+gap> TestFancySpinorNorm([1, 4, 5]);
+gap> TestFancySpinorNorm([1, 4, 8]);
+gap> TestFancySpinorNorm([-1, 6, 4]);
 gap> TestGeneratorsOfOrthogonalGroup := function(args)
 >   local epsilon, n, q, F, zeta, gen, gens, rightDets, gramMatrix, rightForm;
 >   epsilon := args[1];

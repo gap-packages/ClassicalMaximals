@@ -30,7 +30,11 @@ gap> TestFormChangingFunctions := function(args)
 >       standardGroup := Omega(-1, n, q);
 >   fi;
 >   if type in ["O", "O+", "O-"] then
->       broadType := "O-B";
+>       if IsOddInt(q) then
+>           broadType := "O-B";
+>       else
+>           broadType := "O-Q";
+>       fi;
 >   else
 >       broadType := type;
 >   fi;
@@ -42,8 +46,10 @@ gap> TestFormChangingFunctions := function(args)
 >   fi;
 >   if type = "U" then
 >       standardGramMatrix := InvariantSesquilinearForm(standardGroup).matrix;
->   else
+>   elif IsOddInt(q) then
 >       standardGramMatrix := InvariantBilinearForm(standardGroup).matrix;
+>   else
+>       standardGramMatrix := InvariantQuadraticForm(standardGroup).matrix;
 >   fi;
 >   twiceConjugatedGroup := ConjugateToStandardForm(conjugatedGroup, type);
 >   if type = "U" then

@@ -173,7 +173,7 @@ function(F, a, b, c)
         ErrorNoReturn("<a> must be non-zero");
     fi;
 
-    if b = 0 then
+    if IsZero(b) then
         return RootFFE(F, -c / a, 2);
     fi;
 
@@ -449,6 +449,10 @@ end);
 
 # Compute the spinor norm of an element of an orthogonal group.
 # We use Lemma 3.5 (2) from [HR10] for q even.
+#
+# Note that if q is odd, the argument <form> must be the Gram matrix of the
+# bilinear form preserved by the orthogonal group to which M belongs. If q is
+# even, the argument <form> is redundant.
 BindGlobal("FancySpinorNorm",
 function(form, F, M)
     # Don't fool yourself and return One(F) and -One(F) here ... - they are the
