@@ -25,6 +25,9 @@ true
 gap> M := ReflectionMatrix(5, 9, AntidiagonalMat(5, GF(9)), "B", Z(9) ^ 0 * [1, 1, 1, 1, 1]);; 
 gap> IsOne(M ^ 2);
 true
+gap> M := ReflectionMatrix(4, 4, AntidiagonalMat(Z(4) ^ 0 * [1, 1, 0, 0], GF(4)), "Q", Z(4) ^ 0 * [1, 1, 0, 1]);;
+gap> IsOne(M ^ 2);
+true
 gap> x := SolveFrobeniusEquation("S", - Z(7) ^ 0, 7);;
 gap> x + x ^ 7 = - Z(7) ^ 0;
 true
