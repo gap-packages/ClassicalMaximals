@@ -366,14 +366,56 @@ end);
 
 InstallGlobalFunction("QuadraticForm",
 function(G)
-    local F, formMatrix;
+    local d, F, formMatrix, polarFormMatrix, i, g, RightSideForLinSys,
+    MatrixForLinSys, x;
 
+    d := DimensionOfMatrixGroup(G);
     F := DefaultFieldOfMatrixGroup(G);
+    if not IsFinite(F) then
+        ErrorNoReturn("The base field of <G> must be finite");
+    fi;
 
     if HasInvariantQuadraticForm(G) then
         formMatrix := InvariantQuadraticForm(G).matrix;
         return ImmutableMatrix(F, formMatrix);
-    else
-        ErrorNoReturn("Someone should really implement this");
     fi;
- end);
+
+    # We first look for an invariant symmetric bilinear form of G, which will
+    # be the polar form of the desired quadratic form
+    polarFormMatrix := SymmetricBilinearForm(G);
+    # The Gram matrix formMatrix of the quadratic form is upper triangular and
+    # polarFormMatrix = formMatrix + formMatrix ^ T, so the entries above the
+    # main diagonal of polarFormMatrix and formMatrix must be the same
+    formMatrix := List([1..d], i -> Concatenation(ListWithIdenticalEntries(i, Zero(F)),
+                                                  polarFormMatrix[i]{[i + 1..d]}));
+    if Characteristic(F) <> 2 then
+        # In this case, the polar form determines the quadratic form completely
+        formMatrix := formMatrix + 1 / 2 * DiagonalMat(DiagonalOfMatrix(polarFormMatrix));
+    else
+        # We are left to determine the diagonal entries of formMatrix. Let them
+        # be x1, ..., xd and X = diag(x1, ..., xd); furthermore, let U be the
+        # part of polarFormMatrix above the main diagonal (i.e. the current
+        # value of formMatrix). Then for the quadratic form X + U to be
+        # preserved, we need g * (X + U) * g ^ T to have the same diagonal
+        # entries as X + U, i.e. as X, for each generator g of G.
+        #
+        # Hence, we need xi = (g * U * g ^ T)_ii + (x1 * g[i, 1] ^ 2 + ... + xd * g[i, d] ^ 2)
+        # This leads to a linear system for the xi, which we solve.
+
+        RightSideForLinSys := Concatenation(List(GeneratorsOfGroup(G), 
+                                                 g -> DiagonalOfMatrix(g * formMatrix * TransposedMat(g))));
+        MatrixForLinSys := Concatenation(List(GeneratorsOfGroup(G),
+                                              g -> List([1..d], 
+                                                        i -> DiagonalOfMatrix(TransposedMat([g[i]{[1..d]}]) * [g[i]{[1..d]}]))
+                                                    + IdentityMat(d, F)));
+        x := SolutionMat(TransposedMat(MatrixForLinSys), RightSideForLinSys);
+
+        if x = fail then
+            return fail;
+        fi;
+
+        formMatrix := formMatrix + DiagonalMat(x);
+    fi;
+
+    return formMatrix;
+end);
