@@ -30,6 +30,8 @@ function(type, n, q, classes...)
         return MaximalSubgroupClassRepsSpecialLinearGroup(n, q, classes);
     elif type = "U" then
         return MaximalSubgroupClassRepsSpecialUnitaryGroup(n, q, classes);
+    elif type = "S" then
+        return MaximalSubgroupClassRepsSymplecticGroup(n, q, classes);
     fi;
     ErrorNoReturn("not yet implemented");
 end);
@@ -901,7 +903,7 @@ function(n, q)
     od;
 
     # unitary type subgroups
-    if IsEvenInt(n) then
+    if IsEvenInt(n)  and IsOddInt(q) then
         Add(result, UnitarySemilinearSp(n, q));
     fi;
 
@@ -975,14 +977,14 @@ function(n, q)
     if r = 2 and e = 1 then
         extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSp(m, q);
         # Cf. Tables 3.5.C and 3.5.G in [KL90]
-        if (q - 1) = 0 mod 8 or (q - 7) = 0 mod 8 then
+        if (q - 1) mod 8 = 0  or (q - 7) mod 8 = 0 then
             numberOfConjugates := 2;
         else
             numberOfConjugates := 1;
         fi;
         result := ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
-                                           generatorNormSpMinusSp, 
-                                           numberOfConjugates); 
+                                           generatorNormSpMinusSp,
+                                           numberOfConjugates);
     fi;
 
     return result;
@@ -1050,9 +1052,13 @@ function(n, q, classes...)
         # Class C2 subgroups ######################################################
         # Cf. Propositions 3.3.3 (n = 4), 3.5.3, 3.5.4 (all n = 6),
         #                  3.7.3, 3.7.4 (all n = 8), 3.9.3, 3.9.4 (all n = 10),
-        #                  3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12)
-        maximalSubgroups := Concatenation(maximalSubgroups,
+        #                  3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12) in [BHR13]
+        if not (n = 4 and q = 3) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
                                               C2SubgroupsSymplecticGroupGeneric(n, q));
+        else
+            Add(maximalSubgroups, SpNonDegenerateImprimitives(n, q, 2));
+        fi;
     fi;
 
     if 3 in classes then
@@ -1063,7 +1069,7 @@ function(n, q, classes...)
             maximalSubgroups := Concatenation(maximalSubgroups,
                                           C3SubgroupsSymplecticGroupGeneric(n, q));
         else
-            Add(maximalSubgroups, SymplecticSemilinearSp(n, q));
+            Add(maximalSubgroups, SymplecticSemilinearSp(n, q, 2));
         fi;
     fi;
 
@@ -1114,8 +1120,10 @@ function(n, q, classes...)
         # Class C8 subgroups ######################################################
         # Cf. Propositions 3.3.7 (n = 4), 3.5.8 (n = 6), 3.7.11 (n = 8),
         #                  3.9.8 (n = 10), 3.11.10 (n = 12) in [BHR13]
-        maximalSubgroups := Concatenation(maximalSubgroups,
+        if IsEvenInt(q) then
+            maximalSubgroups := Concatenation(maximalSubgroups,
                                           C8SubgroupsSymplecticGroupGeneric(n, q));
+        fi;
     fi;
 
     return maximalSubgroups;

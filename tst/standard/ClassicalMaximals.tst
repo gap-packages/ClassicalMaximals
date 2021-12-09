@@ -202,4 +202,44 @@ gap> TestClassicalMaximalsUnitary([12, 2, 21]);
 gap> TestClassicalMaximalsUnitary([12, 3, 27]);
 
 #
+gap> TestClassicalMaximalsSymplectic := function(args)
+>   Assert(0, Length(ClassicalMaximalsGeneric("S", args[1], args[2])) = args[3]);
+> end;;
+gap> TestClassicalMaximalsSymplectic([4, 3, 5]);
+gap> TestClassicalMaximalsSymplectic([4, 4, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 5, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 7, 8]);
+gap> TestClassicalMaximalsSymplectic([4, 8, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 9, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 11, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 13, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 16, 7]);
+gap> TestClassicalMaximalsSymplectic([4, 17, 8]);
+gap> TestClassicalMaximalsSymplectic([4, 19, 7]);
+gap> TestClassicalMaximalsSymplectic([6, 2, 7]);
+gap> TestClassicalMaximalsSymplectic([6, 3, 8]);
+gap> TestClassicalMaximalsSymplectic([6, 4, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 5, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 7, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 8, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 9, 10]);
+gap> TestClassicalMaximalsSymplectic([6, 11, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 13, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 16, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 17, 9]);
+gap> TestClassicalMaximalsSymplectic([6, 19, 9]);
+gap> TestClassicalMaximalsSymplectic([8, 2, 9]);
+gap> TestClassicalMaximalsSymplectic([8, 3, 12]);
+gap> TestClassicalMaximalsSymplectic([8, 4, 11]);
+gap> TestClassicalMaximalsSymplectic([8, 5, 13]);
+gap> TestClassicalMaximalsSymplectic([8, 7, 14]);
+gap> TestClassicalMaximalsSymplectic([8, 8, 11]);
+gap> TestClassicalMaximalsSymplectic([8, 9, 15]);
+gap> TestClassicalMaximalsSymplectic([8, 11, 13]);
+gap> TestClassicalMaximalsSymplectic([8, 13, 13]);
+gap> TestClassicalMaximalsSymplectic([8, 16, 11]);
+gap> TestClassicalMaximalsSymplectic([8, 17, 14]);
+gap> TestClassicalMaximalsSymplectic([8, 19, 13]);
+
+#
 gap> STOP_TEST("ClassicalMaximals.tst", 0);
