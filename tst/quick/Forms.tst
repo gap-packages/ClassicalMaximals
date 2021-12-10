@@ -49,7 +49,6 @@ gap> TestFormChangingFunctions := function(args)
 >   elif IsOddInt(q) then
 >       standardGramMatrix := InvariantBilinearForm(standardGroup).matrix;
 >   else
->       SetInvariantQuadraticForm(conjugatedGroup, rec(matrix := gramMatrix));
 >       polarForm := gramMatrix + TransposedMat(gramMatrix);
 >       standardGramMatrix := InvariantQuadraticForm(standardGroup).matrix;
 >       standardPolarForm := InvariantBilinearForm(standardGroup).matrix;
