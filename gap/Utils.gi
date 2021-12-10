@@ -66,6 +66,37 @@ function(M, func)
     return result;
 end);
 
+# Take an m x n-matrix M and change its shape to a rows x cols-matrix, where
+# entries are copied column by column. 
+BindGlobal("ReshapeMatrix",
+function(M, rows, cols)
+    local m, n, result, currentRow, currentCol, i, j;
+
+    m := NrRows(M);
+    n := NrCols(M);
+
+    if rows * cols <> m * n then
+        ErrorNoReturn("<rows> * <cols> must be the same as the number",
+                      "of entries of <M>");
+    fi;
+
+    result := NullMat(rows, cols, DefaultFieldOfMatrix(M));
+    currentRow := 1;
+    currentCol := 1;
+    for i in [1..m] do
+        for j in [1..n] do
+            result[currentRow, currentCol] := M[i, j];
+            currentCol := currentCol + 1;
+            if currentCol > cols then
+                currentCol := 1;
+                currentRow := currentRow + 1;
+            fi;
+        od;
+    od;
+
+    return result;
+end);
+
 # Return a matrix N obtained from M by first raising each entry to the q-th
 # power and then transposing the result.
 BindGlobal("HermitianConjugate",
@@ -192,6 +223,14 @@ function(F, a, b, c)
     t := LinearCombination(B, SolutionMat(M, Coefficients(B, d)));
 
     return b / a * t;
+end);
+
+# Compute the Trace of an element x in GF(q ^ s) over GF(q). Since the Galois
+# group of GF(q ^ s) over GF(q) is cyclic with generator x -> x ^ q, this is
+# just x + x ^ q + x ^ (q  ^ 2) + ... + x ^ (q  ^ (s - 1))
+BindGlobal("TraceOverFiniteField",
+function(x, q, s)
+    return Sum(List([0..s - 1], i -> x ^ (q ^ i)));
 end);
 
 # An n x n - matrix of zeroes over <field> with a 1 in position (<row>, <column>)

@@ -139,7 +139,8 @@ end);
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
     local F, As, Bs, Cs, Fs, m, gammaL1, Y, AandB, C, D, i,
-    range, AsInGU, omega, generators, size;
+    range, AsInGU, omega, generators, size, result, standardForm, formMatrix,
+    j, u, v, B;
     if d mod s <> 0 or not IsPrime(s) or not IsOddInt(s) then
         ErrorNoReturn("<s> must be an odd prime and a divisor of <d>");
     fi;
@@ -170,31 +171,60 @@ function(d, q, s)
     if m = 1 then
         # note that we require s to be odd
         generators := [Bs, Cs];
-        # conjugate the result so that it preserves the standard unitary form
-        return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "U");
+    
+    else
+        omega := PrimitiveElement(GF(q ^ (2 * s)));
+        # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
+        AandB := List(GeneratorsOfGroup(SU(m, q ^ s)), g -> MapGammaLToGL(g, As, omega));
+        # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
+        C := MapGammaLToGL(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
+        # det(D) = 1
+        D := IdentityMat(d, GF(q));
+        for i in [0..m - 1] do
+            range := [i * s + 1..(i + 1) * s];
+            D{range}{range} := Bs;
+        od;
+
+        generators := Concatenation(AandB, [C, D]);
     fi;
 
-    omega := PrimitiveElement(GF(q ^ (2 * s)));
-    # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
-    AandB := List(GeneratorsOfGroup(SU(m, q ^ s)), g -> MapGammaLToGL(g, As, omega));
-    # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
-    C := MapGammaLToGL(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
-    # det(D) = 1
-    D := IdentityMat(d, GF(q));
-    for i in [0..m - 1] do
-        range := [i * s + 1..(i + 1) * s];
-        D{range}{range} := Bs;
-    od;
+    # Calculate the form preserved by the constructed group: Let beta be the
+    # standard symplectic form on GF(q ^ s) ^ (d / s). Then the sought form is
+    # given as follows: We can interpret any u, v in GF(q) ^ d as elements of
+    # GF(q ^ s) ^ (d / s) via the standard basis; then take the trace of
+    # beta(u, v).
+    standardForm := IdentityMat(d / s, F);
+    formMatrix := NullMat(d, d, F);
+    B := CanonicalBasis(AsField(F, GF(q ^ (2 * s))));
+    for i in [1..d] do
+        for j in [1..i] do
+            u := NullMat(1, d, F);
+            u[1, i] := One(F);
+            v := NullMat(1, d, F);
+            v[1, j] := One(F);
 
-    generators := Concatenation(AandB, [C, D]);
+            formMatrix[i, j] := TraceOverFiniteField((ReshapeMatrix(u, d / s, s) * B) 
+                                                        * standardForm 
+                                                        * ApplyFunctionToEntries([(ReshapeMatrix(v, d / s, s) * B)], 
+                                                                                 x -> x ^ q)[1], 
+                                                      q, s);
+        od;
+    od;
+    formMatrix := formMatrix + TransposedMat(ApplyFunctionToEntries(formMatrix,
+                                                                    x -> x ^ q))
+                             - DiagonalMat(DiagonalOfMatrix(formMatrix));
+    result := MatrixGroupWithSize(F, generators, size);
+    SetInvariantSesquilinearForm(result, rec(matrix := formMatrix));
+
     # conjugate the result so that it preserves the standard unitary form 
-    return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "U");
+    return ConjugateToStandardForm(result, "U");
 end);
 
 # Construction as in Proposition 6.4 of [HR05]
 BindGlobal("SymplecticSemilinearSp",
 function(d, q, s)
-    local F, gammaL1, As, Bs, m, omega, AandB, C, i, range, generators, size;
+    local F, gammaL1, As, Bs, m, omega, AandB, C, i, range, generators, size,
+    standardForm, formMatrix, B, j, u, v, result;
     if d mod s <> 0 or not IsPrime(s) then
         ErrorNoReturn("<s> must be prime and a divisor of <d>");
     fi;
@@ -225,14 +255,43 @@ function(d, q, s)
     generators := Concatenation(AandB, [C]);
     # Size according to Table 2.6 of [BHR13]
     size := SizeSp(m, q ^ s) * s;
+
+    # Calculate the form preserved by the constructed group: Let beta be the
+    # standard symplectic form on GF(q ^ s) ^ (d / s). Then the sought form is
+    # given as follows: We can interpret any u, v in GF(q) ^ d as elements of
+    # GF(q ^ s) ^ (d / s) via the standard basis; then take the trace of
+    # beta(u, v).
+    standardForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d / (2 * s), One(F)),
+                                                  ListWithIdenticalEntries(d / (2 * s), -One(F))),
+                                    F);
+    formMatrix := NullMat(d, d, F);
+    B := CanonicalBasis(AsField(F, GF(q ^ s)));
+    for i in [1..d] do
+        for j in [1..i] do
+            u := NullMat(1, d, F);
+            u[1, i] := One(F);
+            v := NullMat(1, d, F);
+            v[1, j] := One(F);
+
+            formMatrix[i, j] := TraceOverFiniteField((ReshapeMatrix(u, d / s, s) * B) 
+                                                       * standardForm 
+                                                       * (ReshapeMatrix(v, d / s, s) * B), 
+                                                     q, s);
+        od;
+    od;
+    formMatrix := formMatrix - TransposedMat(formMatrix);
+    result := MatrixGroupWithSize(F, generators, size);
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix));
+
     # conjugate the result so that it preserves the standard symplectic form 
-    return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "S");
+    return ConjugateToStandardForm(result, "S");
 end);
 
 # Construction as in Proposition 6.5 of [HR05]
 BindGlobal("UnitarySemilinearSp",
 function(d, q)
-    local F, gammaL1, A2, B2, omega, AandB, i, m, C, j, range, generators, size;
+    local F, gammaL1, A2, B2, omega, AandB, i, m, C, j, range, generators,
+    size, formMatrix;
     if d mod 2 <> 0 then
         ErrorNoReturn("<d> must be divisible by 2");
     fi;
@@ -266,7 +325,7 @@ function(d, q)
 
     generators := Concatenation(AandB, [C]);
     # Size according to Table 2.6 of [BHR13]
-    size := SizeGU(d / 2, q) * 2;
+    size := SizeGU(d / 2, q) * 2;    
     # conjugate the result so that it preserves the standard symplectic form 
     return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "S");
 end);
