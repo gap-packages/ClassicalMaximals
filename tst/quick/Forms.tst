@@ -55,37 +55,38 @@ gap> TestFormChangingFunctions := function(args)
 >   fi;
 >   twiceConjugatedGroup := ConjugateToStandardForm(conjugatedGroup, type);
 >   if type = "U" then
->       return ForAll(GeneratorsOfGroup(conjugatedGroup), 
->                     g -> g * gramMatrix * HermitianConjugate(g, q) = gramMatrix)
->              and ForAll(GeneratorsOfGroup(twiceConjugatedGroup), 
->                         g -> g * standardGramMatrix * HermitianConjugate(g, q) = standardGramMatrix);
+>       Assert(0, ForAll(GeneratorsOfGroup(conjugatedGroup), 
+>                        g -> g * gramMatrix * HermitianConjugate(g, q) = gramMatrix));
+>       Assert(0, ForAll(GeneratorsOfGroup(twiceConjugatedGroup), 
+>                        g -> g * standardGramMatrix * HermitianConjugate(g, q) = standardGramMatrix));
 >   elif IsOddInt(q) then
->       return ForAll(GeneratorsOfGroup(conjugatedGroup),
->                     g -> g * gramMatrix * TransposedMat(g) = gramMatrix)
->              and ForAll(GeneratorsOfGroup(twiceConjugatedGroup),
->                         g -> g * standardGramMatrix * TransposedMat(g) = standardGramMatrix);
+>       Assert(0, ForAll(GeneratorsOfGroup(conjugatedGroup),
+>                        g -> g * gramMatrix * TransposedMat(g) = gramMatrix));
+>       Assert(0, ForAll(GeneratorsOfGroup(twiceConjugatedGroup),
+>                        g -> g * standardGramMatrix * TransposedMat(g) = standardGramMatrix));
 >   else
->       return ForAll(GeneratorsOfGroup(conjugatedGroup), 
->                     g -> (g * polarForm * TransposedMat(g) = polarForm 
->                           and DiagonalOfMat(g * gramMatrix * TransposedMat(g)) 
->                               = DiagonalOfMat(gramMatrix)))
->              and ForAll(GeneratorsOfGroup(twiceConjugatedGroup),
->                         g -> (g * standardPolarForm * TransposedMat(g) = standardPolarForm
->                               and DiagonalOfMat(g * standardGramMatrix * TransposedMat(g)) 
->                                   = DiagonalOfMat(standardGramMatrix)));
+>       Assert(0, ForAll(GeneratorsOfGroup(conjugatedGroup), 
+>                        g -> (g * polarForm * TransposedMat(g) = polarForm 
+>                              and DiagonalOfMat(g * gramMatrix * TransposedMat(g)) 
+>                                  = DiagonalOfMat(gramMatrix))));
+>       Assert(0, ForAll(GeneratorsOfGroup(twiceConjugatedGroup),
+>                        g -> (g * standardPolarForm * TransposedMat(g) = standardPolarForm
+>                              and DiagonalOfMat(g * standardGramMatrix * TransposedMat(g)) 
+>                                  = DiagonalOfMat(standardGramMatrix))));
 >   fi;
 > end;;
-gap> testsFormChangingFunctions := [[3, 7, "U", IdentityMat(3, GF(7))],
->                                   [6, 3, "S", AntidiagonalMat(Z(3) ^ 0 * [1, -1, 1, -1, 1, -1], GF(3))],
->                                   [5, 5, "O", IdentityMat(5, GF(5))],
->                                   [4, 7, "O+", AntidiagonalMat(4, GF(7))],
->                                   [4, 7, "O-", Z(7) ^ 0 * DiagonalMat([Z(7), 1, 1, 1])],
->                                   [6, 7, "O-", IdentityMat(6, GF(7))],
->                                   [1, 5, "O", IdentityMat(1, GF(5))],
->                                   [1, 5, "O", Z(5) * IdentityMat(1, GF(5))],
->                                   [2, 2, "O-", Z(2) ^ 0 * [[1, 1], [0, 1]]],
->                                   [6, 4, "O+", AntidiagonalMat(Z(4) ^ 0 * [1, 1, 1, 0, 0, 0], GF(4))]];;
-gap> ForAll(testsFormChangingFunctions, TestFormChangingFunctions);
+gap> TestFormChangingFunctions([3, 7, "U", IdentityMat(3, GF(7))]);
+gap> TestFormChangingFunctions([6, 3, "S", AntidiagonalMat(Z(3) ^ 0 * [1, -1, 1, -1, 1, -1], GF(3))]);
+gap> TestFormChangingFunctions([5, 5, "O", IdentityMat(5, GF(5))]);
+gap> TestFormChangingFunctions([4, 7, "O+", AntidiagonalMat(4, GF(7))]);
+gap> TestFormChangingFunctions([4, 7, "O-", Z(7) ^ 0 * DiagonalMat([Z(7), 1, 1, 1])]);
+gap> TestFormChangingFunctions([6, 7, "O-", IdentityMat(6, GF(7))]);
+gap> TestFormChangingFunctions([1, 5, "O", IdentityMat(1, GF(5))]);
+gap> TestFormChangingFunctions([1, 5, "O", Z(5) * IdentityMat(1, GF(5))]);
+gap> TestFormChangingFunctions([2, 2, "O-", Z(2) ^ 0 * [[1, 1], [0, 1]]]);
+gap> TestFormChangingFunctions([6, 4, "O+", AntidiagonalMat(Z(4) ^ 0 * [1, 1, 1, 0, 0, 0], GF(4))]);
+gap> Q := QuadraticForm(Group(GeneratorsOfGroup(SO(5, 5))));;
+gap> Q / Q[5, 5] = InvariantQuadraticForm(SO(5, 5)).matrix;
 true
 
 #
