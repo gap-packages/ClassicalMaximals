@@ -848,13 +848,12 @@ end);
 
 BindGlobal("C1SubgroupsSymplecticGroupGeneric",
 function(n, q)
-    local listOfks, result;
-    listOfks := [1..QuoInt(n, 2) - 1];
+    local result;
     # type P_k subgroups
-    result := List(listOfks, k -> SpStabilizerOfIsotropicSubspace(n, q, k));
-    # type Sp(k, q) _|_ Sp(n - k, q) subgroups
-    result := Concatenation(result, 
-                            List(listOfks, 
+    result := List([1..QuoInt(n, 2)], k -> SpStabilizerOfIsotropicSubspace(n, q, k));
+    # type Sp(2 * k, q) _|_ Sp(n - 2 * k, q) subgroups
+    result := Concatenation(result,
+                            List([1..QuoInt(n - 2, 4)],
                                 k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
     return result;
 end);
@@ -914,10 +913,11 @@ BindGlobal("C4SubgroupsSymplecticGroupGeneric",
 function(n, q)
     local result, l, halfOfEvenFactorsOfn, n_1, n_2;
 
-    result := [];
     if IsEvenInt(q) then
-        return result;
+        return [];
     fi;
+
+    result := [];
 
     # Instead of computing all the factors of n and
     # then only using the even ones, we factor n / 2
@@ -944,15 +944,26 @@ end);
 
 BindGlobal("C5SubgroupsSymplecticGroupGeneric",
 function(n, q)
-    local factorisation, p, e, degreeOfExtension, result;
+    local factorisation, p, e, result, generatorNormSpMinusSp, r, G, numberOfConjugates;
     
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
     e := factorisation[2];
 
-    # For each prime divisor of e, there is exactly one of these subgroups,
-    # so this is sufficient.
-    return List(PrimeDivisors(e), b -> SubfieldSp(n, p, e, QuoInt(e, b)));
+    result := [];
+    generatorNormSpMinusSp := NormSpMinusSp(n, q);
+
+    # For each prime divisor of e, there is exactly one of these subgroups
+    # up to conjugation in CSp, so this loop is sufficient.
+    for r in PrimeDivisors(e) do
+        G := SubfieldSp(n, p, e, QuoInt(e, r));
+
+        # Cf. Proposition 4.5.4 (i) in [KL90] for the number of conjugates
+        numberOfConjugates := Gcd(2, q - 1, r);
+        result := Concatenation(result, ConjugatesInGeneralGroup(G, generatorNormSpMinusSp, numberOfConjugates));
+    od;
+
+    return result;
 end);
 
 BindGlobal("C6SubgroupsSymplecticGroupGeneric",
@@ -960,10 +971,15 @@ function(n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
     generatorNormSpMinusSp, numberOfConjugates, extraspecialNormalizerSubgroup;
 
-    result := [];
-    if not IsPrimePowerInt(n) then
-        return result;
+    if IsEvenInt(q) then
+        return [];
     fi;
+
+    if not IsPrimePowerInt(n) then
+        return [];
+    fi;
+
+    result := [];
     
     factorisationOfq := PrimePowersInt(q);
     p := factorisationOfq[1];
@@ -999,13 +1015,17 @@ function(n, q)
     fi;
 
     primeDivs := PrimePowersInt(n);
-    if not Length(primeDivs) = 2 then
+    if Length(primeDivs) <> 2 then
         return [];
     fi;
 
-
     listOfts := Filtered(DivisorsInt(primeDivs[2]), IsOddInt);
     RemoveSet(listOfts, 1);
+
+    # This way we avoid (m, q) = (2, 3) according to Table 2.10 in [BHR13]
+    if q = 3 then
+        RemoveSet(listOfts, primeDivs[2]);
+    fi;
 
     return List(listOfts, t -> TensorInducedDecompositionStabilizerInSp(primeDivs[1] ^ QuoInt(primeDivs[2], t), t, q));
 end);
@@ -1078,11 +1098,9 @@ function(n, q, classes...)
         # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10)
         #                  3.11.8 (n = 12) in [BHR13]
         # For n = 4, class C4 is empty.
-        if n = 8 then
+        if n = 8 and IsOddInt(q) then
             # Cf. Lemma 3.7.6 in [BHR13]
-            if q <> 2 then
-                Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 4, q));
-            fi;
+            Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 4, q));
         elif n = 12 and q = 3 then
             Add(maximalSubgroups, TensorProductStabilizerInSp(1, 2, 6, q));
             Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 6, q));

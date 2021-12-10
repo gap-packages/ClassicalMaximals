@@ -391,13 +391,13 @@ end);
 # Construction as in Proposition 4.3 of [HR05]
 BindGlobal("SpStabilizerOfIsotropicSubspace",
 function(d, q, k)
-    local field, gens, I, J, GLgen, Xi, Spgen, Yi;
+    local field, gens, I, J, GLgen, Xi, SpDim, Spgen, Yi;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even");
     fi;
 
-    if k >= d / 2 then
+    if k > d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2");
     fi;
 
@@ -422,13 +422,16 @@ function(d, q, k)
         Add(gens, Xi);
     od;
 
-    # These two generators are diagonal block matrices with 2x2 blocks
-    # that generate a subgroup of Sp(d, q) corresponding to Sp(d - 2 * k, q).
-    for Spgen in GeneratorsOfGroup(Sp(d - 2 * k, q)) do
-        Yi := IdentityMat(d, field);
-        Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
-        Add(gens, Yi);
-    od;
+    SpDim := d - 2 * k;
+    if SpDim <> 0 then
+        # These two generators are diagonal block matrices with 2x2 blocks
+        # that generate a subgroup of Sp(d, q) corresponding to Sp(d - 2 * k, q).
+        for Spgen in GeneratorsOfGroup(Sp(SpDim, q)) do
+            Yi := IdentityMat(d, field);
+            Yi{[k + 1 .. d - k]}{[k + 1 .. d - k]} := Spgen;
+            Add(gens, Yi);
+        od;
+    fi;
 
     # This generator is mapped to matrices "with 1s down the diagonal,
     # a (k x k) block in the middle that is symmetric about the anti-diagonal,
