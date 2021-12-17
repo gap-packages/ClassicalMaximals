@@ -135,6 +135,56 @@ function(n, q, s)
     return MatrixGroupWithSize(F, Concatenation(AandB, [C, D]), size);
 end);
 
+# For a sesquilinear form beta on the vector space GF(q ^ s) ^ (d / s) given 
+# by the Gram matrix <form>, we can interpret any u, v in GF(q) ^ d as elements of 
+# GF(q ^ s) ^ (d / s) via the standard basis. Taking the trace of beta(u, v)
+# yields a sesquilinear form on the vector space GF(q) ^ d.
+BindGlobal("TakeTraceOfSesquilinearForm",
+function(form, q, s, type)
+    local F, d, newForm, B, conjugation, i, j, u, v, uOverGFqs, vOverGFqs;
+
+    if not type in ["S", "U"] then
+        ErrorNoReturn("<type> must be 'S' or 'U'");
+    fi;
+    if type = "U" and not IsInt(Sqrt(q)) then
+        ErrorNoReturn("<q> must be a square if <type> = 'U'");
+    fi;
+
+    F := GF(q);
+    d := s * Size(form);
+    newForm := NullMat(d, d, F);
+    B := CanonicalBasis(AsField(F, GF(q ^ s)));
+
+    if type = "U" then
+        conjugation := (x -> x ^ Sqrt(q));
+    fi;
+
+    for i in [1..d] do
+        for j in [1..d] do
+            u := NullMat(1, d, F);
+            u[1, i] := One(F);
+            v := NullMat(1, d, F);
+            v[1, j] := One(F);
+
+            uOverGFqs := ReshapeMatrix(u, d / s, s) * B;
+            vOverGFqs := ReshapeMatrix(v, d / s, s) * B;
+
+            if type = "S" then
+                newForm[i, j] := TraceOverFiniteField(uOverGFqs * form 
+                                                                * vOverGFqs, 
+                                                      q, s);
+            else
+                newForm[i, j] := TraceOverFiniteField(uOverGFqs * form 
+                                                                * ApplyFunctionToEntries([vOverGFqs], 
+                                                                                         conjugation)[1], 
+                                                      q, s);
+            fi;
+        od;
+    od;
+
+    return newForm;
+end);
+
 # Construction as in Proposition 6.6 of [HR05]
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
@@ -188,35 +238,13 @@ function(d, q, s)
         generators := Concatenation(AandB, [C, D]);
     fi;
 
-    # Calculate the form preserved by the constructed group: Let beta be the
-    # standard symplectic form on GF(q ^ s) ^ (d / s). Then the sought form is
-    # given as follows: We can interpret any u, v in GF(q) ^ d as elements of
-    # GF(q ^ s) ^ (d / s) via the standard basis; then take the trace of
-    # beta(u, v).
+    # Calculate the form preserved by the constructed group
     standardForm := IdentityMat(d / s, F);
-    formMatrix := NullMat(d, d, F);
-    B := CanonicalBasis(AsField(F, GF(q ^ (2 * s))));
-    for i in [1..d] do
-        for j in [1..i] do
-            u := NullMat(1, d, F);
-            u[1, i] := One(F);
-            v := NullMat(1, d, F);
-            v[1, j] := One(F);
-
-            formMatrix[i, j] := TraceOverFiniteField((ReshapeMatrix(u, d / s, s) * B) 
-                                                        * standardForm 
-                                                        * ApplyFunctionToEntries([(ReshapeMatrix(v, d / s, s) * B)], 
-                                                                                 x -> x ^ q)[1], 
-                                                      q, s);
-        od;
-    od;
-    formMatrix := formMatrix + TransposedMat(ApplyFunctionToEntries(formMatrix,
-                                                                    x -> x ^ q))
-                             - DiagonalMat(DiagonalOfMatrix(formMatrix));
+    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q ^ 2, s, "U");
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantSesquilinearForm(result, rec(matrix := formMatrix));
 
-    # conjugate the result so that it preserves the standard unitary form 
+    # Conjugate the result so that it preserves the standard unitary form 
     return ConjugateToStandardForm(result, "U");
 end);
 
@@ -256,34 +284,15 @@ function(d, q, s)
     # Size according to Table 2.6 of [BHR13]
     size := SizeSp(m, q ^ s) * s;
 
-    # Calculate the form preserved by the constructed group: Let beta be the
-    # standard symplectic form on GF(q ^ s) ^ (d / s). Then the sought form is
-    # given as follows: We can interpret any u, v in GF(q) ^ d as elements of
-    # GF(q ^ s) ^ (d / s) via the standard basis; then take the trace of
-    # beta(u, v).
+    # Calculate the form preserved by the constructed group
     standardForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d / (2 * s), One(F)),
                                                   ListWithIdenticalEntries(d / (2 * s), -One(F))),
                                     F);
-    formMatrix := NullMat(d, d, F);
-    B := CanonicalBasis(AsField(F, GF(q ^ s)));
-    for i in [1..d] do
-        for j in [1..i] do
-            u := NullMat(1, d, F);
-            u[1, i] := One(F);
-            v := NullMat(1, d, F);
-            v[1, j] := One(F);
-
-            formMatrix[i, j] := TraceOverFiniteField((ReshapeMatrix(u, d / s, s) * B) 
-                                                       * standardForm 
-                                                       * (ReshapeMatrix(v, d / s, s) * B), 
-                                                     q, s);
-        od;
-    od;
-    formMatrix := formMatrix - TransposedMat(formMatrix);
+    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, s, "S");
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 
-    # conjugate the result so that it preserves the standard symplectic form 
+    # Conjugate the result so that it preserves the standard symplectic form 
     return ConjugateToStandardForm(result, "S");
 end);
 
@@ -291,7 +300,7 @@ end);
 BindGlobal("UnitarySemilinearSp",
 function(d, q)
     local F, gammaL1, A2, B2, omega, AandB, i, m, C, j, range, generators,
-    size, formMatrix;
+    size, standardForm, formMatrix, result;
     if d mod 2 <> 0 then
         ErrorNoReturn("<d> must be divisible by 2");
     fi;
@@ -326,6 +335,13 @@ function(d, q)
     generators := Concatenation(AandB, [C]);
     # Size according to Table 2.6 of [BHR13]
     size := SizeGU(d / 2, q) * 2;    
-    # conjugate the result so that it preserves the standard symplectic form 
-    return ConjugateToStandardForm(MatrixGroupWithSize(F, generators, size), "S");
+
+    # Calculate the form preserved by the constructed group
+    standardForm := PrimitiveElement(GF(q ^ 2)) ^ ((q ^ 2 - 1) / 4) * IdentityMat(d / 2, F);
+    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, 2, "S");
+    result := MatrixGroupWithSize(F, generators, size);
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix));
+
+    # Conjugate the result so that it preserves the standard symplectic form 
+    return ConjugateToStandardForm(result, "S");
 end);
