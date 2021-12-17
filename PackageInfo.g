@@ -18,7 +18,7 @@ Persons := [
   rec(
     FirstNames := "Sergio",
     LastName := "Siccha",
-    WWWHome := "https://www.mathematik.rwth-aachen.de/go/id/bkbg/gguid/0x28CF75713F0B7744BEF1377FB3F6748E/ikz/11/allou/1/lidx/1/",
+    #WWWHome := "https://www.mathematik.rwth-aachen.de/go/id/bkbg/gguid/0x28CF75713F0B7744BEF1377FB3F6748E/ikz/11/allou/1/lidx/1/",
     Email := "siccha@mathematik.uni-kl.de",
     IsAuthor := true,
     IsMaintainer := true,
@@ -36,17 +36,16 @@ Persons := [
     Place := "TU Kaiserslautern",
     #Institution := "Fachbereich Mathematik",
   ),
-#  rec(
-#    FirstNames := "Alice",
-#    LastName := "Niemeyer",
-#    WWWHome := "http://www.math.rwth-aachen.de/~Alice.Niemeyer/",
-#    Email := "alice.niemeyer@mathb.rwth-aachen.de",
-#    IsAuthor := true,
-#    IsMaintainer := true,
-#    PostalAddress := "None",
-#    Place := "Aachen",
-#    Institution := "RWTH Aachen University",
-#  ),
+  rec(
+    FirstNames := "Tristan",
+    LastName := "Pfersdorff",
+    #WWWHome := "",
+    Email := "pfersdor@rhrk.uni-kl.de",
+    IsAuthor := true,
+    IsMaintainer := true,
+    Place := "TU Kaiserslautern",
+    #Institution := "Fachbereich Mathematik",
+  ),
 ],
 
 SourceRepository := rec(
