@@ -87,7 +87,7 @@ function(d, q, k)
         # if d = 2 * k, we do not need a second transvection
         T2 := IdentityMat(d, F);
     fi;
-    generators := Concatenation(generators, [T1, T2]);
+    Append(generators, [T1, T2]);
 
     # finally a diagonal matrix of order q ^ 2 - 1 (or q - 1 if d = 2 * k)
     D := IdentityMat(d, F);
@@ -398,7 +398,7 @@ function(d, q, k)
     fi;
 
     if k > d / 2 then
-        ErrorNoReturn("<k> must be less than <d> / 2");
+        ErrorNoReturn("<k> must be less than or equal to <d> / 2");
     fi;
 
     field := GF(q);

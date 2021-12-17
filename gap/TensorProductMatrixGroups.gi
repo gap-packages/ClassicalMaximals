@@ -64,9 +64,8 @@ function(d1, d2, q)
 
     generators := List(GeneratorsOfGroup(SUd1FormIdentityMat), 
                        g -> KroneckerProduct(g, IdentityMat(d2, F)));
-    generators := Concatenation(generators,
-                                List(GeneratorsOfGroup(SUd2FormIdentityMat),
-                                     g -> KroneckerProduct(IdentityMat(d1, F), g)));
+    Append(generators, List(GeneratorsOfGroup(SUd2FormIdentityMat),
+                            g -> KroneckerProduct(IdentityMat(d1, F), g)));
 
     # add a generating scalar
     C := zeta ^ QuoInt(q ^ 2 - 1, Gcd(q + 1, d)) * IdentityMat(d, F);

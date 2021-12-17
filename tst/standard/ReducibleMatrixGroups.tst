@@ -78,7 +78,7 @@ gap> TestSpStabilizerOfIsotropicSubspace([6, 7, 2]);
 gap> SpStabilizerOfIsotropicSubspace(5, 2, 1);
 Error, <d> must be even
 gap> SpStabilizerOfIsotropicSubspace(4, 2, 3);
-Error, <k> must be less than <d> / 2
+Error, <k> must be less than or equal to <d> / 2
 
 #
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)

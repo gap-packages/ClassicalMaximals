@@ -171,13 +171,13 @@ function(epsilon, d, q)
         SOChangedForm := ConjugateToSesquilinearForm(SO(d, q),
                                                      "O-B",
                                                      AntidiagonalMat(d, F));
-        generators := Concatenation(generators, GeneratorsOfGroup(SOChangedForm));
+        Append(generators, GeneratorsOfGroup(SOChangedForm));
         result := MatrixGroupWithSize(F, generators, size);
         SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
         result := ConjugateToStandardForm(result, "U");
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
-        generators := Concatenation(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
+        Append(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
         # det(D) = -1 
         D := generatorsOfOrthogonalGroup.D;
         # det(E) = (epsilon * zeta ^ (q + 1)) ^ (d / 2)

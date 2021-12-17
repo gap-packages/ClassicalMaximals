@@ -24,12 +24,10 @@ function(s, q)
     xq := PowerMod(x, q, primitivePolynomial);
     B := [];
     for i in [0 .. s - 1] do
-        row := CoefficientsOfUnivariatePolynomial(PowerMod(xq,
+        row := List(CoefficientsOfUnivariatePolynomial(PowerMod(xq,
                                                            i,
-                                                           primitivePolynomial));
-        row := Concatenation(row,
-                             ListWithIdenticalEntries(s - Length(row),
-                                                      Zero(F)));
+                                                           primitivePolynomial)));
+        Append(row, ListWithIdenticalEntries(s - Length(row), Zero(F)));
         Add(B, row);
     od;
     return rec(A := A, B := B);
