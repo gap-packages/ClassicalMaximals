@@ -391,12 +391,13 @@ end);
 # Construction as in Proposition 4.3 of [HR05]
 BindGlobal("SpStabilizerOfIsotropicSubspace",
 function(d, q, k)
-    local field, gens, I, J, GLgen, Xi, SpDim, Spgen, Yi;
+    local l, field, gens, I, J, GLgen, Xi, SpDim, Spgen, Yi, result;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even");
     fi;
 
+    l := QuoInt(d, 2);
     if k > d / 2 then
         ErrorNoReturn("<k> must be less than or equal to <d> / 2");
     fi;
@@ -444,19 +445,24 @@ function(d, q, k)
     Add(gens, I + SquareSingleEntryMatrix(field, d, d, d - k) - SquareSingleEntryMatrix(field, d, k + 1, 1));
 
     # Size according to Table 2.3 of [BHR13]
-    return MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
+    result := MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
+        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+
+    return ConjugateToStandardForm(result, "S");
 end);
 
 
 # Construction as in Proposition 4.4 of [HR05]
 BindGlobal("SpStabilizerOfNonDegenerateSubspace",
 function(d, q, k)
-    local field, gens, twok, Spgen, Xi, Yi;
+    local l, field, gens, twok, Spgen, Xi, Yi, result;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even");
     fi;
 
+    l := QuoInt(d, 2);
     if k >= d / 2 then
         ErrorNoReturn("<k> must be less than <d> / 2");
     fi;
@@ -487,7 +493,11 @@ function(d, q, k)
 
     # Size according to Table 2.3 of [BHR13], except we replace
     # k with 2k because [BHR13] seems to have this wrong.
-    return MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
+    result :=  MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
+        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+
+    return ConjugateToStandardForm(result, "S");
 end);
 
 # Construction as in Lemma 4.4 of [HR10]

@@ -288,7 +288,7 @@ end);
 # Construction as in Proposition 8.2 of [HR05]
 BindGlobal("SubfieldSp",
 function (d, p, e, f)
-    local F, q0, b, gens, l, zeta, omega, zetaPower, C, gen;
+    local field, q0, b, gens, l, zeta, omega, zetaPower, C, gen, result;
 
     if IsOddInt(d) then
     	ErrorNoReturn("<d> must be even");
@@ -304,18 +304,18 @@ function (d, p, e, f)
         ErrorNoReturn("the quotient of <f> by <e> must be a prime");
     fi;
 
-    F := GF(p ^ e);
+    field := GF(p ^ e);
     q0 := p ^ f;
     gens := List(GeneratorsOfGroup(Sp(d, q0)));
 
     # In this case the embedding of Sp(d, q0) in Sp(d, q) is already
     # the C5-subgroup, so we just need to adjust the base field.
     if Gcd(2, b, p - 1) = 1 then
-        return MatrixGroupWithSize(F, gens, SizeSp(d, q0));
+        return MatrixGroupWithSize(field, gens, SizeSp(d, q0));
     fi;
 
     l := QuoInt(d, 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveElement(field);
     omega := PrimitiveElement(GF(q0));
     zetaPower := zeta ^ - QuoInt(q0 + 1, 2);
 
@@ -327,5 +327,9 @@ function (d, p, e, f)
     Add(gens, C);
 
     # Size according to Table 2.8 in [BHR13]
-    return MatrixGroupWithSize(F, gens, SizeSp(d, q0) * 2);
+    result := MatrixGroupWithSize(field, gens, SizeSp(d, q0) * 2);
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
+        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+
+    return ConjugateToStandardForm(result, "S");
 end);

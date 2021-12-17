@@ -182,7 +182,7 @@ end);
 # where l = d / 2, m = d / t and k = m / 2.
 BindGlobal("SpNonDegenerateImprimitives",
 function(d, q, t)
-    local m, l, k, field, one, gens, Spgen, Xi, C, D;
+    local m, l, k, field, one, gens, Spgen, Xi, C, D, result;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even");
@@ -266,7 +266,11 @@ function(d, q, t)
 
     fi;
 
-    return MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
+    result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
+        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+
+    return ConjugateToStandardForm(result, "S");
 
 end);
 
@@ -276,7 +280,7 @@ end);
 # < e_1, ..., e_l > and < f_l, ..., f_1 >.
 BindGlobal("SpIsotropicImprimitives",
 function(d, q)
-    local l, field, one, gens, J, GLgen, AorB, C;
+    local l, field, one, gens, J, GLgen, AorB, C, result;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even");
@@ -313,6 +317,10 @@ function(d, q)
 
     Add(gens, C);
 
-    return MatrixGroupWithSize(field, gens, SizeGL(l, q) * 2);
+    result := MatrixGroupWithSize(field, gens, SizeGL(l, q) * 2);
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
+        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+
+    return ConjugateToStandardForm(result, "S");
 
 end);
