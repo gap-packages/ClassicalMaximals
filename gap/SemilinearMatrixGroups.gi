@@ -139,15 +139,23 @@ end);
 # by the Gram matrix <form>, we can interpret any u, v in GF(q) ^ d as elements of 
 # GF(q ^ s) ^ (d / s) via the standard basis. Taking the trace of beta(u, v)
 # yields a sesquilinear form on the vector space GF(q) ^ d.
+#
+# Takes a unitary form and returns a unitary form if <type> = "U-U"; takes a
+# unitary form and returns a symplectic form if <type> = "U-S"; takes a
+# symplectic form and returns a symplectic form if <type> = "S-S". 
 BindGlobal("TakeTraceOfSesquilinearForm",
 function(form, q, s, type)
-    local F, d, newForm, B, conjugation, i, j, u, v, uOverGFqs, vOverGFqs;
+    local F, d, newForm, B, rootOfq, i, j, eiOverGFqsEntry, eiOverGFqsIndex,
+    ejOverGFqsEntry, ejOverGFqsIndex;
 
-    if not type in ["S", "U"] then
-        ErrorNoReturn("<type> must be 'S' or 'U'");
+    if not type in ["S-S", "U-S", "U-U"] then
+        ErrorNoReturn("<type> must be one of 'S-S', 'U-S' or 'U-U'");
     fi;
-    if type = "U" and not IsInt(Sqrt(q)) then
-        ErrorNoReturn("<q> must be a square if <type> = 'U'");
+    if type = "U-U" and not IsInt(Sqrt(q)) then
+        ErrorNoReturn("<q> must be a square if <type> = 'U-U'");
+    fi;
+    if type = "U-S" and not s = 2 then
+        ErrorNoReturn("<s> must be two if <type> = 'U-S'");
     fi;
 
     F := GF(q);
@@ -155,32 +163,48 @@ function(form, q, s, type)
     newForm := NullMat(d, d, F);
     B := CanonicalBasis(AsField(F, GF(q ^ s)));
 
-    if type = "U" then
-        conjugation := (x -> x ^ Sqrt(q));
+    if type = "U-U" then
+        rootOfq := Sqrt(q);
     fi;
 
     for i in [1..d] do
-        for j in [1..d] do
-            u := NullMat(1, d, F);
-            u[1, i] := One(F);
-            v := NullMat(1, d, F);
-            v[1, j] := One(F);
+        # The basis vector ei of GF(q) ^ d corresponds to a vector in 
+        # GF(q ^ s) ^ (d / s) with the entry eiOverGFqsEntry in the 
+        # eiOverGFqsIndex-th component.
+        eiOverGFqsEntry := B[(i - 1) mod s + 1];
+        eiOverGFqsIndex := QuoInt(i - 1, s) + 1;
 
-            uOverGFqs := ReshapeMatrix(u, d / s, s) * B;
-            vOverGFqs := ReshapeMatrix(v, d / s, s) * B;
+        for j in [1..i] do
+            ejOverGFqsEntry := B[(j - 1) mod s + 1];
+            ejOverGFqsIndex := QuoInt(j - 1, s) + 1;
 
-            if type = "S" then
-                newForm[i, j] := TraceOverFiniteField(uOverGFqs * form 
-                                                                * vOverGFqs, 
+            if type = "S-S" then
+                newForm[i, j] := TraceOverFiniteField(eiOverGFqsEntry
+                                                            * form[eiOverGFqsIndex, ejOverGFqsIndex] 
+                                                            * ejOverGFqsEntry, 
+                                                      q, s);
+            elif type = "U-S" then
+                newForm[i, j] := TraceOverFiniteField(eiOverGFqsEntry
+                                                            * form[eiOverGFqsIndex, ejOverGFqsIndex] 
+                                                            * ejOverGFqsEntry ^ q, 
                                                       q, s);
             else
-                newForm[i, j] := TraceOverFiniteField(uOverGFqs * form 
-                                                                * ApplyFunctionToEntries([vOverGFqs], 
-                                                                                         conjugation)[1], 
+                newForm[i, j] := TraceOverFiniteField(eiOverGFqsEntry 
+                                                            * form[eiOverGFqsIndex, ejOverGFqsIndex]
+                                                            * ejOverGFqsEntry ^ (rootOfq ^ s), 
                                                       q, s);
             fi;
         od;
     od;
+
+    # If type = "S-S" or type = "U-S", newForm must be an anti-symmetric matrix; 
+    # likewise, if type = "U-U", newForm must be a hermitian matrix
+    if type = "S-S" or type = "U-S" then
+        newForm := newForm - TransposedMat(newForm);
+    else
+        newForm := newForm + HermitianConjugate(newForm, rootOfq) 
+                           - DiagonalMat(DiagonalOfMat(newForm));
+    fi;
 
     return newForm;
 end);
@@ -239,8 +263,8 @@ function(d, q, s)
     fi;
 
     # Calculate the form preserved by the constructed group
-    standardForm := IdentityMat(d / s, F);
-    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q ^ 2, s, "U");
+    standardForm := InvariantSesquilinearForm(SU(m, q ^ s)).matrix;
+    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q ^ 2, s, "U-U");
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantSesquilinearForm(result, rec(matrix := formMatrix));
 
@@ -288,7 +312,7 @@ function(d, q, s)
     standardForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d / (2 * s), One(F)),
                                                   ListWithIdenticalEntries(d / (2 * s), -One(F))),
                                     F);
-    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, s, "S");
+    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, s, "S-S");
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 
@@ -299,8 +323,8 @@ end);
 # Construction as in Proposition 6.5 of [HR05]
 BindGlobal("UnitarySemilinearSp",
 function(d, q)
-    local F, gammaL1, A2, B2, omega, AandB, i, m, C, j, range, generators,
-    size, standardForm, formMatrix, result;
+    local F, gammaL1, A2, B2, omega, AandB, i, m, C, j, 
+    range, generators, size, standardForm, formMatrix, result;
     if d mod 2 <> 0 then
         ErrorNoReturn("<d> must be divisible by 2");
     fi;
@@ -334,11 +358,11 @@ function(d, q)
 
     generators := Concatenation(AandB, [C]);
     # Size according to Table 2.6 of [BHR13]
-    size := SizeGU(d / 2, q) * 2;    
+    size := SizeGU(d / 2, q) * 2; 
 
     # Calculate the form preserved by the constructed group
-    standardForm := PrimitiveElement(GF(q ^ 2)) ^ ((q ^ 2 - 1) / 4) * IdentityMat(d / 2, F);
-    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, 2, "S");
+    standardForm := omega ^ ((q + 1) / 2) * InvariantSesquilinearForm(GU(d / 2, q)).matrix;
+    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, 2, "U-S");
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 

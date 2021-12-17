@@ -186,7 +186,7 @@ function(i, dims)
         s := t - s;
         r := q mod dims[s];
         result := Concatenation([r + 1], result);
-        q := (q - r) / dims[s];
+        q := QuoInt(q, dims[s]);
     od;
 
     return result;
