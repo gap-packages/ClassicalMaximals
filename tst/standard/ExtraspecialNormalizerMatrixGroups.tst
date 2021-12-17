@@ -2,16 +2,14 @@ gap> START_TEST("ExtraspecialNormalizerMatrixGroups.tst");
 
 #
 gap> TestExtraspecialNormalizerInSL := function(args)
->   local r, m, q, G, hasSize;
+>   local r, m, q, G;
 >   r := args[1];
 >   m := args[2];
 >   q := args[3];
 >   G := ExtraspecialNormalizerInSL(r, m, q);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSL(r ^ m, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SL(r ^ m, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestExtraspecialNormalizerInSL([5, 1, 11]);
 gap> TestExtraspecialNormalizerInSL([3, 1, 7]);
@@ -25,16 +23,14 @@ gap> TestExtraspecialNormalizerInSL([2, 1, 7]);
 
 #
 gap> TestExtraspecialNormalizerInSU := function(args)
->   local r, m, q, G, hasSize;
+>   local r, m, q, G;
 >   r := args[1];
 >   m := args[2];
 >   q := args[3];
 >   G := ExtraspecialNormalizerInSU(r, m, q);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSU(r ^ m, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SU(r ^ m, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
->   Assert(0, hasSize);
 > end;;
 gap> TestExtraspecialNormalizerInSU([5, 1, 4]);
 gap> TestExtraspecialNormalizerInSU([2, 3, 3]);
@@ -49,15 +45,13 @@ gap> TestExtraspecialNormalizerInSU([3, 1, 5]);
 
 #
 gap> TestExtraspecialNormalizerInSp := function(args)
->   local m, q, G, hasSize;
+>   local m, q, G;
 >   m := args[1];
 >   q := args[2];
 >   G := ExtraspecialNormalizerInSp(m, q);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSp(2 ^ m, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(Sp(2 ^ m, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestExtraspecialNormalizerInSp([2, 3]);
 gap> TestExtraspecialNormalizerInSp([2, 5]);

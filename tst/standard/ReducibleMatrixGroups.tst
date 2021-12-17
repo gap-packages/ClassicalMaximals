@@ -2,17 +2,15 @@ gap> START_TEST("ReducibleMatrixGroups.tst");
 
 #
 gap> TestSLStabilizerOfSubspace := function(args)
->   local n, q, k, G, hasSize;
+>   local n, q, k, G;
 >   Info(InfoClassicalMaximalsTests, 1, args);
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
 >   G := SLStabilizerOfSubspace(n, q, k);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSL(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SL(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestSLStabilizerOfSubspace([4, 3, 2]);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
@@ -22,16 +20,14 @@ gap> TestSLStabilizerOfSubspace([2, 7, 1]);
 
 #
 gap> TestSUStabilizerOfIsotropicSubspace := function(args)
->   local n, q, k, G, hasSize;
+>   local n, q, k, G;
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
 >   G := SUStabilizerOfIsotropicSubspace(n, q, k);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSU(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
->   Assert(0, hasSize);
 > end;;
 gap> TestSUStabilizerOfIsotropicSubspace([4, 3, 2]);
 gap> TestSUStabilizerOfIsotropicSubspace([3, 5, 1]);
@@ -40,16 +36,14 @@ gap> TestSUStabilizerOfIsotropicSubspace([4, 3, 1]);
 
 #
 gap> TestSUStabilizerOfNonDegenerateSubspace := function(args)
->   local n, q, k, G, hasSize;
+>   local n, q, k, G;
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
 >   G := SUStabilizerOfNonDegenerateSubspace(n, q, k);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSU(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
->   Assert(0, hasSize);
 > end;;
 gap> TestSUStabilizerOfNonDegenerateSubspace([5, 3, 2]);
 gap> TestSUStabilizerOfNonDegenerateSubspace([6, 3, 2]);
@@ -58,16 +52,14 @@ gap> TestSUStabilizerOfNonDegenerateSubspace([5, 4, 1]);
 
 #
 gap> TestSpStabilizerOfIsotropicSubspace := function(args)
->   local n, q, k, G, hasSize;
+>   local n, q, k, G;
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
 >   G := SpStabilizerOfIsotropicSubspace(n, q, k);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSp(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestSpStabilizerOfIsotropicSubspace([4, 2, 1]);
 gap> TestSpStabilizerOfIsotropicSubspace([4, 9, 1]);
@@ -82,16 +74,14 @@ Error, <k> must be less than or equal to <d> / 2
 
 #
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(args)
->   local n, q, k, G, hasSize;
+>   local n, q, k, G;
 >   n := args[1];
 >   q := args[2];
 >   k := args[3];
 >   G := SpStabilizerOfNonDegenerateSubspace(n, q, k);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSp(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestSpStabilizerOfNonDegenerateSubspace([4, 2, 1]);
 gap> TestSpStabilizerOfNonDegenerateSubspace([4, 9, 1]);
@@ -106,16 +96,15 @@ Error, <k> must be less than <d> / 2
 
 #
 gap> TestOmegaStabilizerOfNonSingularVector := function(args)
->   local epsilon, d, q, hasSize, G;
+>   local epsilon, d, q, G;
 >   epsilon := args[1];
 >   d := args[2];
 >   q := args[3];
 >   G := OmegaStabilizerOfNonSingularVector(epsilon, d, q);
->   hasSize := HasSize(G);
->   RECOG.TestGroup(G, false, Size(G));
+>   Assert(0, HasSize(G));
 >   Assert(0, IsSubset(Omega(epsilon, d, q), GeneratorsOfGroup(G)));
 >   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
+>   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestOmegaStabilizerOfNonSingularVector([1, 6, 4]);
 gap> TestOmegaStabilizerOfNonSingularVector([-1, 6, 4]);

@@ -6,6 +6,7 @@
 #
 LoadPackage( "ClassicalMaximals" );
 
+ReadPackage( "ClassicalMaximals", "tst/utils.g" );
 TestDirectory(DirectoriesPackageLibrary( "ClassicalMaximals", "tst" ),
   rec(exitGAP := true));
 

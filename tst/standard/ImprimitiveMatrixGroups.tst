@@ -2,16 +2,14 @@ gap> START_TEST("ImprimitiveMatrixGroups.tst");
 
 #
 gap> TestImprimitivesMeetSL := function(args)
->   local n, q, t, G, hasSize;
+>   local n, q, t, G;
 >   n := args[1];
 >   q := args[2];
 >   t := args[3];
 >   G := ImprimitivesMeetSL(n, q, t);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSL(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SL(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestImprimitivesMeetSL([2, 3, 2]);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
@@ -21,15 +19,13 @@ gap> TestImprimitivesMeetSL([6, 5, 3]);
 
 #
 gap> TestSUIsotropicImprimitives := function(args)
->   local n, q, G, hasSize;
+>   local n, q, G;
 >   n := args[1];
 >   q := args[2];
 >   G := SUIsotropicImprimitives(n, q);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSU(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
->   Assert(0, hasSize);
 > end;;
 gap> TestSUIsotropicImprimitives([6, 2]);
 gap> TestSUIsotropicImprimitives([4, 3]);
@@ -37,16 +33,14 @@ gap> TestSUIsotropicImprimitives([2, 5]);
 
 #
 gap> TestSUNonDegenerateImprimitives := function(args)
->   local n, q, t, G, hasSize;
+>   local n, q, t, G;
 >   n := args[1];
 >   q := args[2];
 >   t := args[3];
 >   G := SUNonDegenerateImprimitives(n, q, t);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSU(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SU(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
->   Assert(0, hasSize);
 > end;;
 gap> TestSUNonDegenerateImprimitives([6, 3, 3]);
 gap> TestSUNonDegenerateImprimitives([9, 2, 3]);
@@ -54,15 +48,13 @@ gap> TestSUNonDegenerateImprimitives([3, 5, 3]);
 
 #
 gap> TestSpIsotropicImprimitives := function(args)
->   local n, q, G, hasSize;
+>   local n, q, G;
 >   n := args[1];
 >   q := args[2];
 >   G := SpIsotropicImprimitives(n, q);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSp(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestSpIsotropicImprimitives([4, 3]);
 gap> TestSpIsotropicImprimitives([4, 7]);
@@ -77,16 +69,14 @@ Error, <q> must be odd
 
 #
 gap> TestSpNonDegenerateImprimitives := function(args)
->   local n, q, t, G, hasSize;
+>   local n, q, t, G;
 >   n := args[1];
 >   q := args[2];
 >   t := args[3];
 >   G := SpNonDegenerateImprimitives(n, q, t);
->   hasSize := HasSize(G);
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSp(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(Sp(n, q), GeneratorsOfGroup(G)));
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
 > end;;
 gap> TestSpNonDegenerateImprimitives([4, 2, 2]);
 gap> TestSpNonDegenerateImprimitives([6, 5, 3]);

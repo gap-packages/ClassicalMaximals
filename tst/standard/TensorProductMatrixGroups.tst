@@ -2,16 +2,15 @@ gap> START_TEST("TensorProductMatrixGroups.tst");
 
 #
 gap> TestTensorProductStabilizerInSL := function(args)
->   local d1, d2, q, G, hasSize;
+>   local d1, d2, q, G;
 >   d1 := args[1];
 >   d2 := args[2];
 >   q := args[3];
 >   G := TensorProductStabilizerInSL(d1, d2, q);
->   hasSize := HasSize(G);
->   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SL(d1 * d2, q), GeneratorsOfGroup(G)));
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSL(d1 * d2, q, G));
 >   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
+>   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestTensorProductStabilizerInSL([2, 3, 2]);
 gap> TestTensorProductStabilizerInSL([2, 3, 3]);
@@ -23,16 +22,15 @@ gap> TestTensorProductStabilizerInSL([3, 4, 3]);
 
 #
 gap> TestTensorProductStabilizerInSU := function(args)
->   local d1, d2, q, G, hasSize;
+>   local d1, d2, q, G;
 >   d1 := args[1];
 >   d2 := args[2];
 >   q := args[3];
 >   G := TensorProductStabilizerInSU(d1, d2, q);
->   hasSize := HasSize(G);
->   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(SU(d1 * d2, q), GeneratorsOfGroup(G)));
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSU(d1 * d2, q, G));
 >   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
->   Assert(0, hasSize);
+>   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestTensorProductStabilizerInSU([2, 3, 2]);
 gap> TestTensorProductStabilizerInSU([2, 3, 3]);
@@ -43,17 +41,16 @@ gap> TestTensorProductStabilizerInSU([2, 4, 3]); # FIXME: see https://github.com
 
 #
 gap> TestTensorProductStabilizerInSp := function(args)
->   local epsilon, d1, d2, q, G, hasSize;
+>   local epsilon, d1, d2, q, G;
 >   epsilon := args[1];
 >   d1 := args[2];
 >   d2 := args[3];
 >   q := args[4];
 >   G := TensorProductStabilizerInSp(epsilon, d1, d2, q);
->   hasSize := HasSize(G);
->   RECOG.TestGroup(G, false, Size(G));
->   Assert(0, IsSubset(Sp(d1 * d2, q), GeneratorsOfGroup(G)));
+>   Assert(0, HasSize(G));
+>   Assert(0, IsSubsetSp(d1 * d2, q, G));
 >   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
->   Assert(0, hasSize);
+>   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestTensorProductStabilizerInSp([0, 2, 3, 3]);
 gap> TestTensorProductStabilizerInSp([0, 4, 3, 5]);
