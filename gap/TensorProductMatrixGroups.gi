@@ -99,7 +99,8 @@ end);
 # Construction as in Proposition 7.2 of [HR05]
 BindGlobal("TensorProductStabilizerInSp",
 function(epsilon, d1, d2, q)
-    local field, I_d1, I_d2, gens, size, Spgen, orthogonalGens, SOgen, Z_1, Z, E, result;
+    local field, I_d1, I_d2, gens, size, Spgen, orthogonalGens, SOgen, Z_1, Z,
+    E, standardSymplecticForm, standardBilinearForm, formMatrix, result;
 
     if IsOddInt(d1) then
         ErrorNoReturn("<d1> must be even");
@@ -156,6 +157,23 @@ function(epsilon, d1, d2, q)
         size := 2 * size;
     fi;
 
+    # Calculate the form preserved by the constructed group
+    standardSymplecticForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d1 / 2, One(field)),
+                                                            ListWithIdenticalEntries(d1 / 2, -One(field))),
+                                              field);
+    if epsilon = 0 then
+        standardBilinearForm := IdentityMat(d2, field);
+    elif epsilon = 1 then
+        standardBilinearForm := AntidiagonalMat(d2, field);
+    elif epsilon = -1 then
+        standardBilinearForm := IdentityMat(d2, field);
+        if IsEvenInt(d2 * (q - 1) / 4) then
+            standardBilinearForm[1, 1] := PrimitiveElement(field);
+        fi;
+    fi;
+    
+    formMatrix := LiftFormsToTensorProduct([standardSymplecticForm, standardBilinearForm], field);
     result := MatrixGroupWithSize(field, gens, size);
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix));
     return ConjugateToStandardForm(result, "S");
 end);

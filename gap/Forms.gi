@@ -164,6 +164,61 @@ function(group, type)
     return ConjugateToSesquilinearForm(group, broadType, gapForm);
 end);
 
+# Let <dims> = [d1, d2, ..., dt], consider the tensor product of the vector
+# spaces F ^ d1, F ^ d2, ..., F ^ dt and in it the i-th basis vector ei. 
+#
+# Return a list of indices [i1, i2, ..., it] such that ei is the tensor product 
+# of the basis vectors ei1, ei2, ..., eit of F ^ d1, F ^ d2, ..., F ^ dt.
+BindGlobal("GetTensorFactors",
+function(i, dims)
+    local d, t, q, s, r, result;
+
+    d := Product(dims);
+    t := Length(dims);
+    if i > d or i < 1 then
+        ErrorNoReturn("<i> must be between 0 and the product of all elements",
+                      " of <dims>");
+    fi;
+
+    result := [];
+    q := i - 1;
+    for s in [0..t - 1] do
+        s := t - s;
+        r := q mod dims[s];
+        result := Concatenation([r + 1], result);
+        q := (q - r) / dims[s];
+    od;
+
+    return result;
+end);
+
+# Let <forms> = [f1, f2, ..., ft] be a list of sesquilinear forms on the vector
+# spaces F ^ d1, F ^ d2, ..., F ^ dt. Then we can lift these to a sesquilinear
+# form f on the tensor product F ^ d1 x F ^ d2 x ... x F ^ dt by defining
+# f(v1 x v2 x ... x vt, w1 x w2 x ... x wt) = f1(v1, w1)f2(v2, w2)...ft(vt, wt).
+#
+# Return the Gram matrix of f; the forms f1, f2, ..., ft must be given as their
+# respective Gram matrices.
+BindGlobal("LiftFormsToTensorProduct",
+function(forms, F)
+    local dims, d, t, newForm, i, j, indicesi, indicesj;
+
+    dims := List(forms, f -> Size(f));
+    d := Product(dims);
+    t := Length(dims);
+    newForm := NullMat(d, d, F);
+
+    for i in [1..d] do
+        for j in [1..d] do
+            indicesi := GetTensorFactors(i, dims);
+            indicesj := GetTensorFactors(j, dims);
+
+            newForm[i, j] := Product(List([1..t], k -> (forms[k])[indicesi[k], indicesj[k]]));
+        od;
+    od;
+
+    return newForm;
+end);
 
 BindGlobal("ConjugateModule",
 function(M, q)

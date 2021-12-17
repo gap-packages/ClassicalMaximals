@@ -251,7 +251,7 @@ end);
 # Construction as in Proposition 10.2 in [HR05]
 BindGlobal("TensorInducedDecompositionStabilizerInSp",
 function(m, t, q)
-    local field, I, gens, D, result;
+    local field, I, gens, D, result, standardForm, formMatrix;
 
     if IsOddInt(m) then
         ErrorNoReturn("<m> must be even");
@@ -276,5 +276,13 @@ function(m, t, q)
     # Size according to the aforementioned proposition, but we add a
     # factor of 2 because we want the size of G, not of G / Z(G)
     result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
+
+    # Calculate the form preserved by the constructed group
+    standardForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m / 2, One(field)),
+                                                  ListWithIdenticalEntries(m / 2, -One(field))),
+                                    field);
+    formMatrix := LiftFormsToTensorProduct(ListWithIdenticalEntries(t, standardForm), field);
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix));
+
     return ConjugateToStandardForm(result, "S");
 end);
