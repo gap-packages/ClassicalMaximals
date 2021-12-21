@@ -918,7 +918,7 @@ function(n, q)
 
         # Cf. Proposition 4.5.4 (i) in [KL90] for the number of conjugates
         numberOfConjugates := Gcd(2, q - 1, r);
-        result := Concatenation(result, ConjugatesInGeneralGroup(G, generatorNormSpMinusSp, numberOfConjugates));
+        Append(result, ConjugatesInGeneralGroup(G, generatorNormSpMinusSp, numberOfConjugates));
     od;
 
     return result;
