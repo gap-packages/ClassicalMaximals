@@ -1,21 +1,17 @@
 gap> START_TEST("SubfieldMatrixGroups.tst");
 
 #
-gap> TestSubfieldSL := function(args)
->   local n, p, e, f, G;
->   n := args[1];
->   p := args[2];
->   e := args[3];
->   f := args[4];
+gap> TestSubfieldSL := function(n, p, e, f)
+>   local G;
 >   G := SubfieldSL(n, p, e, f);
 >   Assert(0, HasSize(G));
 >   Assert(0, IsSubsetSL(n, p ^ e, G));
 >   RECOG.TestGroup(G, false, Size(G));
 > end;;
-gap> TestSubfieldSL([4, 2, 4, 2]);
+gap> TestSubfieldSL(4, 2, 4, 2);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestSubfieldSL([2, 3, 6, 2]);
-gap> TestSubfieldSL([3, 7, 3, 1]);
+gap> TestSubfieldSL(2, 3, 6, 2);
+gap> TestSubfieldSL(3, 7, 3, 1);
 #@fi
 
 # Test error handling
@@ -27,21 +23,17 @@ gap> SubfieldSL(1, 1, 1, 4);
 Error, the quotient of <e> by <f> must be a prime
 
 #
-gap> TestUnitarySubfieldSU := function(args)
->   local n, p, e, f, G;
->   n := args[1];
->   p := args[2];
->   e := args[3];
->   f := args[4];
+gap> TestUnitarySubfieldSU := function(n, p, e, f)
+>   local G;
 >   G := UnitarySubfieldSU(n, p, e, f);
 >   Assert(0, HasSize(G));
 >   Assert(0, IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G)));
 >   #Assert(0, DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))); # FIXME
 >   RECOG.TestGroup(G, false, Size(G));
 > end;;
-gap> TestUnitarySubfieldSU([2, 3, 6, 2]);
-gap> TestUnitarySubfieldSU([3, 7, 3, 1]);
-gap> TestUnitarySubfieldSU([3, 5, 3, 1]);
+gap> TestUnitarySubfieldSU(2, 3, 6, 2);
+gap> TestUnitarySubfieldSU(3, 7, 3, 1);
+gap> TestUnitarySubfieldSU(3, 5, 3, 1);
 
 # Test error handling
 gap> UnitarySubfieldSU(1, 1, 1, 1);
@@ -52,18 +44,16 @@ gap> UnitarySubfieldSU(1, 1, 1, 2);
 Error, the quotient of <e> by <f> must be an odd prime
 
 #
-gap> TestSymplecticSubfieldSU := function(args)
->   local n, q, G;
->   n := args[1];
->   q := args[2];
+gap> TestSymplecticSubfieldSU := function(n, q)
+>   local G;
 >   G := SymplecticSubfieldSU(n, q);
 >   Assert(0, HasSize(G));
 >   Assert(0, IsSubsetSU(n, q, G));
 >   RECOG.TestGroup(G, false, Size(G));
 > end;;
-gap> TestSymplecticSubfieldSU([4, 5]);
-gap> TestSymplecticSubfieldSU([2, 4]);
-gap> TestSymplecticSubfieldSU([4, 3]);
+gap> TestSymplecticSubfieldSU(4, 5);
+gap> TestSymplecticSubfieldSU(2, 4);
+gap> TestSymplecticSubfieldSU(4, 3);
 
 # Test error handling
 gap> SymplecticSubfieldSU(3, 3);
@@ -86,21 +76,17 @@ gap> TestOrthogonalSubfieldSU(-1, 2, 5);
 gap> TestOrthogonalSubfieldSU(-1, 4, 3);
 
 #
-gap> TestSubfieldSp := function(args)
->   local n, p, e, f, G;
->   n := args[1];
->   p := args[2];
->   e := args[3];
->   f := args[4];
+gap> TestSubfieldSp := function(n, p, e, f)
+>   local G;
 >   G := SubfieldSp(n, p, e, f);
 >   Assert(0, HasSize(G));
 >   Assert(0, IsSubsetSp(n, p ^ e, G));
 >   RECOG.TestGroup(G, false, Size(G));
 > end;;
-gap> TestSubfieldSp([6, 2, 2, 1]);
-gap> TestSubfieldSp([4, 3, 2, 1]);
-gap> TestSubfieldSp([4, 3, 4, 2]);
-gap> TestSubfieldSp([4, 7, 2, 1]);
+gap> TestSubfieldSp(6, 2, 2, 1);
+gap> TestSubfieldSp(4, 3, 2, 1);
+gap> TestSubfieldSp(4, 3, 4, 2);
+gap> TestSubfieldSp(4, 7, 2, 1);
 
 # Test error handling
 gap> SubfieldSp(3, 2, 2, 1);
