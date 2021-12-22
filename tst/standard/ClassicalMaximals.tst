@@ -1,269 +1,510 @@
 gap> START_TEST("ClassicalMaximals.tst");
 
 #
-gap> TestClassicalMaximalsLinear := function(args)
->   Assert(0, Length(ClassicalMaximalsGeneric("L", args[1], args[2])) = args[3]);
-> end;;
-gap> TestClassicalMaximalsLinear([2, 4, 3]);
-gap> TestClassicalMaximalsLinear([2, 5, 3]);
-gap> TestClassicalMaximalsLinear([2, 7, 3]);
-gap> TestClassicalMaximalsLinear([2, 8, 3]);
-gap> TestClassicalMaximalsLinear([2, 9, 3]);
-gap> TestClassicalMaximalsLinear([2, 11, 2]);
-gap> TestClassicalMaximalsLinear([2, 13, 4]);
-gap> TestClassicalMaximalsLinear([2, 16, 4]);
-gap> TestClassicalMaximalsLinear([2, 17, 5]);
-gap> TestClassicalMaximalsLinear([2, 19, 3]);
-gap> TestClassicalMaximalsLinear([3, 2, 3]);
-gap> TestClassicalMaximalsLinear([3, 3, 4]);
-gap> TestClassicalMaximalsLinear([3, 4, 6]);
-gap> TestClassicalMaximalsLinear([3, 5, 5]);
-gap> TestClassicalMaximalsLinear([3, 7, 8]);
-gap> TestClassicalMaximalsLinear([3, 8, 5]);
-gap> TestClassicalMaximalsLinear([3, 9, 7]);
-gap> TestClassicalMaximalsLinear([3, 11, 5]);
-gap> TestClassicalMaximalsLinear([3, 13, 8]);
-gap> TestClassicalMaximalsLinear([3, 16, 8]);
-gap> TestClassicalMaximalsLinear([3, 17, 5]);
-gap> TestClassicalMaximalsLinear([3, 19, 10]);
-gap> TestClassicalMaximalsLinear([4, 2, 5]);
-gap> TestClassicalMaximalsLinear([4, 3, 8]);
-gap> TestClassicalMaximalsLinear([4, 4, 8]);
-gap> TestClassicalMaximalsLinear([4, 5, 13]);
-gap> TestClassicalMaximalsLinear([4, 7, 10]);
-gap> TestClassicalMaximalsLinear([4, 8, 8]);
-gap> TestClassicalMaximalsLinear([4, 9, 18]);
-gap> TestClassicalMaximalsLinear([4, 11, 10]);
-gap> TestClassicalMaximalsLinear([4, 13, 14]);
-gap> TestClassicalMaximalsLinear([4, 16, 9]);
-gap> TestClassicalMaximalsLinear([4, 17, 16]);
-gap> TestClassicalMaximalsLinear([4, 19, 10]);
-gap> TestClassicalMaximalsLinear([5, 2, 5]);
-gap> TestClassicalMaximalsLinear([5, 3, 6]);
-gap> TestClassicalMaximalsLinear([5, 4, 7]);
-gap> TestClassicalMaximalsLinear([5, 5, 7]);
-gap> TestClassicalMaximalsLinear([5, 7, 7]);
-gap> TestClassicalMaximalsLinear([5, 8, 7]);
-gap> TestClassicalMaximalsLinear([5, 9, 9]);
-gap> TestClassicalMaximalsLinear([5, 11, 16]);
-gap> TestClassicalMaximalsLinear([5, 13, 7]);
-gap> TestClassicalMaximalsLinear([5, 16, 12]);
-gap> TestClassicalMaximalsLinear([5, 17, 7]);
-gap> TestClassicalMaximalsLinear([5, 19, 7]);
-gap> TestClassicalMaximalsLinear([6, 2, 9]);
-gap> TestClassicalMaximalsLinear([6, 3, 13]);
-gap> TestClassicalMaximalsLinear([6, 4, 17]);
-gap> TestClassicalMaximalsLinear([6, 5, 14]);
-gap> TestClassicalMaximalsLinear([6, 7, 20]);
-gap> TestClassicalMaximalsLinear([6, 8, 13]);
-gap> TestClassicalMaximalsLinear([6, 9, 18]);
-gap> TestClassicalMaximalsLinear([6, 11, 14]);
-gap> TestClassicalMaximalsLinear([6, 13, 20]);
-gap> TestClassicalMaximalsLinear([6, 16, 18]);
-gap> TestClassicalMaximalsLinear([6, 17, 14]);
-gap> TestClassicalMaximalsLinear([6, 19, 20]);
-gap> TestClassicalMaximalsLinear([7, 2, 7]);
-gap> TestClassicalMaximalsLinear([7, 3, 8]);
-gap> TestClassicalMaximalsLinear([7, 4, 9]);
-gap> TestClassicalMaximalsLinear([7, 5, 9]);
-gap> TestClassicalMaximalsLinear([7, 7, 9]);
-gap> TestClassicalMaximalsLinear([7, 8, 22]);
-gap> TestClassicalMaximalsLinear([7, 9, 11]);
-gap> TestClassicalMaximalsLinear([7, 11, 9]);
-gap> TestClassicalMaximalsLinear([7, 13, 9]);
-gap> TestClassicalMaximalsLinear([7, 16, 10]);
-gap> TestClassicalMaximalsLinear([7, 17, 9]);
-gap> TestClassicalMaximalsLinear([7, 19, 9]);
-gap> TestClassicalMaximalsLinear([8, 2, 10]);
-gap> TestClassicalMaximalsLinear([8, 3, 16]);
-gap> TestClassicalMaximalsLinear([8, 4, 14]);
-gap> TestClassicalMaximalsLinear([8, 5, 25]);
-gap> TestClassicalMaximalsLinear([8, 7, 17]);
-gap> TestClassicalMaximalsLinear([8, 8, 14]);
-gap> TestClassicalMaximalsLinear([8, 9, 31]);
-gap> TestClassicalMaximalsLinear([8, 11, 17]);
-gap> TestClassicalMaximalsLinear([8, 13, 25]);
-gap> TestClassicalMaximalsLinear([8, 16, 15]);
-gap> TestClassicalMaximalsLinear([8, 17, 33]);
-gap> TestClassicalMaximalsLinear([8, 19, 17]);
-gap> TestClassicalMaximalsLinear([9, 2, 11]);
-gap> TestClassicalMaximalsLinear([9, 3, 12]);
-gap> TestClassicalMaximalsLinear([9, 4, 17]);
-gap> TestClassicalMaximalsLinear([9, 5, 13]);
-gap> TestClassicalMaximalsLinear([9, 7, 20]);
-gap> TestClassicalMaximalsLinear([9, 8, 13]);
-gap> TestClassicalMaximalsLinear([9, 9, 15]);
-gap> TestClassicalMaximalsLinear([9, 11, 13]);
-gap> TestClassicalMaximalsLinear([9, 13, 20]);
-gap> TestClassicalMaximalsLinear([9, 16, 18]);
-gap> TestClassicalMaximalsLinear([9, 17, 13]);
-gap> TestClassicalMaximalsLinear([9, 19, 32]);
-gap> TestClassicalMaximalsLinear([10, 2, 13]);
-gap> TestClassicalMaximalsLinear([10, 3, 17]);
-gap> TestClassicalMaximalsLinear([10, 4, 17]);
-gap> TestClassicalMaximalsLinear([10, 5, 18]);
-gap> TestClassicalMaximalsLinear([10, 7, 18]);
-gap> TestClassicalMaximalsLinear([10, 8, 17]);
-gap> TestClassicalMaximalsLinear([10, 9, 22]);
-gap> TestClassicalMaximalsLinear([10, 11, 30]);
-gap> TestClassicalMaximalsLinear([10, 13, 18]);
-gap> TestClassicalMaximalsLinear([10, 16, 26]);
-gap> TestClassicalMaximalsLinear([10, 17, 18]);
-gap> TestClassicalMaximalsLinear([10, 19, 18]);
-gap> TestClassicalMaximalsLinear([11, 2, 11]);
-gap> TestClassicalMaximalsLinear([11, 3, 12]);
-gap> TestClassicalMaximalsLinear([11, 4, 13]);
-gap> TestClassicalMaximalsLinear([11, 5, 13]);
-gap> TestClassicalMaximalsLinear([11, 7, 13]);
-gap> TestClassicalMaximalsLinear([11, 8, 13]);
-gap> TestClassicalMaximalsLinear([11, 9, 15]);
-gap> TestClassicalMaximalsLinear([11, 11, 13]);
-gap> TestClassicalMaximalsLinear([11, 13, 13]);
-gap> TestClassicalMaximalsLinear([11, 16, 14]);
-gap> TestClassicalMaximalsLinear([11, 17, 13]);
-gap> TestClassicalMaximalsLinear([11, 19, 13]);
-gap> TestClassicalMaximalsLinear([12, 2, 18]);
-gap> TestClassicalMaximalsLinear([12, 3, 24]);
-gap> TestClassicalMaximalsLinear([12, 4, 26]);
-gap> TestClassicalMaximalsLinear([12, 5, 27]);
-gap> TestClassicalMaximalsLinear([12, 7, 33]);
-gap> TestClassicalMaximalsLinear([12, 8, 22]);
-gap> TestClassicalMaximalsLinear([12, 9, 33]);
-gap> TestClassicalMaximalsLinear([12, 11, 25]);
-gap> TestClassicalMaximalsLinear([12, 13, 39]);
-gap> TestClassicalMaximalsLinear([12, 16, 27]);
-gap> TestClassicalMaximalsLinear([12, 17, 27]);
-gap> TestClassicalMaximalsLinear([12, 19, 33]);
+gap> Length(ClassicalMaximalsGeneric("L", 2, 4));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 2, 5));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 2, 7));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 2, 8));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 2, 9));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 2, 11));
+2
+gap> Length(ClassicalMaximalsGeneric("L", 2, 13));
+4
+gap> Length(ClassicalMaximalsGeneric("L", 2, 16));
+4
+gap> Length(ClassicalMaximalsGeneric("L", 2, 17));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 2, 19));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 3, 2));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 3, 3));
+4
+gap> Length(ClassicalMaximalsGeneric("L", 3, 4));
+6
+gap> Length(ClassicalMaximalsGeneric("L", 3, 5));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 3, 7));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 3, 8));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 3, 9));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 3, 11));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 3, 13));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 3, 16));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 3, 17));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 3, 19));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 4, 2));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 4, 3));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 4, 4));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 4, 5));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 4, 7));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 4, 8));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 4, 9));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 4, 11));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 4, 13));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 4, 16));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 4, 17));
+16
+gap> Length(ClassicalMaximalsGeneric("L", 4, 19));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 5, 2));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 5, 3));
+6
+gap> Length(ClassicalMaximalsGeneric("L", 5, 4));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 5, 5));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 5, 7));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 5, 8));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 5, 9));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 5, 11));
+16
+gap> Length(ClassicalMaximalsGeneric("L", 5, 13));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 5, 16));
+12
+gap> Length(ClassicalMaximalsGeneric("L", 5, 17));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 5, 19));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 6, 2));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 6, 3));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 6, 4));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 6, 5));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 6, 7));
+20
+gap> Length(ClassicalMaximalsGeneric("L", 6, 8));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 6, 9));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 6, 11));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 6, 13));
+20
+gap> Length(ClassicalMaximalsGeneric("L", 6, 16));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 6, 17));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 6, 19));
+20
+gap> Length(ClassicalMaximalsGeneric("L", 7, 2));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 7, 3));
+8
+gap> Length(ClassicalMaximalsGeneric("L", 7, 4));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 7, 5));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 7, 7));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 7, 8));
+22
+gap> Length(ClassicalMaximalsGeneric("L", 7, 9));
+11
+gap> Length(ClassicalMaximalsGeneric("L", 7, 11));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 7, 13));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 7, 16));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 7, 17));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 7, 19));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 8, 2));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 8, 3));
+16
+gap> Length(ClassicalMaximalsGeneric("L", 8, 4));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 8, 5));
+25
+gap> Length(ClassicalMaximalsGeneric("L", 8, 7));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 8, 8));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 8, 9));
+31
+gap> Length(ClassicalMaximalsGeneric("L", 8, 11));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 8, 13));
+25
+gap> Length(ClassicalMaximalsGeneric("L", 8, 16));
+15
+gap> Length(ClassicalMaximalsGeneric("L", 8, 17));
+33
+gap> Length(ClassicalMaximalsGeneric("L", 8, 19));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 9, 2));
+11
+gap> Length(ClassicalMaximalsGeneric("L", 9, 3));
+12
+gap> Length(ClassicalMaximalsGeneric("L", 9, 4));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 9, 5));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 9, 7));
+20
+gap> Length(ClassicalMaximalsGeneric("L", 9, 8));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 9, 9));
+15
+gap> Length(ClassicalMaximalsGeneric("L", 9, 11));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 9, 13));
+20
+gap> Length(ClassicalMaximalsGeneric("L", 9, 16));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 9, 17));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 9, 19));
+32
+gap> Length(ClassicalMaximalsGeneric("L", 10, 2));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 10, 3));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 10, 4));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 10, 5));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 10, 7));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 10, 8));
+17
+gap> Length(ClassicalMaximalsGeneric("L", 10, 9));
+22
+gap> Length(ClassicalMaximalsGeneric("L", 10, 11));
+30
+gap> Length(ClassicalMaximalsGeneric("L", 10, 13));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 10, 16));
+26
+gap> Length(ClassicalMaximalsGeneric("L", 10, 17));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 10, 19));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 11, 2));
+11
+gap> Length(ClassicalMaximalsGeneric("L", 11, 3));
+12
+gap> Length(ClassicalMaximalsGeneric("L", 11, 4));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 5));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 7));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 8));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 9));
+15
+gap> Length(ClassicalMaximalsGeneric("L", 11, 11));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 13));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 16));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 11, 17));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 11, 19));
+13
+gap> Length(ClassicalMaximalsGeneric("L", 12, 2));
+18
+gap> Length(ClassicalMaximalsGeneric("L", 12, 3));
+24
+gap> Length(ClassicalMaximalsGeneric("L", 12, 4));
+26
+gap> Length(ClassicalMaximalsGeneric("L", 12, 5));
+27
+gap> Length(ClassicalMaximalsGeneric("L", 12, 7));
+33
+gap> Length(ClassicalMaximalsGeneric("L", 12, 8));
+22
+gap> Length(ClassicalMaximalsGeneric("L", 12, 9));
+33
+gap> Length(ClassicalMaximalsGeneric("L", 12, 11));
+25
+gap> Length(ClassicalMaximalsGeneric("L", 12, 13));
+39
+gap> Length(ClassicalMaximalsGeneric("L", 12, 16));
+27
+gap> Length(ClassicalMaximalsGeneric("L", 12, 17));
+27
+gap> Length(ClassicalMaximalsGeneric("L", 12, 19));
+33
 
 #
-gap> TestClassicalMaximalsUnitary := function(args)
->   Assert(0, Length(ClassicalMaximalsGeneric("U", args[1], args[2])) = args[3]);
-> end;;
-gap> TestClassicalMaximalsUnitary([3, 3, 3]);
-gap> TestClassicalMaximalsUnitary([3, 4, 4]);
-gap> TestClassicalMaximalsUnitary([3, 5, 2]);
-gap> TestClassicalMaximalsUnitary([3, 7, 5]);
-gap> TestClassicalMaximalsUnitary([3, 8, 7]);
-gap> TestClassicalMaximalsUnitary([3, 9, 5]);
-gap> TestClassicalMaximalsUnitary([3, 11, 8]);
-gap> TestClassicalMaximalsUnitary([3, 13, 5]);
-gap> TestClassicalMaximalsUnitary([3, 16, 4]);
-gap> TestClassicalMaximalsUnitary([3, 17, 10]);
-gap> TestClassicalMaximalsUnitary([3, 19, 5]);
-gap> TestClassicalMaximalsUnitary([4, 2, 5]);
-gap> TestClassicalMaximalsUnitary([4, 3, 10]);
-gap> TestClassicalMaximalsUnitary([4, 4, 7]);
-gap> TestClassicalMaximalsUnitary([4, 5, 10]);
-gap> TestClassicalMaximalsUnitary([4, 7, 16]);
-gap> TestClassicalMaximalsUnitary([4, 8, 8]);
-gap> TestClassicalMaximalsUnitary([4, 9, 10]);
-gap> TestClassicalMaximalsUnitary([4, 11, 14]);
-gap> TestClassicalMaximalsUnitary([4, 13, 10]);
-gap> TestClassicalMaximalsUnitary([4, 16, 7]);
-gap> TestClassicalMaximalsUnitary([4, 17, 10]);
-gap> TestClassicalMaximalsUnitary([4, 19, 14]);
-gap> TestClassicalMaximalsUnitary([5, 2, 5]);
-gap> TestClassicalMaximalsUnitary([5, 3, 7]);
-gap> TestClassicalMaximalsUnitary([5, 4, 11]);
-gap> TestClassicalMaximalsUnitary([5, 5, 7]);
-gap> TestClassicalMaximalsUnitary([5, 7, 7]);
-gap> TestClassicalMaximalsUnitary([5, 8, 7]);
-gap> TestClassicalMaximalsUnitary([5, 9, 16]);
-gap> TestClassicalMaximalsUnitary([5, 11, 7]);
-gap> TestClassicalMaximalsUnitary([5, 13, 7]);
-gap> TestClassicalMaximalsUnitary([5, 16, 6]);
-gap> TestClassicalMaximalsUnitary([5, 17, 7]);
-gap> TestClassicalMaximalsUnitary([5, 19, 16]);
-gap> TestClassicalMaximalsUnitary([6, 2, 10]);
-gap> TestClassicalMaximalsUnitary([6, 3, 14]);
-gap> TestClassicalMaximalsUnitary([6, 4, 12]);
-gap> TestClassicalMaximalsUnitary([6, 5, 20]);
-gap> TestClassicalMaximalsUnitary([6, 7, 14]);
-gap> TestClassicalMaximalsUnitary([6, 8, 17]);
-gap> TestClassicalMaximalsUnitary([7, 2, 8]);
-gap> TestClassicalMaximalsUnitary([7, 3, 9]);
-gap> TestClassicalMaximalsUnitary([7, 8, 9]);
-gap> TestClassicalMaximalsUnitary([7, 13, 22]);
-gap> TestClassicalMaximalsUnitary([8, 2, 11]);
-gap> TestClassicalMaximalsUnitary([8, 3, 25]);
-gap> TestClassicalMaximalsUnitary([8, 4, 13]);
-gap> TestClassicalMaximalsUnitary([8, 5, 17]);
-gap> TestClassicalMaximalsUnitary([8, 8, 14]);
-gap> TestClassicalMaximalsUnitary([9, 2, 14]);
-gap> TestClassicalMaximalsUnitary([9, 3, 13]);
-gap> TestClassicalMaximalsUnitary([9, 4, 12]);
-gap> TestClassicalMaximalsUnitary([9, 5, 20]);
-gap> TestClassicalMaximalsUnitary([9, 8, 17]);
-gap> TestClassicalMaximalsUnitary([10, 2, 14]);
-gap> TestClassicalMaximalsUnitary([10, 3, 18]);
-gap> TestClassicalMaximalsUnitary([11, 2, 12]);
-gap> TestClassicalMaximalsUnitary([11, 3, 13]);
-gap> TestClassicalMaximalsUnitary([12, 2, 21]);
-gap> TestClassicalMaximalsUnitary([12, 3, 27]);
+gap> Length(ClassicalMaximalsGeneric("U", 3, 3));
+3
+gap> Length(ClassicalMaximalsGeneric("U", 3, 4));
+4
+gap> Length(ClassicalMaximalsGeneric("U", 3, 5));
+2
+gap> Length(ClassicalMaximalsGeneric("U", 3, 7));
+5
+gap> Length(ClassicalMaximalsGeneric("U", 3, 8));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 3, 9));
+5
+gap> Length(ClassicalMaximalsGeneric("U", 3, 11));
+8
+gap> Length(ClassicalMaximalsGeneric("U", 3, 13));
+5
+gap> Length(ClassicalMaximalsGeneric("U", 3, 16));
+4
+gap> Length(ClassicalMaximalsGeneric("U", 3, 17));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 3, 19));
+5
+gap> Length(ClassicalMaximalsGeneric("U", 4, 2));
+5
+gap> Length(ClassicalMaximalsGeneric("U", 4, 3));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 4, 4));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 4, 5));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 4, 7));
+16
+gap> Length(ClassicalMaximalsGeneric("U", 4, 8));
+8
+gap> Length(ClassicalMaximalsGeneric("U", 4, 9));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 4, 11));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 4, 13));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 4, 16));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 4, 17));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 4, 19));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 5, 2));
+5
+gap> Length(ClassicalMaximalsGeneric("U", 5, 3));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 4));
+11
+gap> Length(ClassicalMaximalsGeneric("U", 5, 5));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 7));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 8));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 9));
+16
+gap> Length(ClassicalMaximalsGeneric("U", 5, 11));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 13));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 16));
+6
+gap> Length(ClassicalMaximalsGeneric("U", 5, 17));
+7
+gap> Length(ClassicalMaximalsGeneric("U", 5, 19));
+16
+gap> Length(ClassicalMaximalsGeneric("U", 6, 2));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 6, 3));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 6, 4));
+12
+gap> Length(ClassicalMaximalsGeneric("U", 6, 5));
+20
+gap> Length(ClassicalMaximalsGeneric("U", 6, 7));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 6, 8));
+17
+gap> Length(ClassicalMaximalsGeneric("U", 7, 2));
+8
+gap> Length(ClassicalMaximalsGeneric("U", 7, 3));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 8));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 13));
+22
+gap> Length(ClassicalMaximalsGeneric("U", 8, 2));
+11
+gap> Length(ClassicalMaximalsGeneric("U", 8, 3));
+25
+gap> Length(ClassicalMaximalsGeneric("U", 8, 4));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 8, 5));
+17
+gap> Length(ClassicalMaximalsGeneric("U", 8, 8));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 9, 2));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 9, 3));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 9, 4));
+12
+gap> Length(ClassicalMaximalsGeneric("U", 9, 5));
+20
+gap> Length(ClassicalMaximalsGeneric("U", 9, 8));
+17
+gap> Length(ClassicalMaximalsGeneric("U", 10, 2));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 10, 3));
+18
+gap> Length(ClassicalMaximalsGeneric("U", 11, 2));
+12
+gap> Length(ClassicalMaximalsGeneric("U", 11, 3));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 12, 2));
+21
+gap> Length(ClassicalMaximalsGeneric("U", 12, 3));
+27
 
 #
-gap> TestClassicalMaximalsSymplectic := function(args)
->   Assert(0, Length(ClassicalMaximalsGeneric("S", args[1], args[2])) = args[3]);
-> end;;
-gap> TestClassicalMaximalsSymplectic([4, 3, 5]);
-gap> TestClassicalMaximalsSymplectic([4, 4, 7]);
-gap> TestClassicalMaximalsSymplectic([4, 5, 7]);
-gap> TestClassicalMaximalsSymplectic([4, 7, 8]);
-gap> TestClassicalMaximalsSymplectic([4, 8, 7]);
-gap> TestClassicalMaximalsSymplectic([4, 9, 8]);
-gap> TestClassicalMaximalsSymplectic([4, 11, 7]);
-gap> TestClassicalMaximalsSymplectic([4, 13, 7]);
-gap> TestClassicalMaximalsSymplectic([4, 16, 7]);
-gap> TestClassicalMaximalsSymplectic([4, 17, 8]);
-gap> TestClassicalMaximalsSymplectic([4, 19, 7]);
-gap> TestClassicalMaximalsSymplectic([6, 2, 7]);
-gap> TestClassicalMaximalsSymplectic([6, 3, 8]);
-gap> TestClassicalMaximalsSymplectic([6, 4, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 5, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 7, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 8, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 9, 11]);
-gap> TestClassicalMaximalsSymplectic([6, 11, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 13, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 16, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 17, 9]);
-gap> TestClassicalMaximalsSymplectic([6, 19, 9]);
-gap> TestClassicalMaximalsSymplectic([8, 2, 9]);
-gap> TestClassicalMaximalsSymplectic([8, 3, 12]);
-gap> TestClassicalMaximalsSymplectic([8, 4, 11]);
-gap> TestClassicalMaximalsSymplectic([8, 5, 13]);
-gap> TestClassicalMaximalsSymplectic([8, 7, 14]);
-gap> TestClassicalMaximalsSymplectic([8, 8, 11]);
-gap> TestClassicalMaximalsSymplectic([8, 9, 14]);
-gap> TestClassicalMaximalsSymplectic([8, 11, 13]);
-gap> TestClassicalMaximalsSymplectic([8, 13, 13]);
-gap> TestClassicalMaximalsSymplectic([8, 16, 11]);
-gap> TestClassicalMaximalsSymplectic([8, 17, 14]);
-gap> TestClassicalMaximalsSymplectic([8, 19, 13]);
-gap> TestClassicalMaximalsSymplectic([10, 2, 10]);
-gap> TestClassicalMaximalsSymplectic([10, 3, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 4, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 5, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 7, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 8, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 9, 14]);
-gap> TestClassicalMaximalsSymplectic([10, 11, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 13, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 16, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 17, 12]);
-gap> TestClassicalMaximalsSymplectic([10, 19, 12]);
-gap> TestClassicalMaximalsSymplectic([12, 2, 14]);
-gap> TestClassicalMaximalsSymplectic([12, 3, 17]);
-gap> TestClassicalMaximalsSymplectic([12, 4, 16]);
-gap> TestClassicalMaximalsSymplectic([12, 5, 18]);
-gap> TestClassicalMaximalsSymplectic([12, 7, 18]);
-gap> TestClassicalMaximalsSymplectic([12, 8, 16]);
-gap> TestClassicalMaximalsSymplectic([12, 9, 20]);
-gap> TestClassicalMaximalsSymplectic([12, 11, 18]);
-gap> TestClassicalMaximalsSymplectic([12, 13, 18]);
-gap> TestClassicalMaximalsSymplectic([12, 16, 16]);
-gap> TestClassicalMaximalsSymplectic([12, 17, 18]);
-gap> TestClassicalMaximalsSymplectic([12, 19, 18]);
+gap> Length(ClassicalMaximalsGeneric("S", 4, 3));
+5
+gap> Length(ClassicalMaximalsGeneric("S", 4, 4));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 4, 5));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 4, 7));
+8
+gap> Length(ClassicalMaximalsGeneric("S", 4, 8));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 4, 9));
+8
+gap> Length(ClassicalMaximalsGeneric("S", 4, 11));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 4, 13));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 4, 16));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 4, 17));
+8
+gap> Length(ClassicalMaximalsGeneric("S", 4, 19));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 6, 2));
+7
+gap> Length(ClassicalMaximalsGeneric("S", 6, 3));
+8
+gap> Length(ClassicalMaximalsGeneric("S", 6, 4));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 5));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 7));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 8));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 9));
+11
+gap> Length(ClassicalMaximalsGeneric("S", 6, 11));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 13));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 16));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 17));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 19));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 8, 2));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 8, 3));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 8, 4));
+11
+gap> Length(ClassicalMaximalsGeneric("S", 8, 5));
+13
+gap> Length(ClassicalMaximalsGeneric("S", 8, 7));
+14
+gap> Length(ClassicalMaximalsGeneric("S", 8, 8));
+11
+gap> Length(ClassicalMaximalsGeneric("S", 8, 9));
+14
+gap> Length(ClassicalMaximalsGeneric("S", 8, 11));
+13
+gap> Length(ClassicalMaximalsGeneric("S", 8, 13));
+13
+gap> Length(ClassicalMaximalsGeneric("S", 8, 16));
+11
+gap> Length(ClassicalMaximalsGeneric("S", 8, 17));
+14
+gap> Length(ClassicalMaximalsGeneric("S", 8, 19));
+13
+gap> Length(ClassicalMaximalsGeneric("S", 10, 2));
+10
+gap> Length(ClassicalMaximalsGeneric("S", 10, 3));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 4));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 5));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 7));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 8));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 9));
+14
+gap> Length(ClassicalMaximalsGeneric("S", 10, 11));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 13));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 16));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 17));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 10, 19));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 12, 2));
+14
+gap> Length(ClassicalMaximalsGeneric("S", 12, 3));
+17
+gap> Length(ClassicalMaximalsGeneric("S", 12, 4));
+16
+gap> Length(ClassicalMaximalsGeneric("S", 12, 5));
+18
+gap> Length(ClassicalMaximalsGeneric("S", 12, 7));
+18
+gap> Length(ClassicalMaximalsGeneric("S", 12, 8));
+16
+gap> Length(ClassicalMaximalsGeneric("S", 12, 9));
+20
+gap> Length(ClassicalMaximalsGeneric("S", 12, 11));
+18
+gap> Length(ClassicalMaximalsGeneric("S", 12, 13));
+18
+gap> Length(ClassicalMaximalsGeneric("S", 12, 16));
+16
+gap> Length(ClassicalMaximalsGeneric("S", 12, 17));
+18
+gap> Length(ClassicalMaximalsGeneric("S", 12, 19));
+18
 
 #
 gap> STOP_TEST("ClassicalMaximals.tst", 0);
