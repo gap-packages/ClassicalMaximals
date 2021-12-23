@@ -39,7 +39,7 @@ end);
 # This is the function Theta(...) from [HR05].
 BindGlobal("MapGammaLToGL",
 function(M, A, omega)
-    local result, i, j, exponent, dimensionOfA;
+    local result, i, j, exponent, dimensionOfA, omegainv;
 
     if not NumberRows(A) = NumberColumns(A) then
         ErrorNoReturn("<A> must be a square matrix");
@@ -50,10 +50,20 @@ function(M, A, omega)
                       NumberColumns(M) * dimensionOfA, 
                       DefaultFieldOfMatrix(A));
 
+    omegainv := omega^-1;
     for i in [1..NumberRows(M)] do
         for j in [1..NumberColumns(M)] do
             if not IsZero(M[i, j]) then
-                exponent := LogFFE(M[i, j], omega);
+                # Hack: for large fields, LogFFE is extremely inefficient; but
+                # for the matrices we consider (generators of SL or Sp), all
+                # entries really are either 0, 1, omega or omega^-1. All but
+                # the last one are handled efficiently by LogFFE. So we deal
+                # with the remaining case here.
+                if M[i, j] = omegainv then
+                    exponent := -1;
+                else
+                    exponent := LogFFE(M[i, j], omega);
+                fi;
                 result{[(i - 1) * dimensionOfA + 1..i * dimensionOfA]}
                       {[(j - 1) * dimensionOfA + 1..j * dimensionOfA]} 
                           := A ^ exponent;
