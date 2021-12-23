@@ -431,14 +431,8 @@ function(n, q)
     F := GF(q ^ 2);
     zeta := PrimitiveElement(F);
     result := IdentityMat(n, F);
-    if IsEvenInt(n) then
-        result[1, 1] := zeta;
-        result[n, n] := zeta ^ (-q);
-    else
-        halfOfn := QuoInt(n, 2);
-        result[halfOfn, halfOfn] := zeta;
-        result[halfOfn + 2, halfOfn + 2] := zeta ^ (-q);
-    fi;
+    result[1, 1] := zeta;
+    result[n, n] := zeta ^ (-q);
     return ImmutableMatrix(F, result);
 end);
 

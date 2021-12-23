@@ -36,7 +36,7 @@ end);
 # Return a block matrix where the block in place (i, j) is A ^ k if and only if
 # the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
 # is zero as well).
-# This is the function Theta(...) from [HR05].
+# This is the function Theta(...) from [HR05] defined on page 61 before Lemma 6.2.
 BindGlobal("MapGammaLToGL",
 function(M, A, omega)
     local result, i, j, exponent, dimensionOfA;
@@ -57,6 +57,34 @@ function(M, A, omega)
                 result{[(i - 1) * dimensionOfA + 1..i * dimensionOfA]}
                       {[(j - 1) * dimensionOfA + 1..j * dimensionOfA]} 
                           := A ^ exponent;
+            fi;
+        od;
+    od;
+
+    return result;
+end);
+
+# Variant of MapGammaLToGL: here M is assumed to be a matrix whose entries are
+# univariate rational functions, which we evaluate at A.
+BindGlobal("MapGammaLToGLRatFun",
+function(M, A)
+    local result, i, j, dimensionOfA;
+
+    if not NumberRows(A) = NumberColumns(A) then
+        ErrorNoReturn("<A> must be a square matrix");
+    fi;
+
+    dimensionOfA := NumberRows(A);
+    result := NullMat(NumberRows(M) * dimensionOfA,
+                      NumberColumns(M) * dimensionOfA,
+                      DefaultFieldOfMatrix(A));
+
+    for i in [1..NumberRows(M)] do
+        for j in [1..NumberColumns(M)] do
+            if not IsZero(M[i, j]) then
+                result{[(i - 1) * dimensionOfA + 1..i * dimensionOfA]}
+                      {[(j - 1) * dimensionOfA + 1..j * dimensionOfA]}
+                          := Value(M[i, j], A);
             fi;
         od;
     od;
@@ -115,7 +143,7 @@ function(n, q, s)
         fi;
     fi;
 
-    zeta := PrimitiveElement(GF(q ^ s));
+    zeta := PrimitiveRoot(GF(q ^ s));
     AandB := List(GeneratorsOfGroup(SL(m, q ^ s)), g -> MapGammaLToGL(g, As, zeta));
     C := IdentityMat(n, F);
     C{[1..s]}{[1..s]} := Cs;
@@ -205,6 +233,163 @@ function(form, q, s, type)
     return newForm;
 end);
 
+# Return generating matrices for GU(n,q) but with a twist: the argument `z`
+# can be set either to a primitive root of GF(q^2); or to an indeterminate. In
+# the former case, regular generators are returned. In the latter case, the
+# result are matrices whose entries are rational functions. This is useful in
+# combination with "MapGammaLToGLRatFun".
+#
+# This function is adapted from the code of the GAP library function
+# "GeneralUnitaryGroupCons", but with minor modifications and cleanup; in a
+# few cases slightly different generators may be returned, but the generated
+# groups are equal.
+BindGlobal( "GeneralUnitaryGroupGens",
+function( n, q, z )
+    local g, i, e, f, o, mat1, mat2;
+
+    f:= DefaultField(z);
+    o:= z^0;
+
+    # Construct the generators.
+    if n = 1 then
+        return [ [ [ z ^ (q-1) ] ] ];
+    fi;
+
+    mat1:= IdentityMat( n, f );
+    mat2:= NullMat( n, n, f );
+
+    if n = 2 then
+
+      # We use the isomorphism of 'SU(2,q)' and 'SL(2,q)':
+      # 'e' is mapped to '-e' under the Frobenius mapping.
+      if q mod 2 = 1 then e:= z^( (q+1)/2 ); else e:= o; fi;
+      if q = 2 then
+        mat1[1,1]:= z;
+        mat1[2,2]:= z;
+        mat1[1,2]:= z;
+        mat2[1,2]:= o;
+        mat2[2,1]:= o;
+      else
+        mat1[1,1]:= z;
+        mat1[2,2]:= z^-q;
+        mat2[1,1]:= -o;
+        mat2[1,2]:= e;
+        mat2[2,1]:= -e^-1;
+      fi;
+
+    elif n mod 2 = 0 then
+
+      mat1[1,1]:= z;
+      mat1[n,n]:= z^-q;
+
+      if q mod 2 = 1 then e:= z^( (q+1)/2 ); else e:= o; fi;
+      for i in [ 2 .. n/2 ]     do mat2[ i, i-1 ]:= o; od;
+      for i in [ n/2+1 .. n-1 ] do mat2[ i, i+1 ]:= o; od;
+      mat2[ 1, 1 ]:= o;
+      mat2[1,n/2+1]:= e;
+      mat2[n-1,n/2]:= e^-1;
+      mat2[n, n/2 ]:= -e^-1;
+
+    else
+
+      mat1[(n-1)/2  ,(n-1)/2  ]:= z;
+      mat1[(n-1)/2+2,(n-1)/2+2]:= z^-q;
+
+      for i in [ 1 .. (n-1)/2-1 ] do mat2[ i, i+1 ]:= o; od;
+      for i in [ (n-1)/2+3 .. n ] do mat2[ i, i-1 ]:= o; od;
+      mat2[(n-1)/2,    1    ]:=  -(1+z^q/z)^-1;
+      mat2[(n-1)/2,(n-1)/2+1]:= -o;
+      mat2[(n-1)/2,    n    ]:=  o;
+      mat2[(n-1)/2+1,  1    ]:= -o;
+      mat2[(n-1)/2+1,(n-1)/2+1]:= -o;
+      mat2[(n-1)/2+2,  1  ]:=  o;
+    fi;
+
+    return [ mat1, mat2 ];
+end );
+
+
+# Return generating matrices for SU(n,q) but with a twist: the argument `z`
+# can be set either to a primitive root of GF(q^2); or to an indeterminate. In
+# the former case, regular generators are returned. In the latter case, the
+# result are matrices whose entries are rational functions. This is useful in
+# combination with "MapGammaLToGLRatFun".
+#
+# This function is adapted from the code of the GAP library function
+# "SpecialUnitaryGroupCons", but with minor modifications and cleanup; in a
+# few cases slightly different generators may be returned, but the generated
+# groups are equal.
+BindGlobal( "SpecialUnitaryGroupGens",
+function( n, q, z )
+    local g, i, e, f, o, mat1, mat2;
+
+    f:= DefaultField(z);
+    o:= z^0;
+
+    # Construct the generators.
+    if n = 1 then
+        return [ IdentityMat( n, f ) ];
+    fi;
+
+    mat1:= IdentityMat( n, f );
+    mat2:= NullMat( n, n, f );
+
+    if n = 2 then
+
+      # We use the isomorphism of 'SU(2,q)' and 'SL(2,q)':
+      # 'e' is mapped to '-e' under the Frobenius mapping.
+      if q mod 2 = 1 then e:= z^( (q+1)/2 ); else e:= o; fi;
+      if q <= 3 then
+        mat1[1,2]:= e;
+        mat2[1,2]:= e;
+        mat2[2,1]:= -e^-1;
+      else
+        mat1[1,1]:= z^(q+1);
+        mat1[2,2]:= z^(-q-1);
+        mat2[1,1]:= -o;
+        mat2[1,2]:= e;
+        mat2[2,1]:= -e^-1;
+      fi;
+
+    elif n mod 2 = 0 then
+
+      mat1[1,1]:= z;
+      mat1[n,n]:= z^-q;
+      mat1[2,2]:= z^-1;
+      mat1[n-1,n-1]:= z^q;
+
+      if q mod 2 = 1 then e:= z^( (q+1)/2 ); else e:= o; fi;
+      for i in [ 2 .. n/2 ]     do mat2[ i, i-1 ]:= o; od;
+      for i in [ n/2+1 .. n-1 ] do mat2[ i, i+1 ]:= o; od;
+      mat2[ 1, 1 ]:= o;
+      mat2[1,n/2+1]:= e;
+      mat2[n-1,n/2]:= e^-1;
+      mat2[n, n/2 ]:= -e^-1;
+
+    elif n = 3 and q = 2 then
+
+      mat1:= [ [o,z,z], [0,o,z^2], [0,0,o] ] * o;
+      mat2:= [ [z,o,o], [o,o, 0 ], [o,0,0] ] * o;
+
+    else
+
+      mat1[(n-1)/2  ,(n-1)/2  ]:= z;
+      mat1[(n-1)/2+1,(n-1)/2+1]:= z^q/z;
+      mat1[(n-1)/2+2,(n-1)/2+2]:= z^-q;
+
+      for i in [ 1 .. (n-1)/2-1 ] do mat2[ i, i+1 ]:= o; od;
+      for i in [ (n-1)/2+3 .. n ] do mat2[ i, i-1 ]:= o; od;
+      mat2[(n-1)/2,    1    ]:=  -(1+z^q/z)^-1;
+      mat2[(n-1)/2,(n-1)/2+1]:= -o;
+      mat2[(n-1)/2,    n    ]:=  o;
+      mat2[(n-1)/2+1,  1    ]:= -o;
+      mat2[(n-1)/2+1,(n-1)/2+1]:= -o;
+      mat2[(n-1)/2+2,  1  ]:=  o;
+    fi;
+
+    return [ mat1, mat2 ];
+end );
+
 # Construction as in Proposition 6.6 of [HR05]
 BindGlobal("GammaLMeetSU",
 function(d, q, s)
@@ -243,11 +428,18 @@ function(d, q, s)
         generators := [Bs, Cs];
     
     else
-        omega := PrimitiveElement(GF(q ^ (2 * s)));
+        omega := Indeterminate(GF(q ^ (2 * s)));
+
         # The following two matrices generate SU(m, q ^ s) as a subgroup of SU(d, q)
-        AandB := List(GeneratorsOfGroup(SU(m, q ^ s)), g -> MapGammaLToGL(g, As, omega));
+        AandB := SpecialUnitaryGroupGens(m, q ^ s, omega);
+        AandB := List(AandB, g -> MapGammaLToGLRatFun(g, As));
+
         # Note that GUMinusSU(m, q ^ s) ^ (q + 1) has determinant 1.
-        C := MapGammaLToGL(GUMinusSU(m, q ^ s) ^ (q + 1), As, omega);
+        C := IdentityMat(m, DefaultField(omega));
+        C[1, 1] := omega ^ (q + 1);
+        C[m, m] := (omega ^ (-q ^ s)) ^ (q + 1);
+        C := MapGammaLToGLRatFun(C, As);
+
         # det(D) = 1
         D := IdentityMat(d, GF(q));
         for i in [0..m - 1] do
@@ -291,7 +483,7 @@ function(d, q, s)
     Bs := gammaL1.B;
     m := QuoInt(d, s);
 
-    omega := PrimitiveElement(GF(q ^ s));
+    omega := PrimitiveRoot(GF(q ^ s));
     AandB := List(GeneratorsOfGroup(Sp(m, q ^ s)), g -> MapGammaLToGL(g, As, omega));
 
     C := IdentityMat(d, F);
@@ -341,7 +533,8 @@ function(d, q)
     B2 := gammaL1.B;
 
     omega := PrimitiveElement(GF(q ^ 2));
-    AandB := List(GeneratorsOfGroup(GU(d / 2, q)), g -> MapGammaLToGL(g, A2, omega));
+    AandB := GeneralUnitaryGroupGens(d / 2, q, Indeterminate(GF(q ^ 2)));
+    AandB := List(AandB, g -> MapGammaLToGLRatFun(g, A2));
 
     # Choose i such that (q + 1) / 2 ^ i is odd
     i := PValuation(q + 1, 2);
