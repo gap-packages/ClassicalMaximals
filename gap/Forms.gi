@@ -164,34 +164,6 @@ function(group, type)
     return ConjugateToSesquilinearForm(group, broadType, gapForm);
 end);
 
-# Let <dims> = [d1, d2, ..., dt], consider the tensor product of the vector
-# spaces F ^ d1, F ^ d2, ..., F ^ dt and in it the i-th basis vector ei. 
-#
-# Return a list of indices [i1, i2, ..., it] such that ei is the tensor product 
-# of the basis vectors ei1, ei2, ..., eit of F ^ d1, F ^ d2, ..., F ^ dt.
-BindGlobal("GetTensorFactors",
-function(i, dims)
-    local d, t, q, s, r, result;
-
-    d := Product(dims);
-    t := Length(dims);
-    if i > d or i < 1 then
-        ErrorNoReturn("<i> must be between 0 and the product of all elements",
-                      " of <dims>");
-    fi;
-
-    result := [];
-    q := i - 1;
-    for s in [0..t - 1] do
-        s := t - s;
-        r := q mod dims[s];
-        result := Concatenation([r + 1], result);
-        q := QuoInt(q, dims[s]);
-    od;
-
-    return result;
-end);
-
 # Let <forms> = [f1, f2, ..., ft] be a list of sesquilinear forms on the vector
 # spaces F ^ d1, F ^ d2, ..., F ^ dt. Then we can lift these to a sesquilinear
 # form f on the tensor product F ^ d1 x F ^ d2 x ... x F ^ dt by defining
@@ -201,18 +173,20 @@ end);
 # respective Gram matrices.
 BindGlobal("LiftFormsToTensorProduct",
 function(forms, F)
-    local dims, d, t, newForm, i, j, indicesi, indicesj;
+    local dims, d, t, newForm, i, j, iteri, iterj, indicesi, indicesj;
 
     dims := List(forms, NrRows);
     d := Product(dims);
     t := Length(dims);
     newForm := NullMat(d, d, F);
+    dims := List(dims,d->[1..d]);
 
+    iteri := IteratorOfCartesianProduct(dims);
     for i in [1..d] do
-        indicesi := GetTensorFactors(i, dims);
+        indicesi := NextIterator(iteri);
+        iterj := IteratorOfCartesianProduct(dims);
         for j in [1..d] do
-            indicesj := GetTensorFactors(j, dims);
-
+            indicesj := NextIterator(iterj);
             newForm[i, j] := Product([1..t], k -> (forms[k])[indicesi[k], indicesj[k]]);
         od;
     od;
