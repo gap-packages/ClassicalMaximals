@@ -146,7 +146,7 @@ end);
 BindGlobal("TakeTraceOfSesquilinearForm",
 function(form, q, s, type)
     local F, d, newForm, B, rootOfq, i, j, eiOverGFqsEntry, eiOverGFqsIndex,
-    ejOverGFqsEntry, ejOverGFqsIndex;
+    ejOverGFqsEntry, ejOverGFqsIndex, exp, valueOfForm;
 
     if not type in ["S-S", "U-S", "U-U"] then
         ErrorNoReturn("<type> must be one of 'S-S', 'U-S' or 'U-U'");
@@ -167,6 +167,14 @@ function(form, q, s, type)
         rootOfq := Sqrt(q);
     fi;
 
+    if type = "S-S" then
+        exp := 1;
+    elif type = "U-S" then
+        exp := q;
+    else
+        exp := rootOfq ^ s;
+    fi;
+
     for i in [1..d] do
         # The basis vector ei of GF(q) ^ d corresponds to a vector in 
         # GF(q ^ s) ^ (d / s) with the entry eiOverGFqsEntry in the 
@@ -178,22 +186,10 @@ function(form, q, s, type)
             ejOverGFqsEntry := B[(j - 1) mod s + 1];
             ejOverGFqsIndex := QuoInt(j - 1, s) + 1;
 
-            if type = "S-S" then
-                newForm[i, j] := TraceOverFiniteField(eiOverGFqsEntry
-                                                            * form[eiOverGFqsIndex, ejOverGFqsIndex] 
-                                                            * ejOverGFqsEntry, 
-                                                      q, s);
-            elif type = "U-S" then
-                newForm[i, j] := TraceOverFiniteField(eiOverGFqsEntry
-                                                            * form[eiOverGFqsIndex, ejOverGFqsIndex] 
-                                                            * ejOverGFqsEntry ^ q, 
-                                                      q, s);
-            else
-                newForm[i, j] := TraceOverFiniteField(eiOverGFqsEntry 
-                                                            * form[eiOverGFqsIndex, ejOverGFqsIndex]
-                                                            * ejOverGFqsEntry ^ (rootOfq ^ s), 
-                                                      q, s);
-            fi;
+            valueOfForm := eiOverGFqsEntry * form[eiOverGFqsIndex, ejOverGFqsIndex] 
+                                           * ejOverGFqsEntry ^ exp;
+            newForm[i, j] := TraceOverFiniteField(valueOfForm, q, s);
+
         od;
     od;
 

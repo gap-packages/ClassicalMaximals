@@ -11,9 +11,12 @@ gap> M := GL(7, 5 ^ 2).1;;
 gap> N := ApplyFunctionToEntries(M, x -> x ^ 5);;
 gap> M = ApplyFunctionToEntries(N, x -> x ^ 5);
 true
+gap> M := IdentityMat(4);;
+gap> ReshapeMatrix(M, 2, 8);
+[ [ 1, 0, 0, 0, 0, 1, 0, 0 ], [ 0, 0, 1, 0, 0, 0, 0, 1 ] ]
 gap> M := IdentityMat(12, GF(7));;
-gap> Size(ReshapeMatrix(M, 48, 3)) = 48;
-true
+gap> DimensionsMat(ReshapeMatrix(M, 48, 3));
+[ 48, 3 ]
 gap> M := GU(5, 7).1;;
 gap> M = HermitianConjugate(HermitianConjugate(M, 7), 7);
 true

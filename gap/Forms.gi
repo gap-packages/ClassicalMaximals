@@ -203,17 +203,17 @@ BindGlobal("LiftFormsToTensorProduct",
 function(forms, F)
     local dims, d, t, newForm, i, j, indicesi, indicesj;
 
-    dims := List(forms, f -> Size(f));
+    dims := List(forms, NrRows);
     d := Product(dims);
     t := Length(dims);
     newForm := NullMat(d, d, F);
 
     for i in [1..d] do
+        indicesi := GetTensorFactors(i, dims);
         for j in [1..d] do
-            indicesi := GetTensorFactors(i, dims);
             indicesj := GetTensorFactors(j, dims);
 
-            newForm[i, j] := Product(List([1..t], k -> (forms[k])[indicesi[k], indicesj[k]]));
+            newForm[i, j] := Product([1..t], k -> (forms[k])[indicesi[k], indicesj[k]]);
         od;
     od;
 
