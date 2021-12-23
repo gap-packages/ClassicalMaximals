@@ -1,3 +1,13 @@
+CheckSize := function(G)
+  local lvl, ri;
+  Assert(0, HasSize(G));
+  lvl:=InfoLevel(InfoRecog);
+  SetInfoLevel(InfoRecog, 0);
+  ri := RecogniseGroup(G);
+  SetInfoLevel(InfoRecog, lvl);
+  return Size(ri) = Size(G);
+end;
+
 CheckGeneratorsInvertible := function(G)
   return ForAll(GeneratorsOfGroup(G),
               g -> not IsZero(Determinant(g)));

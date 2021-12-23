@@ -4,9 +4,8 @@ gap> START_TEST("ExtraspecialNormalizerMatrixGroups.tst");
 gap> TestExtraspecialNormalizerInSL := function(r, m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInSL(r, m, q);
->   Assert(0, HasSize(G));
+>   Assert(0, CheckSize(G));
 >   Assert(0, IsSubsetSL(r ^ m, q, G));
->   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestExtraspecialNormalizerInSL(5, 1, 11);
 gap> TestExtraspecialNormalizerInSL(3, 1, 7);
@@ -22,16 +21,15 @@ gap> TestExtraspecialNormalizerInSL(2, 1, 7);
 gap> TestExtraspecialNormalizerInSU := function(r, m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInSU(r, m, q);
->   Assert(0, HasSize(G));
+>   Assert(0, CheckSize(G));
 >   Assert(0, IsSubsetSU(r ^ m, q, G));
->   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestExtraspecialNormalizerInSU(5, 1, 4);
-gap> TestExtraspecialNormalizerInSU(2, 3, 3);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestExtraspecialNormalizerInSU(2, 3, 7); # FIXME: `Giving up, Schreier tree is not shallow.`
-gap> TestExtraspecialNormalizerInSU(2, 2, 3); # FIXME: `Error, the recognition described by this recognition node has failed!`
+gap> TestExtraspecialNormalizerInSU(2, 3, 3); # FIXME: `Giving up, Schreier tree is not shallow.`
+gap> TestExtraspecialNormalizerInSU(2, 3, 7); # FIXME: `Error, the recognition described by this recognition node has failed!`
 #@fi
+gap> TestExtraspecialNormalizerInSU(2, 2, 3);
 gap> TestExtraspecialNormalizerInSU(2, 2, 7);
 gap> TestExtraspecialNormalizerInSU(3, 2, 5);
 gap> TestExtraspecialNormalizerInSU(3, 1, 8);
@@ -41,9 +39,8 @@ gap> TestExtraspecialNormalizerInSU(3, 1, 5);
 gap> TestExtraspecialNormalizerInSp := function(m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInSp(m, q);
->   Assert(0, HasSize(G));
+>   Assert(0, CheckSize(G));
 >   Assert(0, IsSubsetSp(2 ^ m, q, G));
->   RECOG.TestGroup(G, false, Size(G));
 > end;;
 gap> TestExtraspecialNormalizerInSp(2, 3);
 gap> TestExtraspecialNormalizerInSp(2, 5);
