@@ -222,7 +222,7 @@ end);
 
 # Return the standard orthogonal and corresponding bilinear form as used for
 # constructions in [HR10], cf. section 3.1 loc. cit.
-BindGlobal("StandardOrthogonalForm",
+InstallGlobalFunction("StandardOrthogonalForm",
 function(epsilon, d, q)
     local field, m, F, Q, gamma, xi;
     
