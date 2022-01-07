@@ -1,7 +1,7 @@
 #
 # ClassicalMaximals: Maximal subgroups of classical groups
 #
-# Code along the lines of [BHR13], [KL90], HR05] and [HR10].
+# Code along the lines of [BHR13], [KL90], [HR05] and [HR10].
 #
 # Implementations
 #
