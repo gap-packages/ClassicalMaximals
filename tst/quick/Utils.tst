@@ -158,6 +158,47 @@ gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeGO(-1, n,
 gap> for n in [3, 5 .. 9] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSO(0, n, q) <> Size(SO(0, n, q)) then Error("bad result for SO(0, ", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSO(1, n, q) <> Size(SO(1, n, q)) then Error("bad result for SO(1, ", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSO(-1, n, q) <> Size(SO(-1, n, q)) then Error("bad result for SO(1, ", n, ", ", q, ")"); fi; od; od;
+gap> TestStandardGeneratorsOfOrthogonalGroup := function(epsilon, d, q)
+>   local gens, generatorsOfOmega, S, G, D, standardForms, F, Q, field, one,
+>   e, p, applyDToF, applyDToQ;
+>   gens := StandardGeneratorsOfOrthogonalGroup(epsilon, d, q);
+>   generatorsOfOmega := gens.generatorsOfOmega;
+>   S := gens.S;
+>   G := gens.G;
+>   D := gens.D;
+>   standardForms := StandardOrthogonalForm(epsilon, d, q);
+>   F := standardForms.F;
+>   Q := standardForms.Q;
+>   field := GF(q);
+>   one := One(field);
+>   Assert(0, ForAll(generatorsOfOmega, g -> FancySpinorNorm(F, field, g) = 1));
+>   Assert(0, S * F * TransposedMat(S) = F);
+>   Assert(0, DiagonalOfMat(S * Q * TransposedMat(S)) = DiagonalOfMat(Q));
+>   Assert(0, Determinant(S) = one);
+>   Assert(0, FancySpinorNorm(F, field, S) = -1);
+>   Assert(0, G * F * TransposedMat(G) = F);
+>   Assert(0, DiagonalOfMat(G * Q * TransposedMat(G)) = DiagonalOfMat(Q));
+>   Assert(0, Determinant(G) = -one);
+>   e := DegreeOverPrimeField(field);
+>   p := Root(q, e);
+>   if IsEvenInt(q) or IsEvenInt(e) or p mod 8 = 1 or p mod 8 = 7 then
+>       Assert(0, FancySpinorNorm(F, field, G) = 1);
+>   else
+>       Assert(0, FancySpinorNorm(F, field, G) = -1);
+>   fi;
+>   applyDToF := D * F * TransposedMat(D);
+>   Assert(0, applyDToF * F[1, d] / applyDToF[1, d] = F);
+>   applyDToQ := D * Q * TransposedMat(D);
+>   Assert(0, DiagonalOfMat(applyDToQ * F[1, d] / applyDToF[1, d]) = DiagonalOfMat(Q)); 
+> end;;
+gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 2, 7);
+gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 2, 5);
+gap> TestStandardGeneratorsOfOrthogonalGroup(1, 6, 9);
+gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 6, 9);
+gap> TestStandardGeneratorsOfOrthogonalGroup(0, 5, 11);
+gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 2, 8);
+gap> TestStandardGeneratorsOfOrthogonalGroup(1, 6, 8);
+gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 6, 8);
 
 #
 gap> STOP_TEST("Utils.tst", 0);

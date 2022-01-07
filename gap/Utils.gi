@@ -556,7 +556,7 @@ function(epsilon, d, q)
     else
         # q even
         if d = 2 and epsilon = -1 then
-            S := ReflectionMatrix(2, q, Q, "Q", [one, 0]);
+            S := ReflectionMatrix(2, q, Q, "Q", one * [1, 0]);
         else
             S := ReflectionMatrix(d, q, Q, "Q", 
                                   one * Concatenation([1],
@@ -566,6 +566,9 @@ function(epsilon, d, q)
 
         # SO(epsilon, d, q) = GO(epsilon, d, q) since q is even
         G := IdentityMat(d, GF(q));
+
+        # as given in Table 2 of [MR11]
+        D := zeta ^ (q / 2) * IdentityMat(d, field);
     fi;
 
     if epsilon = 0 then
@@ -575,7 +578,7 @@ function(epsilon, d, q)
     elif epsilon = 1 then
         D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m, zeta),
                                        ListWithIdenticalEntries(m, one)));
-    else
+    elif IsOddInt(q) then
         xi := PrimitiveElement(GF(q ^ 2));
         D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m - 1, zeta),
                                        one * [0, 0],

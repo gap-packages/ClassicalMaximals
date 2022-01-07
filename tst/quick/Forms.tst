@@ -88,6 +88,15 @@ gap> TestFormChangingFunctions([6, 4, "O+", AntidiagonalMat(Z(4) ^ 0 * [1, 1, 1,
 gap> Q := QuadraticForm(Group(GeneratorsOfGroup(SO(5, 5))));;
 gap> Q / Q[5, 5] = InvariantQuadraticForm(SO(5, 5)).matrix;
 true
+gap> TestStandardOrthogonalForm := function(epsilon, d, q)
+>   local standardForm;
+>   standardForm := StandardOrthogonalForm(epsilon, d, q);
+>   Assert(0, standardForm.F = standardForm.Q + TransposedMat(standardForm.Q));
+> end;;
+gap> TestStandardOrthogonalForm(0, 5, 7);
+gap> TestStandardOrthogonalForm(1, 6, 9);
+gap> TestStandardOrthogonalForm(-1, 6, 9);
+gap> TestStandardOrthogonalForm(-1, 6, 4);
 
 #
 gap> STOP_TEST("Forms.tst", 0);
