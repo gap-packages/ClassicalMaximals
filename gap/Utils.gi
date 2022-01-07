@@ -486,6 +486,107 @@ function(epsilon, n, q)
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
 
+# Construct standard generators generatorsOfOmega, S, G, D for the orthogonal 
+# groups as used in [HR10], with the following properties:
+#   * generatorsOfOmega generate Omega(epsilon, d, q)
+#   * generatorsOfOmega and S generate SO(epsilon, d, q)
+#   * generatorsOfOmega, S and G generate GO(epsilon, d, q)
+#   * the spinor norm of G is 1 
+#   * D generates CO(epsilon, d, q) mod GO(epsilon, d, q)
+# Construction as in Theorem 3.9 loc. cit.
+BindGlobal("StandardGeneratorsOfOrthogonalGroup",
+function(epsilon, d, q)
+    local field, one, zeta, standardForm, Q, m, conjugatedOmega, 
+    generatorsOfOmega, e, p, R0, R1, S, G, D, xi;
+    
+    if not epsilon in [-1, 0, 1] then
+        ErrorNoReturn("<epsilon> must be one of -1, 0, 1");
+    fi;
+    if epsilon = 0 and IsEvenInt(d) then
+        ErrorNoReturn("<epsilon> must be one of -1 or 1 if <d> is even");
+    fi;
+    if epsilon <> 0 and IsOddInt(d) then
+        ErrorNoReturn("<epsilon> must be 0 if <d> is odd");
+    fi;
+    if IsEvenInt(q) and IsOddInt(d) then
+        ErrorNoReturn("<d> must be even if <q> is even");
+    fi;
+
+    field := GF(q);
+    one := One(field);
+    zeta := PrimitiveElement(field);
+    standardForm := StandardOrthogonalForm(epsilon, d, q);
+    Q := standardForm.Q;
+    m := QuoInt(d, 2);
+
+    conjugatedOmega := ConjugateToSesquilinearForm(Omega(epsilon, d, q), "O-Q", Q);
+    generatorsOfOmega := ShallowCopy(GeneratorsOfGroup(conjugatedOmega));
+    if Length(generatorsOfOmega) = 1 then
+        # this is in particular the case if d = 2
+        Add(generatorsOfOmega, IdentityMat(d, GF(q)));
+    fi;
+
+    if IsOddInt(q) then
+        if d = 2 and epsilon = -1 then
+            e := DegreeOverPrimeField(field);
+            p := Root(q, e);
+            if IsEvenInt(e) or p mod 8 = 1 or p mod 8 = 7 then
+                # by quadratic reciprocity, this is the case where 2 is a
+                # square in GF(q)
+                R0 := ReflectionMatrix(2, q, Q, "Q", one * [1, 0]);
+                R1 := ReflectionMatrix(2, q, Q, "Q", one * [0, 1]);
+            else
+                R0 := ReflectionMatrix(2, q, Q, "Q", one * [0, 1]);
+                R1 := ReflectionMatrix(2, q, Q, "Q", one * [1, 0]);
+            fi;
+        else
+            R0 := ReflectionMatrix(d, q, Q, "Q", 
+                                   one * Concatenation([1], 
+                                                       ListWithIdenticalEntries(d - 2, 0), 
+                                                       [1 / 2]));
+            R1 := ReflectionMatrix(d, q, Q, "Q",
+                                   one * Concatenation([1], 
+                                                       ListWithIdenticalEntries(d - 2, 0),
+                                                       [zeta / 2]));
+        fi;
+
+        S := R0 * R1;
+        G := R0;
+
+    else
+        # q even
+        if d = 2 and epsilon = -1 then
+            S := ReflectionMatrix(2, q, Q, "Q", [one, 0]);
+        else
+            S := ReflectionMatrix(d, q, Q, "Q", 
+                                  one * Concatenation([1],
+                                                      ListWithIdenticalEntries(d - 2, 0),
+                                                      [1]));
+        fi;
+
+        # SO(epsilon, d, q) = GO(epsilon, d, q) since q is even
+        G := IdentityMat(d, GF(q));
+    fi;
+
+    if epsilon = 0 then
+        D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m, zeta ^ 2),
+                                       [zeta],
+                                       ListWithIdenticalEntries(m, one)));
+    elif epsilon = 1 then
+        D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m, zeta),
+                                       ListWithIdenticalEntries(m, one)));
+    else
+        xi := PrimitiveElement(GF(q ^ 2));
+        D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m - 1, zeta),
+                                       one * [0, 0],
+                                       ListWithIdenticalEntries(m - 1, one)));
+        D[m, m + 1] := xi + xi ^ q;
+        D[m + 1, m] := zeta * (xi + xi ^ q) ^ (-1);
+    fi;
+
+    return rec(generatorsOfOmega := generatorsOfOmega, S := S, G := G, D := D);        
+end);
+
 # Compute the spinor norm of an element of an orthogonal group.
 # We use Lemma 3.5 (2) from [HR10] for q even.
 #

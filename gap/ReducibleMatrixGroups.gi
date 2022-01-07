@@ -503,7 +503,7 @@ end);
 # Construction as in Lemma 4.4 of [HR10]
 BindGlobal("OmegaStabilizerOfNonSingularVector",
 function(epsilon, d, q)
-    local field, m, one, zero, gamma, F, Q, w, L, HStar, N, H, j, wj,
+    local field, one, zero, standardForm, F, Q, w, L, HStar, N, H, j, wj,
         matForLinSys, rightSideForLinSys, particularSol, nullspace, basisVector, z,
         alpha, gens, result;
     
@@ -518,21 +518,14 @@ function(epsilon, d, q)
     fi;
 
     field := GF(q);
-    m := QuoInt(d, 2);
     one := One(field);
     zero := Zero(field);
 
     # Q and F are the matrices of the quadratic form and corresponding polar
     # bilinear form we will use in what follows
-    F := AntidiagonalMat(d, field);
-    Q := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m, one),
-                                       ListWithIdenticalEntries(m, zero)),
-                         field);
-    if epsilon = -1 then
-        gamma := FindGamma(q);
-        Q[m, m] := one;
-        Q[m + 1, m + 1] := gamma;
-    fi;
+    standardForm := StandardOrthogonalForm(epsilon, d, q);
+    F := standardForm.F;
+    Q := standardForm.Q;
 
     # This is the vector we will stabilise; we have w * Q * w^T = 1
     w := Concatenation([one], ListWithIdenticalEntries(d - 2, zero), [one]);

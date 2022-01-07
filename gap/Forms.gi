@@ -220,6 +220,56 @@ function(forms, F)
     return newForm;
 end);
 
+# Return the standard orthogonal and corresponding bilinear form as used for
+# constructions in [HR10], cf. section 3.1 loc. cit.
+BindGlobal("StandardOrthogonalForm",
+function(epsilon, d, q)
+    local field, m, F, Q, gamma, xi;
+    
+    if not epsilon in [-1, 0, 1] then
+        ErrorNoReturn("<epsilon> must be one of -1, 0, 1");
+    fi;
+    if epsilon = 0 and IsEvenInt(d) then
+        ErrorNoReturn("<epsilon> must be one of -1 or 1 if <d> is even");
+    fi;
+    if epsilon <> 0 and IsOddInt(d) then
+        ErrorNoReturn("<epsilon> must be 0 if <d> is odd");
+    fi;
+    if IsEvenInt(q) and IsOddInt(d) then
+        ErrorNoReturn("<d> must be even if <q> is even");
+    fi;
+
+    field := GF(q);
+    m := QuoInt(d, 2);
+    F := AntidiagonalMat(d, field);
+
+    if IsOddInt(d * q) then
+        Q := AntidiagonalMat(One(field) * Concatenation(ListWithIdenticalEntries(m, 1),
+                                                        [1 / 2],
+                                                        ListWithIdenticalEntries(m, 0)),
+                             field);
+    else
+        Q := AntidiagonalMat(One(field) * Concatenation(ListWithIdenticalEntries(m, 1),
+                                                        ListWithIdenticalEntries(m, 0)),
+                             field);
+        if epsilon = -1 then
+            if IsEvenInt(q) then
+                gamma := FindGamma(q);
+            else
+                xi := PrimitiveElement(GF(q ^ 2));
+                gamma := xi ^ (q + 1) * (xi + xi ^ q) ^ (-2);
+            fi;
+
+            F[m, m] := 2 * gamma ^ 0;
+            F[m + 1, m + 1] := 2 * gamma;
+            Q[m, m] := gamma ^ 0;
+            Q[m + 1, m + 1] := gamma;
+        fi;
+    fi;
+
+    return rec(Q := Q, F := F);
+end);
+
 BindGlobal("ConjugateModule",
 function(M, q)
   return GModuleByMats(List(MTX.Generators(M), A -> ApplyFunctionToEntries(A, x -> x ^ q)), 
