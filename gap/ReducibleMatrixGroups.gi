@@ -625,7 +625,7 @@ function(epsilon, d, q, epsilon_0, k)
     else
 
         # The matrices G have spinor norm 1 and determinant -1
-        # respectively, so the matrix H_6 has spinor norm 1 and
+        # respectively, so the matrix H_5 has spinor norm 1 and
         # determinant 1 and is therefore in Omega(epsilon, d, q).
         H_5 := IdentityMat(d, field);
         H_5{[1..k]}{[1..k]} := orthogonal_gens_1.G;
