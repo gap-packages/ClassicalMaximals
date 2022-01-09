@@ -500,6 +500,167 @@ function(d, q, k)
     return ConjugateToStandardForm(result, "S");
 end);
 
+# Construction as in Lemma 4.3 of [HR10]
+BindGlobal("OmegaStabilizerOfNonDegenerateSubspace",
+function(epsilon, d, q, epsilon_0, k)
+    local m, epsilon_1, epsilon_2, orthogonal_gens_1, orthogonal_gens_2, field, gens, gen_1, gen_2, H, size, H_5, H_6, Q, F, result;
+
+    # All of the conditions below follow from the general rules of
+    # orthogonal groups as well as Table 1 from [HR10], except we
+    # use epsilon_0 where the table uses epsilon_1 since Lemma 4.3
+    # repurposes that name.
+    if not epsilon in [-1, 0, 1] then
+        ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
+    elif not epsilon_0 in [-1, 0, 1] then
+        ErrorNoReturn("<epsilon_1> must be in [-1, 0, 1]");
+    fi;
+
+    m := QuoInt(d, 2);
+
+    if epsilon = 0 then
+
+        if IsEvenInt(d) then
+            ErrorNoReturn("<d> must be odd");
+        elif not epsilon_0 in [-1, 1] then
+            ErrorNoReturn("<epsilon_1> must be -1 or 1");
+        elif IsEvenInt(k) then
+            ErrorNoReturn("<k> must be odd");
+        elif k >= d then
+            ErrorNoReturn("<k> must be less than <d>");
+        fi;
+
+        epsilon_1 := 0;
+        epsilon_2 := epsilon_0;
+
+    elif epsilon = 1 then
+
+        if IsOddInt(d) then
+            ErrorNoReturn("<d> must be even");
+        fi;
+        if IsOddInt(k) then
+            if IsEvenInt(k) then
+                ErrorNoReturn("<q> must be odd");
+            fi;
+        fi;
+        if epsilon_0 = 0 then
+            if IsEvenInt(k) then
+                ErrorNoReturn("<k> must be odd");
+            fi;
+        elif epsilon_0 in [-1, 1] then
+            if IsOddInt(k) then
+                ErrorNoReturn("<k> must be even");
+            fi;
+        fi;
+        if k >= m then
+            ErrorNoReturn("<k> must be less than m");
+        fi;
+
+        epsilon_1 := epsilon_0;
+        epsilon_2 := epsilon_0;
+
+    elif epsilon = -1 then
+
+        if IsOddInt(d) then
+            ErrorNoReturn("<d> must be even");
+        fi;
+        if IsOddInt(k) then
+            if IsEvenInt(k) then
+                ErrorNoReturn("<q> must be odd");
+            fi;
+        fi;
+        if epsilon_0 = 0 then
+            if IsEvenInt(k) then
+                ErrorNoReturn("<k> must be odd");
+            fi;
+            if k = m then
+                ErrorNoReturn("<k> must not be equal to <m>");
+            fi;
+        elif epsilon_0 in [-1, 1] then
+            if IsOddInt(k) then
+                ErrorNoReturn("<k> must be even");
+            fi;
+        fi;
+        if k > m then
+            ErrorNoReturn("<k> must be less than or equal to m");
+        fi;
+
+        epsilon_1 := epsilon_0;
+        epsilon_2 := -epsilon_0;
+
+    fi;
+
+    orthogonal_gens_1 := StandardGeneratorsOfOrthogonalGroup(epsilon_1, k, q);
+    orthogonal_gens_2 := StandardGeneratorsOfOrthogonalGroup(epsilon_2, d - k, q);
+
+    field := GF(q);
+    gens := [];
+
+    for gen_1 in orthogonal_gens_1.generatorsOfOmega do
+        for gen_2 in orthogonal_gens_2.generatorsOfOmega do
+            H := IdentityMat(d, field);
+            H{[1..k]}{[1..k]} := gen_1;
+            H{[k + 1..d]}{[k + 1..d]} := gen_2;
+            Add(gens, H);
+        od;
+    od;
+
+    # Size according to Table 2.3 of [BHR13]
+    size := SizeSO(epsilon_1, k, q) * SizeSO(epsilon_2, d - k, q);
+
+    if IsEvenInt(q) then
+
+        H_5 := IdentityMat(d, field);
+        H_5{[1..k]}{[1..k]} := orthogonal_gens_1.S;
+        H_5{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
+        Add(gens, H_5);
+
+        # The constructed group preserves this form matrix.
+        Q := IdentityMat(d, field);
+        Q{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).Q;
+        Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, k, q).Q;
+
+        result := MatrixGroupWithSize(field, gens, QuoInt(size, 2));
+        SetInvariantQuadraticForm(result, rec(matrix := Q));
+
+    else
+
+        # The matrices G have spinor norm 1 and determinant -1
+        # respectively, so the result has spinor norm 1 and
+        # determinant 1 and is therefore in SO(epsilon, d, q).
+        H_5 := IdentityMat(d, field);
+        H_5{[1..k]}{[1..k]} := orthogonal_gens_1.G;
+        H_5{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.G;
+        Add(gens, H_5);
+
+        if k > 1 then
+            H_6 := IdentityMat(d, field);
+            H_6{[1..k]}{[1..k]} := orthogonal_gens_1.S;
+            H_6{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
+            Add(gens, H_6);
+        else
+            size := QuoInt(size, 2);
+        fi;
+
+        # The constructed group preserves this form matrix.
+        F := IdentityMat(d, field);
+        F{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).F;
+        F{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).F;
+
+        result := MatrixGroupWithSize(field, gens, size);
+        SetInvariantBilinearForm(result, rec(matrix := F));
+
+    fi;
+
+    if epsilon = -1 then
+        return ConjugateToStandardForm(result, "O-");
+    elif epsilon = 0 then
+        return ConjugateToStandardForm(result, "O");
+    else
+        return ConjugateToStandardForm(result, "O+");
+    fi;
+
+end);
+
 # Construction as in Lemma 4.4 of [HR10]
 BindGlobal("OmegaStabilizerOfNonSingularVector",
 function(epsilon, d, q)
