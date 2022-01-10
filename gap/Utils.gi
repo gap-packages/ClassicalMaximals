@@ -515,6 +515,13 @@ function(epsilon, d, q)
     field := GF(q);
     one := One(field);
     zeta := PrimitiveElement(field);
+
+    # In this case, 1 = Omega = SO, GO = Z_2 and CO = Z_(q - 1)
+    # up to isomorphisms.
+    if d = 1 then
+        return rec( generatorsOfOmega := [IdentityMat(1, field)], S := IdentityMat(1, field), G := [[-one]], D := [[zeta]] );
+    fi;
+
     standardForm := StandardOrthogonalForm(epsilon, d, q);
     Q := standardForm.Q;
     m := QuoInt(d, 2);

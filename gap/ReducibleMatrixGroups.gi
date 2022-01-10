@@ -514,6 +514,9 @@ function(epsilon, d, q, epsilon_0, k)
     elif not epsilon_0 in [-1, 0, 1] then
         ErrorNoReturn("<epsilon_1> must be in [-1, 0, 1]");
     fi;
+    if IsEvenInt(q) and IsOddInt(d) then
+        ErrorNoReturn("<d> must be even if <q> is even");
+    fi;
 
     m := QuoInt(d, 2);
 
@@ -604,7 +607,11 @@ function(epsilon, d, q, epsilon_0, k)
         od;
     od;
 
-    # Size according to Table 2.3 of [BHR13]
+    # Size according to Table 2.3 of [BHR13], in case q even
+    # we will divide by 2. Because we use the size of SO instead
+    # of Omega and Omega = SO (not |SO| = 2 * |Omega|) in case
+    # k = 1, we do not need to divide by 2 for k = 1, but this
+    # is still consistent with [HR10].
     size := SizeSO(epsilon_1, k, q) * SizeSO(epsilon_2, d - k, q);
 
     if IsEvenInt(q) then
@@ -617,7 +624,7 @@ function(epsilon, d, q, epsilon_0, k)
         # The constructed group preserves this form matrix.
         Q := IdentityMat(d, field);
         Q{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).Q;
-        Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, k, q).Q;
+        Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).Q;
 
         result := MatrixGroupWithSize(field, gens, QuoInt(size, 2));
         SetInvariantQuadraticForm(result, rec(matrix := Q));
@@ -637,8 +644,6 @@ function(epsilon, d, q, epsilon_0, k)
             H_6{[1..k]}{[1..k]} := orthogonal_gens_1.S;
             H_6{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
             Add(gens, H_6);
-        else
-            size := QuoInt(size, 2);
         fi;
 
         # The constructed group preserves this form matrix.

@@ -75,6 +75,25 @@ gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
 Error, <k> must be less than <d> / 2
 
 #
+gap> TestOmegaStabilizerOfNonDegenerateSubspace := function(epsilon, d, q, epsilon_0, k)
+>   local G;
+>   G := OmegaStabilizerOfNonDegenerateSubspace(epsilon, d, q, epsilon_0, k);
+>   Assert(0, CheckSize(G));
+>   Assert(0, IsSubset(Omega(epsilon, d, q), GeneratorsOfGroup(G)));
+>   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
+> end;;
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, 1, 3);
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, -1, 5);
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 5, -1, 2);
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 5, 0, 1);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 8, 1, 2); # `Error, !!!`, may be related to https://github.com/gap-packages/recog/issues/12
+#@fi
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, -1, 4);
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 7, 0, 1);
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 8, 1, 2);
+
+#
 gap> TestOmegaStabilizerOfNonSingularVector := function(epsilon, d, q)
 >   local G;
 >   G := OmegaStabilizerOfNonSingularVector(epsilon, d, q);
