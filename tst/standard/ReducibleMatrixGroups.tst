@@ -93,6 +93,44 @@ gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, -1, 4);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 7, 0, 1);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 8, 1, 2);
 
+# Test error handling
+gap> OmegaStabilizerOfNonDegenerateSubspace(2, 0, 0, 0, 0);
+Error, <epsilon> must be in [-1, 0, 1]
+gap> OmegaStabilizerOfNonDegenerateSubspace(1, 2, 3, 2, 1);
+Error, <epsilon_0> must be in [-1, 0, 1]
+gap> OmegaStabilizerOfNonDegenerateSubspace(0, 5, 4, 1, 2);
+Error, <d> must be even if <q> is even
+gap> OmegaStabilizerOfNonDegenerateSubspace(0, 4, 5, 1, 1);
+Error, <d> must be odd
+gap> OmegaStabilizerOfNonDegenerateSubspace(0, 5, 5, 0, 1);
+Error, <epsilon_0> must be -1 or 1
+gap> OmegaStabilizerOfNonDegenerateSubspace(0, 5, 5, 1, 2);
+Error, <k> must be odd
+gap> OmegaStabilizerOfNonDegenerateSubspace(0, 5, 5, 1, 7);
+Error, <k> must be less than <d>
+gap> OmegaStabilizerOfNonDegenerateSubspace(1, 5, 5, 0, 1);
+Error, <d> must be even
+gap> OmegaStabilizerOfNonDegenerateSubspace(1, 4, 4, 0, 1);
+Error, <q> must be odd if <k> is odd
+gap> OmegaStabilizerOfNonDegenerateSubspace(1, 6, 4, 0, 2);
+Error, <k> must be odd if <epsilon_0> is 0
+gap> OmegaStabilizerOfNonDegenerateSubspace(1, 4, 5, 1, 1);
+Error, <k> must be even if <epsilon_0> is 1 or -1
+gap> OmegaStabilizerOfNonDegenerateSubspace(1, 4, 5, 0, 3);
+Error, <k> must be less than <d> / 2
+gap> OmegaStabilizerOfNonDegenerateSubspace(-1, 5, 5, 0, 1);
+Error, <d> must be even
+gap> OmegaStabilizerOfNonDegenerateSubspace(-1, 4, 4, 0, 1);
+Error, <q> must be odd if <k> is odd
+gap> OmegaStabilizerOfNonDegenerateSubspace(-1, 6, 4, 0, 2);
+Error, <k> must be odd if <epsilon_0> is 0
+gap> OmegaStabilizerOfNonDegenerateSubspace(-1, 6, 5, 0, 3);
+Error, <k> must not be equal to <d> / 2 if <epsilon_0> is 0
+gap> OmegaStabilizerOfNonDegenerateSubspace(-1, 4, 5, 1, 1);
+Error, <k> must be even if <epsilon_0> is 1 or -1
+gap> OmegaStabilizerOfNonDegenerateSubspace(-1, 4, 5, 1, 4);
+Error, <k> must be less than or equal to <d> / 2
+
 #
 gap> TestOmegaStabilizerOfNonSingularVector := function(epsilon, d, q)
 >   local G;

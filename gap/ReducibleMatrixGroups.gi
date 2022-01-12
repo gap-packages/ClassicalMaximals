@@ -512,7 +512,7 @@ function(epsilon, d, q, epsilon_0, k)
     if not epsilon in [-1, 0, 1] then
         ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
     elif not epsilon_0 in [-1, 0, 1] then
-        ErrorNoReturn("<epsilon_1> must be in [-1, 0, 1]");
+        ErrorNoReturn("<epsilon_0> must be in [-1, 0, 1]");
     fi;
     if IsEvenInt(q) and IsOddInt(d) then
         ErrorNoReturn("<d> must be even if <q> is even");
@@ -525,7 +525,7 @@ function(epsilon, d, q, epsilon_0, k)
         if IsEvenInt(d) then
             ErrorNoReturn("<d> must be odd");
         elif not epsilon_0 in [-1, 1] then
-            ErrorNoReturn("<epsilon_1> must be -1 or 1");
+            ErrorNoReturn("<epsilon_0> must be -1 or 1");
         elif IsEvenInt(k) then
             ErrorNoReturn("<k> must be odd");
         elif k >= d then
@@ -541,21 +541,21 @@ function(epsilon, d, q, epsilon_0, k)
             ErrorNoReturn("<d> must be even");
         fi;
         if IsOddInt(k) then
-            if IsEvenInt(k) then
-                ErrorNoReturn("<q> must be odd");
+            if IsEvenInt(q) then
+                ErrorNoReturn("<q> must be odd if <k> is odd");
             fi;
         fi;
         if epsilon_0 = 0 then
             if IsEvenInt(k) then
-                ErrorNoReturn("<k> must be odd");
+                ErrorNoReturn("<k> must be odd if <epsilon_0> is 0");
             fi;
         elif epsilon_0 in [-1, 1] then
             if IsOddInt(k) then
-                ErrorNoReturn("<k> must be even");
+                ErrorNoReturn("<k> must be even if <epsilon_0> is 1 or -1");
             fi;
         fi;
         if k >= m then
-            ErrorNoReturn("<k> must be less than m");
+            ErrorNoReturn("<k> must be less than <d> / 2");
         fi;
 
         epsilon_1 := epsilon_0;
@@ -567,24 +567,24 @@ function(epsilon, d, q, epsilon_0, k)
             ErrorNoReturn("<d> must be even");
         fi;
         if IsOddInt(k) then
-            if IsEvenInt(k) then
-                ErrorNoReturn("<q> must be odd");
+            if IsEvenInt(q) then
+                ErrorNoReturn("<q> must be odd if <k> is odd");
             fi;
         fi;
         if epsilon_0 = 0 then
             if IsEvenInt(k) then
-                ErrorNoReturn("<k> must be odd");
+                ErrorNoReturn("<k> must be odd if <epsilon_0> is 0");
             fi;
             if k = m then
-                ErrorNoReturn("<k> must not be equal to <m>");
+                ErrorNoReturn("<k> must not be equal to <d> / 2 if <epsilon_0> is 0");
             fi;
         elif epsilon_0 in [-1, 1] then
             if IsOddInt(k) then
-                ErrorNoReturn("<k> must be even");
+                ErrorNoReturn("<k> must be even if <epsilon_0> is 1 or -1");
             fi;
         fi;
         if k > m then
-            ErrorNoReturn("<k> must be less than or equal to m");
+            ErrorNoReturn("<k> must be less than or equal to <d> / 2");
         fi;
 
         epsilon_1 := epsilon_0;
