@@ -94,7 +94,7 @@ gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 7, 0, 1);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 8, 1, 2);
 
 # Test error handling
-gap> OmegaStabilizerOfNonDegenerateSubspace(2, 0, 0, 0, 0);
+gap> OmegaStabilizerOfNonDegenerateSubspace(2, 5, 5, 1, 2);
 Error, <epsilon> must be in [-1, 0, 1]
 gap> OmegaStabilizerOfNonDegenerateSubspace(1, 2, 3, 2, 1);
 Error, <epsilon_0> must be in [-1, 0, 1]

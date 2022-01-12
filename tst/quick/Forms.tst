@@ -98,5 +98,15 @@ gap> TestStandardOrthogonalForm(1, 6, 9);
 gap> TestStandardOrthogonalForm(-1, 6, 9);
 gap> TestStandardOrthogonalForm(-1, 6, 4);
 
+# Test error handling
+gap> StandardOrthogonalForm(2, 5, 5);
+Error, <epsilon> must be one of -1, 0, 1
+gap> StandardOrthogonalForm(0, 6, 5);
+Error, <epsilon> must be one of -1 or 1 if <d> is even
+gap> StandardOrthogonalForm(1, 5, 5);
+Error, <epsilon> must be 0 if <d> is odd
+gap> StandardOrthogonalForm(0, 5, 4);
+Error, <d> must be even if <q> is even
+
 #
 gap> STOP_TEST("Forms.tst", 0);
