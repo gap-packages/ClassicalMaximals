@@ -66,3 +66,27 @@ IsSubsetSU := function(n, q, G)
   Assert(0, CheckSesquilinearForm(G));
   return true;
 end;
+
+IsSubsetOmega := function(epsilon, n, q, G)
+  local field, invariantForm;
+  field := GF(q);
+  if IsEvenInt(q) then
+    Assert(0, CheckQuadraticForm(G));
+    invariantForm := QuadraticFormByMatrix(InvariantQuadraticForm(G).matrix, field);
+  else
+    Assert(0, CheckBilinearForm(G));
+    invariantForm := BilinearFormByMatrix(InvariantBilinearForm(G).matrix, field);
+  fi;
+  if epsilon = 0 then
+    Assert(0, WittIndex(invariantForm) = QuoInt(n - 1, 2));
+  elif epsilon = 1 then
+    Assert(0, WittIndex(invariantForm) = QuoInt(n, 2));
+  elif epsilon = -1 then
+    Assert(0, WittIndex(invariantForm) = QuoInt(n, 2) - 1);
+  fi;
+  Assert(0, DimensionOfMatrixGroup(G) = n);
+  Assert(0, DefaultFieldOfMatrixGroup(G) = field);
+  Assert(0, CheckGeneratorsSpecial(G));
+  Assert(0, ForAll(GeneratorsOfGroup(G), g -> FancySpinorNorm(InvariantBilinearForm(G).matrix, field, g) = 1));
+  return true;
+end;
