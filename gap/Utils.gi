@@ -594,7 +594,73 @@ function(epsilon, d, q)
         D[m + 1, m] := zeta * (xi + xi ^ q) ^ (-1);
     fi;
 
-    return rec(generatorsOfOmega := generatorsOfOmega, S := S, G := G, D := D);        
+    return rec(generatorsOfOmega := generatorsOfOmega, S := S, G := G, D := D);
+end);
+
+# Construct standard generators L1, L2, L3 as used in [HR10] and
+# mentioned by Theorem 2.3 in [R-D13] with the following properties:
+#   * L1 and L2 generate GL(d, q)
+#   * L1 and L3 generate SL(d, q)
+#   * all matrix entries lie in {0, \pm 1, \pm zeta^{\pm 1}} where zeta is
+#       a primitve element of GF(q)
+# Construction as in [T87]
+BindGlobal("StandardGeneratorsOfLinearGroup",
+function(d, q)
+    local field, one, zeta, L1, L2, L3;
+
+    field := GF(q);
+    one := One(field);
+    zeta := PrimitiveElement(field);
+
+    if d = 1 then
+
+        L1 := [[one]];
+        L2 := [[zeta]];
+        L3 := [[one]];
+
+    elif q in [2, 3] then
+
+        L1 := NullMat(d, d, field);
+        L1[1, d] := one;
+        L1{[2..d]}{[1..d - 1]} := -IdentityMat(d - 1, field);
+
+        # In case q = 2, this matrix is just equal to L3, which
+        # makes sense because SL(d, 2) = GL(d, 2).
+        # In case q = 3, since L1 and L3 generate SL(d, 3)
+        # and [ GL(d, 3): SL(d, 3) ] = 2, adjoining any matrix 
+        # of determinant -1 to L1 and L2 will give GL(d, 3).
+        # Since we only want 2 generators, this matrix is
+        # constructed to be a square root of L3 with determinant -1,
+        # so L1 and L2 must already generate GL(d, 3).
+        # This differs from the matrix given in [T87] because
+        # [T87] does not fulfill our requirements in case q = 3.
+        # TODO: This idea does not work for d = 2, q = 3 because
+        # in then, L3 does not seem to have a square root with
+        # determinant 1, so that case might need hardcoding.
+        L2 := IdentityMat(d, field);
+        L2[1, 2] := -one;
+        L2[d, d] := -one;
+
+        L3 := IdentityMat(d, field);
+        L3[1, 2] := one;
+
+    else
+
+        L1 := NullMat(d, d, field);
+        L1[1, d] := one;
+        L1[1, 1] := -one;
+        L1{[2..d]}{[1..d - 1]} := -IdentityMat(d - 1, field);
+
+        L2 := IdentityMat(d, field);
+        L2[1, 1] := zeta;
+
+        L3 := IdentityMat(d, field);
+        L3[1, 1] := zeta;
+        L3[2, 2] := zeta ^ (-1);
+
+    fi;
+
+    return rec(L1 := L1, L2 := L2, L3 := L3);
 end);
 
 # Compute the spinor norm of an element of an orthogonal group.

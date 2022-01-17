@@ -200,6 +200,41 @@ gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 2, 8);
 gap> TestStandardGeneratorsOfOrthogonalGroup(1, 6, 8);
 gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 6, 8);
 
+gap> TestStandardGeneratorsOfLinearGroup := function(d, q)
+>   local gens, field, one, zeta, entrySet, L1, L2, L3, S, G;
+>   gens := StandardGeneratorsOfLinearGroup(d, q);
+>   field := GF(q);
+>   one := One(field);
+>   zeta := PrimitiveElement(field);
+>   entrySet := [Zero(field), one, -one, zeta, -zeta, zeta ^ (-1), -zeta ^ (-1)];
+>   L1 := gens.L1;
+>   L2 := gens.L2;
+>   L3 := gens.L3;
+>   S := MatrixGroup(field, [L1, L3]);
+>   G := MatrixGroup(field, [L1, L2]);
+>   Assert(0, IsSubsetSL(d, q, S));
+>   Assert(0, DimensionsMat(L2) = [d, d]);
+>   Assert(0, DefaultFieldOfMatrix(L2) = field);
+>   Assert(0, not Determinant(L2) in [0, 1]);
+>   Assert(0, Size(S) = SizeSL(d, q));
+>   Assert(0, Size(G) = SizeGL(d, q));
+>   Assert(0, ForAll(L1, row -> IsSubset(entrySet, row)));
+>   Assert(0, ForAll(L2, row -> IsSubset(entrySet, row)));
+>   Assert(0, ForAll(L3, row -> IsSubset(entrySet, row)));
+> end;;
+
+gap> TestStandardGeneratorsOfLinearGroup(1, 2);
+gap> TestStandardGeneratorsOfLinearGroup(1, 5);
+gap> TestStandardGeneratorsOfLinearGroup(2, 2);
+gap> TestStandardGeneratorsOfLinearGroup(2, 3);
+gap> TestStandardGeneratorsOfLinearGroup(2, 5);
+gap> TestStandardGeneratorsOfLinearGroup(4, 2);
+gap> TestStandardGeneratorsOfLinearGroup(4, 3);
+gap> TestStandardGeneratorsOfLinearGroup(4, 5);
+gap> TestStandardGeneratorsOfLinearGroup(5, 2);
+gap> TestStandardGeneratorsOfLinearGroup(5, 3);
+gap> TestStandardGeneratorsOfLinearGroup(5, 5);
+
 # Test error handling
 gap> StandardOrthogonalForm(2, 5, 5);
 Error, <epsilon> must be one of -1, 0, 1
