@@ -597,12 +597,12 @@ function(epsilon, d, q)
     return rec(generatorsOfOmega := generatorsOfOmega, S := S, G := G, D := D);
 end);
 
-# Construct standard generators L1, L2, L3 as used in [HR10] and
-# mentioned by Theorem 2.3 in [R-D13] with the following properties:
+# Construct standard generators L1, L2, L3 as used in [HR10]
+# with the following properties:
 #   * L1 and L2 generate GL(d, q)
 #   * L1 and L3 generate SL(d, q)
 #   * all matrix entries lie in {0, \pm 1, \pm zeta^{\pm 1}} where zeta is
-#       a primitve element of GF(q)
+#       a primitive element of GF(q)
 # Construction as in [T87]
 BindGlobal("StandardGeneratorsOfLinearGroup",
 function(d, q)
