@@ -635,8 +635,8 @@ function(d, q)
         # This differs from the matrix given in [T87] because
         # [T87] does not fulfill our requirements in case q = 3.
         # TODO: This idea does not work for d = 2, q = 3 because
-        # in then, L3 does not seem to have a square root with
-        # determinant 1, so that case might need hardcoding.
+        # then, L3 does not seem to have a square root with
+        # determinant -1, so that case might need hardcoding.
         L2 := IdentityMat(d, field);
         L2[1, 2] := -one;
         L2[d, d] := -one;
