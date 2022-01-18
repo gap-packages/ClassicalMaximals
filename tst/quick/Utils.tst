@@ -40,6 +40,8 @@ true
 gap> x := SolveFrobeniusEquation("P", - Z(7) ^ 0, 7);;
 gap> x * x ^ 7 = - Z(7) ^ 0;
 true
+
+#
 gap> TestFindGamma := function(q)
 >   local gamma, R, x;
 >   gamma := FindGamma(q);
@@ -50,6 +52,8 @@ gap> TestFindGamma := function(q)
 gap> TestFindGamma(8);
 gap> TestFindGamma(2 ^ 7);
 gap> TestFindGamma(2 ^ 13);
+
+#
 gap> TestSolveQuadraticEquation := function(args)
 >   local F, a, b, c;
 >   F := args[1];
@@ -62,6 +66,8 @@ gap> TestSolveQuadraticEquation := function(args)
 gap> TestSolveQuadraticEquation([GF(2), Z(2), 0 * Z(2), Z(2)]);
 gap> TestSolveQuadraticEquation([GF(4), Z(4), Z(4) ^ 3, Z(4) ^ 2]);
 gap> TestSolveQuadraticEquation([GF(2 ^ 19), Z(2 ^ 19) ^ 0, Z(2 ^ 19) ^ 113, Z(2 ^ 19) ^ (-1)]);
+
+#
 gap> TestFancySpinorNorm := function(args)
 >   local epsilon, d, q, GroupOmega, GroupSO;
 >   epsilon := args[1];
@@ -78,6 +84,8 @@ gap> TestFancySpinorNorm([0, 3, 7]);
 gap> TestFancySpinorNorm([1, 4, 5]);
 gap> TestFancySpinorNorm([1, 4, 8]);
 gap> TestFancySpinorNorm([-1, 6, 4]);
+
+#
 gap> TestGeneratorsOfOrthogonalGroup := function(args)
 >   local epsilon, n, q, F, zeta, gen, gens, rightDets, gramMatrix, rightForm;
 >   epsilon := args[1];
@@ -147,6 +155,8 @@ gap> testsMatrixGroup := [[GF(3 ^ 2), Z(3) * IdentityMat(2, GF(3)), 37],
 >                         [GF(5 ^ 2), Z(5) * IdentityMat(2, GF(5)), 73]];;
 gap> ForAll(testsMatrixGroup, TestMatrixGroup);
 true
+
+#
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSp(n, q) <> Size(Sp(n, q)) then Error("bad result for Sp(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4, 6] do for q in [2, 3, 4, 5, 7] do if SizePSp(n, q) <> Size(PSp(n, q)) then Error("bad result for PSp(", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSU(n, q) <> Size(SU(n, q)) then Error("bad result for SU(", n, ", ", q, ")"); fi; od; od;
@@ -158,6 +168,8 @@ gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeGO(-1, n,
 gap> for n in [3, 5 .. 9] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSO(0, n, q) <> Size(SO(0, n, q)) then Error("bad result for SO(0, ", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSO(1, n, q) <> Size(SO(1, n, q)) then Error("bad result for SO(1, ", n, ", ", q, ")"); fi; od; od;
 gap> for n in [2, 4 .. 10] do for q in [2, 3, 4, 5, 7, 8, 9] do if SizeSO(-1, n, q) <> Size(SO(-1, n, q)) then Error("bad result for SO(1, ", n, ", ", q, ")"); fi; od; od;
+
+#
 gap> TestStandardGeneratorsOfOrthogonalGroup := function(epsilon, d, q)
 >   local gens, generatorsOfOmega, S, G, D, standardForms, F, Q, field, one,
 >   e, p, applyDToF, applyDToQ;
@@ -200,6 +212,7 @@ gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 2, 8);
 gap> TestStandardGeneratorsOfOrthogonalGroup(1, 6, 8);
 gap> TestStandardGeneratorsOfOrthogonalGroup(-1, 6, 8);
 
+#
 gap> TestStandardGeneratorsOfLinearGroup := function(d, q)
 >   local gens, field, one, zeta, entrySet, L1, L2, L3, S, G;
 >   gens := StandardGeneratorsOfLinearGroup(d, q);
@@ -222,7 +235,6 @@ gap> TestStandardGeneratorsOfLinearGroup := function(d, q)
 >   Assert(0, ForAll(L2, row -> IsSubset(entrySet, row)));
 >   Assert(0, ForAll(L3, row -> IsSubset(entrySet, row)));
 > end;;
-
 gap> TestStandardGeneratorsOfLinearGroup(1, 2);
 gap> TestStandardGeneratorsOfLinearGroup(1, 3);
 gap> TestStandardGeneratorsOfLinearGroup(1, 4);
