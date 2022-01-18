@@ -224,15 +224,20 @@ gap> TestStandardGeneratorsOfLinearGroup := function(d, q)
 > end;;
 
 gap> TestStandardGeneratorsOfLinearGroup(1, 2);
+gap> TestStandardGeneratorsOfLinearGroup(1, 3);
+gap> TestStandardGeneratorsOfLinearGroup(1, 4);
 gap> TestStandardGeneratorsOfLinearGroup(1, 5);
 gap> TestStandardGeneratorsOfLinearGroup(2, 2);
 gap> TestStandardGeneratorsOfLinearGroup(2, 3);
+gap> TestStandardGeneratorsOfLinearGroup(2, 4);
 gap> TestStandardGeneratorsOfLinearGroup(2, 5);
 gap> TestStandardGeneratorsOfLinearGroup(4, 2);
 gap> TestStandardGeneratorsOfLinearGroup(4, 3);
+gap> TestStandardGeneratorsOfLinearGroup(4, 4);
 gap> TestStandardGeneratorsOfLinearGroup(4, 5);
 gap> TestStandardGeneratorsOfLinearGroup(5, 2);
 gap> TestStandardGeneratorsOfLinearGroup(5, 3);
+gap> TestStandardGeneratorsOfLinearGroup(5, 4);
 gap> TestStandardGeneratorsOfLinearGroup(5, 5);
 
 # Test error handling
