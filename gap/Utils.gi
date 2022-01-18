@@ -598,11 +598,13 @@ function(epsilon, d, q)
 end);
 
 # Construct standard generators L1, L2, L3 as used in [HR10]
-# with the following properties:
+# with the following properties similar to Theorem 3.11 in [HR10]:
 #   * L1 and L2 generate GL(d, q)
 #   * L1 and L3 generate SL(d, q)
-#   * all matrix entries lie in {0, \pm 1, \pm zeta^{\pm 1}} where zeta is
-#       a primitive element of GF(q)
+#   * all matrix entries lie in {0, \pm 1, \pm zeta^{\pm 1}}, where
+#       zeta is a primitive element of GF(q)
+#   * If q is odd, L1 and L2^2 generate the unique subgroup
+#       of index 2 of GL(d, q), often denoted (1 / 2) GL(d, q).
 # Construction as in [T87]
 BindGlobal("StandardGeneratorsOfLinearGroup",
 function(d, q)
@@ -617,6 +619,15 @@ function(d, q)
         L1 := [[one]];
         L2 := [[zeta]];
         L3 := [[one]];
+
+    elif d = 2 and q = 3 then
+
+        L1 := [[-one, one], [-one, 0 * one]];
+        L2 := [[-one, one], [one, 0 * one]];
+
+        # This is precisely L2^2, which is how we ensure that
+        # L1 and L2^2 = L3 generate (1 / 2) GL(2, 3) = SL(2, 3).
+        L3 := [[-one, -one], [-one, one]];
 
     elif q in [2, 3] then
 
@@ -634,9 +645,10 @@ function(d, q)
         # so L1 and L2 must already generate GL(d, 3).
         # This differs from the matrix given in [T87] because
         # [T87] does not fulfill our requirements in case q = 3.
-        # TODO: This idea does not work for d = 2, q = 3 because
+        # This idea does not work for d = 2, q = 3 because
         # then, L3 does not seem to have a square root with
-        # determinant -1, so that case might need hardcoding.
+        # determinant -1, which is why we handle that case
+        # seperately above.
         L2 := IdentityMat(d, field);
         L2[1, 2] := -one;
         L2[d, d] := -one;

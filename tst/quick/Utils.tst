@@ -231,6 +231,9 @@ gap> TestStandardGeneratorsOfLinearGroup := function(d, q)
 >   Assert(0, not Determinant(L2) in [0, 1]);
 >   Assert(0, Size(S) = SizeSL(d, q));
 >   Assert(0, Size(G) = SizeGL(d, q));
+>   if IsOddInt(q) then
+>       Assert(0, Size(Group(L1, L2^2)) = QuoInt(SizeGL(d, q), 2));
+>   fi;
 >   Assert(0, ForAll(L1, row -> IsSubset(entrySet, row)));
 >   Assert(0, ForAll(L2, row -> IsSubset(entrySet, row)));
 >   Assert(0, ForAll(L3, row -> IsSubset(entrySet, row)));
