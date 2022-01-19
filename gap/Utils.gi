@@ -622,12 +622,12 @@ function(d, q)
 
     elif d = 2 and q = 3 then
 
-        L1 := [[-one, one], [-one, 0 * one]];
-        L2 := [[-one, one], [one, 0 * one]];
+        L1 := one * [[-1, 1], [-1, 0]];
+        L2 := one * [[-1, 1], [1, 0]];
 
         # This is precisely L2^2, which is how we ensure that
         # L1 and L2^2 = L3 generate (1 / 2) GL(2, 3) = SL(2, 3).
-        L3 := [[-one, -one], [-one, one]];
+        L3 := one * [[-1, -1], [-1, 1]];
 
     elif q in [2, 3] then
 
@@ -638,9 +638,9 @@ function(d, q)
         # In case q = 2, this matrix is just equal to L3, which
         # makes sense because SL(d, 2) = GL(d, 2).
         # In case q = 3, since L1 and L3 generate SL(d, 3)
-        # and [ GL(d, 3): SL(d, 3) ] = 2, adjoining any matrix 
+        # and [ GL(d, 3): SL(d, 3) ] = 2, adjoining any matrix
         # of determinant -1 to L1 and L2 will give GL(d, 3).
-        # Since we only want 2 generators, this matrix is
+        # Since we only want two generators, this matrix is
         # constructed to be a square root of L3 with determinant -1,
         # so L1 and L2 must already generate GL(d, 3).
         # This differs from the matrix given in [T87] because
