@@ -503,7 +503,8 @@ end);
 # Construction as in Lemma 4.3 of [HR10]
 BindGlobal("OmegaStabilizerOfNonDegenerateSubspace",
 function(epsilon, d, q, epsilon_0, k)
-    local m, epsilon_1, epsilon_2, orthogonal_gens_1, orthogonal_gens_2, field, gens, gen_1, gen_2, H, size, H_5, H_6, Q, F, result;
+    local m, epsilon_1, epsilon_2, orthogonal_gens_1, orthogonal_gens_2, 
+    field, gens, gen_1, gen_2, H, size, H_5, H_6, Q, result;
 
     # All of the conditions below follow from the general rules of
     # orthogonal groups as well as Table 1 from [HR10], except we
@@ -621,14 +622,7 @@ function(epsilon, d, q, epsilon_0, k)
         H_5{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
         Add(gens, H_5);
 
-        # The constructed group preserves this form matrix.
-        Q := IdentityMat(d, field);
-        Q{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).Q;
-        Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).Q;
-
-        result := MatrixGroupWithSize(field, gens, QuoInt(size, 2));
-        SetInvariantQuadraticForm(result, rec(matrix := Q));
-
+        size := QuoInt(size, 2);
     else
 
         # The matrices G have spinor norm 1 and determinant -1
@@ -645,16 +639,15 @@ function(epsilon, d, q, epsilon_0, k)
             H_6{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
             Add(gens, H_6);
         fi;
-
-        # The constructed group preserves this form matrix.
-        F := IdentityMat(d, field);
-        F{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).F;
-        F{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).F;
-
-        result := MatrixGroupWithSize(field, gens, size);
-        SetInvariantBilinearForm(result, rec(matrix := F));
-
     fi;
+
+    # The constructed group preserves this form matrix.
+    Q := IdentityMat(d, field);
+    Q{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).Q;
+    Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).Q;
+
+    result := MatrixGroupWithSize(field, gens, size);
+    SetInvariantQuadraticFormFromMatrix(result, Q);
 
     if epsilon = -1 then
         return ConjugateToStandardForm(result, "O-");

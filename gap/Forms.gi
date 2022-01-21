@@ -1,3 +1,25 @@
+# Compute the Gram matrix of the quadratic form corresponding to the bilinear
+# form described by <gramMatrix> in odd characteristic.
+BindGlobal("BilinearToQuadraticForm",
+function(gramMatrix)
+    local F, n, i, Q;
+
+    F := DefaultFieldOfMatrix(gramMatrix);
+
+    if Characteristic(F) = 2 then
+        ErrorNoReturn("Characteristic must be odd");
+    fi;
+
+    n := NrRows(gramMatrix);
+    Q := List(gramMatrix, ShallowCopy);
+    for i in [1..n] do
+        Q{[i]}{[i + 1..n]} := NullMat(1, n - i, F);
+        Q[i, i] := 1 / 2 * gramMatrix[i, i];
+    od;
+
+    return Q;
+end);
+
 # One needs to ensure that the attribute DefaultFieldOfMatrixGroup is set
 # correctly for <group>; this can be done, for example, by making the
 # generators used during construction of the group immutable matrices over the
@@ -77,8 +99,10 @@ function(group, type, gramMatrix)
         result := group;
     fi;
 
-    if type = "S" or type = "O-B" then
+    if type = "S" then
         SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
+    elif type = "O-B" then
+        SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(gramMatrix));
     elif type = "U" then
         SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix));
     else
