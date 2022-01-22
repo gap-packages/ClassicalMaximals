@@ -640,6 +640,63 @@ function(m, q, type...)
     return MatrixGroupWithSize(F, generators, size);
 end);
 
+# Construction as in Proposition 9.1 of [HR10]
+BindGlobal("Extraspecial2PlusTypeNormalizerInOmega",
+function(m, q)
+    local F, factorization, p, e, generatorsOfNormalizerInGL, listOfVi, 
+    generatingScalar, rho, V1, generators, size;
+
+    if m < 3 then
+        ErrorNoReturn("<m> must be at least 3");
+    fi;
+
+    F := GF(q);
+    # q = p ^ e with p prime
+    factorization := PrimePowersInt(q);
+    p := factorization[1];
+    e := factorization[2];
+
+    generatorsOfNormalizerInGL := OddExtraspecialNormalizerInGL(2, m, q);
+    # Note that the matrices which are called Vi here are called Ui in [HR10]
+    listOfVi := generatorsOfNormalizerInGL.listOfVi;
+
+    # We always need a generating scalar
+    # Cf. Lemma 3.3(2) in [HR10]
+    generatingScalar := -IdentityMat(2 ^ m, F);
+
+    # Notice that we already have det(Xi) = det(Yi) = det(Wi) = 1 and the
+    # generators Ui are redundant due to Xi = Ui in this case.
+    
+    # Cf. Table 2.9 in [BHR13]
+    size := 2 ^ (1 + 2 * m) * SizeSO(1, 2 * m, 2);
+    
+    if IsEvenInt(e) or (p - 1) mod 8 = 0 or (p + 1) mod 8 = 0 then
+        # In this case we can find a square root of 2 in F; note that 
+        # det(V) = -2 and hence det(Vi) = 2 ^ (2 ^ (m - 1))
+        rho := RootFFE(F, 2 * One(F), 2);
+        listOfVi := List(listOfVi, Vi -> rho ^ (-1) * Vi);
+    else
+        # Here we take Vi * V1 ^ (-1) as generators instead of Vi (notice that
+        # this gives exactly the same group as the generators Vi * V{i+1} ^ (-1)
+        # described in [HR10] since 
+        #   (Vi * V1 ^ (-1)) * (V{i+1} * V1 ^ (-1)) ^ (-1) = Vi * V{i+1} ^ (-1) 
+        # and
+        #   (V1 * V2 ^ (-1)) * (V2 * V3 ^ (-1)) * ... * (V{i-1} * Vi ^ (-1)) = V1 * Vi ^ (-1) = (Vi * V1 ^ (-1)) ^ (-1)
+        V1 := listOfVi[1];
+        listOfVi := List(listOfVi, Vi -> Vi * V1 ^ (-1));
+
+        size := size / 2;
+    fi;
+
+    generators := Concatenation([generatingScalar], 
+                                generatorsOfNormalizerInGL.listOfXi, 
+                                generatorsOfNormalizerInGL.listOfYi,
+                                generatorsOfNormalizerInGL.listOfWi,
+                                listOfVi);
+
+    return MatrixGroupWithSize(F, generators, size);
+end);
+
 BindGlobal("ExtraspecialNormalizerInSL",
 function(r, m, q)
     if IsOddInt(r) then
@@ -688,6 +745,9 @@ function(m, q)
     if not 2 ^ m > 2 then
         ErrorNoReturn("2 ^ <m> must be at least 4 in the symplectic case");
     fi;
+    if IsEvenInt(q) then
+        ErrorNoReturn("<q> must be odd");
+    fi;
 
     F := GF(q);
     result := Extraspecial2MinusTypeNormalizerInSL(m, q, "S");
@@ -704,6 +764,25 @@ function(m, q)
                                                      i -> [2 * i, 2 * i - 1, -1])));
     SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
     result := ConjugateToStandardForm(result, "S");
+
+    return result;
+end);
+
+# Construction as in Proposition 9.1 of [HR10]
+BindGlobal("ExtraspecialNormalizerInOmega",
+function(m, q)
+    local F, result;
+    if not 2 ^ m > 4 then
+        ErrorNoReturn("2 ^ <m> must be at least 8 in the orthogonal case");
+    fi;
+
+    F := GF(q);
+    result := Extraspecial2PlusTypeNormalizerInOmega(m, q);
+    
+    # This group now preserves the bilinear form given by the identity matrix
+    # and we conjugate it so that it preserves the standard GAP form
+    SetInvariantBilinearForm(result, rec(matrix := IdentityMat(2 ^ m, F)));
+    result := ConjugateToStandardForm(result, "O+");
 
     return result;
 end);

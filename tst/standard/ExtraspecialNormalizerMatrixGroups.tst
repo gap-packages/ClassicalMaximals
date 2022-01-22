@@ -130,4 +130,25 @@ gap> TestExtraspecial2MinusTypeNormalizerInGL(1, 7);
 gap> TestExtraspecial2MinusTypeNormalizerInGL(2, 5);
 
 #
+gap> TestExtraspecialNormalizerInOmega := function(m, q)
+>   local G;
+>   G := ExtraspecialNormalizerInOmega(m, q);
+>   Assert(0, CheckSize(G));
+>   Assert(0, IsSubsetOmega(1, 2 ^ m, q, G));
+> end;;
+gap> TestExtraspecialNormalizerInOmega(3, 3);
+gap> TestExtraspecialNormalizerInOmega(3, 5);
+gap> TestExtraspecialNormalizerInOmega(3, 7);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestExtraspecialNormalizerInOmega(4, 3); # FIXME: 'Error, the recognition described by this recognition node has failed!'
+#@fi
+gap> TestExtraspecialNormalizerInOmega(4, 5);
+
+# Test error handling
+gap> ExtraspecialNormalizerInOmega(2, 5);
+Error, 2 ^ <m> must be at least 8 in the orthogonal case
+gap> ExtraspecialNormalizerInOmega(3, 4);
+Error, <r> must be prime and a divisor of <q> - 1
+
+#
 gap> STOP_TEST("ExtraspecialNormalizerMatrixGroups.tst", 0);
