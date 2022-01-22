@@ -558,10 +558,10 @@ function(epsilon, d, q, k)
                 Add(gens, H_3or4);
             od;
             # Size according to Table 2.3 of [BHR13]
-            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q);
+            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q) * SizeOmega(epsilon, d - 2 * k, q);
         else
             # Size according to Table 2.3 of [BHR13]
-            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q) * SizeOmega(epsilon, d - 2 * k, q);
+            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q);
         fi;
 
     else
