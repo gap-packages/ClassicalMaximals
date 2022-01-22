@@ -11,9 +11,10 @@
 # special (or quasisimple) group, in order to get representatives for all
 # conjugacy classes in the special (or quasisimple) group, not only for the
 # conjugacy classes in the general group (which are generally larger).
-ConjugatesInGeneralGroup := function(S, C, r)
+BindGlobal("ConjugatesInGeneralGroup",
+function(S, C, r)
     return List([0..r - 1], i -> S ^ (C ^ i));
-end;
+end);
 
 InstallGlobalFunction(ClassicalMaximalsGeneric,
 function(type, n, q, classes...)
@@ -1090,4 +1091,135 @@ function(n, q, classes...)
 
     return maximalSubgroups;
 
+end);
+
+# Return an element of SO(epsilon, n, q) \ Omega(epsilon, n, q)
+InstallGlobalFunction("SOMinusOmega",
+function(epsilon, n, q)
+   return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).S; 
+end);
+
+# Return an element of GO(epsilon, n, q) \ SO(epsilon, n, q)
+InstallGlobalFunction("GOMinusSO",
+function(epsilon, n, q)
+    if not IsOddInt(q) then
+        ErrorNoReturn("<q> must be odd");
+    fi;
+    return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).G;
+end);
+
+# Return an element of Normaliser(GL(n, q), GO(epsilon, n, q)) \ GO(epsilon, n, q)
+InstallGlobalFunction("NormGOMinusGO",
+function(epsilon, n, q)
+    return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D;
+end);
+
+# Given a subgroup G of Omega(epsilon, n, q) conjugate it with all products of
+# combinations of elements from the set ...
+# * ... [SOMinusOmega(epsilon, n, q)] if numberOfConjugates = 2
+# * ... [SOMinusOmega(epsilon, n, q), GOMinusSO(epsilon, n, q)] 
+#       if numberOfConjugates = 4
+# * ... [SOMinusOmega(epsilon, n, q), GOMinusSO(epsilon, n, q), NormGOMinusGO(epsilon, n, q)]
+#       if numberOfConjugates = 8.
+BindGlobal("ConjugateSubgroupOmega",
+function(epsilon, n, q, G, numberOfConjugates)
+    local elementsToConjugate, result, powerSet, subset, exponent;
+
+    if not numberOfConjugates in [2, 4, 8] then
+        ErrorNoReturn("<numberOfConjugates> must be one of 2, 4, 8");
+    fi;
+
+    elementsToConjugate := [SOMinusOmega(epsilon, n, q)];
+    if numberOfConjugates >= 4 then
+        Add(elementsToConjugate, GOMinusSO(epsilon, n, q));
+        if numberOfConjugates = 8 then
+            Add(elementsToConjugate, NormGOMinusGO(epsilon, n, q));
+        fi;
+    fi;
+
+    result := [];
+    powerSet := Combinations(elementsToConjugate);
+    for subset in powerSet do
+        if subset = [] then
+            Add(result, G);
+        else
+            exponent := Product(subset);
+            Add(result, G ^ exponent);
+        fi;
+    od;
+
+    return result;
+end);
+
+BindGlobal("C6SubgroupsOrthogonalGroupGeneric",
+function(epsilon, n, q)
+    local factorisationOfq, p, e, factorisationOfn, r, m, result,
+    numberOfConjugates, extraspecialNormalizerSubgroup;
+
+    if IsEvenInt(q) then
+        return [];
+    fi;
+
+    if not IsPrimePowerInt(n) then
+        return [];
+    fi;
+
+    result := [];
+    
+    factorisationOfq := PrimePowersInt(q);
+    p := factorisationOfq[1];
+    e := factorisationOfq[2];
+    factorisationOfn := PrimePowersInt(n);
+    r := factorisationOfn[1];
+    m := factorisationOfn[2];
+
+    # Cf. Table 4.6.B and the corresponding definition in [KL90]
+    if epsilon = 1 and r = 2 and e = 1 then
+        extraspecialNormalizerSubgroup := ExtraspecialNormalizerInOmega(m, q);
+        # Cf. Tables 3.5.E and 3.5.G in [KL90]
+        if (q - 1) mod 8 = 0  or (q - 7) mod 8 = 0 then
+            numberOfConjugates := 8;    
+        else
+            numberOfConjugates := 4;
+        fi;
+        result := ConjugateSubgroupOmega(epsilon, n, q,
+                                         extraspecialNormalizerSubgroup,
+                                         numberOfConjugates);
+    fi;
+
+    return result;
+end);
+
+InstallGlobalFunction(MaximalSubgroupClassRepsOrthogonalGroup,
+function(epsilon, n, q, classes...)
+    local maximalSubgroups;
+
+    if Length(classes) = 0 then
+        classes := [1..9];
+    elif Length(classes) = 1 and IsList(classes[1]) then
+        classes := classes[1];
+    fi;
+    if not IsSubset([1..9], classes) then
+        ErrorNoReturn("<classes> must be a subset of [1..9]");
+    fi;
+
+
+    if n < 7 then
+        Error("We assume <n> to be greater or equal to 7 in case 'O' since",
+              " otherwise Omega(epsilon, n, q) is either not quasisimple or",
+              " isomorphic to another classical group");
+    fi;
+
+    maximalSubgroups := [];
+
+    if 6 in classes then
+        # Class C6 subgroups ######################################################
+        # Cf. Propositions 3.7.9 and Table 8.50 (n = 8) in [BHR13]
+        # For all other n, class C6 is empty.
+        if not (q - 3) mod 8 = 0 and not (q - 5) mod 8 = 0 then
+            Append(maximalSubgroups, C6SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        fi;
+    fi;
+
+    return maximalSubgroups;
 end);

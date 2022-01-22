@@ -23,6 +23,11 @@ DeclareGlobalFunction("MaximalSubgroupClassRepsSpecialUnitaryGroup");
 
 DeclareGlobalFunction("MaximalSubgroupClassRepsSymplecticGroup");
 
+DeclareGlobalFunction("MaximalSubgroupClassRepsOrthogonalGroup");
+
 DeclareGlobalFunction("GLMinusSL");
 DeclareGlobalFunction("GUMinusSU");
 DeclareGlobalFunction("NormSpMinusSp");
+DeclareGlobalFunction("SOMinusOmega");
+DeclareGlobalFunction("GOMinusSO");
+DeclareGlobalFunction("NormGOMinusGO");
