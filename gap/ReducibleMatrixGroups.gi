@@ -500,6 +500,153 @@ function(d, q, k)
     return ConjugateToStandardForm(result, "S");
 end);
 
+# Construction as in Lemma 4.2 of [HR10]
+BindGlobal("OmegaStabilizerOfIsotropicSubspace",
+function(epsilon, d, q, k)
+    local m, field, one, gens, linearGens, orthogonalGens, L, H_1or2, OmegaGen, t, H_3or4, size, matrices, gamma, eta, result;
+
+    if epsilon = 0 then
+
+        if IsEvenInt(d) then
+            ErrorNoReturn("<d> must be odd");
+        elif IsEvenInt(k) then
+            ErrorNoReturn("<k> must be odd");
+        fi;
+
+    elif epsilon in [-1, 1] then
+
+        if IsOddInt(d) then
+            ErrorNoReturn("<d> must be even");
+        fi;
+
+    else
+
+        ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
+    
+    fi;
+
+    if IsEvenInt(q) and IsOddInt(d) then
+        ErrorNoReturn("<d> must be even if <q> is even");
+    fi;
+
+    m := QuoInt(d, 2);
+
+    if k > m then
+        ErrorNoReturn("<k> must be less than or equal to <m>");
+    fi;
+
+    field := GF(q);
+    one := One(field);
+    gens := [];
+
+    linearGens := StandardGeneratorsOfLinearGroup(k, q);
+    orthogonalGens := StandardGeneratorsOfOrthogonalGroup(epsilon, d - 2 * k, q);
+
+    if IsEvenInt(q) then
+
+        for L in [linearGens.L1, linearGens.L2] do
+            H_1or2 := IdentityMat(d, field);
+            H_1or2{[1..k]}{[1..k]} := L;
+            H_1or2{[d - k + 1..d]}{[d - k + 1..d]} := RotateMat(TransposedMat(L ^ -1));
+            Add(gens, H_1or2);
+        od;
+
+        if k <> m then
+            for OmegaGen in orthogonalGens.generatorsOfOmega do
+                H_3or4 := IdentityMat(d, field);
+                H_3or4{[k + 1..d - k]}{[k + 1..d - k]} := OmegaGen;
+                Add(gens, H_3or4);
+            od;
+        fi;
+
+        # Size according to Table 2.3 of [BHR13]
+        size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q) * SizeOmega(epsilon, d - 2 * k, q);
+
+    else
+
+        if k = m then
+            
+            for L in [linearGens.L1, linearGens.L2 ^ 2] do
+                H_1or2 := IdentityMat(d, field);
+                H_1or2{[1..k]}{[1..k]} := L;
+                H_1or2{[d - k + 1..d]}{[d - k + 1..d]} := RotateMat(TransposedMat(L ^ -1));
+                Add(gens, H_1or2);
+            od;
+
+            # Size according to Table 2.3 of [BHR13]
+            if IsEvenInt(d) then
+                t := -1;
+            else
+                t := 1;
+            fi;
+            size := q ^ QuoInt(k * (k + 1), 2) * QuoInt(SizeGL(k, q), 2);
+
+        else
+
+            for matrices in [(linearGens.L1, IdentityMat(d - 2 * k, field)), (linearGens.L2, orthogonalGens.S)] do
+                H_1or2 := IdentityMat(d, field);
+                H_1or2{[1..k]}{[1..k]} := L;
+                H_1or2{[k + 1..d - k]}{[k + 1..d - k]} := matrices[2];
+                H_1or2{[d - k + 1..d]}{[d - k + 1..d]} := RotateMat(TransposedMat(matrices[1] ^ -1));
+                Add(gens, H_1or2);
+            od;
+
+            for OmegaGen in orthogonalGens.generatorsOfOmega do
+                H_3or4 := IdentityMat(d, field);
+                H_3or4{[k + 1..d - k]}{[k + 1..d - k]} := OmegaGen;
+                Add(gens, H_3or4);
+            od;
+
+            # Size according to Table 2.3 of [BHR13]
+            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q) * SizeOmega(epsilon, d - 2 * k, q);
+
+        fi;
+
+    fi;
+
+    if k = 1 then
+
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[2, 1, one], [d, d - 1, -one]]));
+
+    elif k < QuoInt(d - 1, 2) then
+
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
+
+    elif IsEvenInt(d) and k = m - 1 then
+
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
+        if epsilon = 1 then
+            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
+            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d - k - 1, 1, -one]]));
+        else
+            gamma := FindGamma(q);
+            eta := (1 - 4 * gamma) ^ -1;
+            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, 1, gamma * eta], [d, k + 1, 2 * gamma * eta], [d, k + 2, -eta]]));
+        fi;
+            
+    else
+
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
+        if IsOddInt(d) then
+            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one], [d, 1, -one / 2]]));
+        fi;
+
+    fi;
+
+
+    result := MatrixGroupWithSize(field, gens, size);
+    return result;
+    # if epsilon = -1 then
+    #     return ConjugateToStandardForm(result, "O-");
+    # elif epsilon = 0 then
+    #     return ConjugateToStandardForm(result, "O");
+    # else
+    #     return ConjugateToStandardForm(result, "O+");
+    # fi;
+
+end);
+
 # Construction as in Lemma 4.3 of [HR10]
 BindGlobal("OmegaStabilizerOfNonDegenerateSubspace",
 function(epsilon, d, q, epsilon_0, k)

@@ -7,6 +7,13 @@ true
 gap> M := AntidiagonalMat(7, GF(9));;
 gap> IsOne(M ^ 2);
 true
+gap> J := AntidiagonalMat(5, GF(7));;
+gap> M := [ [ Z(7)^3, 0*Z(7), 0*Z(7), 0*Z(7), Z(7)^0 ], [ Z(7)^3, 0*Z(7), 0*Z(7), 0*Z(7), 0*Z(7) ], [ 0*Z(7), Z(7)^3, 0*Z(7), 0*Z(7), 0*Z(7) ], [ 0*Z(7), 0*Z(7), Z(7)^3, 0*Z(7), 0*Z(7) ], [ 0*Z(7), 0*Z(7), 0*Z(7), Z(7)^3, 0*Z(7) ] ];;
+gap> RotateMat(M) = J * M * J;
+true
+gap> M := [[1, 2, 3], [4, 5, 6]];;
+gap> RotateMat(M) = [[6, 5, 4 ], [3, 2, 1]];
+true
 gap> M := GL(7, 5 ^ 2).1;;
 gap> N := ApplyFunctionToEntries(M, x -> x ^ 5);;
 gap> M = ApplyFunctionToEntries(N, x -> x ^ 5);

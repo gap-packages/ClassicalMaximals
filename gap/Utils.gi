@@ -25,6 +25,21 @@ function(entries, field)
     return m;
 end);
 
+InstallGlobalFunction("RotateMat",
+function(A)
+    local dims, m, n, B, i, j;
+    dims := DimensionsMat(A);
+    m := dims[1];
+    n := dims[2];
+    B := NullMat(m, n, DefaultFieldOfMatrix(A));
+    for i in [1..m] do
+        for j in [1..n] do
+            B[m - i + 1, n - j + 1] := A[i, j];
+        od;
+    od;
+    return B;
+end);
+
 # Solving the congruence a ^ 2 + b ^ 2 = c in F_q by trial and error.
 #
 # A solution always exists by a simple counting argument using the pigeonhole
@@ -249,7 +264,6 @@ function(m, n)
     fi;
 end);
 
-
 # Compute the size of Sp(n, q) according to Theorem 1.6.22 in [BHR13]
 InstallGlobalFunction("SizeSp",
 function(n, q)
@@ -267,13 +281,11 @@ function(n, q)
     return result;
 end);
 
-
 # Compute the size of PSp(n, q) according to Table 1.3 in [BHR13],
 InstallGlobalFunction("SizePSp",
 function(n, q)
     return QuoInt(SizeSp(n, q), Gcd(2, q - 1));
 end);
-
 
 # Compute the size of SU(n, q) according to Theorem 1.6.22 in [BHR13]
 # using the formula for GU(n, q) but starting with i = 2
@@ -306,7 +318,6 @@ InstallGlobalFunction("SizeGU",
 function(n, q)
     return (q + 1) * SizeSU(n, q);
 end);
-
 
 # Compute the size of GO(epsilon, n, q) according to Theorem 1.6.22 in [BHR13]
 InstallGlobalFunction("SizeGO",
@@ -347,11 +358,19 @@ function(epsilon, n, q)
     return result;
 end);
 
-
 # Compute the size of SO(epsilon, n, q) according to Table 1.3 in [BHR13]
 InstallGlobalFunction("SizeSO",
 function(epsilon, n, q)
     return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
+end);
+
+# Compute the size of Omega(epsilon, n, q) according to Table 1.3 in [BHR13]
+InstallGlobalFunction("SizeOmega",
+function(epsilon, n, q)
+    if IsOddInt(n) and IsEvenInt(q) then
+        return SizeSO(epsilon, n, q);
+    fi;
+    return QuoCeil(SizeSO(epsilon, n, q), 2);
 end);
 
 # Return the matrix corresponding to the reflection in the vector <v> of the 

@@ -22,7 +22,15 @@ DeclareGlobalFunction("MatrixByEntries");
 #! - If <A>entries</A> is an integer, the entries of <C>M</C> are all ones 
 #!   and the number of them is <A>entries</A>.
 DeclareGlobalFunction("AntidiagonalMat");
-
+#! @Chater Utility Functions
+#! @Section MatrixFunctions
+#! @Arguments A
+#! @Description
+#! Return the matrix <C>B</C> which is the rotation of <C>A</C> by 180 degrees.
+#! This is equivalent to multiplying <C>A</C> by the correctly sized matrices of
+#! the form AntiDiag(1, ..., 1) from the left and right respectively, but rotation
+#! is more efficient than matrix multiplication.
+DeclareGlobalFunction("RotateMat");
 #! @Chapter Utility Functions
 #! @Section Creating Matrix Groups
 #! @Arguments gens, F
@@ -48,3 +56,4 @@ DeclareGlobalFunction("SizePSU");
 DeclareGlobalFunction("SizeGU");
 DeclareGlobalFunction("SizeGO");
 DeclareGlobalFunction("SizeSO");
+DeclareGlobalFunction("SizeOmega");
