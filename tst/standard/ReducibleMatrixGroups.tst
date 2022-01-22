@@ -75,6 +75,22 @@ gap> SpStabilizerOfNonDegenerateSubspace(4, 2, 3);
 Error, <k> must be less than <d> / 2
 
 #
+gap> TestOmegaStabilizerOfIsotropicSubspace := function(epsilon, d, q, k)
+>   local G;
+>   G := OmegaStabilizerOfIsotropicSubspace(epsilon, d, q, k);
+>   Assert(0, CheckSize(G));
+>   Assert(0, IsSubsetOmega(epsilon, d, q, G));
+> end;;
+gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 6, 8, 3);
+gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 4);
+gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 5, 2);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 5, 4);
+gap> TestOmegaStabilizerOfIsotropicSubspace(1, 4, 5, 1);
+gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 5, 1);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 4, 5, 1);
+
+#
 gap> TestOmegaStabilizerOfNonDegenerateSubspace := function(epsilon, d, q, epsilon_0, k)
 >   local G;
 >   G := OmegaStabilizerOfNonDegenerateSubspace(epsilon, d, q, epsilon_0, k);

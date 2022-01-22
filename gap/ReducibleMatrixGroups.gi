@@ -509,8 +509,8 @@ function(epsilon, d, q, k)
 
         if IsEvenInt(d) then
             ErrorNoReturn("<d> must be odd");
-        elif IsEvenInt(k) then
-            ErrorNoReturn("<k> must be odd");
+        # elif IsEvenInt(k) then
+        #     ErrorNoReturn("<k> must be odd");
         fi;
 
     elif epsilon in [-1, 1] then
@@ -540,8 +540,7 @@ function(epsilon, d, q, k)
     gens := [];
 
     linearGens := StandardGeneratorsOfLinearGroup(k, q);
-    orthogonalGens := StandardGeneratorsOfOrthogonalGroup(epsilon, d - 2 * k, q);
-
+    
     if IsEvenInt(q) then
 
         for L in [linearGens.L1, linearGens.L2] do
@@ -552,15 +551,18 @@ function(epsilon, d, q, k)
         od;
 
         if k <> m then
+            orthogonalGens := StandardGeneratorsOfOrthogonalGroup(epsilon, d - 2 * k, q);
             for OmegaGen in orthogonalGens.generatorsOfOmega do
                 H_3or4 := IdentityMat(d, field);
                 H_3or4{[k + 1..d - k]}{[k + 1..d - k]} := OmegaGen;
                 Add(gens, H_3or4);
             od;
+            # Size according to Table 2.3 of [BHR13]
+            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q);
+        else
+            # Size according to Table 2.3 of [BHR13]
+            size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q) * SizeOmega(epsilon, d - 2 * k, q);
         fi;
-
-        # Size according to Table 2.3 of [BHR13]
-        size := q ^ (k * d - QuoInt(k * (3 * k + 1), 2)) * SizeGL(k, q) * SizeOmega(epsilon, d - 2 * k, q);
 
     else
 
@@ -579,13 +581,14 @@ function(epsilon, d, q, k)
             else
                 t := 1;
             fi;
-            size := q ^ QuoInt(k * (k + 1), 2) * QuoInt(SizeGL(k, q), 2);
+            size := q ^ QuoInt(k * (k + t), 2) * QuoInt(SizeGL(k, q), 2);
 
         else
 
-            for matrices in [(linearGens.L1, IdentityMat(d - 2 * k, field)), (linearGens.L2, orthogonalGens.S)] do
+            orthogonalGens := StandardGeneratorsOfOrthogonalGroup(epsilon, d - 2 * k, q);
+            for matrices in [[linearGens.L1, IdentityMat(d - 2 * k, field)], [linearGens.L2, orthogonalGens.S]] do
                 H_1or2 := IdentityMat(d, field);
-                H_1or2{[1..k]}{[1..k]} := L;
+                H_1or2{[1..k]}{[1..k]} := matrices[1];
                 H_1or2{[k + 1..d - k]}{[k + 1..d - k]} := matrices[2];
                 H_1or2{[d - k + 1..d]}{[d - k + 1..d]} := RotateMat(TransposedMat(matrices[1] ^ -1));
                 Add(gens, H_1or2);
@@ -634,16 +637,16 @@ function(epsilon, d, q, k)
 
     fi;
 
-
     result := MatrixGroupWithSize(field, gens, size);
-    return result;
-    # if epsilon = -1 then
-    #     return ConjugateToStandardForm(result, "O-");
-    # elif epsilon = 0 then
-    #     return ConjugateToStandardForm(result, "O");
-    # else
-    #     return ConjugateToStandardForm(result, "O+");
-    # fi;
+    SetInvariantQuadraticFormFromMatrix(result, StandardOrthogonalForm(epsilon, d, q).Q);
+
+    if epsilon = -1 then
+        return ConjugateToStandardForm(result, "O-");
+    elif epsilon = 0 then
+        return ConjugateToStandardForm(result, "O");
+    else
+        return ConjugateToStandardForm(result, "O+");
+    fi;
 
 end);
 
