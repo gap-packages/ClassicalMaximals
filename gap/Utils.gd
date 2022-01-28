@@ -22,7 +22,7 @@ DeclareGlobalFunction("MatrixByEntries");
 #! - If <A>entries</A> is an integer, the entries of <C>M</C> are all ones 
 #!   and the number of them is <A>entries</A>.
 DeclareGlobalFunction("AntidiagonalMat");
-#! @Chater Utility Functions
+#! @Chapter Utility Functions
 #! @Section MatrixFunctions
 #! @Arguments A
 #! @Description

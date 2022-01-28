@@ -27,11 +27,10 @@ end);
 
 InstallGlobalFunction("RotateMat",
 function(A)
-    local dims, m, n, B, i, j;
-    dims := DimensionsMat(A);
-    m := dims[1];
-    n := dims[2];
-    B := NullMat(m, n, DefaultFieldOfMatrix(A));
+    local m, n, B, i, j;
+    m := NrRows(A);
+    n := NrCols(B);
+    B := ZeroMutable(A);
     for i in [1..m] do
         for j in [1..n] do
             B[m - i + 1, n - j + 1] := A[i, j];

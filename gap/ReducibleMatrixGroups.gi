@@ -623,7 +623,10 @@ function(epsilon, d, q, k)
         Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
         if epsilon = 1 then
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
-            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d - k - 1, 1, -one]]));
+            # [BHR13] wants the matrix
+            # IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d - k - 1, 1, -one]])
+            # here, but that just makes no sense. Instead, this works :)
+            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d, d - k - 1, -one]]));
         else
             if IsEvenInt(q) then
                 gamma := FindGamma(q);
