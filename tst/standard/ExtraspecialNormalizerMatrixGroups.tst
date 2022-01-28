@@ -4,8 +4,8 @@ gap> START_TEST("ExtraspecialNormalizerMatrixGroups.tst");
 gap> TestExtraspecialNormalizerInSL := function(r, m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInSL(r, m, q);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSL(r ^ m, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSL(r ^ m, q, G);
 > end;;
 gap> TestExtraspecialNormalizerInSL(5, 1, 11);
 gap> TestExtraspecialNormalizerInSL(3, 1, 7);
@@ -21,8 +21,8 @@ gap> TestExtraspecialNormalizerInSL(2, 1, 7);
 gap> TestExtraspecialNormalizerInSU := function(r, m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInSU(r, m, q);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSU(r ^ m, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSU(r ^ m, q, G);
 > end;;
 gap> TestExtraspecialNormalizerInSU(5, 1, 4);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
@@ -39,8 +39,8 @@ gap> TestExtraspecialNormalizerInSU(3, 1, 5);
 gap> TestExtraspecialNormalizerInSp := function(m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInSp(m, q);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSp(2 ^ m, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSp(2 ^ m, q, G);
 > end;;
 gap> TestExtraspecialNormalizerInSp(2, 3);
 gap> TestExtraspecialNormalizerInSp(2, 5);
@@ -133,8 +133,8 @@ gap> TestExtraspecial2MinusTypeNormalizerInGL(2, 5);
 gap> TestExtraspecialNormalizerInOmega := function(m, q)
 >   local G;
 >   G := ExtraspecialNormalizerInOmega(m, q);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetOmega(1, 2 ^ m, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetOmega(1, 2 ^ m, q, G);
 > end;;
 gap> TestExtraspecialNormalizerInOmega(3, 3);
 gap> TestExtraspecialNormalizerInOmega(3, 5);

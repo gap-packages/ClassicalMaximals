@@ -225,7 +225,7 @@ gap> TestStandardGeneratorsOfLinearGroup := function(d, q)
 >   L3 := gens.L3;
 >   S := MatrixGroup(field, [L1, L3]);
 >   G := MatrixGroup(field, [L1, L2]);
->   Assert(0, IsSubsetSL(d, q, S));
+>   CheckIsSubsetSL(d, q, S);
 >   Assert(0, DimensionsMat(L2) = [d, d]);
 >   Assert(0, DefaultFieldOfMatrix(L2) = field);
 >   Assert(0, not Determinant(L2) in [0, 1]);

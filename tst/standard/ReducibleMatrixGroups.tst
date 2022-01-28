@@ -5,8 +5,8 @@ gap> TestSLStabilizerOfSubspace := function(n, q, k)
 >   local G;
 >   Info(InfoClassicalMaximalsTests, 1, [n,q,k]);
 >   G := SLStabilizerOfSubspace(n, q, k);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSL(n, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSL(n, q, G);
 > end;;
 gap> TestSLStabilizerOfSubspace(4, 3, 2);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
@@ -18,8 +18,8 @@ gap> TestSLStabilizerOfSubspace(2, 7, 1);
 gap> TestSUStabilizerOfIsotropicSubspace := function(n, q, k)
 >   local G;
 >   G := SUStabilizerOfIsotropicSubspace(n, q, k);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSU(n, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSU(n, q, G);
 > end;;
 gap> TestSUStabilizerOfIsotropicSubspace(4, 3, 2);
 gap> TestSUStabilizerOfIsotropicSubspace(3, 5, 1);
@@ -30,8 +30,8 @@ gap> TestSUStabilizerOfIsotropicSubspace(4, 3, 1);
 gap> TestSUStabilizerOfNonDegenerateSubspace := function(n, q, k)
 >   local G;
 >   G := SUStabilizerOfNonDegenerateSubspace(n, q, k);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSU(n, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSU(n, q, G);
 > end;;
 gap> TestSUStabilizerOfNonDegenerateSubspace(5, 3, 2);
 gap> TestSUStabilizerOfNonDegenerateSubspace(6, 3, 2);
@@ -42,8 +42,8 @@ gap> TestSUStabilizerOfNonDegenerateSubspace(5, 4, 1);
 gap> TestSpStabilizerOfIsotropicSubspace := function(n, q, k)
 >   local G;
 >   G := SpStabilizerOfIsotropicSubspace(n, q, k);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSp(n, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSp(n, q, G);
 > end;;
 gap> TestSpStabilizerOfIsotropicSubspace(4, 2, 1);
 gap> TestSpStabilizerOfIsotropicSubspace(4, 9, 1);
@@ -60,8 +60,8 @@ Error, <k> must be less than or equal to <d> / 2
 gap> TestSpStabilizerOfNonDegenerateSubspace := function(n, q, k)
 >   local G;
 >   G := SpStabilizerOfNonDegenerateSubspace(n, q, k);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetSp(n, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetSp(n, q, G);
 > end;;
 gap> TestSpStabilizerOfNonDegenerateSubspace(4, 2, 1);
 gap> TestSpStabilizerOfNonDegenerateSubspace(4, 9, 1);
@@ -78,8 +78,8 @@ Error, <k> must be less than <d> / 2
 gap> TestOmegaStabilizerOfNonDegenerateSubspace := function(epsilon, d, q, epsilon_0, k)
 >   local G;
 >   G := OmegaStabilizerOfNonDegenerateSubspace(epsilon, d, q, epsilon_0, k);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetOmega(epsilon, d, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetOmega(epsilon, d, q, G);
 > end;;
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, 1, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, -1, 5);
@@ -134,8 +134,8 @@ Error, <k> must be less than or equal to <d> / 2
 gap> TestOmegaStabilizerOfNonSingularVector := function(epsilon, d, q)
 >   local G;
 >   G := OmegaStabilizerOfNonSingularVector(epsilon, d, q);
->   Assert(0, CheckSize(G));
->   Assert(0, IsSubsetOmega(epsilon, d, q, G));
+>   CheckSize(G);
+>   CheckIsSubsetOmega(epsilon, d, q, G);
 > end;;
 gap> TestOmegaStabilizerOfNonSingularVector(1, 6, 4);
 gap> TestOmegaStabilizerOfNonSingularVector(-1, 6, 4);

@@ -1,38 +1,49 @@
 CheckSize := function(G)
   local lvl, ri;
-  Assert(0, HasSize(G));
+  if not HasSize(G) then
+    Error("size not set");
+  fi;
   lvl:=InfoLevel(InfoRecog);
   SetInfoLevel(InfoRecog, 0);
   ri := RecogniseGroup(G);
   SetInfoLevel(InfoRecog, lvl);
-  return Size(ri) = Size(G);
+  if Size(ri) <> Size(G) then
+    Error("bad size");
+  fi;
 end;
 
 CheckGeneratorsInvertible := function(G)
-  return ForAll(GeneratorsOfGroup(G),
-              g -> not IsZero(Determinant(g)));
+  if ForAny(GeneratorsOfGroup(G), g -> IsZero(Determinant(g))) then
+    Error("not all generators are invertible");
+  fi;
 end;
 
 CheckGeneratorsSpecial := function(G)
-  return ForAll(GeneratorsOfGroup(G),
-              g -> IsOne(Determinant(g)));
+  if not ForAll(GeneratorsOfGroup(G), g -> IsOne(Determinant(g))) then
+    Error("not all generators have determinant one");
+  fi;
 end;
 
 # verify that forms are given and preserved
 CheckBilinearForm := function(G)
   local M;
   M := InvariantBilinearForm(G).matrix;
-  return ForAll(GeneratorsOfGroup(G),
-              g -> g*M*TransposedMat(g) = M);
+  if not ForAll(GeneratorsOfGroup(G), g -> g*M*TransposedMat(g) = M) then
+    Error("not all generators preserve the bilinear form");
+  fi;
 end;
 
 CheckQuadraticForm := function(G)
   local M, Q;
   M := InvariantBilinearForm(G).matrix;
   Q := InvariantQuadraticForm(G).matrix;
-  return (Q+TransposedMat(Q) = M) and
-         ForAll(GeneratorsOfGroup(G),
-           g -> RespectsQuadraticForm(Q, g));
+  if Q+TransposedMat(Q) <> M then
+    Error("incompatible quadratic and bilinear form");
+  fi;
+
+  if not ForAll(GeneratorsOfGroup(G), g -> RespectsQuadraticForm(Q, g)) then
+    Error("not all generators preserve the quadratic form");
+  fi;
 end;
 
 CheckSesquilinearForm := function(G)
@@ -40,47 +51,49 @@ CheckSesquilinearForm := function(G)
   M := InvariantSesquilinearForm(G).matrix;
   F := DefaultFieldOfMatrixGroup(G);
   q := RootInt(Size(F));
-  return ForAll(GeneratorsOfGroup(G),
-              g -> g*M*HermitianConjugate(g,q) = M);
+  if not ForAll(GeneratorsOfGroup(G), g -> g*M*HermitianConjugate(g,q) = M) then
+    Error("not all generators preserve the quadratic form");
+  fi;
 end;
 
-IsSubsetSL := function(n, q, G)
-  Assert(0, DimensionOfMatrixGroup(G) = n);
-  Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
-  Assert(0, CheckGeneratorsSpecial(G));
-  return true;
+CheckIsSubsetSL := function(n, q, G)
+  local m, F;
+  m := DimensionOfMatrixGroup(G);
+  if m <> n then
+    Error("matrix group: expected degree ", n, " actual degree ", m);
+  fi;
+  F := DefaultFieldOfMatrixGroup(G);
+  if Size(F) <> q then
+    Error("matrix group: expected field of size ", q, " actual size ", Size(F));
+  fi;
+  CheckGeneratorsSpecial(G);
 end;
 
-IsSubsetSp := function(n, q, G)
-  Assert(0, DimensionOfMatrixGroup(G) = n);
-  Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
-  Assert(0, CheckGeneratorsSpecial(G));
-  Assert(0, CheckBilinearForm(G));
-  return true;
+CheckIsSubsetSp := function(n, q, G)
+  CheckIsSubsetSL(n, q, G);
+  CheckBilinearForm(G);
 end;
 
-IsSubsetSU := function(n, q, G)
-  Assert(0, DimensionOfMatrixGroup(G) = n);
-  Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q^2));
-  Assert(0, CheckGeneratorsSpecial(G));
-  Assert(0, CheckSesquilinearForm(G));
-  return true;
+CheckIsSubsetSU := function(n, q, G)
+  CheckIsSubsetSL(n, q^2, G);
+  CheckSesquilinearForm(G);
 end;
 
-IsSubsetOmega := function(epsilon, n, q, G)
+CheckIsSubsetOmega := function(epsilon, n, q, G)
   local field, invariantForm;
+  CheckIsSubsetSL(n, q, G);
   field := GF(q);
-  Assert(0, DimensionOfMatrixGroup(G) = n);
-  Assert(0, DefaultFieldOfMatrixGroup(G) = field);
-  Assert(0, CheckGeneratorsSpecial(G));
   if IsEvenInt(q) then
-    Assert(0, CheckQuadraticForm(G));
+    CheckQuadraticForm(G);
     invariantForm := QuadraticFormByMatrix(InvariantQuadraticForm(G).matrix, field);
   else
-    Assert(0, CheckBilinearForm(G));
+    CheckBilinearForm(G);
     invariantForm := BilinearFormByMatrix(InvariantBilinearForm(G).matrix, field);
   fi;
-  Assert(0, 2 * WittIndex(invariantForm) = n + epsilon - 1);
-  Assert(0, ForAll(GeneratorsOfGroup(G), g -> FancySpinorNorm(InvariantBilinearForm(G).matrix, field, g) = 1));
-  return true;
+  if 2 * WittIndex(invariantForm) <> n + epsilon - 1 then
+    Error("wrong Witt index");
+  fi;
+  if not ForAll(GeneratorsOfGroup(G), g -> FancySpinorNorm(InvariantBilinearForm(G).matrix, field, g) = 1) then
+    Error("wrong Spinor norm");
+  fi;
 end;
