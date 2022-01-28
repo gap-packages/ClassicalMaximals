@@ -4,8 +4,8 @@ gap> START_TEST("TensorInducedMatrixGroups.tst");
 gap> TestTensorInducedDecompositionStabilizerInSL := function(m, t, q)
 >   local G;
 >   G := TensorInducedDecompositionStabilizerInSL(m, t, q);
->   CheckSize(G);
 >   CheckIsSubsetSL(m ^ t, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestTensorInducedDecompositionStabilizerInSL(3, 2, 5);
 gap> TestTensorInducedDecompositionStabilizerInSL(2, 2, 7);
@@ -29,8 +29,8 @@ gap> TestTensorInducedDecompositionStabilizerInSU(3, 2, 5);
 gap> TestTensorInducedDecompositionStabilizerInSp := function(m, t, q)
 >   local G;
 >   G := TensorInducedDecompositionStabilizerInSp(m, t, q);
->   CheckSize(G);
 >   CheckIsSubsetSp(m ^ t, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestTensorInducedDecompositionStabilizerInSp(2, 3, 7);
 gap> TestTensorInducedDecompositionStabilizerInSp(4, 3, 3);

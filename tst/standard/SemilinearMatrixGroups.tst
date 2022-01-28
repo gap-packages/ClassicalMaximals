@@ -4,8 +4,8 @@ gap> START_TEST("SemilinearMatrixGroups.tst");
 gap> TestGammaLMeetSL := function(n, q, s)
 >   local G;
 >   G := GammaLMeetSL(n, q, s);
->   CheckSize(G);
 >   CheckIsSubsetSL(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestGammaLMeetSL(4, 3, 2);
 gap> TestGammaLMeetSL(2, 2, 2);
@@ -16,8 +16,8 @@ gap> TestGammaLMeetSL(3, 4, 3);
 gap> TestGammaLMeetSU := function(n, q, s)
 >   local G;
 >   G := GammaLMeetSU(n, q, s);
->   CheckSize(G);
 >   CheckIsSubsetSU(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestGammaLMeetSU(3, 5, 3);
 gap> TestGammaLMeetSU(6, 3, 3);
@@ -27,8 +27,8 @@ gap> TestGammaLMeetSU(3, 7, 3);
 gap> TestSymplecticSemilinearSp := function(n, q, s)
 >   local G;
 >   G := SymplecticSemilinearSp(n, q, s);
->   CheckSize(G);
 >   CheckIsSubsetSp(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestSymplecticSemilinearSp(4, 7, 2);
 gap> TestSymplecticSemilinearSp(6, 5, 3);
@@ -38,8 +38,8 @@ gap> TestSymplecticSemilinearSp(8, 4, 2);
 gap> TestUnitarySemilinearSp := function(n, q)
 >   local G;
 >   G := UnitarySemilinearSp(n, q);
->   CheckSize(G);
 >   CheckIsSubsetSp(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestUnitarySemilinearSp(4, 7);
 gap> TestUnitarySemilinearSp(8, 5);

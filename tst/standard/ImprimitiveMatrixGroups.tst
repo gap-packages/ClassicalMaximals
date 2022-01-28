@@ -4,8 +4,8 @@ gap> START_TEST("ImprimitiveMatrixGroups.tst");
 gap> TestImprimitivesMeetSL := function(n, q, t)
 >   local G;
 >   G := ImprimitivesMeetSL(n, q, t);
->   CheckSize(G);
 >   CheckIsSubsetSL(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestImprimitivesMeetSL(2, 3, 2);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
@@ -17,8 +17,8 @@ gap> TestImprimitivesMeetSL(6, 5, 3);
 gap> TestSUIsotropicImprimitives := function(n, q)
 >   local G;
 >   G := SUIsotropicImprimitives(n, q);
->   CheckSize(G);
 >   CheckIsSubsetSU(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestSUIsotropicImprimitives(6, 2);
 gap> TestSUIsotropicImprimitives(4, 3);
@@ -28,8 +28,8 @@ gap> TestSUIsotropicImprimitives(2, 5);
 gap> TestSUNonDegenerateImprimitives := function(n, q, t)
 >   local G;
 >   G := SUNonDegenerateImprimitives(n, q, t);
->   CheckSize(G);
 >   CheckIsSubsetSU(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestSUNonDegenerateImprimitives(6, 3, 3);
 gap> TestSUNonDegenerateImprimitives(9, 2, 3);
@@ -39,8 +39,8 @@ gap> TestSUNonDegenerateImprimitives(3, 5, 3);
 gap> TestSpIsotropicImprimitives := function(n, q)
 >   local G;
 >   G := SpIsotropicImprimitives(n, q);
->   CheckSize(G);
 >   CheckIsSubsetSp(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestSpIsotropicImprimitives(4, 3);
 gap> TestSpIsotropicImprimitives(4, 7);
@@ -57,8 +57,8 @@ Error, <q> must be odd
 gap> TestSpNonDegenerateImprimitives := function(n, q, t)
 >   local G;
 >   G := SpNonDegenerateImprimitives(n, q, t);
->   CheckSize(G);
 >   CheckIsSubsetSp(n, q, G);
+>   CheckSize(G);
 > end;;
 gap> TestSpNonDegenerateImprimitives(4, 2, 2);
 gap> TestSpNonDegenerateImprimitives(6, 5, 3);
