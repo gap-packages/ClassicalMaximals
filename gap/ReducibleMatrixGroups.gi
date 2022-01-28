@@ -503,14 +503,12 @@ end);
 # Construction as in Lemma 4.2 of [HR10]
 BindGlobal("OmegaStabilizerOfIsotropicSubspace",
 function(epsilon, d, q, k)
-    local m, field, one, gens, linearGens, orthogonalGens, L, H_1or2, OmegaGen, t, H_3or4, size, matrices, gamma, eta, result;
+    local m, field, one, gens, linearGens, orthogonalGens, L, H_1or2, OmegaGen, t, H_3or4, size, matrices, gamma, zeta, eta, result;
 
     if epsilon = 0 then
 
         if IsEvenInt(d) then
             ErrorNoReturn("<d> must be odd");
-        # elif IsEvenInt(k) then
-        #     ErrorNoReturn("<k> must be odd");
         fi;
 
     elif epsilon in [-1, 1] then
@@ -541,6 +539,7 @@ function(epsilon, d, q, k)
 
     linearGens := StandardGeneratorsOfLinearGroup(k, q);
     
+    # We first construct the complement to the p-core of the stabilizer.
     if IsEvenInt(q) then
 
         for L in [linearGens.L1, linearGens.L2] do
@@ -607,6 +606,9 @@ function(epsilon, d, q, k)
 
     fi;
 
+    # We now construct the p-core of the stabilizer.
+    # TODO: understand how to properly construct the normal closures instead
+    # of just adding the matrices to the generators.
     if k = 1 then
 
         Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[2, 1, one], [d, d - 1, -one]]));
@@ -623,7 +625,12 @@ function(epsilon, d, q, k)
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d - k - 1, 1, -one]]));
         else
-            gamma := FindGamma(q);
+            if IsEvenInt(q) then
+                gamma := FindGamma(q);
+            else
+                zeta := PrimitiveElement(field);
+                gamma := zeta ^ (q + 1) + (zeta + zeta ^ q) ^ -2;
+            fi;
             eta := (1 - 4 * gamma) ^ -1;
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, 1, gamma * eta], [d, k + 1, 2 * gamma * eta], [d, k + 2, -eta]]));
         fi;
@@ -647,6 +654,8 @@ function(epsilon, d, q, k)
     else
         return ConjugateToStandardForm(result, "O+");
     fi;
+
+    return result;
 
 end);
 
