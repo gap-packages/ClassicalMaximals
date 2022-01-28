@@ -29,7 +29,7 @@ InstallGlobalFunction("RotateMat",
 function(A)
     local m, n, B, i, j;
     m := NrRows(A);
-    n := NrCols(B);
+    n := NrCols(A);
     B := ZeroMutable(A);
     for i in [1..m] do
         for j in [1..n] do
