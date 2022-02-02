@@ -78,21 +78,34 @@ Error, <k> must be less than <d> / 2
 gap> TestOmegaStabilizerOfIsotropicSubspace := function(epsilon, d, q, k)
 >   local G;
 >   G := OmegaStabilizerOfIsotropicSubspace(epsilon, d, q, k);
->   Assert(0, CheckSize(G));
 >   Assert(0, IsSubsetOmega(epsilon, d, q, G));
+>   Assert(0, CheckSize(G));
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);
 #@fi
-gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 6, 8, 3);
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 4);
-gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 5, 2);
-gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 5, 4);
+gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 7, 2);
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 3);
-gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 5, 2);
-gap> TestOmegaStabilizerOfIsotropicSubspace(1, 4, 5, 1);
-gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 5, 1);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 4, 2);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 6, 5, 1);
+gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 3, 1);
+
+# Test error handling
+gap> OmegaStabilizerOfIsotropicSubspace(0, 6, 5, 1);
+Error, <d> must be odd
+gap> OmegaStabilizerOfIsotropicSubspace(1, 5, 5, 1);
+Error, <d> must be even
+gap> OmegaStabilizerOfIsotropicSubspace(2, 5, 5, 1);
+Error, <epsilon> must be in [-1, 0, 1]
+gap> OmegaStabilizerOfIsotropicSubspace(0, 5, 8, 1);
+Error, <d> must be even if <q> is even
+gap> OmegaStabilizerOfIsotropicSubspace(0, 5, 5, 3);
+Error, <k> must be less than or equal to <m>
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 5, 4);
+Error, <k> must not be equal to <m> for <epsilon> = -1
 gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 4, 5, 1);
+Error, <d> must be at least 5
 
 #
 gap> TestOmegaStabilizerOfNonDegenerateSubspace := function(epsilon, d, q, epsilon_0, k)

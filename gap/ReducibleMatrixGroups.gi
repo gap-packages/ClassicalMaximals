@@ -520,7 +520,7 @@ function(epsilon, d, q, k)
     else
 
         ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
-    
+
     fi;
 
     if IsEvenInt(q) and IsOddInt(d) then
@@ -531,6 +531,15 @@ function(epsilon, d, q, k)
 
     if k > m then
         ErrorNoReturn("<k> must be less than or equal to <m>");
+    fi;
+
+    if k = m and epsilon = -1 then
+        ErrorNoReturn("<k> must not be equal to <m> for <epsilon> = -1");
+    fi;
+
+    # the construction referenced above fails for d < 5
+    if d < 5 then
+        ErrorNoReturn("<d> must be at least 5");
     fi;
 
     field := GF(q);
@@ -607,8 +616,6 @@ function(epsilon, d, q, k)
     fi;
 
     # We now construct the p-core of the stabilizer.
-    # TODO: understand how to properly construct the normal closures instead
-    # of just adding the matrices to the generators.
     if k = 1 then
 
         Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[2, 1, one], [d, d - 1, -one]]));

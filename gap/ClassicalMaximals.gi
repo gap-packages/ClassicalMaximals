@@ -1151,6 +1151,67 @@ function(epsilon, n, q, G, numberOfConjugates)
     return result;
 end);
 
+BindGlobal("C1SubgroupsOrthogonalGroupGeneric",
+function(epsilon, n, q)
+    local m, result, listOfks;
+
+    m := QuoInt(n, 2);
+    result := [];
+
+    # Isotropic type, number of conjugates according to Proposition 4.1.20 (I) in [KL90]
+    if epsilon = -1 then
+        listOfks := [1..m - 1];
+    elif epsilon = 0 then
+        listOfks := [1..m];
+    elif epsilon = 1 then
+        listOfks := [1..m - 2];
+        Add(listOfks, m);
+        Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, m - 1), 2));
+    fi;
+    Append(result, List(listOfks, k -> OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k)));
+
+    # Non-degenerate type, number of conjugates according to Proposition 4.1.6 (I) in [KL90]
+    if epsilon = 0 then
+
+        listOfks := 2 * [1..m] - 1;
+        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, k)));
+
+        # Cf. Proposition 2.3.2 (iii) in [BHR13]
+        if q in [2, 3] then
+            Remove(listOfks, 1);
+        fi;
+        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, k)));
+
+    else
+
+        if IsOddInt(q) then
+            listOfks := 2 * [1..QuoInt(m, 2)] - 1;
+            Append(result, Flat(List(listOfks, k -> ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, k), 2))));
+        fi;
+
+        if epsilon = -1 then
+            listOfks := 2 * [1..QuoInt(m, 2)];
+        else
+            listOfks := 2 * [1..QuoInt(m - 1, 2)];
+        fi;
+        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, k)));
+
+        # Cf. Proposition 2.3.2 (iii) in [BHR13]
+        if q = 2 then
+            Remove(listOfks, 1);
+        fi;
+        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, k)));
+
+    fi;
+
+    # Non-singular type, number of conjugates according to Proposition 4.1.7 (I) in [KL90]
+    if IsEvenInt(q) then
+        Add(result, OmegaStabilizerOfNonSingularVector(epsilon, n, q));
+    fi;
+
+    return result;
+end);
+
 BindGlobal("C6SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
@@ -1211,6 +1272,14 @@ function(epsilon, n, q, classes...)
     fi;
 
     maximalSubgroups := [];
+
+    if 1 in classes then
+        # Class C6 subgroups ######################################################
+        # Cf. Propositions 3.6.1 (n = 7), 3.7.1 (n = 8), 3.8.1 (n = 9),
+        # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12)
+        # and Table 8.50 (n = 8) in [BHR13]
+        Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+    fi;
 
     if 6 in classes then
         # Class C6 subgroups ######################################################
