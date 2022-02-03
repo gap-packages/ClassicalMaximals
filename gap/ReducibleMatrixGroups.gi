@@ -672,7 +672,7 @@ end);
 # Construction as in Lemma 4.3 of [HR10]
 BindGlobal("OmegaStabilizerOfNonDegenerateSubspace",
 function(epsilon, d, q, epsilon_0, k)
-    local m, epsilon_1, epsilon_2, orthogonal_gens_1, orthogonal_gens_2, 
+    local m, epsilon_1, epsilon_2, orthogonalGens_1, orthogonalGens_2, 
     field, gens, gen_1, gen_2, H, size, H_5, H_6, Q, result;
 
     # All of the conditions below follow from the general rules of
@@ -762,14 +762,14 @@ function(epsilon, d, q, epsilon_0, k)
 
     fi;
 
-    orthogonal_gens_1 := StandardGeneratorsOfOrthogonalGroup(epsilon_1, k, q);
-    orthogonal_gens_2 := StandardGeneratorsOfOrthogonalGroup(epsilon_2, d - k, q);
+    orthogonalGens_1 := StandardGeneratorsOfOrthogonalGroup(epsilon_1, k, q);
+    orthogonalGens_2 := StandardGeneratorsOfOrthogonalGroup(epsilon_2, d - k, q);
 
     field := GF(q);
     gens := [];
 
-    for gen_1 in orthogonal_gens_1.generatorsOfOmega do
-        for gen_2 in orthogonal_gens_2.generatorsOfOmega do
+    for gen_1 in orthogonalGens_1.generatorsOfOmega do
+        for gen_2 in orthogonalGens_2.generatorsOfOmega do
             H := IdentityMat(d, field);
             H{[1..k]}{[1..k]} := gen_1;
             H{[k + 1..d]}{[k + 1..d]} := gen_2;
@@ -787,8 +787,8 @@ function(epsilon, d, q, epsilon_0, k)
     if IsEvenInt(q) then
 
         H_5 := IdentityMat(d, field);
-        H_5{[1..k]}{[1..k]} := orthogonal_gens_1.S;
-        H_5{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
+        H_5{[1..k]}{[1..k]} := orthogonalGens_1.S;
+        H_5{[k + 1..d]}{[k + 1..d]} := orthogonalGens_2.S;
         Add(gens, H_5);
 
         size := QuoInt(size, 2);
@@ -798,14 +798,14 @@ function(epsilon, d, q, epsilon_0, k)
         # respectively, so the matrix H_5 has spinor norm 1 and
         # determinant 1 and is therefore in Omega(epsilon, d, q).
         H_5 := IdentityMat(d, field);
-        H_5{[1..k]}{[1..k]} := orthogonal_gens_1.G;
-        H_5{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.G;
+        H_5{[1..k]}{[1..k]} := orthogonalGens_1.G;
+        H_5{[k + 1..d]}{[k + 1..d]} := orthogonalGens_2.G;
         Add(gens, H_5);
 
         if k > 1 then
             H_6 := IdentityMat(d, field);
-            H_6{[1..k]}{[1..k]} := orthogonal_gens_1.S;
-            H_6{[k + 1..d]}{[k + 1..d]} := orthogonal_gens_2.S;
+            H_6{[1..k]}{[1..k]} := orthogonalGens_1.S;
+            H_6{[k + 1..d]}{[k + 1..d]} := orthogonalGens_2.S;
             Add(gens, H_6);
         fi;
     fi;
@@ -825,6 +825,8 @@ function(epsilon, d, q, epsilon_0, k)
     else
         return ConjugateToStandardForm(result, "O+");
     fi;
+
+    return result;
 
 end);
 

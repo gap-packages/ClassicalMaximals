@@ -88,6 +88,8 @@ gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 4);
 gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 7, 2);
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 3);
 gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 4, 2);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 4, 3);
+gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 4, 4);
 gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 6, 5, 1);
 gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 3, 1);
 
