@@ -78,8 +78,8 @@ Error, <k> must be less than <d> / 2
 gap> TestOmegaStabilizerOfIsotropicSubspace := function(epsilon, d, q, k)
 >   local G;
 >   G := OmegaStabilizerOfIsotropicSubspace(epsilon, d, q, k);
->   Assert(0, IsSubsetOmega(epsilon, d, q, G));
->   Assert(0, CheckSize(G));
+>   CheckIsSubsetOmega(epsilon, d, q, G);
+>   CheckSize(G);
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);
