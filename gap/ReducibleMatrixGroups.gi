@@ -672,8 +672,10 @@ end);
 # Construction as in Lemma 4.3 of [HR10]
 BindGlobal("OmegaStabilizerOfNonDegenerateSubspace",
 function(epsilon, d, q, epsilon_0, k)
-    local m, epsilon_1, epsilon_2, orthogonalGens_1, orthogonalGens_2, 
-    field, gens, gen_1, gen_2, H, size, H_5, H_6, Q, result;
+    local m, epsilon_1, epsilon_2, field, gens, one, zeta,
+    bilinearFormMat_1, bilinearFormMat_2, nonzeroEntries,
+    OmegaGens, R0, R1, orthogonalGens_1, orthogonalGens_2,
+    Q, gen_1, gen_2, H, size, H_5, H_6, result;
 
     # All of the conditions below follow from the general rules of
     # orthogonal groups as well as Table 1 from [HR10], except we
@@ -762,11 +764,74 @@ function(epsilon, d, q, epsilon_0, k)
 
     fi;
 
-    orthogonalGens_1 := StandardGeneratorsOfOrthogonalGroup(epsilon_1, k, q);
-    orthogonalGens_2 := StandardGeneratorsOfOrthogonalGroup(epsilon_2, d - k, q);
-
     field := GF(q);
     gens := [];
+
+    # In this case, the group preserves both a hyperbolic and
+    # an elliptic form. If we lazily construct the form by
+    # taking the direct sum of preserved standard forms,
+    # we might end up with a form of incorrect type. To avoid
+    # this, we need to manually contruct a form of correct type
+    # and conjugate accordingly. Note that this case only
+    # occurs for q odd, so we can safely divide by 2 to get
+    # the quadratic form matrix at the end.
+    # Unfortunately, we also have to construct the matrices
+    # S and G from Theorem 3.9 in [HR10] from scratch, because
+    # conjugation does not preserve the spinor norm.
+    # Thankfully though the forms we use here are very simple,
+    # so finding vectors with square/nonsquare form is not too
+    # complicated.
+    if epsilon_0 = 0 then
+
+        one := One(field);
+        zeta := PrimitiveElement(field);
+
+        bilinearFormMat_1 := IdentityMat(k, field);
+        bilinearFormMat_2 := IdentityMat(d - k, field);
+        if (epsilon = 1 and (q mod 4 = 3 and d mod 4 = 2)) or (epsilon = -1 and not (q mod 4 = 3 and d mod 4 = 2)) then
+            bilinearFormMat_2[1, 1] := zeta;
+        fi;
+
+        # The following construction is akin to Theorem 3.9 in [HR10]
+        # but with custon vectors for our form(s).
+        # The vector v = [0, ..., 0, a, b] guarantees that beta(v, v)
+        # is nonsquare for our bilinear form beta, so we can use
+        # its reflection matrix to get spinor norm -1.
+        # Of course the vector [0, ..., 0, 1] satisfies beta(v, v) square,
+        # so its reflection matrix has spinor norm 1.
+        nonzeroEntries := SolveQuadraticCongruence(zeta, q);
+
+        if k = 1 then
+            orthogonalGens_1 := rec( generatorsOfOmega := [IdentityMat(1, field)], S := IdentityMat(1, field), G := [[-one]] );
+        else
+            OmegaGens := GeneratorsOfGroup(ConjugateToSesquilinearForm(Omega(0, k, q), "O-B", bilinearFormMat_1));
+            R0 := ReflectionMatrix(k, q, bilinearFormMat_1, "B",
+                                    one * Concatenation(ListWithIdenticalEntries(k - 1, 0), [1]));
+            R1 := ReflectionMatrix(k, q, bilinearFormMat_1, "B",
+                                    one * Concatenation(ListWithIdenticalEntries(k - 2, 0), [nonzeroEntries.a, nonzeroEntries.b]));
+            orthogonalGens_1 := rec( generatorsOfOmega := OmegaGens, S := R0 * R1, G := R0 );
+        fi;
+
+        OmegaGens := GeneratorsOfGroup(ConjugateToSesquilinearForm(Omega(0, d - k, q), "O-B", bilinearFormMat_2));
+        R0 := ReflectionMatrix(d - k, q, bilinearFormMat_2, "B",
+                                one * Concatenation(ListWithIdenticalEntries(d - k - 1, 0), [1]));
+        R1 := ReflectionMatrix(d - k, q, bilinearFormMat_2, "B",
+                                one * Concatenation(ListWithIdenticalEntries(d - k - 2, 0), [nonzeroEntries.a, nonzeroEntries.b]));
+        orthogonalGens_2 := rec( generatorsOfOmega := OmegaGens, S := R0 * R1, G := R0 );
+
+        Q := IdentityMat(d, field) / 2;
+        Q[k + 1, k + 1] := bilinearFormMat_2[1, 1] / 2;
+
+    else
+
+        orthogonalGens_1 := StandardGeneratorsOfOrthogonalGroup(epsilon_1, k, q);
+        orthogonalGens_2 := StandardGeneratorsOfOrthogonalGroup(epsilon_2, d - k, q);
+
+        Q := IdentityMat(d, field);
+        Q{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).Q;
+        Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).Q;
+
+    fi;
 
     for gen_1 in orthogonalGens_1.generatorsOfOmega do
         for gen_2 in orthogonalGens_2.generatorsOfOmega do
@@ -802,6 +867,9 @@ function(epsilon, d, q, epsilon_0, k)
         H_5{[k + 1..d]}{[k + 1..d]} := orthogonalGens_2.G;
         Add(gens, H_5);
 
+        # Strangely, [BHR13] uses the matrices S for Omega(epsilon, k, q)
+        # and Omega(epsilon, d - k, q) here, but those are not even
+        # always well-defined, so we assume that to be a typo.
         if k > 1 then
             H_6 := IdentityMat(d, field);
             H_6{[1..k]}{[1..k]} := orthogonalGens_1.S;
@@ -809,11 +877,6 @@ function(epsilon, d, q, epsilon_0, k)
             Add(gens, H_6);
         fi;
     fi;
-
-    # The constructed group preserves this form matrix.
-    Q := IdentityMat(d, field);
-    Q{[1..k]}{[1..k]} := StandardOrthogonalForm(epsilon_1, k, q).Q;
-    Q{[k + 1..d]}{[k + 1..d]} := StandardOrthogonalForm(epsilon_2, d - k, q).Q;
 
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantQuadraticFormFromMatrix(result, Q);
