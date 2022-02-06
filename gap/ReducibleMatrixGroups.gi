@@ -503,7 +503,8 @@ end);
 # Construction as in Lemma 4.2 of [HR10]
 BindGlobal("OmegaStabilizerOfIsotropicSubspace",
 function(epsilon, d, q, k)
-    local m, field, one, gens, linearGens, orthogonalGens, L, H_1or2, OmegaGen, t, H_3or4, size, matrices, gamma, zeta, eta, result;
+    local m, field, one, gens, linearGens, orthogonalGens, L, H_1or2,
+    OmegaGen, t, H_3or4, size, matrices, gamma, xi, eta, result;
 
     if epsilon = 0 then
 
@@ -638,8 +639,8 @@ function(epsilon, d, q, k)
             if IsEvenInt(q) then
                 gamma := FindGamma(q);
             else
-                zeta := PrimitiveElement(field);
-                gamma := zeta ^ (q + 1) + (zeta + zeta ^ q) ^ -2;
+                xi := PrimitiveElement(GF(q ^ 2));
+                gamma := xi ^ (q + 1) * (xi + xi ^ q) ^ -2;
             fi;
             eta := (1 - 4 * gamma) ^ -1;
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, 1, gamma * eta], [d, k + 1, 2 * gamma * eta], [d, k + 2, -eta]]));
@@ -664,8 +665,6 @@ function(epsilon, d, q, k)
     else
         return ConjugateToStandardForm(result, "O+");
     fi;
-
-    return result;
 
 end);
 
@@ -888,8 +887,6 @@ function(epsilon, d, q, epsilon_0, k)
     else
         return ConjugateToStandardForm(result, "O+");
     fi;
-
-    return result;
 
 end);
 

@@ -92,6 +92,7 @@ gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 4, 3);
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 4, 4);
 gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 6, 5, 1);
 gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 3, 1);
+gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 7, 3);
 
 # Test error handling
 gap> OmegaStabilizerOfIsotropicSubspace(0, 6, 5, 1);
