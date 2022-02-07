@@ -631,7 +631,7 @@ function(epsilon, d, q, k)
         Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
         if epsilon = 1 then
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
-            # [BHR13] wants the matrix
+            # [HR10] wants the matrix
             # IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d - k - 1, 1, -one]])
             # here, but that just makes no sense. Instead, this works :)
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d, d - k - 1, -one]]));
@@ -770,7 +770,7 @@ function(epsilon, d, q, epsilon_0, k)
     # an elliptic form. If we lazily construct the form by
     # taking the direct sum of preserved standard forms,
     # we might end up with a form of incorrect type. To avoid
-    # this, we need to manually contruct a form of correct type
+    # this, we need to manually construct a form of correct type
     # and conjugate accordingly. Note that this case only
     # occurs for q odd, so we can safely divide by 2 to get
     # the quadratic form matrix at the end.
@@ -792,7 +792,7 @@ function(epsilon, d, q, epsilon_0, k)
         fi;
 
         # The following construction is akin to Theorem 3.9 in [HR10]
-        # but with custon vectors for our form(s).
+        # but with custom vectors for our form(s).
         # The vector v = [0, ..., 0, a, b] guarantees that beta(v, v)
         # is nonsquare for our bilinear form beta, so we can use
         # its reflection matrix to get spinor norm -1.
@@ -866,9 +866,10 @@ function(epsilon, d, q, epsilon_0, k)
         H_5{[k + 1..d]}{[k + 1..d]} := orthogonalGens_2.G;
         Add(gens, H_5);
 
-        # Strangely, [BHR13] uses the matrices S for Omega(epsilon, k, q)
+        # Strangely, [HR10] uses the matrices S for Omega(epsilon, k, q)
         # and Omega(epsilon, d - k, q) here, but those are not even
-        # always well-defined, so we assume that to be a typo.
+        # always well-defined, so we assume that to be a typo and go
+        # with epsilon_1 and epsilon_2 here instead of epsilon.
         if k > 1 then
             H_6 := IdentityMat(d, field);
             H_6{[1..k]}{[1..k]} := orthogonalGens_1.S;
