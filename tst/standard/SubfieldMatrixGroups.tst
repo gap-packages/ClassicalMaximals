@@ -92,4 +92,40 @@ gap> SubfieldSp(4, 2, 4, 1);
 Error, the quotient of <f> by <e> must be a prime
 
 #
+gap> TestSubfieldOmega := function(epsilon, n, p, e, f, epsilon_0)
+>   local G;
+>   G := SubfieldOmega(epsilon, n, p, e, f, epsilon_0);
+>   CheckIsSubsetOmega(epsilon, n, p ^ e, G);
+>   CheckSize(G);
+> end;;
+gap> TestSubfieldOmega(0, 7, 3, 5, 1, 0);
+gap> TestSubfieldOmega(0, 5, 3, 4, 2, 0);
+gap> TestSubfieldOmega(0, 7, 5, 3, 1, 0);
+gap> TestSubfieldOmega(0, 7, 7, 2, 1, 0);
+gap> TestSubfieldOmega(-1, 8, 4, 5, 1, -1);
+gap> TestSubfieldOmega(-1, 10, 3, 3, 1, -1);
+gap> TestSubfieldOmega(1, 8, 4, 5, 1, 1);
+gap> TestSubfieldOmega(1, 6, 3, 4, 2, 1);
+gap> TestSubfieldOmega(1, 6, 8, 2, 1, -1);
+gap> TestSubfieldOmega(1, 10, 3, 2, 1, -1);
+
+# Test error handling
+gap> SubfieldOmega(0, 8, 3, 2, 1, 0);
+Error, <d> must be odd
+gap> SubfieldOmega(1, 7, 3, 2, 1, 1);
+Error, <d> must be even
+gap> SubfieldOmega(2, 7, 3, 2, 1, 1);
+Error, <epsilon> must be in [-1, 0, 1]
+gap> SubfieldOmega(0, 7, 4, 2, 1, 0);
+Error, <d> must be even if <q> is even
+gap> SubfieldOmega(0, 7, 3, 3, 2, 0);
+Error, <f> must be a divisor of <e>
+gap> SubfieldOmega(0, 7, 3, 4, 1, 0);
+Error, the quotient of <f> by <e> must be a prime
+gap> SubfieldOmega(0, 7, 3, 2, 1, 2);
+Error, <epsilon_0> must be in [-1, 0, 1]
+gap> SubfieldOmega(-1, 8, 3, 2, 1, 1);
+Error, <epsilon_0> ^ r must be equal to <epsilon>
+
+#
 gap> STOP_TEST("SubfieldMatrixGroups.tst", 0);

@@ -334,3 +334,108 @@ function (d, p, e, f)
 
     return ConjugateToStandardForm(result, "S");
 end);
+
+# Construction as in Proposition 8.1 of [HR10]
+BindGlobal("SubfieldOmega",
+function (epsilon, d, p, e, f, epsilon_0)
+    local r, q0, field, one, zeta, lambda, lambdaInv, m,
+    A, F, ABlock, FBlock, i, orthogonalType, gens, result;
+
+    if epsilon = 0 then
+        if IsEvenInt(d) then
+            ErrorNoReturn("<d> must be odd");
+        fi;
+    elif epsilon in [-1, 1] then
+        if IsOddInt(d) then
+            ErrorNoReturn("<d> must be even");
+        fi;
+    else
+        ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
+    fi;
+
+    if IsEvenInt(p) and IsOddInt(d) then
+        ErrorNoReturn("<d> must be even if <q> is even");
+    fi;
+
+    if e mod f <> 0 then
+        ErrorNoReturn("<f> must be a divisor of <e>");
+    fi;
+
+    r := QuoInt(e, f);
+
+    if not IsPrime(r) then
+        ErrorNoReturn("the quotient of <f> by <e> must be a prime");
+    fi;
+
+    if not epsilon_0 in [-1, 0, 1] then
+        ErrorNoReturn("<epsilon_0> must be in [-1, 0, 1]");
+    elif epsilon_0 ^ r <> epsilon then
+        ErrorNoReturn("<epsilon_0> ^ r must be equal to <epsilon>");
+    fi;
+
+    q0 := p ^ f;
+
+    if IsOddInt(d) then
+        if r = 2 then
+            return ConjugateToStandardForm(SO(0, d, q0), "O");
+        else
+            return Omega(0, d, q0);
+        fi;
+    fi;
+
+    if IsEvenInt(p) then
+        return Omega(epsilon_0, d, q0);
+    fi;
+
+    if r <> 2 then
+        return Omega(epsilon_0, d, q0);
+    fi;
+
+    # from now on we assume r = 2, d even and epsilon = 1
+    if epsilon_0 = 1 then
+        if d mod 2 = 0 and q0 mod 4 = 1 then
+            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+");
+        fi;
+    else
+        if not (d mod 2 = 0 and q0 mod 4 = 1) then
+            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O-");
+        fi;
+    fi;
+    
+    field := GF(p ^ e);
+    one := One(field);
+    zeta := PrimitiveElement(field);
+    lambda := zeta ^ QuoInt(q0 + 1, 2);
+    lambdaInv := lambda ^ -1;
+    m := QuoInt(d, 2);
+
+    if epsilon_0 = 1 then
+
+        A := lambda * IdentityMat(d, field);
+        A{[m + 1..d]}{[m + 1..d]} := lambdaInv * IdentityMat(m, field);
+        F := StandardOrthogonalForm(epsilon, d, q0).F;
+        orthogonalType := "O+";
+
+    else
+
+        A := NullMat(d, d, field);
+        F := NullMat(d, d, field);
+        ABlock := one * [[lambda, 0], [0, lambdaInv]];
+        FBlock := AntidiagonalMat(2, field);
+        for i in [1..m - 1] do
+            A{[2 * i - 1..2 * i]}{[2 * i - 1..2 * i]} := ABlock;
+            F{[2 * i - 1..2 * i]}{[2 * i - 1..2 * i]} := FBlock;
+        od;
+        A[d - 1, d] := -lambdaInv;
+        A[d, d - 1] := lambda;
+        F[d - 1, d - 1] := one;
+        F[d, d] := lambda ^ 2;
+        orthogonalType := "O-";
+
+    fi;
+
+    gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), F, "O-B")));
+    Add(gens, A);
+    result := MatrixGroupWithSize(field, gens, SizeSO(d, q0) * 2);
+    return ConjugateToStandardForm(result, orthogonalType);
+end);
