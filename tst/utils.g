@@ -37,7 +37,7 @@ CheckQuadraticForm := function(G)
   local M, Q;
   M := InvariantBilinearForm(G).matrix;
   Q := InvariantQuadraticForm(G).matrix;
-  if Q+TransposedMat(Q) <> M then
+  if Q + TransposedMat(Q) <> M then
     Error("incompatible quadratic and bilinear form");
   fi;
 
@@ -52,7 +52,7 @@ CheckSesquilinearForm := function(G)
   F := DefaultFieldOfMatrixGroup(G);
   q := RootInt(Size(F));
   if not ForAll(GeneratorsOfGroup(G), g -> g * M * HermitianConjugate(g,q) = M) then
-    Error("not all generators preserve the quadratic form");
+    Error("not all generators preserve the sesquilinear form");
   fi;
 end;
 
@@ -63,7 +63,7 @@ CheckIsSubsetSL := function(n, q, G)
     Error("matrix group: expected degree ", n, " actual degree ", m);
   fi;
   F := DefaultFieldOfMatrixGroup(G);
-  if q mod Size(F) <> 0 then
+  if Characteristic(F) <> PrimePowersInt(q)[1] then
     Error("matrix group: expected field of size ", q, " actual size ", Size(F));
   fi;
   CheckGeneratorsSpecial(G);
@@ -94,6 +94,6 @@ CheckIsSubsetOmega := function(epsilon, n, q, G)
     Error("wrong Witt index");
   fi;
   if not ForAll(GeneratorsOfGroup(G), g -> FancySpinorNorm(InvariantBilinearForm(G).matrix, field, g) = 1) then
-    Error("wrong Spinor norm");
+    Error("wrong spinor norm");
   fi;
 end;

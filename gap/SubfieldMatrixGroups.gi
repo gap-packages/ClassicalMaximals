@@ -301,7 +301,7 @@ function (d, p, e, f)
     b := QuoInt(e, f);
 
     if not IsPrime(b) then
-        ErrorNoReturn("the quotient of <f> by <e> must be a prime");
+        ErrorNoReturn("the quotient of <e> by <f> must be a prime");
     fi;
 
     field := GF(p ^ e);
@@ -364,13 +364,13 @@ function (epsilon, d, p, e, f, epsilon_0)
     r := QuoInt(e, f);
 
     if not IsPrime(r) then
-        ErrorNoReturn("the quotient of <f> by <e> must be a prime");
+        ErrorNoReturn("the quotient of <e> by <f> must be a prime");
     fi;
 
     if not epsilon_0 in [-1, 0, 1] then
         ErrorNoReturn("<epsilon_0> must be in [-1, 0, 1]");
     elif epsilon_0 ^ r <> epsilon then
-        ErrorNoReturn("<epsilon_0> ^ r must be equal to <epsilon>");
+        ErrorNoReturn("<epsilon_0> ^ (<e> / <f>) must be equal to <epsilon>");
     fi;
 
     q0 := p ^ f;
@@ -393,11 +393,11 @@ function (epsilon, d, p, e, f, epsilon_0)
 
     # from now on we assume r = 2, d even and epsilon = 1
     if epsilon_0 = 1 then
-        if d mod 2 = 0 and q0 mod 4 = 1 then
+        if d mod 4 = 2 and q0 mod 4 = 1 then
             return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+");
         fi;
     else
-        if not (d mod 2 = 0 and q0 mod 4 = 1) then
+        if not (d mod 4 = 2 and q0 mod 4 = 1) then
             return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O-");
         fi;
     fi;
@@ -434,8 +434,8 @@ function (epsilon, d, p, e, f, epsilon_0)
 
     fi;
 
-    gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), F, "O-B")));
+    gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F)));
     Add(gens, A);
-    result := MatrixGroupWithSize(field, gens, SizeSO(d, q0) * 2);
+    result := MatrixGroupWithSize(field, gens, SizeSO(epsilon, d, q0) * 2);
     return ConjugateToStandardForm(result, orthogonalType);
 end);

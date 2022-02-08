@@ -89,7 +89,7 @@ Error, <d> must be even
 gap> SubfieldSp(4, 2, 1, 2);
 Error, <f> must be a divisor of <e>
 gap> SubfieldSp(4, 2, 4, 1);
-Error, the quotient of <f> by <e> must be a prime
+Error, the quotient of <e> by <f> must be a prime
 
 #
 gap> TestSubfieldOmega := function(epsilon, n, p, e, f, epsilon_0)
@@ -121,11 +121,11 @@ Error, <d> must be even if <q> is even
 gap> SubfieldOmega(0, 7, 3, 3, 2, 0);
 Error, <f> must be a divisor of <e>
 gap> SubfieldOmega(0, 7, 3, 4, 1, 0);
-Error, the quotient of <f> by <e> must be a prime
+Error, the quotient of <e> by <f> must be a prime
 gap> SubfieldOmega(0, 7, 3, 2, 1, 2);
 Error, <epsilon_0> must be in [-1, 0, 1]
 gap> SubfieldOmega(-1, 8, 3, 2, 1, 1);
-Error, <epsilon_0> ^ r must be equal to <epsilon>
+Error, <epsilon_0> ^ (<e> / <f>) must be equal to <epsilon>
 
 #
 gap> STOP_TEST("SubfieldMatrixGroups.tst", 0);

@@ -1123,10 +1123,15 @@ end);
 #       if numberOfConjugates = 8.
 BindGlobal("ConjugateSubgroupOmega",
 function(epsilon, n, q, G, numberOfConjugates)
-    local elementsToConjugate, result, powerSet, subset, exponent;
+    local elementsToConjugate, result, invariantFormRec,
+    powerSet, subset, exponent, conjugatedGroup;
 
-    if not numberOfConjugates in [2, 4, 8] then
-        ErrorNoReturn("<numberOfConjugates> must be one of 2, 4, 8");
+    if not numberOfConjugates in [1, 2, 4, 8] then
+        ErrorNoReturn("<numberOfConjugates> must be one of 1, 2, 4, 8");
+    fi;
+
+    if numberOfConjugates = 1 then
+        return [G];
     fi;
 
     elementsToConjugate := [SOMinusOmega(epsilon, n, q)];
@@ -1138,13 +1143,16 @@ function(epsilon, n, q, G, numberOfConjugates)
     fi;
 
     result := [];
+    invariantFormRec := InvariantQuadraticForm(G);
     powerSet := Combinations(elementsToConjugate);
     for subset in powerSet do
         if subset = [] then
             Add(result, G);
         else
             exponent := Product(subset);
-            Add(result, G ^ exponent);
+            conjugatedGroup := G ^ exponent;
+            SetInvariantQuadraticForm(conjugatedGroup, invariantFormRec);
+            Add(result, conjugatedGroup);
         fi;
     od;
 
@@ -1210,6 +1218,62 @@ function(epsilon, n, q)
     fi;
 
     return result;
+
+BindGlobal("C5SubgroupsOrthogonalGroupGeneric",
+function(epsilon, n, q)
+    local factorisationOfq, p, e, listOfrs, result,
+    numberOfConjugatesPlus, numberOfConjugatesMinus, r;
+
+    factorisationOfq := PrimePowersInt(q);
+    p := factorisationOfq[1];
+    e := factorisationOfq[2];
+
+    listOfrs := List(PrimeDivisors(e));
+    result := [];
+
+    if epsilon = 0 then
+
+        # number of conjugates according to [KL90] Proposition 4.5.8 (I)
+        if 2 in listOfrs then
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(0, n, p, e, QuoInt(e, 2), 0), 2));
+            Remove(listOfrs, 1);
+        fi;
+
+    else
+
+        if 2 in listOfrs then
+
+            # number of conjugates according to [KL90] Proposition 4.5.10 (I)
+            if epsilon = 1 then
+                if IsEvenInt(q) then
+                    numberOfConjugatesPlus := 1;
+                    numberOfConjugatesMinus := 1;
+                else
+                    if n mod 4 = 2 and p ^ QuoInt(e, 2) mod 4 = 1 then
+                        numberOfConjugatesPlus := 2;
+                        numberOfConjugatesMinus := 4;
+                    else
+                        numberOfConjugatesPlus := 4;
+                        numberOfConjugatesMinus := 2;
+                    fi;
+                fi;
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(1, n, p, e, QuoInt(e, 2), 1), numberOfConjugatesPlus));
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(1, n, p, e, QuoInt(e, 2), -1), numberOfConjugatesMinus));
+            fi;
+            Remove(listOfrs, 1);
+
+        fi;
+
+    fi;
+
+    # The number of conjugates here is 1 according to [KL90] Proposition 4.5.8 (I)
+    # and Proposition 4.5.10 (I) since r must now be odd.
+    for r in listOfrs do
+        Add(result, SubfieldOmega(epsilon, n, p, e, QuoInt(e, r), epsilon));
+    od;
+
+    return result;
+
 end);
 
 BindGlobal("C6SubgroupsOrthogonalGroupGeneric",
@@ -1279,6 +1343,13 @@ function(epsilon, n, q, classes...)
         # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12)
         # and Table 8.50 (n = 8) in [BHR13]
         Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+
+    if 5 in classes then
+        # Class C5 subgroups ######################################################
+        # Cf. Propositions 3.6.3 (n = 7), 3.7.8 (n = 8), 3.8.4 (n = 9),
+        # 3.9.7 (n = 10), 3.10.3 (n = 11), 3.11.9 (n = 12) and Table 8.50 (n = 8)
+        # in [BHR13]
+        Append(maximalSubgroups, C5SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
 
     if 6 in classes then
