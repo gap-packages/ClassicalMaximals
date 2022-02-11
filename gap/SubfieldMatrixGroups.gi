@@ -437,5 +437,6 @@ function (epsilon, d, p, e, f, epsilon_0)
     gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F)));
     Add(gens, A);
     result := MatrixGroupWithSize(field, gens, SizeSO(epsilon, d, q0) * 2);
+    SetInvariantBilinearForm(rec(matrix := F));
     return ConjugateToStandardForm(result, orthogonalType);
 end);
