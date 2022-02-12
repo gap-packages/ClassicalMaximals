@@ -774,12 +774,15 @@ function(epsilon, d, q, epsilon_0, k)
     # and conjugate accordingly. Note that this case only
     # occurs for q odd, so we can safely divide by 2 to get
     # the quadratic form matrix at the end.
-    # Unfortunately, we also have to construct the matrices
-    # S and G from Theorem 3.9 in [HR10] from scratch, because
-    # conjugation does not preserve the spinor norm.
+    # We also construct the matrices S and G from Theorem 3.9
+    # in [HR10] from scratch, because getting them through
+    # conjugation is quite messy (and somewhat inefficient).
     # Thankfully though the forms we use here are very simple,
     # so finding vectors with square/nonsquare form is not too
-    # complicated.
+    # complicated. Perhaps this should be abstracted to a function
+    # similar to StandardGeneratorsOfOrthogonalGroup at a later date
+    # since these generators are mentioned in Theorem 3.10 in [HR10]
+    # and used for other constructions as well.
     if epsilon_0 = 0 then
 
         one := One(field);
