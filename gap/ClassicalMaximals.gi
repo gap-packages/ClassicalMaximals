@@ -1228,7 +1228,7 @@ function(epsilon, n, q)
     p := factorisationOfq[1];
     e := factorisationOfq[2];
 
-    listOfrs := List(PrimeDivisors(e));
+    listOfrs := PrimeDivisors(e);
     result := [];
 
     if epsilon = 0 then
@@ -1236,7 +1236,7 @@ function(epsilon, n, q)
         # number of conjugates according to [KL90] Proposition 4.5.8 (I)
         if 2 in listOfrs then
             Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(0, n, p, e, QuoInt(e, 2), 0), 2));
-            Remove(listOfrs, 1);
+            listOfrs := Difference(listOfrs, [2]);
         fi;
 
     else
@@ -1248,19 +1248,17 @@ function(epsilon, n, q)
                 if IsEvenInt(q) then
                     numberOfConjugatesPlus := 1;
                     numberOfConjugatesMinus := 1;
+                elif n mod 4 = 2 and p ^ QuoInt(e, 2) mod 4 = 1 then
+                    numberOfConjugatesPlus := 2;
+                    numberOfConjugatesMinus := 4;
                 else
-                    if n mod 4 = 2 and p ^ QuoInt(e, 2) mod 4 = 1 then
-                        numberOfConjugatesPlus := 2;
-                        numberOfConjugatesMinus := 4;
-                    else
-                        numberOfConjugatesPlus := 4;
-                        numberOfConjugatesMinus := 2;
-                    fi;
+                    numberOfConjugatesPlus := 4;
+                    numberOfConjugatesMinus := 2;
                 fi;
                 Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(1, n, p, e, QuoInt(e, 2), 1), numberOfConjugatesPlus));
                 Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(1, n, p, e, QuoInt(e, 2), -1), numberOfConjugatesMinus));
             fi;
-            Remove(listOfrs, 1);
+            listOfrs := Difference(listOfrs, [2]);
 
         fi;
 
