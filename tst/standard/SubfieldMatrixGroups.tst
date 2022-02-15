@@ -105,8 +105,10 @@ gap> TestSubfieldOmega(0, 7, 7, 2, 1, 0);
 gap> TestSubfieldOmega(-1, 8, 4, 5, 1, -1);
 gap> TestSubfieldOmega(-1, 10, 3, 3, 1, -1);
 gap> TestSubfieldOmega(1, 8, 4, 5, 1, 1);
-gap> TestSubfieldOmega(1, 6, 3, 4, 2, 1);
+gap> TestSubfieldOmega(1, 6, 5, 2, 1, 1);
 gap> TestSubfieldOmega(1, 6, 8, 2, 1, -1);
+gap> TestSubfieldOmega(1, 6, 3, 4, 2, -1);
+gap> TestSubfieldOmega(1, 8, 3, 2, 1, -1);
 gap> TestSubfieldOmega(1, 10, 3, 2, 1, -1);
 
 # Test error handling

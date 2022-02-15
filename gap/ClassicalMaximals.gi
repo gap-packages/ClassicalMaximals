@@ -1218,6 +1218,7 @@ function(epsilon, n, q)
     fi;
 
     return result;
+end);
 
 BindGlobal("C5SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
@@ -1271,7 +1272,6 @@ function(epsilon, n, q)
     od;
 
     return result;
-
 end);
 
 BindGlobal("C6SubgroupsOrthogonalGroupGeneric",
@@ -1341,6 +1341,7 @@ function(epsilon, n, q, classes...)
         # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12)
         # and Table 8.50 (n = 8) in [BHR13]
         Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+    fi;
 
     if 5 in classes then
         # Class C5 subgroups ######################################################

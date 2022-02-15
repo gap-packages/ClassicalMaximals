@@ -339,7 +339,7 @@ end);
 BindGlobal("SubfieldOmega",
 function (epsilon, d, p, e, f, epsilon_0)
     local r, q0, field, one, zeta, lambda, lambdaInv, m,
-    A, F, ABlock, FBlock, i, orthogonalType, gens, result;
+    A, F, ABlock, FBlock, i, gens, result;
 
     if epsilon = 0 then
         if IsEvenInt(d) then
@@ -414,7 +414,6 @@ function (epsilon, d, p, e, f, epsilon_0)
         A := lambda * IdentityMat(d, field);
         A{[m + 1..d]}{[m + 1..d]} := lambdaInv * IdentityMat(m, field);
         F := StandardOrthogonalForm(epsilon, d, q0).F;
-        orthogonalType := "O+";
 
     else
 
@@ -430,13 +429,12 @@ function (epsilon, d, p, e, f, epsilon_0)
         A[d, d - 1] := lambda;
         F[d - 1, d - 1] := one;
         F[d, d] := lambda ^ 2;
-        orthogonalType := "O-";
 
     fi;
 
     gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F)));
     Add(gens, A);
-    result := MatrixGroupWithSize(field, gens, SizeSO(epsilon, d, q0) * 2);
-    SetInvariantBilinearForm(rec(matrix := F));
-    return ConjugateToStandardForm(result, orthogonalType);
+    result := MatrixGroupWithSize(field, gens, SizeSO(epsilon_0, d, q0) * 2);
+    SetInvariantBilinearForm(result, rec(matrix := F));
+    return ConjugateToStandardForm(result, "O+");
 end);
