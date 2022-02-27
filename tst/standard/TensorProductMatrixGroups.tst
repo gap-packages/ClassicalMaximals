@@ -59,4 +59,18 @@ gap> TensorProductStabilizerInSp(0, 2, 4, 3);
 Error, <epsilon> must be +1 or -1 since <d2> is even
 
 #
+gap> TestSymplecticTensorProductStabilizerInOmega := function(d1, d2, q)
+>   local G;
+>   G := SymplecticTensorProductStabilizerInOmega(d1, d2, q);
+>   CheckIsSubsetOmega(1, d1 * d2, q, G);
+>   CheckSize(G);
+> end;;
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 4, 8);
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 4, 7);
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 6, 4);
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 6, 5);
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 8, 2);
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 8, 3);
+
+#
 gap> STOP_TEST("TensorProductMatrixGroups.tst", 0);

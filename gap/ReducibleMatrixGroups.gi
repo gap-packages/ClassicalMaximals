@@ -949,7 +949,7 @@ function(epsilon, d, q)
 
     # Size according to Table 2.3 of [BHR13]
     result := MatrixGroupWithSize(field, gens, SizeSp(d - 2, q));
-    SetInvariantQuadraticForm(result, rec(matrix := Q));
+    SetInvariantQuadraticFormFromMatrix(result, Q);
 
     if epsilon = 1 then
         return ConjugateToStandardForm(result, "O+");

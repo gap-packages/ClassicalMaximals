@@ -99,7 +99,7 @@ end);
 # Construction as in Proposition 7.2 of [HR05]
 BindGlobal("TensorProductStabilizerInSp",
 function(epsilon, d1, d2, q)
-    local field, I_d1, I_d2, gens, size, Spgen, orthogonalGens, SOgen, Z_1, Z,
+    local field, one, I_d1, I_d2, gens, size, Spgen, orthogonalGens, SOgen, Z_1, Z,
     E, standardSymplecticForm, standardBilinearForm, formMatrix, result;
 
     if IsOddInt(d1) then
@@ -125,6 +125,7 @@ function(epsilon, d1, d2, q)
     fi;
 
     field := GF(q);
+    one := One(field);
     I_d1 := IdentityMat(d1, field);
     I_d2 := IdentityMat(d2, field);
     gens := [];
@@ -158,8 +159,8 @@ function(epsilon, d1, d2, q)
     fi;
 
     # Calculate the form preserved by the constructed group
-    standardSymplecticForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d1 / 2, One(field)),
-                                                            ListWithIdenticalEntries(d1 / 2, -One(field))),
+    standardSymplecticForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d1 / 2, one),
+                                                            ListWithIdenticalEntries(d1 / 2, -one)),
                                               field);
     if epsilon = 0 then
         standardBilinearForm := IdentityMat(d2, field);
@@ -176,4 +177,64 @@ function(epsilon, d1, d2, q)
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
     return ConjugateToStandardForm(result, "S");
+end);
+
+# Construction as in Proposition 7.3 of [HR10]
+BindGlobal("OrthogonalTensorProductStabilizerInOmega",
+function(epsilon, d1, d2, q)
+    # local ;
+
+end);
+
+# Construction as in Proposition 7.4 of [HR10]
+BindGlobal("SymplecticTensorProductStabilizerInOmega",
+function(d1, d2, q)
+    local d, m, gcd, field, one, gens, SpGen, size, zeta, A, B, Q, result;
+
+    if IsOddInt(d1) or IsOddInt(d2) then
+        ErrorNoReturn("<d1> and <d2> must be even");
+    fi;
+
+    if d1 >= d2 then
+        ErrorNoReturn("<d1> must be less than <d2>");
+    fi;
+
+    d := d1 * d2;
+    m := QuoInt(d, 2);
+    gcd := Gcd(2, q - 1);
+    field := GF(q);
+    one := One(field);
+    gens := [];
+
+    for SpGen in GeneratorsOfGroup(Sp(d1, q)) do
+        Add(gens, KroneckerProduct(SpGen, IdentityMat(d2, field)));
+    od;
+
+    for SpGen in GeneratorsOfGroup(Sp(d2, q)) do
+        Add(gens, KroneckerProduct(IdentityMat(d1, field), SpGen));
+    od;
+
+    # Size according to Table 2.7 in [BHR13]
+    size := SizeSp(d1, q) * SizeSp(d2, q);
+    if d mod 8 = 4 or IsEvenInt(q) then
+        size := QuoInt(size, gcd);
+    else
+        zeta := PrimitiveElement(field);
+        A := IdentityMat(d1, field);
+        A{[1..d1 / 2]}{[1..d1 / 2]} := zeta * IdentityMat(d1 / 2, field);
+        B := IdentityMat(d2, field);
+        B{[1..d2 / 2]}{[1..d2 / 2]} := zeta ^ (-1) * IdentityMat(d2 / 2, field);
+        Add(gens, KroneckerProduct(A, B));
+    fi;
+
+    Q := KroneckerProduct(AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d1 / 2, one),
+                                                        ListWithIdenticalEntries(d1 / 2, -one)), field) / gcd,
+                          AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d2 / 2, one),
+                                                        ListWithIdenticalEntries(d2 / 2, -one)), field) / gcd);
+    Q{[m + 1..d]}{[1..m]} := NullMat(m, m, field);
+
+    result := MatrixGroupWithSize(field, gens, size);
+    SetInvariantQuadraticFormFromMatrix(result, Q);
+
+    return ConjugateToStandardForm(result, "O+");
 end);
