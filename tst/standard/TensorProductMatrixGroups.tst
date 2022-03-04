@@ -59,6 +59,18 @@ gap> TensorProductStabilizerInSp(0, 2, 4, 3);
 Error, <epsilon> must be +1 or -1 since <d2> is even
 
 #
+gap> TestOrthogonalTensorProductStabilizerInOmega := function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
+>   local G;
+>   G := OrthogonalTensorProductStabilizerInOmega(epsilon, epsilon_1, epsilon_2, d1, d2, q);
+>   CheckIsSubsetOmega(epsilon, d1 * d2, q, G);
+>   CheckSize(G);
+> end;;
+gap> TestOrthogonalTensorProductStabilizerInOmega(0, 0, 0, 3, 5, 5);
+gap> TestOrthogonalTensorProductStabilizerInOmega(-1, -1, 0, 4, 3, 5);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, 0, 4, 3, 5);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, 1, 4, 6, 3);
+
+#
 gap> TestSymplecticTensorProductStabilizerInOmega := function(d1, d2, q)
 >   local G;
 >   G := SymplecticTensorProductStabilizerInOmega(d1, d2, q);
@@ -71,6 +83,12 @@ gap> TestSymplecticTensorProductStabilizerInOmega(2, 6, 4);
 gap> TestSymplecticTensorProductStabilizerInOmega(2, 6, 5);
 gap> TestSymplecticTensorProductStabilizerInOmega(2, 8, 2);
 gap> TestSymplecticTensorProductStabilizerInOmega(2, 8, 3);
+
+# Test error handling
+gap> SymplecticTensorProductStabilizerInOmega(2, 3, 5);
+Error, <d1> and <d2> must be even
+gap> SymplecticTensorProductStabilizerInOmega(4, 2, 5);
+Error, <d1> must be less than <d2>
 
 #
 gap> STOP_TEST("TensorProductMatrixGroups.tst", 0);
