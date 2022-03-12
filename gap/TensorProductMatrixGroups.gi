@@ -184,7 +184,7 @@ BindGlobal("OrthogonalTensorProductStabilizerInOmega",
 function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     local d, field, zeta, gens, size, F1, F2, F, orthogonalGens_1, orthogonalGens_2,
     squareDiscriminant_1, squareDiscriminant_2, G_1, G_2, one, xi, alpha, beta,
-    A, B, E_1, E_2, D, gen, result;
+    A, B, E_1, E_2, D, S, gen, result;
 
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be odd");
@@ -241,6 +241,18 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
         ErrorNoReturn("<epsilon2> must be 0 if <epsilon_1> is 0]");
     fi;
 
+    # In this case we use symmetry to restrict the epsilons,
+    # the papers also implicitly do this
+    if epsilon = 1 and epsilon_1 = -1 and epsilon_2 = 1 then
+        ErrorNoReturn("By symmetry, we disallow this case");
+    fi;
+
+    # In this case we use symmetry to restrict the dimensions,
+    # the papers also implicitly do this
+    if (epsilon = 0 or (epsilon = 1 and epsilon_1 = epsilon_2)) and d1 >= d2 then
+        ErrorNoReturn("By symmetry, we assume d1 < d2 in this case");
+    fi;
+
     if (epsilon = -1) <> (epsilon_1 = -1 and epsilon_2 = 0) then
         ErrorNoReturn("<epsilon> = -1 must be equivalent to <epsilon_1> = -1 and <epsilon_2> = 0");
     fi;
@@ -281,6 +293,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
         Add(gens, KroneckerProduct(IdentityMat(d1, field), orthogonalGens_2.S));
 
     else
+        # In this case we have epsilon = 1 and d1, d2 even
 
         squareDiscriminant_1 := epsilon_1 = (-1) ^ QuoInt((q - 1) * d1, 4);
         squareDiscriminant_2 := epsilon_2 = (-1) ^ QuoInt((q - 1) * d2, 4);
@@ -294,7 +307,8 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
         G_1 := KroneckerProduct(orthogonalGens_1.G, IdentityMat(d2, field));
         G_2 := KroneckerProduct(IdentityMat(d1, field), orthogonalGens_2.G);
 
-        # The following is dark magic from Proposition 7.1 in [HR10]
+        # The following is dark magic from Proposition 7.1 in [HR10], with
+        # the idea being that alpha ^ 2 + beta ^ 2 = zeta.
         one := One(field);
         xi := PrimitiveElement(GF(q ^ 2));
         alpha := xi ^ QuoInt(q + 1, 2) * (xi - xi ^ q) / (xi + xi ^ q);
@@ -323,27 +337,61 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
            (epsilon_1 = 1 and epsilon_2 = 1 and squareDiscriminant_1 = squareDiscriminant_2 and d mod 8 = 4) or
            (epsilon_1 = 1 and epsilon_2 = -1 and not (squareDiscriminant_1 and squareDiscriminant_2)) then
 
-            size := 8 * size;
+            size := 4 * size;
 
-            # We only want to add these matrices if they have spinor norm 1
-            if squareDiscriminant_1 then
-                Add(gens, G_2);
-            fi;
+            # [HR10] tells us to 'adjoin appropriate products' of G_1, G_2 and D
+            # to our generators, essentially meaning 'somehow throw in those 3
+            # matrices while making sure that they have spinor norm 1'. This
+            # monstrosity achieves just that, using the fact that G_i has
+            # spinor norm 1 iff squareDiscriminant_{3 - i} by Lemma 7.2 (2) in [HR10].
+            # If exactly one of the 3 matrices has spinor norm -1, it appears that we
+            # can just ignore that one instead of adjoining its square.
             if squareDiscriminant_2 then
                 Add(gens, G_1);
-            fi;
-            if FancySpinorNorm(F, field, D) = 1 then
-                Add(gens, D);
+                if squareDiscriminant_1 then
+                    Add(gens, G_2);
+                    if FancySpinorNorm(F, field, D) = 1 then
+                        Add(gens, D);
+                    else
+                        # Add(gens, D ^ 2);
+                    fi;
+                else
+                    if FancySpinorNorm(F, field, D) = 1 then
+                        # Add(gens, G_2 ^ 2);
+                        Add(gens, D);
+                    else
+                        Add(gens, G_2 * D);
+                    fi;
+                fi;
+            else
+                if squareDiscriminant_1 then
+                    Add(gens, G_2);
+                    if FancySpinorNorm(F, field, D) = 1 then
+                        # Add(gens, G_1 ^ 2);
+                        Add(gens, D);
+                    else
+                        Add(gens, G_1 * D);
+                    fi;
+                else
+                    Add(gens, G_1 * G_2);
+                    if FancySpinorNorm(F, field, D) = 1 then
+                        Add(gens, D);
+                    else
+                        # choosing G_1 here is arbitrary since both
+                        # G_1 and G_2 have spinor norm -1 here.
+                        Add(gens, G_1 * D);
+                    fi;
+                fi;
             fi;
 
         else
 
-            size := 16 * size;
+            size := 8 * size;
 
-            # These all have spinor norm 1 in this case
             Add(gens, G_1);
             Add(gens, G_2);
             Add(gens, D);
+
         fi;
 
     fi;

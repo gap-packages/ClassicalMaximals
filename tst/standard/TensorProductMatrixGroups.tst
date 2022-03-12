@@ -69,6 +69,13 @@ gap> TestOrthogonalTensorProductStabilizerInOmega(0, 0, 0, 3, 5, 5);
 gap> TestOrthogonalTensorProductStabilizerInOmega(-1, -1, 0, 4, 3, 5);
 gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, 0, 4, 3, 5);
 gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, 1, 4, 6, 3);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, -1, 4, 6, 3);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, -1, 6, 4, 3);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, -1, -1, 4, 6, 3);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, 1, 4, 6, 5);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, -1, 4, 6, 5);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, -1, 6, 4, 5);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, -1, -1, 4, 6, 5);
 
 #
 gap> TestSymplecticTensorProductStabilizerInOmega := function(d1, d2, q)
