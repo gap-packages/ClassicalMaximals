@@ -1291,7 +1291,99 @@ function(epsilon, n, q)
     fi;
 
     return result;
+end);
 
+BindGlobal("C4SubgroupsOrthogonalGroupGeneric",
+function(epsilon, n, q)
+    local result, listOfn1s, n1, n2, numberOfConjugates, listOfn1sFiltered;
+
+    result := [];
+
+    # These are the orthogonal type subgroups with epsilon_2 = 0
+    if epsilon = 0 then
+
+        listOfn1s := Filtered(DivisorsInt(n), n1 -> n1 * n1 < n);
+        RemoveSet(listOfn1s, 1);
+
+        # number of conjugates is 1 according to [KL90] Proposition 4.4.18 (I)
+        Append(result, List(listOfn1s, n1 -> OrthogonalTensorProductStabilizerInOmega(0, 0, 0, n1, n2, q)));
+
+    else
+
+        listOfn1s := Filtered(DivisorsInt(n), IsEvenInt);
+        RemoveSet(listOfn1s, 2);
+
+        # This is nonmaximal, see Proposition 2.3.22 (v) in [BHR13]
+        if q = 3 then
+            RemoveSet(listOfn1s, n / 3);
+        fi;
+
+        for n1 in listOfn1s do
+            n2 := QuoInt(n, n1);
+            if IsOddInt(n2) and n2 <> 1 then
+                # number of conjugates is 1 according to [KL90] Proposition 4.4.17 (I)
+                Add(result, OrthogonalTensorProductStabilizerInOmega(epsilon, epsilon, 0, n1, n2, q));
+            fi;
+        od;
+
+    fi;
+
+    
+    if epsilon = 1 and n mod 4 = 0 then
+        
+        listOfn1s := 2 * DivisorsInt(QuoInt(n, 2));
+        listOfn1sFiltered := Filtered(listOfn1s, n1 -> n1 * n1 < n);
+
+        # These are the orthogonal type subgroups with epsilon_i <> 0
+        if IsOddInt(q) then
+
+            # This is epsilon_1 = epsilon_2
+            for n1 in listOfn1sFiltered do
+                n2 := QuoInt(n, n1);
+                if IsEvenInt(n2) and n1 <> 2 and n2 <> 2 then
+                    # number of conjugates according to [KL90] Proposition 4.4.14 (I)
+                    if n mod 8 = 4 or (q mod 4 = 3 and (n1 mod 4 = 2 or n2 mod 4 = 2)) then
+                        numberOfConjugates := 2;
+                    else
+                        numberOfConjugates := 4;
+                    fi;
+                    Append(result, ConjugateSubgroupOmega(1, n, q, OrthogonalTensorProductStabilizerInOmega(1, 1, 1, n1, n2, q), numberOfConjugates));
+                    # number of conjugates according to [KL90] Proposition 4.4.16 (I)
+                    Append(result, ConjugateSubgroupOmega(1, n, q, OrthogonalTensorProductStabilizerInOmega(1, -1, -1, n1, n2, q), 2));
+                fi;
+            od;
+
+            # This is epsilon_1 = 1, epsilon_2 = -1
+            for n1 in listOfn1s do
+                n2 := QuoInt(n, n1);
+                if IsEvenInt(n2) and n1 <> 2 and n2 <> 2 then
+                    # number of conjugates according to [KL90] Proposition 4.4.15 (I)
+                    Append(result, ConjugateSubgroupOmega(1, n, q, OrthogonalTensorProductStabilizerInOmega(1, 1, -1, n1, n2, q),
+                                                          3 - (-1) ^ QuoInt((n1 - 2) * n2 * (q - 1), 8)));
+                fi;
+            od;
+
+        fi;
+
+        # These are the symplectic type subgroups
+        
+        # This is nonmaximal, see Proposition 2.3.22 (iv) in [BHR13]
+        if q = 2 then
+            RemoveSet(listOfn1sFiltered, 2);
+        fi;
+
+        # number of conjugates according to [KL90] Proposition 4.4.12 (I)
+        numberOfConjugates := 3 - (-1) ^ (q * QuoInt(n - 4, 4));
+        for n1 in listOfn1sFiltered do
+            n2 := QuoInt(n, n1);
+            if IsEvenInt(n2) then
+                Append(result, ConjugateSubgroupOmega(1, n, q, SymplecticTensorProductStabilizerInOmega(n1, n2, q), numberOfConjugates));
+            fi;
+        od;
+
+    fi;
+
+    return result;
 end);
 
 # Cf. Tables 3.5.D, 3.5.E, 3.5.F and 3.5.G in [KL90]
@@ -1532,6 +1624,19 @@ function(epsilon, n, q, classes...)
         # Cf. Propositions 3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9), 
         # 3.9.5 (n = 10), 3.10.3 (n = 11) and 3.11.7 (n = 12) in [BHR13]
         Append(maximalSubgroups, C3SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+    fi;
+
+    if 4 in classes then
+        # Class C4 subgroups ######################################################
+        # Cf. Propositions 3.7.7 (n = 8), Propositions 3.9.6 (n = 10),
+        # Propositions 3.11.8 (n = 12) and Table 8.50 (n = 8) in [BHR13]
+        # For all other n, class C4 is empty.
+        if n = 12 and epsilon = 1 and q <> 2 then
+            # number of conjugates is 2 according to [KL90] Proposition 4.4.12 (I)
+            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, SymplecticTensorProductStabilizerInOmega(2, 6, q), 2));
+        elif q <> 2 and not (epsilon = 1 and n = 8) then
+            Append(maximalSubgroups, C4SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        fi;
     fi;
 
     if 5 in classes then

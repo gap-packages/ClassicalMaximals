@@ -184,7 +184,7 @@ BindGlobal("OrthogonalTensorProductStabilizerInOmega",
 function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     local d, field, zeta, gens, size, F1, F2, F, orthogonalGens_1, orthogonalGens_2,
     squareDiscriminant_1, squareDiscriminant_2, G_1, G_2, one, xi, alpha, beta,
-    A, B, E_1, E_2, D, S, gen, result;
+    A, B, E_1, E_2, D, gen, result;
 
     if IsEvenInt(q) then
         ErrorNoReturn("<q> must be odd");
@@ -344,20 +344,20 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
             # matrices while making sure that they have spinor norm 1'. This
             # monstrosity achieves just that, using the fact that G_i has
             # spinor norm 1 iff squareDiscriminant_{3 - i} by Lemma 7.2 (2) in [HR10].
-            # If exactly one of the 3 matrices has spinor norm -1, it appears that we
-            # can just ignore that one instead of adjoining its square.
+            # A short calculation using the mixed product property of the
+            # Kronecker product shows that G_1 ^ 2, G_2 ^ 2 and D ^ 2 are all in
+            # SO(epsilon_1, d1, q) \otimes SO(epsilon_2, d2, q) already, so if
+            # exactly one of the matrices has spinor norm -1, we do not adjoin its
+            # square and instead just adjoin the other two.
             if squareDiscriminant_2 then
                 Add(gens, G_1);
                 if squareDiscriminant_1 then
                     Add(gens, G_2);
                     if FancySpinorNorm(F, field, D) = 1 then
                         Add(gens, D);
-                    else
-                        # Add(gens, D ^ 2);
                     fi;
                 else
                     if FancySpinorNorm(F, field, D) = 1 then
-                        # Add(gens, G_2 ^ 2);
                         Add(gens, D);
                     else
                         Add(gens, G_2 * D);
@@ -367,7 +367,6 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
                 if squareDiscriminant_1 then
                     Add(gens, G_2);
                     if FancySpinorNorm(F, field, D) = 1 then
-                        # Add(gens, G_1 ^ 2);
                         Add(gens, D);
                     else
                         Add(gens, G_1 * D);
