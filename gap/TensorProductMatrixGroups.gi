@@ -352,8 +352,11 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
             if squareDiscriminant_2 then
                 Add(gens, G_1);
                 if squareDiscriminant_1 then
+                    # This case is quite rare, but not impossible:
+                    # It first appears for parameters 1, -1, -1, 6, 10, 3
                     Add(gens, G_2);
                     if FancySpinorNorm(F, field, D) = 1 then
+                        # And this case is probably impossible
                         Add(gens, D);
                     fi;
                 else

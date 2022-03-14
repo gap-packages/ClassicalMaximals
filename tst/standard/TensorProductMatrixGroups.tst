@@ -77,6 +77,7 @@ gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, -1, 4, 6, 5);
 gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, -1, 6, 4, 5);
 gap> TestOrthogonalTensorProductStabilizerInOmega(1, -1, -1, 4, 6, 5);
 gap> TestOrthogonalTensorProductStabilizerInOmega(1, 1, 1, 6, 8, 3);
+gap> TestOrthogonalTensorProductStabilizerInOmega(1, -1, -1, 6, 10, 3);
 
 # Test error handling
 gap> OrthogonalTensorProductStabilizerInOmega(1, 1, 1, 4, 6, 2);
