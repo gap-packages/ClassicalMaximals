@@ -244,13 +244,13 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     # In this case we use symmetry to restrict the epsilons,
     # the papers also implicitly do this
     if epsilon = 1 and epsilon_1 = -1 and epsilon_2 = 1 then
-        ErrorNoReturn("By symmetry, we disallow this case");
+        ErrorNoReturn("by symmetry, we disallow this case");
     fi;
 
     # In this case we use symmetry to restrict the dimensions,
     # the papers also implicitly do this
     if (epsilon = 0 or (epsilon = 1 and epsilon_1 = epsilon_2)) and d1 >= d2 then
-        ErrorNoReturn("By symmetry, we assume d1 < d2 in this case");
+        ErrorNoReturn("by symmetry, we assume d1 < d2 in this case");
     fi;
 
     if (epsilon = -1) <> (epsilon_1 = -1 and epsilon_2 = 0) then
@@ -374,6 +374,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
                 else
                     Add(gens, G_1 * G_2);
                     if FancySpinorNorm(F, field, D) = 1 then
+                        # This case is probably impossible
                         Add(gens, D);
                     else
                         # choosing G_1 here is arbitrary since both
