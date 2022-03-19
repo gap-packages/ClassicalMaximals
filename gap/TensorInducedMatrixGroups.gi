@@ -286,3 +286,83 @@ function(m, t, q)
 
     return ConjugateToStandardForm(result, "S");
 end);
+
+# Construction as in Lemma 7.3 in [HR10]
+BindGlobal("SymplecticTensorInducedDecompositionStabilizerInOmega",
+function(m, t, q)
+    local field, one, evilCase, size, gens, I, D, result, d, l, Q, gen, F;
+
+    if IsOddInt(m) then
+        ErrorNoReturn("<m> must be even");
+    fi;
+
+    if IsOddInt(q * t) then
+        ErrorNoReturn("<q> * <t> must be even");
+    fi;
+    
+    if m = 2 and q in [2, 3] then
+        ErrorNoReturn("(<m>, <q>) = (2, 2) and (<m>, <q>) = (2, 3) are disallowed");
+    fi;
+
+    field := GF(q);
+    one := One(field);
+
+    # This case is evil
+    evilCase := m mod 4 = 2 and t = 2;
+
+    if evilCase then
+
+        gens := [];
+        I := IdentityMat(m, field);
+        for gen in GeneratorsOfGroup(Sp(m, q)) do
+            Add(gens, KroneckerProduct(gen, I));
+            Add(gens, KroneckerProduct(I, gen));
+        od;
+
+        # In this case the group is isomorphic to the central product
+        # Sp(m, q) \circ Sp(m, q) according to [KL90] as well as [BHR13],
+        # contrary to the structure Sp(m, q) \times Sp(m, q) given by [HR10].
+        # Since |Z(Sp(m, q))| = (2, q - 1) we divide out that factor.
+        size := QuoInt(SizeSp(m, q) ^ 2, Gcd(2, q - 1));
+
+    else
+
+        gens := List(GeneratorsOfGroup(TensorWreathProduct(Sp(m, q), SymmetricGroup(t))));
+
+        # Size according to Table 2.10 of [BHR13]
+        size := SizeSp(m, q) ^ t * Factorial(t);
+
+    fi;
+
+    # We must now construct the preserved form. [HR10] only tells us how to
+    # do this for odd q, but thankfully I am a strong independent mathematician
+    # and I can do it myself and also the case of even q is really not that hard:
+    # The group already preserves our standard form, since the corresponding
+    # bilinear form is the standard symplectic one (recall -1 = 1 here) and
+    # the diagonal is all zeros.
+    if IsEvenInt(q) then
+
+        Q := StandardOrthogonalForm(1, m ^ t, q).Q;
+
+    else
+
+        if not evilCase then
+            # In the evil case this matrix has determinant 1, so we only
+            # add it here.
+            I := IdentityMat(m ^ (t - 2), field);
+            D := NormSpMinusSp(m, q);
+            Add(gens, KroneckerProduct(KroneckerProduct(D, Inverse(D)), I));
+        fi;
+
+
+        F := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m / 2, one),
+                                        ListWithIdenticalEntries(m / 2, -one)),
+                                        field);
+        Q := BilinearToQuadraticForm(LiftFormsToTensorProduct(ListWithIdenticalEntries(t, F), field));
+
+    fi;
+
+    result := MatrixGroupWithSize(field, gens, size);
+    SetInvariantQuadraticFormFromMatrix(result, Q);
+    return ConjugateToStandardForm(result, "O+");
+end);
