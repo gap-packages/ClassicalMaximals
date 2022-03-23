@@ -62,5 +62,40 @@ gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 2, 3);
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 3, 2);
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(6, 2, 5);
 
+# Test error handling
+gap> SymplecticTensorInducedDecompositionStabilizerInOmega(3, 2, 3);
+Error, <m> must be even
+gap> SymplecticTensorInducedDecompositionStabilizerInOmega(4, 3, 3);
+Error, <q> * <t> must be even
+gap> SymplecticTensorInducedDecompositionStabilizerInOmega(4, 1, 2);
+Error, <t> must be at least 2
+gap> SymplecticTensorInducedDecompositionStabilizerInOmega(2, 2, 2);
+Error, (<m>, <q>) = (2, 2) and (<m>, <q>) = (2, 3) are disallowed
+
+#
+gap> TestOrthogonalOddTensorInducedDecompositionStabilizerInOmega := function(m, t, q)
+>   local G;
+>   G := OrthogonalOddTensorInducedDecompositionStabilizerInOmega(m, t, q);
+>   CheckIsSubsetOmega(0, m ^ t, q, G);
+>   CheckSize(G);
+> end;;
+gap> TestOrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 2, 7);
+gap> TestOrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 3, 5);
+gap> TestOrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 4, 5);
+gap> TestOrthogonalOddTensorInducedDecompositionStabilizerInOmega(5, 2, 5);
+gap> TestOrthogonalOddTensorInducedDecompositionStabilizerInOmega(5, 3, 3);
+
+# Test error handling
+gap> OrthogonalOddTensorInducedDecompositionStabilizerInOmega(4, 2, 3);
+Error, <m> must be odd
+gap> OrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 2, 2);
+Error, <q> must be odd
+gap> OrthogonalOddTensorInducedDecompositionStabilizerInOmega(1, 2, 3);
+Error, <m> must be at least 3
+gap> OrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 1, 5);
+Error, <t> must be at least 2
+gap> OrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 2, 3);
+Error, the case (<m>, <q>) = (3, 3) is disallowed
+
 #
 gap> STOP_TEST("TensorInducedMatrixGroups.tst", 0);

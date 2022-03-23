@@ -285,7 +285,7 @@ function(m, t, q)
     return ConjugateToStandardForm(result, "S");
 end);
 
-# Construction as in Lemma 7.3 in [HR10]
+# Construction as in Lemma 10.3 in [HR10]
 BindGlobal("SymplecticTensorInducedDecompositionStabilizerInOmega",
 function(m, t, q)
     local field, one, evilCase, size, gens, I, D, result, d, l, Q, gen, F;
@@ -296,6 +296,10 @@ function(m, t, q)
 
     if IsOddInt(q * t) then
         ErrorNoReturn("<q> * <t> must be even");
+    fi;
+
+    if t < 2 then
+        ErrorNoReturn("<t> must be at least 2");
     fi;
     
     if m = 2 and q in [2, 3] then
@@ -363,4 +367,74 @@ function(m, t, q)
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantQuadraticFormFromMatrix(result, Q);
     return ConjugateToStandardForm(result, "O+");
+end);
+
+# Construction as in Lemma 10.4 in [HR10]
+BindGlobal("OrthogonalOddTensorInducedDecompositionStabilizerInOmega",
+function(m, t, q)
+    local field, OmegaGens, symmetricGroup, gens, I, S, T, _, F, result;
+
+    if IsEvenInt(m) then
+        ErrorNoReturn("<m> must be odd");
+    fi;
+
+    if IsEvenInt(q) then
+        ErrorNoReturn("<q> must be odd");
+    fi;
+
+    if m < 3 then
+        ErrorNoReturn("<m> must be at least 3");
+    fi;
+
+    if t < 2 then
+        ErrorNoReturn("<t> must be at least 2");
+    fi;
+
+    if m = 3 and q = 3 then
+        ErrorNoReturn("the case (<m>, <q>) = (3, 3) is disallowed");
+    fi;
+
+    field := GF(q);
+
+    OmegaGens := AlternativeGeneratorsOfOrthogonalGroup(m, q, true);
+
+    # [HR10] implicitly assumes that we generate the symmetric group Sym(t) with
+    # an even permutation and the transposition (1, 2), which differs from the GAP-
+    # standard of always using (1, ..., t) and (1, 2). Therefore, we create our own
+    # copy of Sym(t) using (1, ..., t) if t is odd and (2, ..., t) if t is even as
+    # our first generator.
+    # If we did not do this, we would manually have to correct the determinant and
+    # the spinor norm of the matrix corresponding to the first generator as we do
+    # for the (1, 2)-matrix.
+    symmetricGroup := Group(CycleFromList([1 + ((t - 1) mod 2)..t]), (1, 2));
+    gens := List(GeneratorsOfGroup(TensorWreathProduct(Group(OmegaGens.generatorsOfOmega), symmetricGroup)));
+
+    # Next we need to construct some elements of SO(m, q) TWr Sym(t). We only
+    # need S to (potentially) correct the spinor norm of the (1, 2)-matrix later on.
+    I := IdentityMat(m, field);
+    S := KroneckerProduct(OmegaGens.S, I);
+    T := KroneckerProduct(OmegaGens.S, OmegaGens.S ^ -1);
+    for _ in [1..t - 2] do
+        S := KroneckerProduct(S, I);
+        T := KroneckerProduct(T, I);
+    od;
+
+    # This one is obviously already in Omega(m ^ t, q).
+    Add(gens, T);
+
+    # According to Equation 4.7.8 in [KL90], we have to correct the determinant
+    # of the (1, 2)-matrix in this case.
+    if m mod 4 = 3 then
+        gens[4] := -gens[4];
+    fi;
+
+    # We might also need to correct the spinor norm.
+    F := IdentityMat(m ^ t, field);
+    if FancySpinorNorm(F, field, gens[4]) = -1 then
+        gens[4] := S * gens[4];
+    fi;
+
+    result := MatrixGroupWithSize(field, gens, 2 ^ (t - 1) * SizeOmega(0, m, q) ^ t * Factorial(t));
+    SetInvariantQuadraticFormFromMatrix(result, F / 2);
+    return ConjugateToStandardForm(result, "O");
 end);
