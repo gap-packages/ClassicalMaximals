@@ -98,4 +98,30 @@ gap> OrthogonalOddTensorInducedDecompositionStabilizerInOmega(3, 2, 3);
 Error, the case (<m>, <q>) = (3, 3) is disallowed
 
 #
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega := function(epsilon, m, t, q)
+>   local G;
+>   G := OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(epsilon, m, t, q);
+>   CheckIsSubsetOmega(1, m ^ t, q, G);
+>   CheckSize(G);
+> end;;
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 4, 2, 3);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 4, 2, 5);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 4, 3, 3);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 4, 2, 5);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 6, 2, 3);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 6, 2, 5);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 6, 2, 3);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 6, 2, 5);
+
+# Test error handling
+gap> OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 5, 2, 3);
+Error, <m> must be even
+gap> OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 6, 2, 2);
+Error, <q> must be odd
+gap> OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 4, 2, 3);
+Error, <m> must be at least 5 + <epsilon>
+gap> OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 6, 1, 3);
+Error, <t> must be at least 2
+
+#
 gap> STOP_TEST("TensorInducedMatrixGroups.tst", 0);
