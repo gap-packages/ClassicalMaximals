@@ -5,7 +5,7 @@
 #     of SL(m, q), respectively) has determinant not equal to 1.
 #
 #     We generate TensorWreathProduct(SL(m, q), Sym(t)) from 
-#       * (m - 1)-fold Kronecker products of the generators of SL(m, q) with 
+#       * (t - 1)-fold Kronecker products of the generators of SL(m, q) with 
 #         mxm identity matrices 
 #       * permutation matrices constructed in the following way: the group
 #         Sym(t) acts naturally on the set Omega of t-tuples over [1..m] giving
@@ -372,7 +372,7 @@ end);
 # Construction as in Lemma 10.4 in [HR10]
 BindGlobal("OrthogonalOddTensorInducedDecompositionStabilizerInOmega",
 function(m, t, q)
-    local field, OmegaGens, symmetricGroup, gens, I, S, T, _, F, result;
+    local field, orthogonalGens, symmetricGroup, gens, I, S, T, _, F, result;
 
     if IsEvenInt(m) then
         ErrorNoReturn("<m> must be odd");
@@ -396,7 +396,7 @@ function(m, t, q)
 
     field := GF(q);
 
-    OmegaGens := AlternativeGeneratorsOfOrthogonalGroup(m, q, true);
+    orthogonalGens := AlternativeGeneratorsOfOrthogonalGroup(m, q, true);
 
     # [HR10] implicitly assumes that we generate the symmetric group Sym(t) with
     # an even permutation and the transposition (1, 2), which differs from the GAP-
@@ -407,13 +407,13 @@ function(m, t, q)
     # the spinor norm of the matrix corresponding to the first generator as we do
     # for the (1, 2)-matrix.
     symmetricGroup := Group(CycleFromList([1 + ((t - 1) mod 2)..t]), (1, 2));
-    gens := List(GeneratorsOfGroup(TensorWreathProduct(Group(OmegaGens.generatorsOfOmega), symmetricGroup)));
+    gens := List(GeneratorsOfGroup(TensorWreathProduct(Group(orthogonalGens.generatorsOfOmega), symmetricGroup)));
 
     # Next we need to construct some elements of SO(m, q) TWr Sym(t). We only
     # need S to (potentially) correct the spinor norm of the (1, 2)-matrix later on.
     I := IdentityMat(m, field);
-    S := KroneckerProduct(OmegaGens.S, I);
-    T := KroneckerProduct(OmegaGens.S, OmegaGens.S ^ -1);
+    S := KroneckerProduct(orthogonalGens.S, I);
+    T := KroneckerProduct(orthogonalGens.S, orthogonalGens.S ^ -1);
     for _ in [1..t - 2] do
         S := KroneckerProduct(S, I);
         T := KroneckerProduct(T, I);
@@ -434,7 +434,128 @@ function(m, t, q)
         gens[4] := S * gens[4];
     fi;
 
+    # Size according to Table 2.10 of [BHR13]
     result := MatrixGroupWithSize(field, gens, 2 ^ (t - 1) * SizeOmega(0, m, q) ^ t * Factorial(t));
     SetInvariantQuadraticFormFromMatrix(result, F / 2);
     return ConjugateToStandardForm(result, "O");
+end);
+
+# Construction as in Lemma 10.5 in [HR10]
+BindGlobal("OrthogonalEvenTensorInducedDecompositionStabilizerInOmega",
+function(epsilon, m, t, q)
+    local d, field, zeta, I, squareDiscriminant, F, orthogonalGens,
+    gens, SOGen, one, xi, alpha, beta, A, E, size, P, G, _, result;
+
+    if IsOddInt(m) then
+        ErrorNoReturn("<m> must be even");
+    fi;
+
+    if IsEvenInt(q) then
+        ErrorNoReturn("<q> must be odd");
+    fi;
+
+    if m < 5 + epsilon then
+        ErrorNoReturn("<m> must be at least 5 + <epsilon>");
+    fi;
+
+    if t < 2 then
+        ErrorNoReturn("<t> must be at least 2");
+    fi;
+
+    d := m ^ t;
+    field := GF(q);
+    zeta := PrimitiveElement(field);
+    I := IdentityMat(m, field);
+
+    squareDiscriminant := epsilon = (-1) ^ QuoInt((q - 1) * m, 4);
+    F := IdentityMat(m, field);
+    if not squareDiscriminant then
+        F[1, 1] := zeta;
+    fi;
+    F := LiftFormsToTensorProduct(ListWithIdenticalEntries(t, F), field);
+    orthogonalGens := AlternativeGeneratorsOfOrthogonalGroup(m, q, squareDiscriminant);
+
+    # We first construct the group SO ^ epsilon(m, q) TWr Alt(t)
+    # P is the matrix corresponding to the cycle (1, 2)
+    if t = 2 then
+        gens := [];
+        for SOGen in Concatenation(orthogonalGens.generatorsOfOmega, [orthogonalGens.S]) do
+            Add(gens, KroneckerProduct(SOGen, I));
+            Add(gens, KroneckerProduct(I, SOGen));
+        od;
+        P := TensorWreathProduct(Group(I), SymmetricGroup(t)).2;
+    else
+        gens := List(GeneratorsOfGroup(TensorWreathProduct(Group(Concatenation(orthogonalGens.generatorsOfOmega, [orthogonalGens.S])), AlternatingGroup(t))));
+        P := TensorWreathProduct(Group(I), SymmetricGroup(t)).3;
+    fi;
+
+    # The following is dark magic from Proposition 7.1 in [HR10], with
+    # the idea being that alpha ^ 2 + beta ^ 2 = zeta.
+    one := One(field);
+    xi := PrimitiveElement(GF(q ^ 2));
+    alpha := xi ^ QuoInt(q + 1, 2) * (xi - xi ^ q) / (xi + xi ^ q);
+    beta := 2 * zeta / (xi + xi ^ q);
+    A := [[alpha, beta], [beta, -alpha]];
+    E := KroneckerProduct(IdentityMat(m / 2, field), A);
+    if not squareDiscriminant then
+        E{[1, 2]}{[1, 2]} := AntidiagonalMat([zeta, one], field);
+    fi;
+
+    # Size according to Table 2.10 of [BHR13], we have to add some
+    # additional factors in the casework below
+    size := 2 * SizeOmega(epsilon, m, q) ^ t;
+
+    # now for some tedious casework, where we expand
+    # SO ^ epsilon(m, q) TWr Alt(t) to GO ^ epsilon(m, q) TWr Sym(t)
+    if t = 2 and m mod 4 = 2 then
+
+        if squareDiscriminant then
+            Add(gens, KroneckerProduct(orthogonalGens.G, I));
+            Add(gens, KroneckerProduct(I, orthogonalGens.G));
+        else
+            Add(gens, KroneckerProduct(orthogonalGens.G, orthogonalGens.G ^ -1));
+            Add(gens, KroneckerProduct(orthogonalGens.G * E, E ^ -1));
+        fi;
+
+        size := size * 4;
+
+    elif t = 2 and m mod 4 = 0 and epsilon = -1 then
+
+        Add(gens, KroneckerProduct(orthogonalGens.G, orthogonalGens.G ^ -1));
+        Add(gens, KroneckerProduct(E, E ^ -1));
+
+        if FancySpinorNorm(F, field, P) = 1 then
+            Add(gens, P);
+        else
+            Add(gens, P * KroneckerProduct(orthogonalGens.G, I));
+        fi;
+
+        size := size * 8;
+
+    elif t = 3 and m mod 4 = 2 and not squareDiscriminant then
+
+        Add(gens, KroneckerProduct(KroneckerProduct(orthogonalGens.G, I), I));
+        Add(gens, KroneckerProduct(KroneckerProduct(E, E ^ -1), I));
+
+        size := size * 96;
+
+    else
+
+        G := KroneckerProduct(orthogonalGens.G, I);
+        E := KroneckerProduct(E, E ^ -1);
+        for _ in [1..t - 2] do
+            G := KroneckerProduct(G, I);
+            E := KroneckerProduct(E, I);
+        od;
+        Add(gens, G);
+        Add(gens, E);
+        Add(gens, P);
+
+        size := size * 2 ^ (2 * t - 1) * Factorial(t);
+
+    fi;
+
+    result := MatrixGroupWithSize(field, gens, size);
+    SetInvariantQuadraticFormFromMatrix(result, F / 2);
+    return ConjugateToStandardForm(result, "O+");
 end);
