@@ -1543,6 +1543,106 @@ function(epsilon, n, q)
     return result;
 end);
 
+BindGlobal("C7SubgroupsOrthogonalGroupGeneric",
+function(epsilon, n, q)
+    local primeDivs, result, listOfts, t, m, numberOfConjugates, gcd;
+
+    primeDivs := PrimePowersInt(n);
+    if Length(primeDivs) <> 2 then
+        return [];
+    fi;
+
+    result := [];
+
+    listOfts := DivisorsInt(primeDivs[2]);
+    listOfts := Difference(listOfts, [1]);
+
+    if IsOddInt(n) then
+
+        # Cf. [KL90] Proposition 4.7.8 (I)
+        if q = 3 and primeDivs[1] = 3 then
+            RemoveSet(listOfts, primeDivs[2]);
+        fi;
+
+        for t in listOfts do
+            # number of conjugates is 1 according to [KL90] Proposition 4.7.8 (I)
+            Add(result, OrthogonalOddTensorInducedDecompositionStabilizerInOmega(primeDivs[1] ^ QuoInt(primeDivs[2], t), t, q));
+        od;
+
+    elif epsilon = 1 then
+
+        for t in listOfts do
+
+            m := primeDivs[1] ^ QuoInt(primeDivs[2], t);
+
+            if m >= 6 then
+
+                # number of conjugates according to [KL90] Proposition 4.7.6 (I)
+                if t = 2 and m mod 4 = 2 then
+                    numberOfConjugates := 1;
+                elif t = 3 and m mod 4 = 2 and q mod 4 = 3 then
+                    numberOfConjugates := 2;
+                else
+                    numberOfConjugates := 4;
+                fi;
+
+                Append(result, ConjugateSubgroupOmega(1, n, q,
+                                                      OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, m, t, q),
+                                                      numberOfConjugates));
+
+            fi;
+
+            if m >= 4 then
+
+                # number of conjugates according to [KL90] Proposition 4.7.7 (I)
+                if t = 2 and m mod 4 = 2 then
+                    numberOfConjugates := 1;
+                elif t = 2 and m mod 4 = 4 then
+                    numberOfConjugates := 2;
+                elif t = 3 and m mod 4 = 2 and q mod 4 = 3 then
+                    numberOfConjugates := 2;
+                else
+                    numberOfConjugates := 4;
+                fi;
+
+                Append(result, ConjugateSubgroupOmega(1, n, q,
+                                                      OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, m, t, q),
+                                                      numberOfConjugates));
+
+            fi;
+
+        od;
+
+        # Cf. [KL90] Proposition 4.7.5 (I)
+        if q in [2, 3] and primeDivs[1] = 3 then
+            RemoveSet(listOfts, primeDivs[2]);
+        fi;
+
+        gcd := Gcd(2, q - 1);
+        for t in listOfts do
+
+            m := primeDivs[1] ^ QuoInt(primeDivs[2], t);
+
+            # number of conjugates according to [KL90] Proposition 4.7.5 (I)
+            if t = 2 and m mod 4 = 2 then
+                numberOfConjugates := 1;
+            else
+                numberOfConjugates := gcd;
+            fi;
+
+            if IsEvenInt(q * t) then
+                Append(result, ConjugateSubgroupOmega(1, n, q,
+                                                      SymplecticTensorInducedDecompositionStabilizerInOmega(m, t, q),
+                                                      numberOfConjugates));
+            fi;
+
+        od;
+
+    fi;
+
+    return result;
+end);
+
 InstallGlobalFunction(MaximalSubgroupClassRepsOrthogonalGroup,
 function(epsilon, n, q, classes...)
     local maximalSubgroups, squareDiscriminant, numberOfConjugates;
@@ -1649,10 +1749,19 @@ function(epsilon, n, q, classes...)
 
     if 6 in classes then
         # Class C6 subgroups ######################################################
-        # Cf. Propositions 3.7.9 and Table 8.50 (n = 8) in [BHR13]
+        # Cf. Proposition 3.7.9 and Table 8.50 (n = 8) in [BHR13]
         # For all other n, class C6 is empty.
         if not (q - 3) mod 8 = 0 and not (q - 5) mod 8 = 0 then
             Append(maximalSubgroups, C6SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        fi;
+    fi;
+
+    if 7 in classes then
+        # Class C7 subgroups ######################################################
+        # Cf. Table 8.50 (n = 8) and Proposition 3.8.3 (n = 9) in [BHR13]
+        # For all other n, class C7 is empty.
+        if n <> 8 then
+            Append(maximalSubgroups, C7SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
         fi;
     fi;
 
