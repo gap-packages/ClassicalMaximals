@@ -1205,17 +1205,19 @@ function(epsilon, n, q)
             Append(result, Flat(List(listOfks, k -> ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, k), 2))));
         fi;
 
-        if epsilon = -1 then
-            listOfks := 2 * [1..QuoInt(m, 2)];
-        else
-            listOfks := 2 * [1..QuoInt(m - 1, 2)];
+        listOfks := 2 * [1..QuoInt(m - 1, 2)];
+
+        if epsilon = -1 and IsEvenInt(m) then
+            Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, m));
         fi;
+
         Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, k)));
 
         # Cf. Proposition 2.3.2 (iii) in [BHR13]
-        if q = 2 then
-            Remove(listOfks, 1);
+        if q in [2, 3] then
+            RemoveSet(listOfks, 2);
         fi;
+
         Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, k)));
 
     fi;
@@ -1287,7 +1289,7 @@ function(epsilon, n, q)
             Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, Gcd(2, QuoInt(n, 2))));
         fi;
 
-        # Non-degenerate non-isometric type, number of conjugates according to Proposition 4.2.16 (I) in [KL90]
+        # Non-degenerate non-isometric type, number of conjugates is 1 according to Proposition 4.2.16 (I) in [KL90]
         if not squareDiscriminant and IsOddInt(q * QuoInt(n, 2)) then
             Add(result, OmegaNonIsometricImprimitives(epsilon, n, q));
         fi;
@@ -1322,9 +1324,9 @@ function(epsilon, n, q)
                 else
                     numberOfConjugates := 1;
                 fi;
-                result := Concatenation(result, ConjugateSubgroupOmega(epsilon, n, q,
-                                                                       orthogonalTypeSubgroup,
-                                                                       numberOfConjugates));
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q,
+                                                      orthogonalTypeSubgroup,
+                                                      numberOfConjugates));
             fi;
         else
             orthogonalTypeSubgroup := GammaLMeetOmega(epsilon, n, q, s);
@@ -1335,14 +1337,14 @@ function(epsilon, n, q)
     # type GO(0, n / 2, q ^ 2)
     if n mod 4 = 2 and IsOddInt(q) then
         orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, 0, n, q);
-        if q mod 4 = 1 then
+        if q mod 4 = 2 + epsilon then
             numberOfConjugates := 1;
         else    
             numberOfConjugates := 2;
         fi;
-        result := Concatenation(result, ConjugateSubgroupOmega(epsilon, n, q,
-                                                               orthogonalTypeSubgroup,
-                                                               numberOfConjugates));
+        Append(result, ConjugateSubgroupOmega(epsilon, n, q,
+                                              orthogonalTypeSubgroup,
+                                              numberOfConjugates));
     fi;
 
     # type GU(n / 2, q ^ 2)
@@ -1353,9 +1355,9 @@ function(epsilon, n, q)
         else
             numberOfConjugates := 1;
         fi;
-        result := Concatenation(result, ConjugateSubgroupOmega(epsilon, n, q,
-                                                               unitaryTypeSubgroup,
-                                                               numberOfConjugates));
+        Append(result, ConjugateSubgroupOmega(epsilon, n, q,
+                                              unitaryTypeSubgroup,
+                                              numberOfConjugates));
     fi;
     
     return result;
