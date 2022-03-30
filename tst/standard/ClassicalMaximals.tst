@@ -507,4 +507,110 @@ gap> Length(ClassicalMaximalsGeneric("S", 12, 19));
 18
 
 #
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 2));
+7
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 3));
+10
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 4));
+8
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 5));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 7));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 8));
+9
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 9));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 11));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 13));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 16));
+8
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 17));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 8, 19));
+11
+gap> Length(ClassicalMaximalsGeneric("O", 9, 3));
+14
+gap> Length(ClassicalMaximalsGeneric("O", 9, 5));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 9, 7));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 9, 9));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 9, 11));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 9, 13));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 9, 17));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 9, 19));
+16
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 2));
+10
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 3));
+15
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 4));
+13
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 5));
+20
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 7));
+17
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 8));
+13
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 9));
+25
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 11));
+17
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 13));
+21
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 16));
+14
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 17));
+23
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 19));
+17
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 2));
+10
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 3));
+18
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 4));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 5));
+16
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 7));
+22
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 8));
+12
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 9));
+16
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 11));
+20
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 13));
+16
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 16));
+11
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 17));
+16
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 19));
+20
+gap> Length(ClassicalMaximalsGeneric("O", 11, 3));
+15
+gap> Length(ClassicalMaximalsGeneric("O", 11, 5));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 11, 7));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 11, 9));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 11, 11));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 11, 13));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 11, 17));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 11, 19));
+16
+
+#
 gap> STOP_TEST("ClassicalMaximals.tst", 0);
