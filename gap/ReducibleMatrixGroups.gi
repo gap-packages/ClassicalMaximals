@@ -446,8 +446,7 @@ function(d, q, k)
 
     # Size according to Table 2.3 of [BHR13]
     result := MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
-        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
     return ConjugateToStandardForm(result, "S");
 end);
@@ -494,8 +493,7 @@ function(d, q, k)
     # Size according to Table 2.3 of [BHR13], except we replace
     # k with 2k because [BHR13] seems to have this wrong.
     result :=  MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
-        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
     return ConjugateToStandardForm(result, "S");
 end);

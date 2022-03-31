@@ -266,8 +266,7 @@ function(d, q, t)
     fi;
 
     result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
-        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
     return ConjugateToStandardForm(result, "S");
 end);
@@ -315,8 +314,7 @@ function(d, q)
     Add(gens, C);
 
     result := MatrixGroupWithSize(field, gens, SizeGL(l, q) * 2);
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
-        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
     return ConjugateToStandardForm(result, "S");
 end);

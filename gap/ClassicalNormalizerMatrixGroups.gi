@@ -8,9 +8,7 @@ function(d, q)
 
     F := GF(q);
     zeta := PrimitiveElement(F);
-    standardForm := AntidiagonalMat(Concatenation(List([1..d / 2], i -> - zeta ^ 0),
-                                                  List([1..d / 2], i -> zeta ^ 0)), 
-                                    F);
+    standardForm := AntidiagonalHalfOneMat(d, F);
 
     AandB := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
                                                                        "S", 

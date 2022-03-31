@@ -159,9 +159,7 @@ function(epsilon, d1, d2, q)
     fi;
 
     # Calculate the form preserved by the constructed group
-    standardSymplecticForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d1 / 2, one),
-                                                            ListWithIdenticalEntries(d1 / 2, -one)),
-                                              field);
+    standardSymplecticForm := AntidiagonalHalfOneMat(d1, field);
     if epsilon = 0 then
         standardBilinearForm := IdentityMat(d2, field);
     elif epsilon = 1 then
@@ -460,10 +458,8 @@ function(d1, d2, q)
         Add(gens, KroneckerProduct(A, B));
     fi;
 
-    Q := KroneckerProduct(AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d1 / 2, one),
-                                                        ListWithIdenticalEntries(d1 / 2, -one)), field) / gcd,
-                          AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d2 / 2, one),
-                                                        ListWithIdenticalEntries(d2 / 2, -one)), field) / gcd);
+    Q := KroneckerProduct(AntidiagonalHalfOneMat(d1, field) / gcd,
+                          AntidiagonalHalfOneMat(d2, field) / gcd);
     Q{[m + 1..d]}{[1..m]} := NullMat(m, m, field);
 
     result := MatrixGroupWithSize(field, gens, size);

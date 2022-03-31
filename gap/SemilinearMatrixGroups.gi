@@ -507,9 +507,7 @@ function(d, q, s)
     size := SizeSp(m, q ^ s) * s;
 
     # Calculate the form preserved by the constructed group
-    standardForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(d / (2 * s), One(F)),
-                                                  ListWithIdenticalEntries(d / (2 * s), -One(F))),
-                                    F);
+    standardForm := AntidiagonalHalfOneMat(d / s, F);
     formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, s, "S-S");
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
