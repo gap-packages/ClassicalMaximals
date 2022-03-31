@@ -25,6 +25,18 @@ function(entries, field)
     return m;
 end);
 
+InstallGlobalFunction("AntidiagonalHalfOneMat",
+function(d, field)
+    local e, m, i;
+    e := One(field);
+    m := NullMat(d, d, field);
+    for i in [1..d/2] do
+        m[i, d - i + 1] := e;
+        m[d - i + 1, i] := -e;
+    od;
+    return m;
+end);
+
 InstallGlobalFunction("RotateMat",
 function(A)
     local m, n, B, i, j;

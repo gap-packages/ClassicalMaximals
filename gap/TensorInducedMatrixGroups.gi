@@ -278,9 +278,7 @@ function(m, t, q)
     result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
 
     # Calculate the form preserved by the constructed group
-    standardForm := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m / 2, One(field)),
-                                                  ListWithIdenticalEntries(m / 2, -One(field))),
-                                    field);
+    standardForm := AntidiagonalHalfOneMat(m, field);
     formMatrix := LiftFormsToTensorProduct(ListWithIdenticalEntries(t, standardForm), field);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 

@@ -32,10 +32,14 @@ gap> TestOrthogonalNormalizerInSL := function(epsilon, n, q)
 gap> TestOrthogonalNormalizerInSL(0, 3, 5);
 gap> TestOrthogonalNormalizerInSL(-1, 6, 5);
 gap> TestOrthogonalNormalizerInSL(1, 6, 5);
-gap> TestOrthogonalNormalizerInSL(-1, 4, 3);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestOrthogonalNormalizerInSL(-1, 4, 3); # FIXME: see https://github.com/gap-packages/recog/issues/313
+#@fi
 gap> TestOrthogonalNormalizerInSL(1, 4, 3);
 gap> TestOrthogonalNormalizerInSL(-1, 4, 5);
-gap> TestOrthogonalNormalizerInSL(1, 4, 5);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestOrthogonalNormalizerInSL(1, 4, 5); # FIXME: see https://github.com/gap-packages/recog/issues/316
+#@fi
 gap> TestOrthogonalNormalizerInSL(-1, 6, 3);
 
 #

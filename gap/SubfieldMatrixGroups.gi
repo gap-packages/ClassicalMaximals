@@ -99,9 +99,7 @@ function(d, q)
     fi;
 
     F := GF(q ^ 2);
-    form := AntidiagonalMat(Concatenation(List([1..d / 2], i -> One(F)),
-                                          List([1..d / 2], i -> -1)) * Z(q ^ 2)^0,
-                            F);
+    form := AntidiagonalHalfOneMat(d, F);
     generators := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
                                                                             "S", 
                                                                             form)));
@@ -329,8 +327,7 @@ function (d, p, e, f)
         result := MatrixGroupWithSize(field, gens, SizeSp(d, q0) * 2);
     fi;
 
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalMat(Concatenation(
-        ListWithIdenticalEntries(l, One(field)), ListWithIdenticalEntries(l, -One(field))), field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
     return ConjugateToStandardForm(result, "S");
 end);

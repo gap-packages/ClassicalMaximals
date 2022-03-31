@@ -11,6 +11,7 @@
 #! length <C>nrRows * nrCols</C>, the elements of <A>entries</A> will be
 #! written into the matrix row by row.
 DeclareGlobalFunction("MatrixByEntries");
+
 #! @Chapter Utility Functions
 #! @Section MatrixFunctions
 #! @Arguments entries, field
@@ -22,6 +23,16 @@ DeclareGlobalFunction("MatrixByEntries");
 #! - If <A>entries</A> is an integer, the entries of <C>M</C> are all ones 
 #!   and the number of them is <A>entries</A>.
 DeclareGlobalFunction("AntidiagonalMat");
+
+#! @Chapter Utility Functions
+#! @Section MatrixFunctions
+#! @Arguments d, field
+#! @Description
+#! Return an antidiagonal <A>d</A> by <A>d</A> matrix over the given field,
+#! with the first half of the entries on the antidiagonal equal to one,
+#! the reaming half equal to minus one. Note that <A>d</A> must be even.
+DeclareGlobalFunction("AntidiagonalHalfOneMat");
+
 #! @Chapter Utility Functions
 #! @Section MatrixFunctions
 #! @Arguments A
@@ -31,6 +42,7 @@ DeclareGlobalFunction("AntidiagonalMat");
 #! the form AntiDiag(1, ..., 1) from the left and right respectively, but rotation
 #! is more efficient than matrix multiplication.
 DeclareGlobalFunction("RotateMat");
+
 #! @Chapter Utility Functions
 #! @Section Creating Matrix Groups
 #! @Arguments gens, F
@@ -40,6 +52,7 @@ DeclareGlobalFunction("RotateMat");
 #! <A>F</A>. The attribute <Ref Attr="DefaultFieldOfMatrixGroup"/> for the matrix
 #! group constructed will be <A>F</A>.
 DeclareGlobalFunction("MatrixGroup");
+
 #! @Chapter Utility Functions
 #! @Section Creating Matrix Groups
 #! @Arguments gens, F, size
