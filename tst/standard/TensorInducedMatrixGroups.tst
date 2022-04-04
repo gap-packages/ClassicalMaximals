@@ -112,6 +112,7 @@ gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 6, 2, 3);
 gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 6, 2, 5);
 gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 6, 2, 3);
 gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, 6, 2, 5);
+gap> TestOrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 8, 2, 3);
 
 # Test error handling
 gap> OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, 5, 2, 3);

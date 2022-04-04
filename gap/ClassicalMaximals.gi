@@ -1167,7 +1167,7 @@ end);
     
 BindGlobal("C1SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local result, m, listOfks;
+    local result, m, listOfks, G;
 
     result := [];
 
@@ -1181,7 +1181,8 @@ function(epsilon, n, q)
     elif epsilon = 1 then
         listOfks := [1..m - 2];
         Add(listOfks, m);
-        Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, m - 1), 2));
+        G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, m - 1);
+        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
     fi;
     Append(result, List(listOfks, k -> OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k)));
 
@@ -1229,7 +1230,7 @@ end);
 
 BindGlobal("C2SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local result, squareDiscriminant, listOfms, genericPlusExceptions, numberOfConjugates, m, t;
+    local result, squareDiscriminant, listOfms, genericPlusExceptions, numberOfConjugates, G, m, t;
 
     result := [];
 
@@ -1252,7 +1253,8 @@ function(epsilon, n, q)
         if q mod 8 in [1, 7] then
             numberOfConjugates := 2 * numberOfConjugates;
         fi;
-        Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaNonDegenerateImprimitives(epsilon, n, q, 0, n), numberOfConjugates));
+        G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, n);
+        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugates));
     fi;
 
     # Non-degenerate type with m > 1
@@ -1270,7 +1272,8 @@ function(epsilon, n, q)
             fi;
         elif (IsOddInt(t) or squareDiscriminant) and IsOddInt(q) then
             # number of conjugates according to Proposition 4.2.14 (I) in [KL90]
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaNonDegenerateImprimitives(epsilon, n, q, 0, t), Gcd(2, t)));
+            G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, t);
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, Gcd(2, t)));
         fi;
 
     od;
@@ -1280,11 +1283,12 @@ function(epsilon, n, q)
 
         # Isotropic type, number of conjugates according to Proposition 4.2.7 (I) in [KL90]
         if epsilon = 1 then
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaIsotropicImprimitives(n, q), Gcd(2, QuoInt(n, 2))));
+            G := OmegaIsotropicImprimitives(n, q);
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, Gcd(2, QuoInt(n, 2))));
         fi;
 
         # Non-degenerate non-isometric type, number of conjugates according to Proposition 4.2.16 (I) in [KL90]
-        if  not squareDiscriminant and IsOddInt(q * QuoInt(n, 2)) then
+        if not squareDiscriminant and IsOddInt(q * QuoInt(n, 2)) then
             Add(result, OmegaNonIsometricImprimitives(epsilon, n, q));
         fi;
 
@@ -1359,7 +1363,7 @@ end);
 
 BindGlobal("C4SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local result, listOfn1s, n1, n2, numberOfConjugates, listOfn1sFiltered;
+    local result, listOfn1s, n1, n2, numberOfConjugates, listOfn1sFiltered, G;
 
     result := [];
 
@@ -1411,9 +1415,11 @@ function(epsilon, n, q)
                     else
                         numberOfConjugates := 4;
                     fi;
-                    Append(result, ConjugateSubgroupOmega(1, n, q, OrthogonalTensorProductStabilizerInOmega(1, 1, 1, n1, n2, q), numberOfConjugates));
+                    G := OrthogonalTensorProductStabilizerInOmega(1, 1, 1, n1, n2, q);
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
                     # number of conjugates according to [KL90] Proposition 4.4.16 (I)
-                    Append(result, ConjugateSubgroupOmega(1, n, q, OrthogonalTensorProductStabilizerInOmega(1, -1, -1, n1, n2, q), 2));
+                    G := OrthogonalTensorProductStabilizerInOmega(1, -1, -1, n1, n2, q);
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
                 fi;
             od;
 
@@ -1422,8 +1428,8 @@ function(epsilon, n, q)
                 n2 := QuoInt(n, n1);
                 if IsEvenInt(n2) and n1 <> 2 and n2 <> 2 then
                     # number of conjugates according to [KL90] Proposition 4.4.15 (I)
-                    Append(result, ConjugateSubgroupOmega(1, n, q, OrthogonalTensorProductStabilizerInOmega(1, 1, -1, n1, n2, q),
-                                                          3 - (-1) ^ QuoInt((n1 - 2) * n2 * (q - 1), 8)));
+                    G := OrthogonalTensorProductStabilizerInOmega(1, 1, -1, n1, n2, q);
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 3 - (-1) ^ QuoInt((n1 - 2) * n2 * (q - 1), 8)));
                 fi;
             od;
 
@@ -1441,7 +1447,8 @@ function(epsilon, n, q)
         for n1 in listOfn1sFiltered do
             n2 := QuoInt(n, n1);
             if IsEvenInt(n2) then
-                Append(result, ConjugateSubgroupOmega(1, n, q, SymplecticTensorProductStabilizerInOmega(n1, n2, q), numberOfConjugates));
+                G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
+                Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
             fi;
         od;
 
@@ -1452,7 +1459,7 @@ end);
 
 BindGlobal("C5SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local factorisationOfq, p, e, listOfrs, result,
+    local factorisationOfq, p, e, listOfrs, result, G,
     numberOfConjugatesPlus, numberOfConjugatesMinus, r;
 
     factorisationOfq := PrimePowersInt(q);
@@ -1466,7 +1473,8 @@ function(epsilon, n, q)
 
         # number of conjugates according to [KL90] Proposition 4.5.8 (I)
         if 2 in listOfrs then
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(0, n, p, e, QuoInt(e, 2), 0), 2));
+            G := SubfieldOmega(0, n, p, e, QuoInt(e, 2), 0);
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
             listOfrs := Difference(listOfrs, [2]);
         fi;
 
@@ -1486,8 +1494,10 @@ function(epsilon, n, q)
                     numberOfConjugatesPlus := 4;
                     numberOfConjugatesMinus := 2;
                 fi;
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(1, n, p, e, QuoInt(e, 2), 1), numberOfConjugatesPlus));
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q, SubfieldOmega(1, n, p, e, QuoInt(e, 2), -1), numberOfConjugatesMinus));
+                G := SubfieldOmega(1, n, p, e, QuoInt(e, 2), 1);
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugatesPlus));
+                G := SubfieldOmega(1, n, p, e, QuoInt(e, 2), -1);
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugatesMinus));
             fi;
             listOfrs := Difference(listOfrs, [2]);
 
@@ -1545,7 +1555,7 @@ end);
 
 BindGlobal("C7SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local primeDivs, result, listOfts, t, m, numberOfConjugates, gcd;
+    local primeDivs, result, listOfts, t, m, numberOfConjugates, G, gcd;
 
     primeDivs := PrimePowersInt(n);
     if Length(primeDivs) <> 2 then
@@ -1566,7 +1576,8 @@ function(epsilon, n, q)
 
         for t in listOfts do
             # number of conjugates is 1 according to [KL90] Proposition 4.7.8 (I)
-            Add(result, OrthogonalOddTensorInducedDecompositionStabilizerInOmega(primeDivs[1] ^ QuoInt(primeDivs[2], t), t, q));
+            m := primeDivs[1] ^ QuoInt(primeDivs[2], t);
+            Add(result, OrthogonalOddTensorInducedDecompositionStabilizerInOmega(m, t, q));
         od;
 
     elif epsilon = 1 then
@@ -1586,9 +1597,8 @@ function(epsilon, n, q)
                     numberOfConjugates := 4;
                 fi;
 
-                Append(result, ConjugateSubgroupOmega(1, n, q,
-                                                      OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, m, t, q),
-                                                      numberOfConjugates));
+                G := OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(1, m, t, q);
+                Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
 
             fi;
 
@@ -1605,9 +1615,8 @@ function(epsilon, n, q)
                     numberOfConjugates := 4;
                 fi;
 
-                Append(result, ConjugateSubgroupOmega(1, n, q,
-                                                      OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, m, t, q),
-                                                      numberOfConjugates));
+                G := OrthogonalEvenTensorInducedDecompositionStabilizerInOmega(-1, m, t, q);
+                Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
 
             fi;
 
@@ -1623,17 +1632,18 @@ function(epsilon, n, q)
 
             m := primeDivs[1] ^ QuoInt(primeDivs[2], t);
 
-            # number of conjugates according to [KL90] Proposition 4.7.5 (I)
-            if t = 2 and m mod 4 = 2 then
-                numberOfConjugates := 1;
-            else
-                numberOfConjugates := gcd;
-            fi;
-
             if IsEvenInt(q * t) then
-                Append(result, ConjugateSubgroupOmega(1, n, q,
-                                                      SymplecticTensorInducedDecompositionStabilizerInOmega(m, t, q),
-                                                      numberOfConjugates));
+
+                # number of conjugates according to [KL90] Proposition 4.7.5 (I)
+                if t = 2 and m mod 4 = 2 then
+                    numberOfConjugates := 1;
+                else
+                    numberOfConjugates := gcd;
+                fi;
+
+                G := SymplecticTensorInducedDecompositionStabilizerInOmega(m, t, q);
+                Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
+
             fi;
 
         od;
@@ -1645,7 +1655,7 @@ end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsOrthogonalGroup,
 function(epsilon, n, q, classes...)
-    local maximalSubgroups, squareDiscriminant, numberOfConjugates;
+    local maximalSubgroups, squareDiscriminant, numberOfConjugates, G;
 
     if Length(classes) = 0 then
         classes := [1..9];
@@ -1686,34 +1696,39 @@ function(epsilon, n, q, classes...)
                 if q mod 8 in [1, 7] then
                     numberOfConjugates := 2 * numberOfConjugates;
                 fi;
-                Append(maximalSubgroups, ConjugateSubgroupOmega(epsilon, n, q, OmegaNonDegenerateImprimitives(epsilon, 10, q, 0, 10), numberOfConjugates));
+                G := OmegaNonDegenerateImprimitives(epsilon, 10, q, 0, 10);
+                Append(maximalSubgroups, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugates));
             fi;
             if (epsilon = 1 and q > 5) or (epsilon = -1 and q <> 3) then
                 Add(maximalSubgroups, OmegaNonDegenerateImprimitives(epsilon, 10, q, epsilon, 5));
             fi;
             if IsOddInt(q) then
                 if squareDiscriminant then
-                    Append(maximalSubgroups, ConjugateSubgroupOmega(epsilon, 10, q, OmegaNonDegenerateImprimitives(epsilon, 10, q, 0, 2), 2));
+                    G := OmegaNonDegenerateImprimitives(epsilon, 10, q, 0, 2);
+                    Append(maximalSubgroups, ConjugateSubgroupOmega(epsilon, 10, q, G, 2));
                 else
                     Add(maximalSubgroups, OmegaNonIsometricImprimitives(epsilon, 10, q));
                 fi;
             fi;
         elif n = 12 and epsilon = 1 and q < 7 then
             if q in [3, 5] then
-                Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, OmegaNonDegenerateImprimitives(1, 12, q, 0, 12), 2));
+                G := OmegaNonDegenerateImprimitives(1, 12, q, 0, 12);
+                Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, G, 2));
             fi;
             if q <> 3 then
                 Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, -1, 6));
             fi;
             if q = 5 then
-                Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, 5, OmegaNonDegenerateImprimitives(1, 12, 5, 0, 4), 2));
+                G := OmegaNonDegenerateImprimitives(1, 12, 5, 0, 4);
+                Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, 5, G, 2));
             fi;
             if q <> 2 then
                 Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, 1, 3));
             fi;
             Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, -1, 2));
             Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, 1, 2));
-            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, OmegaIsotropicImprimitives(12, q), 2));
+            G := OmegaIsotropicImprimitives(12, q);
+            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, G, 2));
         else
             Append(maximalSubgroups, C2SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
         fi;
@@ -1733,7 +1748,8 @@ function(epsilon, n, q, classes...)
         # For all other n, class C4 is empty.
         if n = 12 and epsilon = 1 and q <> 2 then
             # number of conjugates is 2 according to [KL90] Proposition 4.4.12 (I)
-            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, SymplecticTensorProductStabilizerInOmega(2, 6, q), 2));
+            G := SymplecticTensorProductStabilizerInOmega(2, 6, q);
+            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, G, 2));
         elif q <> 2 and not (epsilon = 1 and n = 8) then
             Append(maximalSubgroups, C4SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
         fi;
