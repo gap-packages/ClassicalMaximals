@@ -1193,8 +1193,8 @@ function(epsilon, n, q)
         Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, k)));
 
         # Cf. Proposition 2.3.2 (iii) in [BHR13]
-        if q in [2, 3] then
-            Remove(listOfks, 1);
+        if q = 3 then
+            RemoveSet(listOfks, n - 2);
         fi;
         Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, k)));
 
@@ -1378,7 +1378,7 @@ function(epsilon, n, q)
         # number of conjugates is 1 according to [KL90] Proposition 4.4.18 (I)
         Append(result, List(listOfn1s, n1 -> OrthogonalTensorProductStabilizerInOmega(0, 0, 0, n1, n2, q)));
 
-    else
+    elif IsOddInt(q) then
 
         listOfn1s := Filtered(DivisorsInt(n), IsEvenInt);
         RemoveSet(listOfn1s, 2);
