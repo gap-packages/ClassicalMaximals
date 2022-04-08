@@ -356,9 +356,7 @@ function(m, t, q)
         fi;
 
 
-        F := AntidiagonalMat(Concatenation(ListWithIdenticalEntries(m / 2, one),
-                                        ListWithIdenticalEntries(m / 2, -one)),
-                                        field);
+        F := AntidiagonalHalfOneMat(m, field);
         Q := BilinearToQuadraticForm(LiftFormsToTensorProduct(ListWithIdenticalEntries(t, F), field));
 
     fi;
