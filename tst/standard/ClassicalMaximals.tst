@@ -532,7 +532,7 @@ gap> Length(ClassicalMaximalsGeneric("O-", 8, 17));
 gap> Length(ClassicalMaximalsGeneric("O-", 8, 19));
 11
 gap> Length(ClassicalMaximalsGeneric("O", 9, 3));
-14
+13
 gap> Length(ClassicalMaximalsGeneric("O", 9, 5));
 16
 gap> Length(ClassicalMaximalsGeneric("O", 9, 7));
