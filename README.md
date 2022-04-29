@@ -6,6 +6,20 @@
 Translation of magma `ClassicalMaximals` to GAP. For resources see
 [this hack.md](https://hackmd.io/aOvJbbctTAKlFQl4kwf4Jg).
 
+## Status
+
+### Already implemented
+	- geometric subgroups in cases L, S, U, O (construction using [HR05] and [HR10] and filtering maximal ones according to [BHR13]), see below for exception
+	- tests using the RECOG package and the tables from [BHR13] section 8
+	
+### TODO
+	- additional subgroups, tests (and filtering?) for Omega(+, 8, q), see [HR10] section 11
+	- class C9/S according to [BHR13] (see 
+[#41](https://github.com/gap-packages/ClassicalMaximals/pull/41))
+	- novelties and non-quasisimple groups (see 
+[Magma's options](http://magma.maths.usyd.edu.au/magma/handbook/text/768#9097))
+	- optional: let user select form (e.g. Magma standard form)
+
 ## Contact
 
 To report issues please use our
