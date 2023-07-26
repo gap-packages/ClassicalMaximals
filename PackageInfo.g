@@ -21,8 +21,8 @@ Persons := [
     IsAuthor      := true,
     IsMaintainer  := false,
     Email         := "mahauck@rhrk.uni-kl.de",
-    Place         := "Kaiserslautern, Germany",
-    Institution   := "RPTU Kaiserslautern-Landau",
+    #Place         := "Kaiserslautern, Germany",
+    #Institution   := "TU Kaiserslautern", # no longer affiliated
   ),
   rec(
     FirstNames    := "Max",
@@ -39,9 +39,9 @@ Persons := [
     LastName      := "Pfersdorff",
     IsAuthor      := true,
     IsMaintainer  := false,
-    Email         := "pfersdor@rhrk.uni-kl.de",
+    Email         := "tristan.pfersdorff@edu.rptu.de",
     Place         := "Kaiserslautern, Germany",
-    Institution   := "TU Kaiserslautern",
+    Institution   := "RPTU Kaiserslautern-Landau",
   ),
   rec(
     FirstNames    := "Sergio",
@@ -49,8 +49,8 @@ Persons := [
     IsAuthor      := true,
     IsMaintainer  := false,
     Email         := "siccha@mathematik.uni-kl.de",
-    Place         := "Kaiserslautern, Germany",
-    Institution   := "TU Kaiserslautern",
+    #Place         := "Kaiserslautern, Germany",
+    #Institution   := "TU Kaiserslautern", # no longer affiliated
   ),
 ],
 
