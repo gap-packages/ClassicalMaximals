@@ -26,7 +26,7 @@ end);
 # appropriate field.
 InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix)
-    local gapForm, newForm, gapToCanonical, canonicalToNew, field, formMatrix,
+    local gapForm, newForm, baseChangeMatrix, field, formMatrix,
         result, d, q, broadType;
     if not type in ["S", "O-B", "O-Q", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O-B', 'O-Q'");
@@ -82,12 +82,9 @@ function(group, type, gramMatrix)
             ErrorNoReturn("The form preserved by <group> must be similar to the form ", 
                           "described by the Gram matrix <gramMatrix>.");
         fi;
-        gapToCanonical := BaseChangeHomomorphism(BaseChangeToCanonical(gapForm), 
-                                                 field);
-        canonicalToNew := BaseChangeHomomorphism(BaseChangeToCanonical(newForm) ^ (-1), 
-                                                 field);
-        result := MatrixGroup(field, canonicalToNew(gapToCanonical(GeneratorsOfGroup(group))));
-    
+        baseChangeMatrix := BaseChangeToCanonical(gapForm)^-1 * BaseChangeToCanonical(newForm);
+        result := MatrixGroup(field, List(GeneratorsOfGroup(group), g -> g ^ baseChangeMatrix));
+
         # Set useful attributes
         UseIsomorphismRelation(group, result);
     else
