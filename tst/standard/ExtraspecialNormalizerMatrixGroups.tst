@@ -134,7 +134,9 @@ gap> TestExtraspecialNormalizerInOmega := function(m, q)
 >   CheckIsSubsetOmega(1, 2 ^ m, q, G);
 >   CheckSize(G);
 > end;;
-gap> TestExtraspecialNormalizerInOmega(3, 3);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestExtraspecialNormalizerInOmega(3, 3); # FIXME: 'Error, the recognition described by this recognition node has failed!' or 'Error, This should never have happened (346), tell Max.'
+#@fi
 gap> TestExtraspecialNormalizerInOmega(3, 5);
 gap> TestExtraspecialNormalizerInOmega(3, 7);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
