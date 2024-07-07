@@ -46,6 +46,7 @@ gap> TestSpStabilizerOfIsotropicSubspace := function(n, q, k)
 >   CheckSize(G);
 > end;;
 gap> TestSpStabilizerOfIsotropicSubspace(4, 2, 1);
+gap> TestSpStabilizerOfIsotropicSubspace(4, 5, 2);
 gap> TestSpStabilizerOfIsotropicSubspace(4, 9, 1);
 gap> TestSpStabilizerOfIsotropicSubspace(6, 4, 1);
 gap> TestSpStabilizerOfIsotropicSubspace(6, 7, 2);
