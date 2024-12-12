@@ -1,3 +1,5 @@
+LoadPackage("recog");
+
 CheckSize := function(G)
   local lvl, ri;
   if not HasSize(G) then

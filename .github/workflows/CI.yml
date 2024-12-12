@@ -35,6 +35,7 @@ jobs:
         with:
           GAPBRANCH: ${{ matrix.gap-branch }}
           GAP_PKGS_TO_CLONE: 'recog'
+          GAP_PKGS_TO_BUILD: 'io profiling orb'
       - uses: gap-actions/build-pkg@v1
       - uses: gap-actions/run-pkg-tests@v2
       - uses: gap-actions/run-pkg-tests@v2
