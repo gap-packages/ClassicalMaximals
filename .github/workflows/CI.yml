@@ -35,7 +35,9 @@ jobs:
         with:
           GAPBRANCH: ${{ matrix.gap-branch }}
           GAP_PKGS_TO_CLONE: 'recog'
-          GAP_PKGS_TO_BUILD: 'io profiling orb'
+          GAP_PKGS_TO_BUILD: 'io profiling orb cvec'
+          # note that we don't need cvec directly but loading it seems to
+          # avoid https://github.com/gap-packages/recog/issues/302
       - uses: gap-actions/build-pkg@v1
       - uses: gap-actions/run-pkg-tests@v2
       - uses: gap-actions/run-pkg-tests@v2
