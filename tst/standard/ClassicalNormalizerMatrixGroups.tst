@@ -50,8 +50,8 @@ gap> TestOrthogonalInSp := function(epsilon, n, q)
 >   CheckSize(G);
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOrthogonalInSp(1, 4, 8);
-gap> TestOrthogonalInSp(-1, 6, 2);
+gap> TestOrthogonalInSp(1, 4, 8); # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
+gap> TestOrthogonalInSp(-1, 6, 2); # FIXME: `Giving up, Schreier tree is not shallow.`
 #@fi
 gap> TestOrthogonalInSp(-1, 4, 4);
 gap> TestOrthogonalInSp(1, 6, 2);

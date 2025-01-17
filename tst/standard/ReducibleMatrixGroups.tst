@@ -82,7 +82,7 @@ gap> TestOmegaStabilizerOfIsotropicSubspace := function(epsilon, d, q, k)
 >   CheckSize(G);
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);
+gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);  # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
 #@fi
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 4);
 gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 7, 2);
