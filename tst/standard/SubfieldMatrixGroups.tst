@@ -8,10 +8,8 @@ gap> TestSubfieldSL := function(n, p, e, f)
 >   CheckSize(G);
 > end;;
 gap> TestSubfieldSL(4, 2, 4, 2);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestSubfieldSL(2, 3, 6, 2);
 gap> TestSubfieldSL(3, 7, 3, 1);
-#@fi
 
 # Test error handling
 gap> SubfieldSL(1, 1, 1, 1);
