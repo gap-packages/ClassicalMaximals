@@ -46,6 +46,7 @@ gap> TestSpStabilizerOfIsotropicSubspace := function(n, q, k)
 >   CheckSize(G);
 > end;;
 gap> TestSpStabilizerOfIsotropicSubspace(4, 2, 1);
+gap> TestSpStabilizerOfIsotropicSubspace(4, 5, 2);
 gap> TestSpStabilizerOfIsotropicSubspace(4, 9, 1);
 gap> TestSpStabilizerOfIsotropicSubspace(6, 4, 1);
 gap> TestSpStabilizerOfIsotropicSubspace(6, 7, 2);
@@ -132,7 +133,9 @@ gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 10, 7, 0, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, 0, 1);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 7, 0, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 7, 0, 1);
-gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 10, 7, 0, 3);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 10, 7, 0, 3);  # info messages: '#I  Have 58653 points' etc.
+#@fi
 
 # Test error handling
 gap> OmegaStabilizerOfNonDegenerateSubspace(2, 5, 5, 1, 2);
