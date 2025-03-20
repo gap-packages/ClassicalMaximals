@@ -42,7 +42,7 @@ gap> TestTensorProductStabilizerInSp := function(epsilon, d1, d2, q)
 gap> TestTensorProductStabilizerInSp(0, 2, 3, 3);
 gap> TestTensorProductStabilizerInSp(0, 4, 3, 5);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestTensorProductStabilizerInSp(1, 2, 4, 5);
+gap> TestTensorProductStabilizerInSp(1, 2, 4, 5);  # FIXME: see https://github.com/gap-packages/recog/issues/316
 #@fi
 gap> TestTensorProductStabilizerInSp(-1, 2, 4, 5);
 

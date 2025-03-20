@@ -34,9 +34,7 @@ gap> TestTensorInducedDecompositionStabilizerInSp := function(m, t, q)
 > end;;
 gap> TestTensorInducedDecompositionStabilizerInSp(2, 3, 7);
 gap> TestTensorInducedDecompositionStabilizerInSp(4, 3, 3);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestTensorInducedDecompositionStabilizerInSp(2, 5, 3); # FIXME: see https://github.com/gap-packages/recog/issues/302
-#@fi
+gap> TestTensorInducedDecompositionStabilizerInSp(2, 5, 3);
 
 # Test error handling
 gap> TensorInducedDecompositionStabilizerInSp(3, 3, 3);
