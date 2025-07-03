@@ -31,6 +31,7 @@ Persons := [
     IsMaintainer  := true,
     Email         := "mhorn@rptu.de",
     #WWWHome       := "https://www.quendi.de/math",
+    GitHubUsername:= "fingolfin",
     Place         := "Kaiserslautern, Germany",
     Institution   := "RPTU Kaiserslautern-Landau",
   ),
