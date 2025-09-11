@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/gap-packages/ClassicalMaximals/workflows/CI/badge.svg?branch=main)](https://github.com/gap-packages/ClassicalMaximals/actions?query=workflow%3ACI+branch%3Amain)
+[![CI](https://github.com/gap-packages/ClassicalMaximals/workflows/CI/badge.svg?branch=main)](https://github.com/gap-packages/ClassicalMaximals/actions?query=workflow%3ACI+branch%3Amain)
 [![Code Coverage](https://codecov.io/github/gap-packages/ClassicalMaximals/coverage.svg?branch=main&token=)](https://codecov.io/gh/gap-packages/ClassicalMaximals)
 
 # The GAP package ClassicalMaximals
