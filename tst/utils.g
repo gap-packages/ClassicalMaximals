@@ -48,11 +48,9 @@ CheckQuadraticForm := function(G)
   fi;
 end;
 
-CheckSesquilinearForm := function(G)
-  local M, F, q;
+CheckSesquilinearForm := function(G, q)
+  local M;
   M := InvariantSesquilinearForm(G).matrix;
-  F := DefaultFieldOfMatrixGroup(G);
-  q := RootInt(Size(F));
   if not ForAll(GeneratorsOfGroup(G), g -> g * M * HermitianConjugate(g,q) = M) then
     Error("not all generators preserve the sesquilinear form");
   fi;
@@ -78,7 +76,7 @@ end;
 
 CheckIsSubsetSU := function(n, q, G)
   CheckIsSubsetSL(n, q ^ 2, G);
-  CheckSesquilinearForm(G);
+  CheckSesquilinearForm(G, q);
 end;
 
 CheckIsSubsetOmega := function(epsilon, n, q, G)
