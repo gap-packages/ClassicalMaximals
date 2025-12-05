@@ -7,9 +7,9 @@ gap> SymplecticForm(Sp(6, 7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
 true
 gap> SymmetricBilinearForm(SO(5, 9)) = InvariantBilinearForm(SO(5, 9)).matrix;
 true
-gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)));
+gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)), GF(4));
 Error, No preserved unitary form found for <group>
-gap> ConjugateToSesquilinearForm(SL(3, 5), "O-B", IdentityMat(3, GF(5)));
+gap> ConjugateToSesquilinearForm(SL(3, 5), "O-B", IdentityMat(3, GF(5)), GF(5));
 Error, No preserved symmetric bilinear form found for <group>
 gap> TestFormChangingFunctions := function(args)
 >   local n, q, type, gramMatrix, standardGroup, conjugatedGroup, broadType,
@@ -38,7 +38,7 @@ gap> TestFormChangingFunctions := function(args)
 >   else
 >       broadType := type;
 >   fi;
->   conjugatedGroup := ConjugateToSesquilinearForm(standardGroup, broadType, gramMatrix);
+>   conjugatedGroup := ConjugateToSesquilinearForm(standardGroup, broadType, gramMatrix, GF(q));
 >   if not IsEmpty(GeneratorsOfGroup(conjugatedGroup)) then
 >       conjugatedGroup := Group(GeneratorsOfGroup(conjugatedGroup));
 >   else
@@ -53,7 +53,7 @@ gap> TestFormChangingFunctions := function(args)
 >       standardGramMatrix := InvariantQuadraticForm(standardGroup).matrix;
 >       standardPolarForm := InvariantBilinearForm(standardGroup).matrix;
 >   fi;
->   twiceConjugatedGroup := ConjugateToStandardForm(conjugatedGroup, type);
+>   twiceConjugatedGroup := ConjugateToStandardForm(conjugatedGroup, type, GF(q));
 >   if type = "U" then
 >       Assert(0, ForAll(GeneratorsOfGroup(conjugatedGroup), 
 >                        g -> g * gramMatrix * HermitianConjugate(g, q) = gramMatrix));

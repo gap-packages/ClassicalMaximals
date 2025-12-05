@@ -59,8 +59,8 @@ function(d1, d2, q)
     generators := [];
 
     # generate the central product SU(d1, q) o SU(d2, q)
-    SUd1FormIdentityMat := ConjugateToSesquilinearForm(SU(d1, q), "U", IdentityMat(d1, F));
-    SUd2FormIdentityMat := ConjugateToSesquilinearForm(SU(d2, q), "U", IdentityMat(d2, F));
+    SUd1FormIdentityMat := ConjugateToSesquilinearForm(SU(d1, q), "U", IdentityMat(d1, F), F);
+    SUd2FormIdentityMat := ConjugateToSesquilinearForm(SU(d2, q), "U", IdentityMat(d2, F), F);
 
     generators := List(GeneratorsOfGroup(SUd1FormIdentityMat), 
                        g -> KroneckerProduct(g, IdentityMat(d2, F)));
@@ -93,7 +93,7 @@ function(d1, d2, q)
     result := MatrixGroupWithSize(F, generators, size);
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 7.2 of [HR05]
@@ -174,7 +174,7 @@ function(epsilon, d1, d2, q)
     formMatrix := LiftFormsToTensorProduct([standardSymplecticForm, standardBilinearForm], field);
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 # Construction as in Proposition 7.3 of [HR10]
@@ -409,11 +409,11 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(F));
 
     if epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", field);
     elif epsilon = 0 then
-        return ConjugateToStandardForm(result, "O");
+        return ConjugateToStandardForm(result, "O", field);
     else
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", field);
     fi;
 end);
 
@@ -465,5 +465,5 @@ function(d1, d2, q)
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantQuadraticFormFromMatrix(result, Q);
 
-    return ConjugateToStandardForm(result, "O+");
+    return ConjugateToStandardForm(result, "O+", field);
 end);

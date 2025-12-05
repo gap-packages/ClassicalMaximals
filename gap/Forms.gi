@@ -20,19 +20,14 @@ function(gramMatrix)
     return Q;
 end);
 
-# One needs to ensure that the attribute DefaultFieldOfMatrixGroup is set
-# correctly for <group>; this can be done, for example, by making the
-# generators used during construction of the group immutable matrices over the
-# appropriate field.
 InstallGlobalFunction("ConjugateToSesquilinearForm",
-function(group, type, gramMatrix)
-    local gapForm, newForm, baseChangeMatrix, field, formMatrix,
+function(group, type, gramMatrix, field)
+    local gapForm, newForm, baseChangeMatrix, formMatrix,
         result, d, q, broadType;
     if not type in ["S", "O-B", "O-Q", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O-B', 'O-Q'");
     fi;
     d := DimensionOfMatrixGroup(group);
-    field := DefaultFieldOfMatrixGroup(group);
     if type = "S" or type = "O-B" then
         if type = "S" then
             broadType := type;
@@ -112,42 +107,36 @@ end);
 # If <group> preserves a sesquilinear form of type <type> (one of "S", "U", "O"
 # (in odd dimension), "O+" or "O-" (both in even dimension), return a group
 # conjugate to <group> preserving the standard form of that type.
-#
-# Also, one need to ensure that the attribute DefaultFieldOfMatrixGroup is set
-# correctly for <group>; this can be done, for example, by making the
-# generators used during construction of the group immutable matrices over the
-# appropriate field.
 InstallGlobalFunction("ConjugateToStandardForm",
-function(group, type)
-    local d, F, q, gapForm, broadType;
+function(group, type, field)
+    local d, q, gapForm, broadType;
 
     # determining d (dimension of matrix group), F (base field) and q (order of
     # F) plus some sanity checks
     if not type in ["S", "O+", "O-", "O", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O+', 'O-', 'O'");
     fi;
-    F := DefaultFieldOfMatrixGroup(group);
     d := DimensionOfMatrixGroup(group);
     if type = "O" and IsEvenInt(d) then
         ErrorNoReturn("<type> cannot be 'O' if the dimension of <group> is even");
     elif type in ["O+", "O-"] and IsOddInt(d) then
         ErrorNoReturn("<type> cannot be 'O+' or 'O-' if the dimension of",
                       " <group> is odd");
-    elif IsEvenInt(Size(F)) and IsOddInt(d) and type in ["O+", "O-", "O"] then
+    elif IsEvenInt(Size(field)) and IsOddInt(d) and type in ["O+", "O-", "O"] then
         ErrorNoReturn("If <type> is 'O+', 'O-' or 'O' and the size of <F> is",
                       " even, <d> must be even");
     fi;
     if type in ["S", "O", "O+", "O-"] then
-        q := Size(F);
+        q := Size(field);
     else
-        if IsSquareInt(Size(F)) then
-            q := RootInt(Size(F));
+        if IsSquareInt(Size(field)) then
+            q := RootInt(Size(field));
         else
             # It might be that G is to be understood as a matrix group over 
             # GF(q ^ 2), but the matrices can actually be represented over a
             # smaller field, which causes DefaultFieldOfMatrixGroup to return GF(q)
             # instead of GF(q ^ 2) - we have to remedy this somehow ...
-            q := Size(F);
+            q := Size(field);
         fi;
     fi;
     
@@ -159,13 +148,13 @@ function(group, type)
     elif type = "O" then
         gapForm := InvariantBilinearForm(Omega(d, q)).matrix;
     elif type = "O+" then
-        if Characteristic(F) = 2 then
+        if Characteristic(field) = 2 then
             gapForm := InvariantQuadraticForm(Omega(1, d, q)).matrix;
         else
             gapForm := InvariantBilinearForm(Omega(1, d, q)).matrix;
         fi;
     elif type = "O-" then
-        if Characteristic(F) = 2 then
+        if Characteristic(field) = 2 then
             gapForm := InvariantQuadraticForm(Omega(-1, d, q)).matrix;
         else
             gapForm := InvariantBilinearForm(Omega(-1, d, q)).matrix;
@@ -173,7 +162,7 @@ function(group, type)
     fi;
 
     if type in ["O", "O+", "O-"] then
-        if Characteristic(F) = 2 then
+        if Characteristic(field) = 2 then
             broadType := "O-Q";
         else
             broadType := "O-B";
@@ -182,7 +171,7 @@ function(group, type)
         broadType := type;
     fi;
 
-    return ConjugateToSesquilinearForm(group, broadType, gapForm);
+    return ConjugateToSesquilinearForm(group, broadType, gapForm, field);
 end);
 
 # Let <forms> = [f1, f2, ..., ft] be a list of sesquilinear forms on the vector
