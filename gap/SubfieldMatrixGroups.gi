@@ -54,7 +54,8 @@ function(d, p, e, f)
     F := GF(q ^ 2);
     AandB := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d, p ^ f),
                                                                        "U",
-                                                                       AntidiagonalMat(d, F))));
+                                                                       AntidiagonalMat(d, F),
+                                                                       F)));
     zeta := PrimitiveElement(F);
     k := Gcd(q + 1, d);
     c := QuoInt(k * Lcm(p ^ f + 1, QuoInt(q + 1, k)), q + 1);
@@ -67,7 +68,7 @@ function(d, p, e, f)
     if c = Gcd(p ^ f + 1, d) then
         result := MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
         SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-        return ConjugateToStandardForm(result, "U");
+        return ConjugateToStandardForm(result, "U", F);
     fi;
 
     # a primitive element of GF(p ^ (2 * f))
@@ -86,7 +87,7 @@ function(d, p, e, f)
 
     result := MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
     SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 8.5 of [HR05]
@@ -102,7 +103,8 @@ function(d, q)
     form := AntidiagonalHalfOneMat(d, F);
     generators := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
                                                                             "S", 
-                                                                            form)));
+                                                                            form,
+                                                                            F)));
     zeta := PrimitiveElement(F);
     k := Gcd(q + 1, d);
     # generates the center of SU(d, q)
@@ -136,7 +138,7 @@ function(d, q)
         SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
     fi;
     
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 8.4 of [HR05]
@@ -168,11 +170,12 @@ function(epsilon, d, q)
     if IsOddInt(d) then
         SOChangedForm := ConjugateToSesquilinearForm(SO(d, q),
                                                      "O-B",
-                                                     AntidiagonalMat(d, F));
+                                                     AntidiagonalMat(d, F),
+                                                     GF(q));
         Append(generators, GeneratorsOfGroup(SOChangedForm));
         result := MatrixGroupWithSize(F, generators, size);
         SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-        result := ConjugateToStandardForm(result, "U");
+        result := ConjugateToStandardForm(result, "U", F);
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
         Append(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
@@ -231,7 +234,7 @@ function(epsilon, d, q)
             
             result := MatrixGroupWithSize(F, generators, size);
             SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-            result := ConjugateToStandardForm(result, "U");
+            result := ConjugateToStandardForm(result, "U", F);
 
         elif epsilon = -1 then
 
@@ -275,7 +278,7 @@ function(epsilon, d, q)
             fi;
 
             SetInvariantSesquilinearForm(result, rec(matrix := form));
-            result := ConjugateToStandardForm(result, "U");
+            result := ConjugateToStandardForm(result, "U", F);
         fi;
     fi;
  
@@ -329,7 +332,7 @@ function (d, p, e, f)
 
     SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 # Construction as in Proposition 8.1 of [HR10]
@@ -374,7 +377,7 @@ function (epsilon, d, p, e, f, epsilon_0)
 
     if IsOddInt(d) then
         if r = 2 then
-            return ConjugateToStandardForm(SO(0, d, q0), "O");
+            return ConjugateToStandardForm(SO(0, d, q0), "O", GF(q0));
         else
             return Omega(0, d, q0);
         fi;
@@ -391,14 +394,14 @@ function (epsilon, d, p, e, f, epsilon_0)
     # from now on we assume r = 2, d even and epsilon = 1
     if epsilon_0 = 1 then
         if d mod 4 = 2 and q0 mod 4 = 1 then
-            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+");
+            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+", GF(q0));
         fi;
     else
         if not (d mod 4 = 2 and q0 mod 4 = 1) then
-            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O-");
+            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O-", GF(q0));
         fi;
     fi;
-    
+
     field := GF(p ^ e);
     one := One(field);
     zeta := PrimitiveElement(field);
@@ -429,9 +432,9 @@ function (epsilon, d, p, e, f, epsilon_0)
 
     fi;
 
-    gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F)));
+    gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F, GF(q0))));
     Add(gens, A);
     result := MatrixGroupWithSize(field, gens, SizeSO(epsilon_0, d, q0) * 2);
     SetInvariantBilinearForm(result, rec(matrix := F));
-    return ConjugateToStandardForm(result, "O+");
+    return ConjugateToStandardForm(result, "O+", field);
 end);

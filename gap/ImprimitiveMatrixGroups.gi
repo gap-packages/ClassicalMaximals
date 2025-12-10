@@ -59,7 +59,7 @@ function(d, q, t)
     # We have to exclude m = 1 since the Forms package has a bug in this case;
     # however, this case is trivial.
     if m > 1 then
-        SUChangedForm := ConjugateToSesquilinearForm(SU(m, q), "U", IdentityMat(m, F));
+        SUChangedForm := ConjugateToSesquilinearForm(SU(m, q), "U", IdentityMat(m, F), F);
     else
         SUChangedForm := SU(m, q);
     fi;
@@ -108,7 +108,7 @@ function(d, q, t)
     # change back fixed form into standard GAP form Antidiag(1, ..., 1)
     SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
 
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 5.5 of [HR05]
@@ -170,7 +170,7 @@ function(d, q)
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
 
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 5.2 of [HR05]
@@ -268,7 +268,7 @@ function(d, q, t)
     result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
     SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 # Construction as in Proposition 5.3 of [HR05]
@@ -316,7 +316,7 @@ function(d, q)
     result := MatrixGroupWithSize(field, gens, SizeGL(l, q) * 2);
     SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 # Construction as in Lemmata 5.2 and 5.3 of [HR10]
@@ -488,11 +488,11 @@ function(epsilon, d, q, epsilon_0, t)
     SetInvariantQuadraticFormFromMatrix(result, Q);
 
     if epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", field);
     elif epsilon = 0 then
-        return ConjugateToStandardForm(result, "O");
+        return ConjugateToStandardForm(result, "O", field);
     else
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", field);
     fi;
 end);
 
@@ -530,7 +530,7 @@ function(d, q)
 
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantQuadraticFormFromMatrix(result, StandardOrthogonalForm(1, d, q).Q);
-    return ConjugateToStandardForm(result, "O+");
+    return ConjugateToStandardForm(result, "O+", field);
 end);
 
 # Construction as in Lemma 5.4 [HR10]
@@ -591,8 +591,8 @@ function(epsilon, d, q)
     SetInvariantQuadraticFormFromMatrix(result, Q);
 
     if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", field);
     else
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", field);
     fi;
 end);

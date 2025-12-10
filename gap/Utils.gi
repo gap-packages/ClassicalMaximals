@@ -450,7 +450,8 @@ function(epsilon, n, q)
             gramMatrix := IdentityMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                             "O-B",
-                                                                            gramMatrix));
+                                                                            gramMatrix,
+                                                                            F));
             D := - IdentityMat(n, F);
             E := zeta * IdentityMat(n, F);
     else 
@@ -458,7 +459,8 @@ function(epsilon, n, q)
             gramMatrix := AntidiagonalMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                             "O-B",
-                                                                            gramMatrix));
+                                                                            gramMatrix,
+                                                                            F));
             # Our standard bilinear form is given by the Gram matrix 
             # Antidiag(1, ..., 1). The norm of [1, 0, ..., 0, 2] under this
             # bilinear form is 4, i.e. a square. (Recall q odd, so this is not zero!)
@@ -479,7 +481,8 @@ function(epsilon, n, q)
                 gramMatrix := IdentityMat(n, F);
                 generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O-B",
-                                                                                gramMatrix));
+                                                                                gramMatrix,
+                                                                                F));
                 # Our standard bilinear form is given by the Gram matrix 
                 # Diag(1, ..., 1). The norm of [1, 0, ..., 0] under this bilinear
                 # form is 1, i.e. a square.
@@ -496,7 +499,8 @@ function(epsilon, n, q)
                                                                    List([1..n - 1], i -> 1)));
                 generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
                                                                                 "O-B",
-                                                                                gramMatrix));
+                                                                                gramMatrix,
+                                                                                F));
                 # Our standard bilinear form is given by the Gram matrix 
                 # Diag(zeta, 1, ..., 1). The norm of [0, ..., 0, 1] under this
                 # bilinear form is 1, i.e. a square.
@@ -557,7 +561,7 @@ function(epsilon, d, q)
     Q := standardForm.Q;
     m := QuoInt(d, 2);
 
-    conjugatedOmega := ConjugateToSesquilinearForm(Omega(epsilon, d, q), "O-Q", Q);
+    conjugatedOmega := ConjugateToSesquilinearForm(Omega(epsilon, d, q), "O-Q", Q, field);
     generatorsOfOmega := ShallowCopy(GeneratorsOfGroup(conjugatedOmega));
     if Length(generatorsOfOmega) = 1 then
         # this is in particular the case if d = 2
@@ -681,7 +685,7 @@ function(d, q, squareDiscriminant)
     R0 := ReflectionMatrix(d, q, F, "B", vectorOfSquareForm);
     R1 := ReflectionMatrix(d, q, F, "B", vectorOfNonSquareForm);
 
-    generatorsOfOmega := GeneratorsOfGroup(ConjugateToSesquilinearForm(Omega(epsilon, d, q), "O-B", F));
+    generatorsOfOmega := GeneratorsOfGroup(ConjugateToSesquilinearForm(Omega(epsilon, d, q), "O-B", F, field));
     S := R0 * R1;
     G := R0;
     D := zeta * IdentityMat(d, field);

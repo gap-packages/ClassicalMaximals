@@ -64,7 +64,7 @@ CheckIsSubsetSL := function(n, q, G)
   fi;
   F := DefaultFieldOfMatrixGroup(G);
   if Characteristic(F) <> PrimePowersInt(q)[1] then
-    Error("matrix group: expected field of size ", q, " actual size ", Size(F));
+      Error("matrix group: wrong characteristic of underlying field");
   fi;
   CheckGeneratorsSpecial(G);
 end;
