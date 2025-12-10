@@ -901,7 +901,7 @@ function(epsilon, epsilon1, d, q)
             # In this case, contrary to what [HR10] suggests, the quadratic
             # form preserved by the constructed group is *not* obtained by
             # taking the trace of some quadratic form on GF(q ^ 2) ^ (d / 2).
-            bilinearForm := BilinearForm(Group(Concatenation(generators, [CS])), "O");
+            bilinearForm := BilinearForm(Group(Concatenation(generators, [CS])), "O", F);
             formMatrix := BilinearToQuadraticForm(bilinearForm);
 
             if FancySpinorNorm(bilinearForm, F, CS) = 1 then

@@ -6,7 +6,6 @@ gap> TestTensorProductStabilizerInSL := function(d1, d2, q)
 >   G := TensorProductStabilizerInSL(d1, d2, q);
 >   CheckIsSubsetSL(d1 * d2, q, G);
 >   CheckSize(G);
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
 > end;;
 gap> TestTensorProductStabilizerInSL(2, 3, 2);
 gap> TestTensorProductStabilizerInSL(2, 3, 3);
@@ -22,7 +21,6 @@ gap> TestTensorProductStabilizerInSU := function(d1, d2, q)
 >   G := TensorProductStabilizerInSU(d1, d2, q);
 >   CheckIsSubsetSU(d1 * d2, q, G);
 >   CheckSize(G);
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q ^ 2));
 > end;;
 gap> TestTensorProductStabilizerInSU(2, 3, 2);
 gap> TestTensorProductStabilizerInSU(2, 3, 3);
@@ -37,7 +35,6 @@ gap> TestTensorProductStabilizerInSp := function(epsilon, d1, d2, q)
 >   G := TensorProductStabilizerInSp(epsilon, d1, d2, q);
 >   CheckIsSubsetSp(d1 * d2, q, G);
 >   CheckSize(G);
->   Assert(0, DefaultFieldOfMatrixGroup(G) = GF(q));
 > end;;
 gap> TestTensorProductStabilizerInSp(0, 2, 3, 3);
 gap> TestTensorProductStabilizerInSp(0, 4, 3, 5);

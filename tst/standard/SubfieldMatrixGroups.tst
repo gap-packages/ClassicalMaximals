@@ -24,7 +24,6 @@ gap> TestUnitarySubfieldSU := function(n, p, e, f)
 >   local G;
 >   G := UnitarySubfieldSU(n, p, e, f);
 >   Assert(0, IsSubset(SU(n, p ^ e), GeneratorsOfGroup(G)));
->   #Assert(0, DefaultFieldOfMatrixGroup(G) = GF(p ^ (2 * e))); # FIXME
 >   CheckSize(G);
 > end;;
 gap> TestUnitarySubfieldSU(2, 3, 6, 2);

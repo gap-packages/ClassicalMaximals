@@ -34,7 +34,7 @@ function(group, type, gramMatrix, field)
         else
             broadType := "O";
         fi;
-        formMatrix := BilinearForm(group, broadType);
+        formMatrix := BilinearForm(group, broadType, field);
         if formMatrix = fail then
             if type = "S" then
                 ErrorNoReturn("No preserved symplectic form found for <group>");
@@ -50,7 +50,7 @@ function(group, type, gramMatrix, field)
             q := Size(field);
             field := GF(q ^ 2);
         fi;
-        formMatrix := UnitaryForm(group);
+        formMatrix := UnitaryForm(group, field);
         if formMatrix = fail then
             ErrorNoReturn("No preserved unitary form found for <group>");
         fi;
@@ -58,7 +58,7 @@ function(group, type, gramMatrix, field)
         newForm := HermitianFormByMatrix(gramMatrix, field);
     else
         # This is the case type = "O-Q"
-        formMatrix := QuadraticForm(group);
+        formMatrix := QuadraticForm(group, field);
         if formMatrix = fail then
             ErrorNoReturn("No preserved quadratic form found for <group>");
         fi;
@@ -132,10 +132,6 @@ function(group, type, field)
         if IsSquareInt(Size(field)) then
             q := RootInt(Size(field));
         else
-            # It might be that G is to be understood as a matrix group over 
-            # GF(q ^ 2), but the matrices can actually be represented over a
-            # smaller field, which causes DefaultFieldOfMatrixGroup to return GF(q)
-            # instead of GF(q ^ 2) - we have to remedy this somehow ...
             q := Size(field);
         fi;
     fi;
@@ -276,20 +272,15 @@ end);
 # In general, this function should only be used if one can be sure that <G>
 # preserves a unitary form (but one does not know which one). 
 InstallGlobalFunction("UnitaryForm",
-function(G)
-    local d, F, q, M, inverseHermitianConjugateM, formMatrix, row, col, x,
+function(G, F)
+    local d, q, M, inverseHermitianConjugateM, formMatrix, row, col, x,
     scalar, counter;
 
     d := DimensionOfMatrixGroup(G);
-    F := DefaultFieldOfMatrixGroup(G);
     if not IsFinite(F) then
         ErrorNoReturn("The base field of <G> must be finite");
     fi;
     if not IsEvenInt(DegreeOverPrimeField(F)) then
-        # It might be that G is to be understood as a matrix group over 
-        # GF(q ^ 2), but the matrices can actually be represented over a
-        # smaller field, which causes DefaultFieldOfMatrixGroup to return GF(q)
-        # instead of GF(q ^ 2) - we have to remedy this somehow ...
         q := Size(F);
     else
         q := RootInt(Size(F));
@@ -377,8 +368,8 @@ end);
 # In general, this function should only be used if one can be sure that <G>
 # preserves a bilinear form (but one does not know which one).
 InstallGlobalFunction("BilinearForm",
-function(G, type)
-    local F, M, inverseTransposeM, counter, formMatrix, condition;
+function(G, type, F)
+    local M, inverseTransposeM, counter, formMatrix, condition;
 
     if not type in ["S", "O"] then
         ErrorNoReturn("<type> must be one of 'S', 'O'");
@@ -390,8 +381,6 @@ function(G, type)
     elif type = "O" then
         condition := x -> (x = TransposedMat(x));
     fi;
-
-    F := DefaultFieldOfMatrixGroup(G);
 
     # Return stored bilinear form if it exists and is symplectic / symmetric
     if HasInvariantBilinearForm(G) then
@@ -444,22 +433,21 @@ function(G, type)
 end);
 
 InstallGlobalFunction("SymplecticForm",
-function(G)
-    return BilinearForm(G, "S");
+function(G, F)
+    return BilinearForm(G, "S", F);
 end);
 
 InstallGlobalFunction("SymmetricBilinearForm",
-function(G)
-    return BilinearForm(G, "O");
+function(G, F)
+    return BilinearForm(G, "O", F);
 end);
 
 InstallGlobalFunction("QuadraticForm",
-function(G)
-    local d, F, formMatrix, polarFormMatrix, i, g, RightSideForLinSys,
+function(G, F)
+    local d, formMatrix, polarFormMatrix, i, g, RightSideForLinSys,
     MatrixForLinSys, x;
 
     d := DimensionOfMatrixGroup(G);
-    F := DefaultFieldOfMatrixGroup(G);
     if not IsFinite(F) then
         ErrorNoReturn("The base field of <G> must be finite");
     fi;
@@ -471,7 +459,7 @@ function(G)
 
     # We first look for an invariant symmetric bilinear form of G, which will
     # be the polar form of the desired quadratic form
-    polarFormMatrix := SymmetricBilinearForm(G);
+    polarFormMatrix := SymmetricBilinearForm(G, F);
     # The Gram matrix formMatrix of the quadratic form is upper triangular and
     # polarFormMatrix = formMatrix + formMatrix ^ T, so the entries above the
     # main diagonal of polarFormMatrix and formMatrix must be the same
