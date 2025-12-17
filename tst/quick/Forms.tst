@@ -19,7 +19,7 @@ gap> TestFormChangingFunctions := function(args)
 >   type := args[3];
 >   gramMatrix := args[4];
 >   if type = "U" then
->       standardGroup := SU(n, q);
+>       standardGroup := SU(n, q); q:=q^2;
 >   elif type = "S" then
 >       standardGroup := Sp(n, q);
 >   elif type = "O" then
@@ -55,6 +55,7 @@ gap> TestFormChangingFunctions := function(args)
 >   fi;
 >   twiceConjugatedGroup := ConjugateToStandardForm(conjugatedGroup, type, GF(q));
 >   if type = "U" then
+>       q := RootInt(q);
 >       Assert(0, ForAll(GeneratorsOfGroup(conjugatedGroup), 
 >                        g -> g * gramMatrix * HermitianConjugate(g, q) = gramMatrix));
 >       Assert(0, ForAll(GeneratorsOfGroup(twiceConjugatedGroup), 
