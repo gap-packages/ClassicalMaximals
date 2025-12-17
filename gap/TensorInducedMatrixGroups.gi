@@ -181,7 +181,8 @@ function(m, t, q)
     else
         H := TensorWreathProduct(ConjugateToSesquilinearForm(SU(m, q),
                                                              "U",
-                                                             AntidiagonalMat(m, F)), 
+                                                             AntidiagonalMat(m, F),
+                                                             F), 
                                  SymmetricGroup(t));
         generatorsOfHInSU := [];
         for generator in GeneratorsOfGroup(H) do
@@ -245,7 +246,7 @@ function(m, t, q)
 
     result := MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
     SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 10.2 in [HR05]
@@ -282,7 +283,7 @@ function(m, t, q)
     formMatrix := LiftFormsToTensorProduct(ListWithIdenticalEntries(t, standardForm), field);
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 # Construction as in Lemma 10.3 in [HR10]
@@ -363,7 +364,7 @@ function(m, t, q)
 
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantQuadraticFormFromMatrix(result, Q);
-    return ConjugateToStandardForm(result, "O+");
+    return ConjugateToStandardForm(result, "O+", field);
 end);
 
 # Construction as in Lemma 10.4 in [HR10]
@@ -436,7 +437,7 @@ function(m, t, q)
     # Size according to Table 2.10 of [BHR13]
     result := MatrixGroupWithSize(field, gens, 2 ^ (t - 1) * SizeOmega(0, m, q) ^ t * Factorial(t));
     SetInvariantQuadraticFormFromMatrix(result, F / 2);
-    return ConjugateToStandardForm(result, "O");
+    return ConjugateToStandardForm(result, "O", field);
 end);
 
 # Construction as in Lemma 10.5 in [HR10]
@@ -566,5 +567,5 @@ function(epsilon, m, t, q)
 
     result := MatrixGroupWithSize(field, gens, size);
     SetInvariantQuadraticFormFromMatrix(result, F / 2);
-    return ConjugateToStandardForm(result, "O+");
+    return ConjugateToStandardForm(result, "O+", field);
 end);

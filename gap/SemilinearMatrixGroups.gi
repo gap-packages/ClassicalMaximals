@@ -467,7 +467,7 @@ function(d, q, s)
     SetInvariantSesquilinearForm(result, rec(matrix := formMatrix));
 
     # Conjugate the result so that it preserves the standard unitary form 
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 6.4 of [HR05]
@@ -513,7 +513,7 @@ function(d, q, s)
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 
     # Conjugate the result so that it preserves the standard symplectic form 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", F);
 end);
 
 # Construction as in Proposition 6.5 of [HR05]
@@ -564,7 +564,7 @@ function(d, q)
     SetInvariantBilinearForm(result, rec(matrix := formMatrix));
 
     # Conjugate the result so that it preserves the standard symplectic form 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", F);
 end);
 
 # For a quadratic form Q on the vector space GF(q ^ s) ^ (d / s) given 
@@ -645,7 +645,7 @@ function(epsilon, d, q, s)
     gammaB := gammaL1.B;
 
     Q := StandardOrthogonalForm(epsilon, d / s, q).Q;
-    conjugatedOmega := ConjugateToSesquilinearForm(Omega(epsilon, d / s, q ^ s), "O-Q", Q);
+    conjugatedOmega := ConjugateToSesquilinearForm(Omega(epsilon, d / s, q ^ s), "O-Q", Q, GF(q ^ s));
     zeta := PrimitiveElement(GF(q ^ s));
     # These matrices generate a group isomorphic to Omega(epsilon, d / s, q ^ s) 
     # as a subgroup of Omega(epsilon, d, q)
@@ -663,11 +663,11 @@ function(epsilon, d, q, s)
     SetInvariantQuadraticFormFromMatrix(result, formMatrix);
     
     if epsilon = 0 then
-        return ConjugateToStandardForm(result, "O");
+        return ConjugateToStandardForm(result, "O", F);
     elif epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", F);
     elif epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", F);
     fi;
 end);
 
@@ -783,9 +783,9 @@ function(d, q)
     SetInvariantQuadraticFormFromMatrix(result, formMatrix);
     
     if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", F);
     else
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", F);
     fi;
 end);
 
@@ -901,7 +901,7 @@ function(epsilon, epsilon1, d, q)
             # In this case, contrary to what [HR10] suggests, the quadratic
             # form preserved by the constructed group is *not* obtained by
             # taking the trace of some quadratic form on GF(q ^ 2) ^ (d / 2).
-            bilinearForm := BilinearForm(Group(Concatenation(generators, [CS])), "O");
+            bilinearForm := BilinearForm(Group(Concatenation(generators, [CS])), "O", F);
             formMatrix := BilinearToQuadraticForm(bilinearForm);
 
             if FancySpinorNorm(bilinearForm, F, CS) = 1 then
@@ -922,8 +922,8 @@ function(epsilon, epsilon1, d, q)
     SetInvariantQuadraticFormFromMatrix(result, formMatrix);
 
     if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", F);
     else
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", F);
     fi;
 end);

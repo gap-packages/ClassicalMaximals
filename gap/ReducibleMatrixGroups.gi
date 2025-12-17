@@ -48,7 +48,8 @@ function(d, q, k)
         for generatorOfSU in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - 2 * k, q), 
                                                                            "U", 
                                                                            AntidiagonalMat(d - 2 * k,
-                                                                                           F))) 
+                                                                                           F),
+                                                                           F))
         do
             generator := IdentityMat(d, F);
             generator{[k + 1..d - k]}{[k + 1..d - k]} := generatorOfSU;
@@ -120,7 +121,7 @@ function(d, q, k)
 
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 # Construction as in Proposition 4.6 of [HR05]
@@ -149,7 +150,8 @@ function(d, q, k)
         # The following matrices generate SU(k, q) x SU(d - k, q).
         for generatorOfSUSubspace in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(k, q), 
                                                                                    "U",
-                                                                                   standardFormSUk)) 
+                                                                                   standardFormSUk,
+                                                                                   F))
         do
             generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
@@ -164,7 +166,8 @@ function(d, q, k)
         od;
         for generatorOfSUComplement in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - k, q),
                                                                                      "U",
-                                                                                     standardFormSUdMinusk)) 
+                                                                                     standardFormSUdMinusk,
+                                                                                     F))
         do
             generator := IdentityMat(d, F);
             generator{[kHalf + 1..d - kHalf]}{[k / 2 + 1..d - kHalf]} := 
@@ -191,7 +194,8 @@ function(d, q, k)
         # The following matrices generate SU(k, q) x SU(d - k, q).
         for generatorOfSUSubspace in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(k, q), 
                                                                                    "U",
-                                                                                   standardFormSUk)) 
+                                                                                   standardFormSUk,
+                                                                                   F))
         do
             generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
@@ -216,7 +220,8 @@ function(d, q, k)
         od;
         for generatorOfSUComplement in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - k, q), 
                                                                                      "U",
-                                                                                     standardFormSUdMinusk)) 
+                                                                                     standardFormSUdMinusk,
+                                                                                     F))
         do
             generator := IdentityMat(d, F);
             generator{[kHalf + 1..dHalf]}{[kHalf + 1..dHalf]} := 
@@ -262,7 +267,8 @@ function(d, q, k)
         # The following matrices generate SU(k, q) x SU(d - k, q).
         for generatorOfSUSubspace in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(k, q), 
                                                                                    "U",
-                                                                                   standardFormSUk)) 
+                                                                                   standardFormSUk,
+                                                                                   F))
         do
             generator := IdentityMat(d, F);
             generator{[1..kHalf]}{[1..kHalf]} := 
@@ -310,7 +316,8 @@ function(d, q, k)
         od;
         for generatorOfSUComplement in GeneratorsOfGroup(ConjugateToSesquilinearForm(SU(d - k, q), 
                                                                                      "U",
-                                                                                     standardFormSUdMinusk)) 
+                                                                                     standardFormSUdMinusk,
+                                                                                     F))
         do
             generator := IdentityMat(d, F); 
             generator{[kHalf + 1..dHalf - 1]}{[kHalf + 1..dHalf - 1]} := 
@@ -384,7 +391,7 @@ function(d, q, k)
     result := MatrixGroupWithSize(F, generators, size);
     SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
 
-    return ConjugateToStandardForm(result, "U");
+    return ConjugateToStandardForm(result, "U", F);
 end);
 
 
@@ -452,7 +459,7 @@ function(d, q, k)
     result := MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
     SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 
@@ -499,7 +506,7 @@ function(d, q, k)
     result :=  MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
     SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
 
-    return ConjugateToStandardForm(result, "S");
+    return ConjugateToStandardForm(result, "S", field);
 end);
 
 # Construction as in Lemma 4.2 of [HR10]
@@ -661,11 +668,11 @@ function(epsilon, d, q, k)
     SetInvariantQuadraticFormFromMatrix(result, StandardOrthogonalForm(epsilon, d, q).Q);
 
     if epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", field);
     elif epsilon = 0 then
-        return ConjugateToStandardForm(result, "O");
+        return ConjugateToStandardForm(result, "O", field);
     else
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", field);
     fi;
 end);
 
@@ -841,11 +848,11 @@ function(epsilon, d, q, epsilon_0, k)
     SetInvariantQuadraticFormFromMatrix(result, Q);
 
     if epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", field);
     elif epsilon = 0 then
-        return ConjugateToStandardForm(result, "O");
+        return ConjugateToStandardForm(result, "O", field);
     else
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", field);
     fi;
 end);
 
@@ -882,7 +889,8 @@ function(epsilon, d, q)
     gens := [];
     for L in GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d - 2, q),
                                                            "S", 
-                                                           AntidiagonalMat(d - 2, field))) do
+                                                           AntidiagonalMat(d - 2, field),
+                                                           field)) do
         HStar := NullMat(d, d, field);
         HStar{[2..d - 1]}{[2..d - 1]} := L;
         N := Q + HStar * Q * TransposedMat(HStar);
@@ -954,8 +962,8 @@ function(epsilon, d, q)
     SetInvariantQuadraticFormFromMatrix(result, Q);
 
     if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+");
+        return ConjugateToStandardForm(result, "O+", field);
     else
-        return ConjugateToStandardForm(result, "O-");
+        return ConjugateToStandardForm(result, "O-", field);
     fi;
 end);

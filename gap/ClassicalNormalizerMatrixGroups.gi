@@ -12,7 +12,8 @@ function(d, q)
 
     AandB := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
                                                                        "S", 
-                                                                       standardForm)));
+                                                                       standardForm,
+                                                                       F)));
     gcd := Gcd(d, q - 1);
     # generates the center of SL(d, q)
     C := zeta ^ QuoInt(q - 1, gcd) * IdentityMat(d, F);
@@ -57,7 +58,7 @@ function(d, q)
     C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, F); # generates the center of SL(d, q)
     g := Gcd(q - 1, d);
     c := QuoInt(Gcd(q0 + 1, d) * (q - 1), Lcm(q0 + 1, QuoInt(q - 1, g)) * g);
-    SUWithIdentityForm := ConjugateToSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d));
+    SUWithIdentityForm := ConjugateToSesquilinearForm(SU(d, q0), "U", IdentityMatrix(GF(q0), d), F);
     SUGens := GeneratorsOfGroup(SUWithIdentityForm);
 
     gens := Concatenation(SUGens, [C]);
@@ -174,5 +175,5 @@ function(epsilon, d, q)
         ErrorNoReturn("<q> must be even");
     fi;
 
-    return ConjugateToStandardForm(SO(epsilon, d, q), "S");
+    return ConjugateToStandardForm(SO(epsilon, d, q), "S", GF(q));
 end);

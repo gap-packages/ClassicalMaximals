@@ -154,8 +154,8 @@ gap> TestMatrixGroup := function(args)
 >   size := args[3];
 >   G := MatrixGroup(F, [M]);
 >   GWithSize := MatrixGroupWithSize(F, [M], size);
->   return DefaultFieldOfMatrixGroup(G) = F
->          and DefaultFieldOfMatrixGroup(GWithSize) = F
+>   return Characteristic(DefaultFieldOfMatrixGroup(G)) = Characteristic(F)
+>          and Characteristic(DefaultFieldOfMatrixGroup(GWithSize)) = Characteristic(F)
 >          and Size(GWithSize) = size;
 > end;;
 gap> testsMatrixGroup := [[GF(3 ^ 2), Z(3) * IdentityMat(2, GF(3)), 37],

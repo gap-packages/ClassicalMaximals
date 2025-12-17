@@ -377,6 +377,8 @@ gap> Length(ClassicalMaximalsGeneric("U", 10, 2));
 14
 gap> Length(ClassicalMaximalsGeneric("U", 10, 3));
 18
+gap> Length(ClassicalMaximalsGeneric("U", 10, 17));
+18
 gap> Length(ClassicalMaximalsGeneric("U", 11, 2));
 12
 gap> Length(ClassicalMaximalsGeneric("U", 11, 3));
