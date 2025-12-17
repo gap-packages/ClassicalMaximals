@@ -52,7 +52,7 @@ DeclareGlobalFunction("RotateMat");
 #! The generators are stored as immutable matrices; over small fields
 #! (with at most 256 elements) this yields compressed matrices that
 #! store the base field, but not over larger fields.
-#! Consequently, the attribute <Ref Attr="DefaultFieldOfMatrixGroup"/> of
+#! Consequently, the attribute <Ref Attr="DefaultFieldOfMatrixGroup" BookName="Ref"/> of
 #! the resulting group is not necessarily equal to <A>F</A> and may
 #! in fact be a proper subfield when the entries lie in a smaller field.
 DeclareGlobalFunction("MatrixGroup");
