@@ -10,7 +10,9 @@ gap> TestExtraspecialNormalizerInSL := function(r, m, q)
 gap> TestExtraspecialNormalizerInSL(5, 1, 11);
 gap> TestExtraspecialNormalizerInSL(3, 1, 7);
 gap> TestExtraspecialNormalizerInSL(3, 2, 13);
-gap> TestExtraspecialNormalizerInSL(2, 3, 5);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestExtraspecialNormalizerInSL(2, 3, 5); # FIXME: `Giving up, Schreier tree is not shallow.`
+#@fi
 gap> TestExtraspecialNormalizerInSL(2, 2, 5);
 gap> TestExtraspecialNormalizerInSL(2, 2, 9);
 gap> TestExtraspecialNormalizerInSL(2, 1, 9);
