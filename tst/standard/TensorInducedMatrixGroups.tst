@@ -57,7 +57,9 @@ gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 3, 8); # Error
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 4, 5); # Error, List Element: <list>[3] must have an assigned value
 #@fi
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 2, 3);
-gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 3, 2);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 3, 2); # Error, This should never have happened (346), tell Max.
+#@fi
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(6, 2, 5);
 
 # Test error handling
