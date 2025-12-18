@@ -20,6 +20,7 @@ function(gramMatrix)
     return Q;
 end);
 
+# Note that if type = "U" then `field` must be GF(q^2) for a subgroup of GU(d,q)
 InstallGlobalFunction("ConjugateToSesquilinearForm",
 function(group, type, gramMatrix, field)
     local gapForm, newForm, baseChangeMatrix, formMatrix,
@@ -46,10 +47,6 @@ function(group, type, gramMatrix, field)
         gapForm := BilinearFormByMatrix(formMatrix, field);
         newForm := BilinearFormByMatrix(gramMatrix, field);
     elif type = "U" then
-        if IsOddInt(DegreeOverPrimeField(field)) then
-            q := Size(field);
-            field := GF(q ^ 2);
-        fi;
         formMatrix := UnitaryForm(group, field);
         if formMatrix = fail then
             ErrorNoReturn("No preserved unitary form found for <group>");
@@ -129,11 +126,7 @@ function(group, type, field)
     if type in ["S", "O", "O+", "O-"] then
         q := Size(field);
     else
-        if IsSquareInt(Size(field)) then
-            q := RootInt(Size(field));
-        else
-            q := Size(field);
-        fi;
+        q := Characteristic(field) ^ (DegreeOverPrimeField(field)/2);
     fi;
     
     # get standard GAP form
@@ -280,11 +273,7 @@ function(G, F)
     if not IsFinite(F) then
         ErrorNoReturn("The base field of <G> must be finite");
     fi;
-    if not IsEvenInt(DegreeOverPrimeField(F)) then
-        q := Size(F);
-    else
-        q := RootInt(Size(F));
-    fi;
+    q := Characteristic(F) ^ (DegreeOverPrimeField(F)/2);
 
     # Return stored sesquilinear form if it exists and is hermitian
     if HasInvariantSesquilinearForm(G) then
