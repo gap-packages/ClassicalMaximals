@@ -128,4 +128,52 @@ gap> StandardOrthogonalForm(0, 5, 4);
 Error, <d> must be even if <q> is even
 
 #
+gap> TestClassicalForms := function(G, field, type)
+>     local forms;
+>     forms := ClassicalForms(G, field);
+>     Assert(0, forms.formType = type);
+>     if type = "linear" then
+>         Assert(0, not forms.bilinearForm
+>                   and not forms.quadraticForm
+>                   and not forms.sesquilinearForm);
+>     elif type in ["orthogonalplus", "orthogonalminus", "orthogonalcircle"] then
+>         Assert(0, not forms.sesquilinearForm);
+>         SetInvariantBilinearForm(G, rec(matrix := forms.bilinearForm));
+>         SetInvariantQuadraticForm(G, rec(matrix := forms.quadraticForm));
+>         CheckBilinearForm(G);
+>         CheckQuadraticForm(G);
+>         if type = "orthogonalplus" then
+>             Assert(0, forms.sign = 1);
+>         elif type = "orthogonalminus" then
+>             Assert(0, forms.sign = -1);
+>         else
+>             Assert(0, forms.sign = 0);
+>         fi;
+>     elif type = "symplectic" then
+>         Assert(0, not forms.quadraticForm
+>                   and not forms.sesquilinearForm);
+>         SetInvariantBilinearForm(G, rec(matrix := forms.bilinearForm));
+>         CheckBilinearForm(G);
+>     elif type = "unitary" then
+>         Assert(0, not forms.bilinearForm
+>                   and not forms.quadraticForm);
+>         SetInvariantSesquilinearForm(G, rec(matrix := forms.sesquilinearForm));
+>         CheckSesquilinearForm(G, Characteristic(field)^(DegreeOverPrimeField(field)/2));
+>     else
+>         Error("invalid form type");
+>     fi;
+> end;;
+gap> TestClassicalForms(SL(3, 5), GF(5), "linear");
+gap> TestClassicalForms(SL(3, 25), GF(25), "linear");
+gap> TestClassicalForms(SO(+1, 8, 9), GF(9), "orthogonalplus");
+gap> TestClassicalForms(SO(-1, 8, 9), GF(9), "orthogonalminus");
+gap> TestClassicalForms(SO(0, 7, 9), GF(9), "orthogonalcircle");
+gap> TestClassicalForms(SO(+1, 4, 2), GF(2), "orthogonalplus");
+gap> TestClassicalForms(SO(-1, 4, 2), GF(2), "orthogonalminus");
+gap> TestClassicalForms(Sp(6, 7), GF(7), "symplectic");
+gap> TestClassicalForms(Sp(6, 2), GF(2), "symplectic");
+gap> TestClassicalForms(SU(4, 3), GF(3^2), "unitary");
+gap> TestClassicalForms(SU(4, 2), GF(2^2), "unitary");
+
+#
 gap> STOP_TEST("Forms.tst", 0);

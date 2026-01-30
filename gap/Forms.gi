@@ -469,3 +469,59 @@ function(G, F)
 
     return formMatrix;
 end);
+
+InstallGlobalFunction("ClassicalForms",
+function(G, field)
+    local M, forms, form, formq, sign, type;
+    
+    M := GModuleByMats(GeneratorsOfGroup(G), field);
+    if not MTX.IsAbsolutelyIrreducible(M) then
+        ErrorNoReturn("ClassicalForms: <G> must be irreducible");
+    fi;
+    forms := rec();
+    forms.formType := "linear";
+    forms.bilinearForm := false;
+    forms.quadraticForm := false;
+    forms.sesquilinearForm := false;
+
+    form := SymmetricBilinearForm(G, field);
+    if form <> fail then
+        forms.bilinearForm := form;
+        formq := QuadraticForm(G, field);
+        if formq = fail then
+            # should only happen in characteristic 2
+            forms.formType := "symplectic";
+            return forms;
+        else
+            sign := MTX.OrthogonalSign(M);
+            if sign = 1 then
+                type := "orthogonalplus";
+            elif sign = -1 then
+                type := "orthogonalminus";
+            elif sign = 0 then
+                type := "orthogonalcircle";
+            else
+                ErrorNoReturn("ClassicalForms: sign determination failed");
+            fi;
+            forms.formType := type;
+            forms.quadraticForm := formq;
+            forms.sign := sign;
+            return forms;
+        fi;
+    fi;
+    form := SymplecticForm(G, field);
+    if form <> fail then
+        forms.formType := "symplectic";
+        forms.bilinearForm := form;
+        return forms;
+    fi;
+    if IsEvenInt(DegreeOverPrimeField(field)) then
+        form := UnitaryForm(G, field);
+        if form <> fail then
+            forms.formType := "unitary";
+            forms.sesquilinearForm := form;
+            return forms;
+        fi;
+    fi;
+    return forms;
+end);
