@@ -274,15 +274,14 @@ function(m, t, q)
     D := NormSpMinusSp(m, q);
     Add(gens, KroneckerProduct(KroneckerProduct(D, Inverse(D)), I));
 
-    # Size according to the aforementioned proposition, but we add a
-    # factor of 2 because we want the size of G, not of G / Z(G)
-    result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
-
     # Calculate the form preserved by the constructed group
     standardForm := AntidiagonalHalfOneMat(m, field);
     formMatrix := LiftFormsToTensorProduct(ListWithIdenticalEntries(t, standardForm), field);
-    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := field));
 
+    # Size according to the aforementioned proposition, but we add a
+    # factor of 2 because we want the size of G, not of G / Z(G)
+    result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := field));
     return ConjugateToStandardForm(result, "S", field);
 end);
 
