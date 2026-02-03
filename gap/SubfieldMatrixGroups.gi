@@ -67,7 +67,7 @@ function(d, p, e, f)
 
     if c = Gcd(p ^ f + 1, d) then
         result := MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
-        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
         return ConjugateToStandardForm(result, "U", F);
     fi;
 
@@ -86,7 +86,7 @@ function(d, p, e, f)
     X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, F);
 
     result := MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
     return ConjugateToStandardForm(result, "U", F);
 end);
 
@@ -131,11 +131,11 @@ function(d, q)
         # we conjugate it to preserve the standard unitary form given by
         # Antidiag(1, ..., 1).
         SetInvariantSesquilinearForm(result, 
-                                     rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form));
+                                     rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form, baseDomain := F));
     else
         # The result preserves the unitary form given by
         # Antidiag(1, ..., 1).
-        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
     fi;
     
     return ConjugateToStandardForm(result, "U", F);
@@ -174,7 +174,7 @@ function(epsilon, d, q)
                                                      GF(q));
         Append(generators, GeneratorsOfGroup(SOChangedForm));
         result := MatrixGroupWithSize(F, generators, size);
-        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
         result := ConjugateToStandardForm(result, "U", F);
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
@@ -233,7 +233,7 @@ function(epsilon, d, q)
             Add(generators, W);
             
             result := MatrixGroupWithSize(F, generators, size);
-            SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+            SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
             result := ConjugateToStandardForm(result, "U", F);
 
         elif epsilon = -1 then
@@ -262,8 +262,6 @@ function(epsilon, d, q)
             fi;
             Add(generators, W);
 
-            result := MatrixGroupWithSize(F, generators, size);
-
             # We still have to change the preserved unitary form to the
             # standard GAP unitary form Antidiag(1, ..., 1)
             if IsEvenInt(d * (q - 1) / 4) then
@@ -277,7 +275,8 @@ function(epsilon, d, q)
                 form := IdentityMat(d, F);
             fi;
 
-            SetInvariantSesquilinearForm(result, rec(matrix := form));
+            result := MatrixGroupWithSize(F, generators, size);
+            SetInvariantSesquilinearForm(result, rec(matrix := form, baseDomain := F));
             result := ConjugateToStandardForm(result, "U", F);
         fi;
     fi;
@@ -330,7 +329,7 @@ function (d, p, e, f)
         result := MatrixGroupWithSize(field, gens, SizeSp(d, q0) * 2);
     fi;
 
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
 
     return ConjugateToStandardForm(result, "S", field);
 end);
@@ -435,6 +434,6 @@ function (epsilon, d, p, e, f, epsilon_0)
     gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F, GF(q0))));
     Add(gens, A);
     result := MatrixGroupWithSize(field, gens, SizeSO(epsilon_0, d, q0) * 2);
-    SetInvariantBilinearForm(result, rec(matrix := F));
+    SetInvariantBilinearForm(result, rec(matrix := F, baseDomain := field));
     return ConjugateToStandardForm(result, "O+", field);
 end);

@@ -120,7 +120,7 @@ function(d, q, k)
     fi;
 
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
     return ConjugateToStandardForm(result, "U", F);
 end);
 
@@ -389,8 +389,7 @@ function(d, q, k)
     size := SizeSU(k, q) * SizeSU(d - k, q) * (q + 1);
 
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
-
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
     return ConjugateToStandardForm(result, "U", F);
 end);
 
@@ -457,7 +456,7 @@ function(d, q, k)
 
     # Size according to Table 2.3 of [BHR13]
     result := MatrixGroupWithSize(field, gens, q ^ (k * d + QuoInt(k - 3 * k * k, 2)) * SizeGL(k, q) * SizeSp(d - 2 * k, q));
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
 
     return ConjugateToStandardForm(result, "S", field);
 end);
@@ -504,7 +503,7 @@ function(d, q, k)
     # Size according to Table 2.3 of [BHR13], except we replace
     # k with 2k because [BHR13] seems to have this wrong.
     result :=  MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field)));
+    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
 
     return ConjugateToStandardForm(result, "S", field);
 end);
@@ -665,7 +664,7 @@ function(epsilon, d, q, k)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantQuadraticFormFromMatrix(result, StandardOrthogonalForm(epsilon, d, q).Q);
+    CM_SetInvariantQuadraticFormFromMatrix(result, StandardOrthogonalForm(epsilon, d, q).Q, field);
 
     if epsilon = -1 then
         return ConjugateToStandardForm(result, "O-", field);
@@ -845,7 +844,7 @@ function(epsilon, d, q, epsilon_0, k)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantQuadraticFormFromMatrix(result, Q);
+    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
 
     if epsilon = -1 then
         return ConjugateToStandardForm(result, "O-", field);
@@ -959,7 +958,7 @@ function(epsilon, d, q)
 
     # Size according to Table 2.3 of [BHR13]
     result := MatrixGroupWithSize(field, gens, SizeSp(d - 2, q));
-    SetInvariantQuadraticFormFromMatrix(result, Q);
+    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
 
     if epsilon = 1 then
         return ConjugateToStandardForm(result, "O+", field);

@@ -1,3 +1,10 @@
+BindGlobal( "CM_SetInvariantQuadraticFormFromMatrix", function( g, mat, F )
+    SetInvariantQuadraticForm( g, rec( matrix:= mat, baseDomain:= F ) );
+    SetInvariantBilinearForm( g, rec( matrix:= mat+TransposedMat(mat),
+                                      baseDomain:= F ) );
+end );
+
+
 # Compute the Gram matrix of the quadratic form corresponding to the bilinear
 # form described by <gramMatrix> in odd characteristic.
 BindGlobal("BilinearToQuadraticForm",
@@ -89,13 +96,13 @@ function(group, type, gramMatrix, field)
     fi;
 
     if type = "S" then
-        SetInvariantBilinearForm(result, rec(matrix := gramMatrix));
+        SetInvariantBilinearForm(result, rec(matrix := gramMatrix, baseDomain := field));
     elif type = "O-B" then
-        SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(gramMatrix));
+        CM_SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(gramMatrix), field);
     elif type = "U" then
-        SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix));
+        SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix, baseDomain := field));
     else
-        SetInvariantQuadraticFormFromMatrix(result, gramMatrix);
+        CM_SetInvariantQuadraticFormFromMatrix(result, gramMatrix, field);
     fi;
 
     return result;

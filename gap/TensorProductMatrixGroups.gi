@@ -91,8 +91,7 @@ function(d1, d2, q)
     # Size according to Table 2.7 in [BHR13]
     size := SizeSU(d1, q) * SizeSU(d2, q) * Gcd(q + 1, d1, d2);
     result := MatrixGroupWithSize(F, generators, size);
-    # change back fixed form into standard GAP form Antidiag(1, ..., 1)
-    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F)));
+    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F), baseDomain := F));
     return ConjugateToStandardForm(result, "U", F);
 end);
 
@@ -173,7 +172,7 @@ function(epsilon, d1, d2, q)
     
     formMatrix := LiftFormsToTensorProduct([standardSymplecticForm, standardBilinearForm], field);
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantBilinearForm(result, rec(matrix := formMatrix));
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := field));
     return ConjugateToStandardForm(result, "S", field);
 end);
 
@@ -406,7 +405,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     od;
 
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(F));
+    CM_SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(F), field);
 
     if epsilon = -1 then
         return ConjugateToStandardForm(result, "O-", field);
@@ -463,7 +462,7 @@ function(d1, d2, q)
     Q{[m + 1..d]}{[1..m]} := NullMat(m, m, field);
 
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantQuadraticFormFromMatrix(result, Q);
+    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
 
     return ConjugateToStandardForm(result, "O+", field);
 end);
