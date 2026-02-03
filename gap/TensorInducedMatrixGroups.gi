@@ -245,7 +245,7 @@ function(m, t, q)
     fi;
 
     result := MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F)));
+    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
     return ConjugateToStandardForm(result, "U", F);
 end);
 
@@ -281,7 +281,7 @@ function(m, t, q)
     # Calculate the form preserved by the constructed group
     standardForm := AntidiagonalHalfOneMat(m, field);
     formMatrix := LiftFormsToTensorProduct(ListWithIdenticalEntries(t, standardForm), field);
-    SetInvariantBilinearForm(result, rec(matrix := formMatrix));
+    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := field));
 
     return ConjugateToStandardForm(result, "S", field);
 end);
@@ -363,7 +363,7 @@ function(m, t, q)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantQuadraticFormFromMatrix(result, Q);
+    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
     return ConjugateToStandardForm(result, "O+", field);
 end);
 
@@ -436,7 +436,7 @@ function(m, t, q)
 
     # Size according to Table 2.10 of [BHR13]
     result := MatrixGroupWithSize(field, gens, 2 ^ (t - 1) * SizeOmega(0, m, q) ^ t * Factorial(t));
-    SetInvariantQuadraticFormFromMatrix(result, F / 2);
+    CM_SetInvariantQuadraticFormFromMatrix(result, F / 2, field);
     return ConjugateToStandardForm(result, "O", field);
 end);
 
@@ -566,6 +566,6 @@ function(epsilon, m, t, q)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    SetInvariantQuadraticFormFromMatrix(result, F / 2);
+    CM_SetInvariantQuadraticFormFromMatrix(result, F / 2, field);
     return ConjugateToStandardForm(result, "O+", field);
 end);
