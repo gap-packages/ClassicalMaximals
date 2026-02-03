@@ -258,19 +258,13 @@ end);
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 BindGlobal("OddExtraspecialNormalizerInSL",
-function(r, m, q, type...)
+function(r, m, q, type)
     local F, d, listOfUi, listOfVi, V, generatorsOfNormalizerInGL, scalarMultiplierUi, 
     scalarMultiplierVi, generators, generatingScalar, size, zeta, rootOfq;
 
     F := GF(q);
     d := r ^ m;
     zeta := PrimitiveElement(F);
-
-    if Length(type) = 0 then
-        type := "L";
-    else
-        type := type[1];
-    fi;
 
     generatorsOfNormalizerInGL := OddExtraspecialNormalizerInGL(r, m, q, "U");
     listOfUi := generatorsOfNormalizerInGL.listOfUi;
@@ -379,19 +373,13 @@ end);
 # If this function is called in the course of the computation of subgroups of
 # SU(d, q) then the argument q of the function is actually q ^ 2.
 BindGlobal("SymplecticTypeNormalizerInSL",
-function(m, q, type...)
+function(m, q, type)
     local F, generatorsOfNormalizerInGL, d, listOfUi, listOfVi, listOfWi,
     generatingScalar, scalarMultiplierVi, i, scalarMultiplierUiAndWi, p, e, 
     factorization, generators, size, zeta, U1InGL, rootOfq;
     
     if (q - 1) mod 4 <> 0 or m < 2 then
         ErrorNoReturn("<q> must be 1 mod 4 and <m> must be at least 2");
-    fi;
-
-    if Length(type) = 0 then
-        type := "L";
-    else
-        type := type[1];
     fi;
 
     F := GF(q);
@@ -535,16 +523,10 @@ end);
 # Construction as in Proposition 9.5 of [HR05]
 # Only built for m = 1 if type = "L"
 BindGlobal("Extraspecial2MinusTypeNormalizerInSL",
-function(m, q, type...)
+function(m, q, type)
     local F, generatorsOfNormalizerInGL, generatingScalar, p, e, V1, U1,
     factorization, generators, size, scalarMultiplier, zeta, listOfVi, listOfWi;
     
-    if Length(type) = 0 then
-        type := "L";
-    else
-        type := type[1];
-    fi;
-
     if type = "L" and m > 1 then
         ErrorNoReturn("If <type> = 'L', we must have <m> = 1");
     fi;
@@ -700,13 +682,13 @@ end);
 BindGlobal("ExtraspecialNormalizerInSL",
 function(r, m, q)
     if IsOddInt(r) then
-        return OddExtraspecialNormalizerInSL(r, m, q);
+        return OddExtraspecialNormalizerInSL(r, m, q, "L");
     elif m >= 2 then
         # r = 2 and m >= 2
-        return SymplecticTypeNormalizerInSL(m, q);
+        return SymplecticTypeNormalizerInSL(m, q, "L");
     else
         # r = 2 and m = 1
-        return Extraspecial2MinusTypeNormalizerInSL(m, q);
+        return Extraspecial2MinusTypeNormalizerInSL(m, q, "L");
     fi;
 end);
 
