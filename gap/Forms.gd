@@ -1,11 +1,11 @@
 DeclareGlobalFunction("ConjugateToSesquilinearForm");
 DeclareGlobalFunction("ConjugateToStandardForm");
 DeclareGlobalFunction("StandardOrthogonalForm");
-DeclareGlobalFunction("UnitaryForm");
-DeclareGlobalFunction("BilinearForm");
-DeclareGlobalFunction("SymplecticForm");
-DeclareGlobalFunction("SymmetricBilinearForm");
-DeclareGlobalFunction("QuadraticForm");
+DeclareGlobalFunction("CM_UnitaryForm");
+DeclareGlobalFunction("CM_BilinearForm");
+DeclareGlobalFunction("CM_SymplecticForm");
+DeclareGlobalFunction("CM_SymmetricBilinearForm");
+DeclareGlobalFunction("CM_QuadraticForm");
 
 #! @Chapter Group Recognition
 #! @Section Classical Forms
@@ -46,4 +46,4 @@ DeclareGlobalFunction("QuadraticForm");
 #!  * <C>"unitary"</C>: <A>G</A> fixes a unitary form. The form matrix is given in
 #!    <C>sesquilinearForm</C>.
 #!  * <C>"linear"</C>: <A>G</A> does not fix any classical form.
-DeclareGlobalFunction("ClassicalForms");
+DeclareGlobalFunction("CM_ClassicalForms");

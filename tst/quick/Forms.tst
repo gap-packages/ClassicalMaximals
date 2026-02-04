@@ -1,7 +1,7 @@
 gap> START_TEST("Forms.tst");
 
 #
-gap> UnitaryForm(SU(4, 3), GF(3^2)) = InvariantSesquilinearForm(SU(4, 3)).matrix;
+gap> CM_UnitaryForm(SU(4, 3), GF(3^2)) = InvariantSesquilinearForm(SU(4, 3)).matrix;
 true
 gap> G := Group([ [ [ Z(79^2)^4792, Z(79^2)^2120, Z(79^2)^3243, Z(79^2)^5635, Z(79^2)^651, Z(79^2)^4635, Z(79^2)^2274, Z(79^2)^952 ],
 >   [ Z(79^2)^3905, Z(79^2)^3703, Z(79^2)^4458, Z(79^2)^2635, Z(79^2)^3474, Z(79^2)^4535, Z(79^2)^1707, Z(79^2)^2019 ],
@@ -19,11 +19,11 @@ gap> G := Group([ [ [ Z(79^2)^4792, Z(79^2)^2120, Z(79^2)^3243, Z(79^2)^5635, Z(
 >   [ Z(79^2)^4052, Z(79^2)^4032, Z(79^2)^5337, Z(79^2)^1838, Z(79^2)^2695, Z(79^2)^3927, Z(79^2)^1585, Z(79^2)^4590 ],
 >   [ Z(79^2)^5990, Z(79^2)^5607, Z(79^2)^3478, Z(79)^59, Z(79^2)^2933, Z(79^2)^2393, Z(79^2)^4820, Z(79^2)^768 ],
 >   [ Z(79^2)^1228, Z(79^2)^4621, Z(79^2)^1975, Z(79^2)^799, Z(79^2)^4455, Z(79^2)^2716, Z(79^2)^5986, Z(79^2)^4359 ] ] ]);;
-gap> M := UnitaryForm(G, GF(79^2));;  # for this group, the unitary form was not reliably found
+gap> M := CM_UnitaryForm(G, GF(79^2));;  # for this group, the unitary form was not reliably found
 gap> Assert(0, ForAll(GeneratorsOfGroup(G), g -> g * M * HermitianConjugate(g, 79) = M));
-gap> SymplecticForm(Sp(6, 7), GF(7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
+gap> CM_SymplecticForm(Sp(6, 7), GF(7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
 true
-gap> SymmetricBilinearForm(SO(5, 9), GF(9)) = InvariantBilinearForm(SO(5, 9)).matrix;
+gap> CM_SymmetricBilinearForm(SO(5, 9), GF(9)) = InvariantBilinearForm(SO(5, 9)).matrix;
 true
 gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)), GF(4));
 Error, No preserved unitary form found for <group>
@@ -104,7 +104,7 @@ gap> TestFormChangingFunctions([1, 5, "O", IdentityMat(1, GF(5))]);
 gap> TestFormChangingFunctions([1, 5, "O", Z(5) * IdentityMat(1, GF(5))]);
 gap> TestFormChangingFunctions([2, 2, "O-", Z(2) ^ 0 * [[1, 1], [0, 1]]]);
 gap> TestFormChangingFunctions([6, 4, "O+", AntidiagonalMat(Z(4) ^ 0 * [1, 1, 1, 0, 0, 0], GF(4))]);
-gap> Q := QuadraticForm(Group(GeneratorsOfGroup(SO(5, 5))), GF(5));;
+gap> Q := CM_QuadraticForm(Group(GeneratorsOfGroup(SO(5, 5))), GF(5));;
 gap> Q / Q[5, 5] = InvariantQuadraticForm(SO(5, 5)).matrix;
 true
 gap> TestStandardOrthogonalForm := function(epsilon, d, q)
@@ -130,7 +130,7 @@ Error, <d> must be even if <q> is even
 #
 gap> TestClassicalForms := function(G, field, type)
 >     local forms;
->     forms := ClassicalForms(G, field);
+>     forms := CM_ClassicalForms(G, field);
 >     Assert(0, forms.formType = type);
 >     if type = "linear" then
 >         Assert(0, not forms.bilinearForm
@@ -174,6 +174,10 @@ gap> TestClassicalForms(Sp(6, 7), GF(7), "symplectic");
 gap> TestClassicalForms(Sp(6, 2), GF(2), "symplectic");
 gap> TestClassicalForms(SU(4, 3), GF(3^2), "unitary");
 gap> TestClassicalForms(SU(4, 2), GF(2^2), "unitary");
+
+# Test error handling
+gap> CM_ClassicalForms(SO(0, 3, 2), GF(2));
+Error, CM_ClassicalForms: <G> must be irreducible
 
 #
 gap> STOP_TEST("Forms.tst", 0);

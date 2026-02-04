@@ -42,7 +42,7 @@ function(group, type, gramMatrix, field)
         else
             broadType := "O";
         fi;
-        formMatrix := BilinearForm(group, broadType, field);
+        formMatrix := CM_BilinearForm(group, broadType, field);
         if formMatrix = fail then
             if type = "S" then
                 ErrorNoReturn("No preserved symplectic form found for <group>");
@@ -54,7 +54,7 @@ function(group, type, gramMatrix, field)
         gapForm := BilinearFormByMatrix(formMatrix, field);
         newForm := BilinearFormByMatrix(gramMatrix, field);
     elif type = "U" then
-        formMatrix := UnitaryForm(group, field);
+        formMatrix := CM_UnitaryForm(group, field);
         if formMatrix = fail then
             ErrorNoReturn("No preserved unitary form found for <group>");
         fi;
@@ -62,7 +62,7 @@ function(group, type, gramMatrix, field)
         newForm := HermitianFormByMatrix(gramMatrix, field);
     else
         # This is the case type = "O-Q"
-        formMatrix := QuadraticForm(group, field);
+        formMatrix := CM_QuadraticForm(group, field);
         if formMatrix = fail then
             ErrorNoReturn("No preserved quadratic form found for <group>");
         fi;
@@ -261,7 +261,7 @@ end);
 #
 # We use this function instead of PreservedSesquilinearForms from the Forms
 # package since PreservedSesquilinearForms seems to be buggy and unreliable. 
-InstallGlobalFunction("UnitaryForm",
+InstallGlobalFunction("CM_UnitaryForm",
 function(G, F)
     local d, q, M, inverseHermitianConjugateM, formMatrix, row, col, x,
     scalar;
@@ -313,9 +313,9 @@ function(G, F)
 
             if IsZero(formMatrix[col, row]) or scalar = fail then
                 if not MTX.IsAbsolutelyIrreducible(M) then
-                    ErrorNoReturn("UnitaryForm failed - group is not absolutely irreducible");
+                    ErrorNoReturn("CM_UnitaryForm failed - group is not absolutely irreducible");
                 fi;
-                ErrorNoReturn("RootFFE failed in UnitaryForm");
+                ErrorNoReturn("RootFFE failed in CM_UnitaryForm");
             fi;
 
             # make formMatrix hermitian
@@ -329,7 +329,7 @@ function(G, F)
         fi;
 
         if formMatrix <> HermitianConjugate(formMatrix, q) and not MTX.IsAbsolutelyIrreducible(M) then
-            ErrorNoReturn("UnitaryForm failed - group is not absolutely irreducible");
+            ErrorNoReturn("CM_UnitaryForm failed - group is not absolutely irreducible");
         fi;
 
         return ImmutableMatrix(F, formMatrix);
@@ -345,8 +345,8 @@ end);
 #
 # We use this function instead of PreservedBilinearForms form the Forms package
 # since PreservedBilinearForms seems to be buggy and unreliable (see also
-# comment above UnitaryForm).
-InstallGlobalFunction("BilinearForm",
+# comment above CM_UnitaryForm).
+InstallGlobalFunction("CM_BilinearForm",
 function(G, type, F)
     local M, inverseTransposeM, counter, formMatrix, condition, x;
 
@@ -372,7 +372,7 @@ function(G, type, F)
     M := GModuleByMats(GeneratorsOfGroup(G), F);
 
     if not MTX.IsIrreducible(M) then
-        ErrorNoReturn("BilinearForm failed - group is not irreducible");
+        ErrorNoReturn("CM_BilinearForm failed - group is not irreducible");
     fi;
 
     # An element A of G acts as A ^ (-T) in MTX.DualModule(M) 
@@ -398,24 +398,24 @@ function(G, type, F)
             return ImmutableMatrix(F, formMatrix);
         fi;
         if not MTX.IsAbsolutelyIrreducible(M) then
-            ErrorNoReturn("BilinearForm failed - group is not absolutely irreducible");
+            ErrorNoReturn("CM_BilinearForm failed - group is not absolutely irreducible");
         fi;
     fi;
 
     return fail;
 end);
 
-InstallGlobalFunction("SymplecticForm",
+InstallGlobalFunction("CM_SymplecticForm",
 function(G, F)
-    return BilinearForm(G, "S", F);
+    return CM_BilinearForm(G, "S", F);
 end);
 
-InstallGlobalFunction("SymmetricBilinearForm",
+InstallGlobalFunction("CM_SymmetricBilinearForm",
 function(G, F)
-    return BilinearForm(G, "O", F);
+    return CM_BilinearForm(G, "O", F);
 end);
 
-InstallGlobalFunction("QuadraticForm",
+InstallGlobalFunction("CM_QuadraticForm",
 function(G, F)
     local d, formMatrix, polarFormMatrix, i, g, RightSideForLinSys,
     MatrixForLinSys, x;
@@ -432,7 +432,7 @@ function(G, F)
 
     # We first look for an invariant symmetric bilinear form of G, which will
     # be the polar form of the desired quadratic form
-    polarFormMatrix := SymmetricBilinearForm(G, F);
+    polarFormMatrix := CM_SymmetricBilinearForm(G, F);
     # The Gram matrix formMatrix of the quadratic form is upper triangular and
     # polarFormMatrix = formMatrix + formMatrix ^ T, so the entries above the
     # main diagonal of polarFormMatrix and formMatrix must be the same
@@ -470,13 +470,13 @@ function(G, F)
     return formMatrix;
 end);
 
-InstallGlobalFunction("ClassicalForms",
+InstallGlobalFunction("CM_ClassicalForms",
 function(G, field)
     local M, forms, form, formq, sign, type;
     
     M := GModuleByMats(GeneratorsOfGroup(G), field);
     if not MTX.IsAbsolutelyIrreducible(M) then
-        ErrorNoReturn("ClassicalForms: <G> must be irreducible");
+        ErrorNoReturn("CM_ClassicalForms: <G> must be irreducible");
     fi;
     forms := rec();
     forms.formType := "linear";
@@ -484,24 +484,23 @@ function(G, field)
     forms.quadraticForm := false;
     forms.sesquilinearForm := false;
 
-    form := SymmetricBilinearForm(G, field);
+    form := CM_SymmetricBilinearForm(G, field);
     if form <> fail then
         forms.bilinearForm := form;
-        formq := QuadraticForm(G, field);
+        formq := CM_QuadraticForm(G, field);
         if formq = fail then
             # should only happen in characteristic 2
             forms.formType := "symplectic";
             return forms;
         else
             sign := MTX.OrthogonalSign(M);
+            Assert(0, sign in [-1, 0, 1]);
             if sign = 1 then
                 type := "orthogonalplus";
             elif sign = -1 then
                 type := "orthogonalminus";
-            elif sign = 0 then
-                type := "orthogonalcircle";
             else
-                ErrorNoReturn("ClassicalForms: sign determination failed");
+                type := "orthogonalcircle";
             fi;
             forms.formType := type;
             forms.quadraticForm := formq;
@@ -509,14 +508,14 @@ function(G, field)
             return forms;
         fi;
     fi;
-    form := SymplecticForm(G, field);
+    form := CM_SymplecticForm(G, field);
     if form <> fail then
         forms.formType := "symplectic";
         forms.bilinearForm := form;
         return forms;
     fi;
     if IsEvenInt(DegreeOverPrimeField(field)) then
-        form := UnitaryForm(G, field);
+        form := CM_UnitaryForm(G, field);
         if form <> fail then
             forms.formType := "unitary";
             forms.sesquilinearForm := form;
