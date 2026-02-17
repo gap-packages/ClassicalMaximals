@@ -72,6 +72,7 @@ function(group, type, gramMatrix, field)
     if gapForm = newForm then
         # nothing to be done
         result := group;
+        result!.baseChangeMatrix := IdentityMat(d, field);
     # The Forms package has a bug for d = 1 so we need to make this exception
     elif d <> 1 then
         # the following if condition can only ever be fulfilled if <group> is an
@@ -83,6 +84,7 @@ function(group, type, gramMatrix, field)
         fi;
         baseChangeMatrix := BaseChangeToCanonical(gapForm)^-1 * BaseChangeToCanonical(newForm);
         result := MatrixGroup(field, List(GeneratorsOfGroup(group), g -> g ^ baseChangeMatrix));
+        result!.baseChangeMatrix := baseChangeMatrix;
 
         # Set useful attributes
         UseIsomorphismRelation(group, result);
@@ -93,6 +95,7 @@ function(group, type, gramMatrix, field)
                           " form described by the Gram matrix <gramMatrix>.");
         fi;
         result := group;
+        result!.baseChangeMatrix := IdentityMat(d, field);
     fi;
 
     if type = "S" then

@@ -7,3 +7,4 @@
 ReadPackage( "ClassicalMaximals", "gap/ClassicalMaximals.gd");
 ReadPackage( "ClassicalMaximals", "gap/Utils.gd");
 ReadPackage( "ClassicalMaximals", "gap/Forms.gd");
+ReadPackage( "ClassicalMaximals", "gap/AlmostSimpleCrossCharacteristic.gd");

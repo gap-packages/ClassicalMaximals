@@ -13,4 +13,5 @@ ReadPackage( "ClassicalMaximals", "gap/ExtraspecialNormalizerMatrixGroups.gi");
 ReadPackage( "ClassicalMaximals", "gap/TensorProductMatrixGroups.gi");
 ReadPackage( "ClassicalMaximals", "gap/TensorInducedMatrixGroups.gi");
 ReadPackage( "ClassicalMaximals", "gap/ClassicalNormalizerMatrixGroups.gi");
+ReadPackage( "ClassicalMaximals", "gap/AlmostSimpleCrossCharacteristic.gi");
 ReadPackage( "ClassicalMaximals", "gap/ClassicalMaximals.gi");

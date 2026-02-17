@@ -813,3 +813,13 @@ function(F, gens, size)
     SetSize(result, size);
     return result;
 end);
+
+InstallGlobalFunction("EntrywisePowerMat",
+function(A, q)
+    return ApplyFunctionToEntries(A, x -> x^q);
+end);
+
+InstallGlobalFunction("CM_InOmega",
+function(g, d, q, sign)
+    return IsOne(FancySpinorNorm(InvariantBilinearForm(Omega(sign, d, q)).matrix, GF(q), g));
+end);
