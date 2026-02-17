@@ -194,7 +194,7 @@ gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,31 : novelties:=true, all:=fals
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,13^2 : novelties:=true);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,13^2 : novelties:=true, all:=false);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,13 : all:=false);  # L2_23 (#374)
+gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,13 : all:=false);  # Have n points (but recog #374 solved)
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,31 : all:=false);  # Have n points
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,49 : all:=false);  # SLCR.FindGoodElement
 #@fi
