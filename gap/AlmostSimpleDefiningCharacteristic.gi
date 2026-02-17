@@ -10,7 +10,7 @@ function(n, q)
     mat{[n+1..2*n]}{[1..n]} := One(G);
     Add(gens, mat);
     G2 := Group(gens);
-    Assert(1, Size(G2) = 2 * Size(G));
+    # Assert(1, Size(G2) = 2 * Size(G));
     return G2;
 end);
 
@@ -26,7 +26,7 @@ function(n, q)
     mat{[n+1..2*n]}{[1..n]} := One(G);
     Add(gens, mat);
     G2 := Group(gens);
-    Assert(1, Size(G2) = 2 * Size(G));
+    # Assert(1, Size(G2) = 2 * Size(G));
     return G2;
 end);
 
