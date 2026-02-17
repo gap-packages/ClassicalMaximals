@@ -37,9 +37,9 @@ end);
 # TODO this function should most likely be revised (especially the use of
 # SetFieldOfMatrixGroup) and carefully documented.
 InstallGlobalFunction("CM_OverSmallerField",
-function(M, G, F)
+function(M, G)
     local b, H;
-    b := RECOG.BaseChangeForSmallestPossibleField(G, M, F);
+    b := RECOG.BaseChangeForSmallestPossibleField(G, M);
     H := MatrixGroup(b.field, b.newgens);
     SetFieldOfMatrixGroup(H, b.field);
     return H;
@@ -207,7 +207,7 @@ function(q)
     u := PermutationMat((2,3,5)(4,7,6), 8, GF(q^3));
     # induces field automorphism
     H := GroupByGenerators(Concatenation(MTX.Generators(T), [u]));
-    G := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^3)), H, GF(q^3));
+    G := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^3)), H);
     Assert(0, Size(FieldOfMatrixGroup(G)) = q);
     G := ConjugateToStandardFormAutoType(G, GF(q));
     if normaliser then
@@ -275,7 +275,7 @@ function(q)
     C := List(MTX.CollectedFactors(T), c -> c[1]);
     M8 := First(C, c -> MTX.Dimension(c) = 8);
     G8 := Group(MTX.Generators(M8));
-    G8q := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(G8), GF(q^2)), G8, GF(q^2));
+    G8q := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(G8), GF(q^2)), G8);
     Assert(0, Size(FieldOfMatrixGroup(G8q)) = q);
     if q mod 3 = 2 then
         G8q := ConjugateToStandardForm(G8q, "O+", GF(q));
@@ -323,7 +323,7 @@ function(q)
     u := PermutationMat((2,3), 4, GF(q^2));
     # induces field automorphism
     H := GroupByGenerators(Concatenation(MTX.Generators(T), [u]));
-    G := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H, GF(q^2));
+    G := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H);
     Assert(0, Size(FieldOfMatrixGroup(G)) = q);
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
     T := TensorProductGModule(M, M);
@@ -388,7 +388,7 @@ function(q)
     u := PermutationMat((2,4)(3,7)(6,8), 9, GF(q^2));
     # induces field automorphism
     H := GroupByGenerators(Concatenation(MTX.Generators(T), [u]));
-    G := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H, GF(q^2));
+    G := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H);
     Assert(0, Size(FieldOfMatrixGroup(G)) = q);
     # adjust G,4 to have determinant 1
     if IsOne(DeterminantMat(G.4)) then
