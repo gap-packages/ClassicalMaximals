@@ -16,6 +16,10 @@ function(S, C, r)
     return List([0..r - 1], i -> S ^ (C ^ i));
 end);
 
+# TODO This needs to be moved to a more suitable location.
+BindGlobal("CM_c9lib",
+DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
+
 InstallGlobalFunction(ClassicalMaximalsGeneric,
 function(type, n, q, classes...)
     if Length(classes) = 0 then
