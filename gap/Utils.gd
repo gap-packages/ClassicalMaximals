@@ -74,3 +74,6 @@ DeclareGlobalFunction("SizeGU");
 DeclareGlobalFunction("SizeGO");
 DeclareGlobalFunction("SizeSO");
 DeclareGlobalFunction("SizeOmega");
+
+DeclareGlobalFunction("EntrywisePowerMat");
+DeclareGlobalFunction("CM_InOmega");

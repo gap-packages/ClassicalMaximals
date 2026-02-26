@@ -16,6 +16,10 @@ function(S, C, r)
     return List([0..r - 1], i -> S ^ (C ^ i));
 end);
 
+# TODO This needs to be moved to a more suitable location.
+BindGlobal("CM_c9lib",
+DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
+
 InstallGlobalFunction(ClassicalMaximalsGeneric,
 function(type, n, q, classes...)
     if Length(classes) = 0 then
@@ -284,6 +288,833 @@ function(n, q)
     return result;
 end);
 
+BindGlobal("C9SubgroupsSpecialLinearGroupGeneric",
+function(n, q)
+    local all, novelties, special, general, normaliser, result, factorisation,
+          p, e, generatorGLMinusSL, LR, S, size, numberOfConjugates;
+    
+    all := ValueOption("all");
+    if all = fail then all := true; fi;
+    novelties := ValueOption("novelties");
+    if novelties = fail then novelties := false; fi;
+    special := ValueOption("special");
+    if special = fail then special := false; fi;
+    general := ValueOption("general");
+    if general = fail then general := false; fi;
+    normaliser := ValueOption("normaliser");
+    if normaliser = fail then normaliser := false; fi;
+
+    result := [];
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
+    generatorGLMinusSL := GLMinusSL(n, q);
+
+    if n = 2 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 5 in [1, 4]) or
+           (e = 2 and p <> 2 and p mod 5 in [2, 3]) then
+            # 2.A5
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl25d2.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            size := 120;
+            SetSize(S[1], size);
+            if all then
+                numberOfConjugates := 2;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 3 then
+        if novelties then return result; fi;
+        if (e = 1 and p <> 2 and p mod 7 in [1, 2, 4]) then
+            # L27
+            LR := ReadAsFunction(Filename(CM_c9lib, "l27d3.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if general then
+                size := (q - 1) * 168;
+            else
+                size := Gcd(q - 1, 3) * 168;
+            fi;
+            SetSize(S[1], size);
+            if all then
+                numberOfConjugates := Gcd(p - 1, 3);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 3 = 1 and p mod 5 in [1, 4]) or
+           (e = 2 and p <> 3 and p mod 5 in [2, 3]) then
+            # 3.A6
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if general then
+                size := (q - 1) * 360;
+            else
+                size := 1080;
+            fi;
+            SetSize(S[1], size);
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 4 then
+        if (e = 1 and p <> 2 and p mod 7 in [1, 2, 4]) then
+            if novelties then
+                # 2.L27
+                LR := ReadAsFunction(Filename(CM_c9lib, "sl27d4.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    size := Gcd(q - 1, 4) * 168;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := Gcd(q - 1, 4);
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            else
+                # 2.A7
+                LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    size := Gcd(q - 1, 4) * 2520;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := Gcd(q - 1, 4);
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+        fi;
+        if novelties then return result; fi;
+        if (e = 1 and p mod 6 = 1) then
+            # 2.U42
+            LR := ReadAsFunction(Filename(CM_c9lib, "2u42d4.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 4) * 25920;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 4);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 2 then
+            # A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 2520;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+    elif n = 5 then
+        if (novelties and q = 3) or
+           (not novelties and e = 1 and p > 3 and p mod 11 in [1, 3, 4, 5, 9]) then
+            # L2_11
+            LR := ReadAsFunction(Filename(CM_c9lib, "l211d5.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 5) * 660;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 5);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if novelties then return result; fi;
+        if (e = 1 and p mod 6 = 1) then
+            # U42
+            LR := ReadAsFunction(Filename(CM_c9lib, "u42d5.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 5) * 25920;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 5);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 3 then
+            # M11
+            LR := ReadAsFunction(Filename(CM_c9lib, "m11d11.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 7920;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+            if all then
+                S := Group(MTX.Generators(DualGModule(
+                     GModuleByMats(GeneratorsOfGroup(S[1]),
+                     GF(3)))));
+                if not general then
+                    size := 7920;
+                    SetSize(S, size);
+                fi;
+                Add(result, S);
+            fi;
+        fi;
+    elif n = 6 then
+        if novelties then
+            if (e = 1 and p mod 24 in [7, 13]) then
+                # 6.L3_4
+                LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    size := 120960;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := 3;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if (e = 1 and p mod 24 in [1, 7]) or
+               (e = 2 and p mod 24 in [5, 11, 13, 19]) then
+                # 6.A6
+                LR := ReadAsFunction(Filename(CM_c9lib, "6a6d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    size := 2160;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := 6;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if (e = 1 and p mod 24 in [1, 7, 13, 19]) then
+                # 3.A6
+                LR := ReadAsFunction(Filename(CM_c9lib, "3a6d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    if p mod 24 in [1, 19] then
+                        size := 4320;
+                    else
+                        size := 2160;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    if p mod 24 in [1, 19] then
+                        numberOfConjugates := 6;
+                    else
+                        numberOfConjugates := 3;
+                    fi;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p <> 3 and p mod 11 in [1, 3, 4, 5, 9]) then
+            # 2.L2_11 in 2.M12 for p = 3
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl211d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 6) * 660;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 6);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        elif q = 3 then
+            # 2.M12
+            LR := ReadAsFunction(Filename(CM_c9lib, "2m12d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 190080;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 2;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 12 in [1, 7]) then
+            # 6_1.U4_3 (p mod 12 = 7) or 6_1.U4_3.2_2 (p mod 12 = 1)
+            LR := ReadAsFunction(Filename(CM_c9lib, "6au43d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                if p mod 12 = 1 then
+                    size := 39191040;
+                else
+                    size := 19595520;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                if p mod 12 = 1 then
+                    numberOfConjugates := 6;
+                else
+                    numberOfConjugates := 3;
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 24 in [1, 19]) then
+            # 6.L3_4.2_1
+            LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 241920;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 6;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 24 in [1, 7]) or
+           (e = 2 and p mod 24 in [5, 11, 13, 19]) then
+            # 6.A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "6a7d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 15120;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                numberOfConjugates := 6;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if IsOddInt(q) then
+            S := AlmostSimpleDefiningCharacteristic_l3qdim6(q :
+                                                            general := general);
+            if not general then
+                size := 2 * SizeSL(3, q);
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := 2;
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+    elif n = 7 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 4 = 1) then
+            # U33
+            LR := ReadAsFunction(Filename(CM_c9lib, "u33d7b.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 7) * 6048;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 7);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 8 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 20 in [1, 9]) or
+           (e = 2 and p mod 20 in [3, 7, 13, 17]) then
+            # 4_1.L3_4 if q mod 16 <> 1 or 4_1.L34.2_3 if q mod 16 = 1
+            LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                if (e = 1 and p mod 80 in [9, 21, 29, 41, 61, 69]) then
+                    size := Gcd(q - 1, 8) * SizePSL(3, 4);
+                elif (e = 1 and p mod 80 in [1, 49]) then
+                    size := 8 * SizePSL(3, 4) * 2;
+                elif (e = 2 and (p mod 80 in [3, 13, 27, 37] or
+                                 p mod 80 in [43, 53, 67, 77])) then
+                    size := 8 * SizePSL(3, 4);
+                elif (e = 2 and (p mod 80 in [7, 17, 23, 33] or
+                                 p mod 80 in [73, 63, 57, 47])) then
+                    size := 8 * SizePSL(3, 4) * 2;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                if q mod 16 = 1 then
+                    numberOfConjugates := 8;
+                else
+                    numberOfConjugates := QuoInt(Gcd(q - 1, 8), 2);
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if q = 5 then
+            # 4_1.L3_4 once
+            LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 80640;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 2;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 9 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 19 in [1, 4, 5, 6, 7, 9, 11, 16, 17]) then
+            # L2_19
+            LR := ReadAsFunction(Filename(CM_c9lib, "l219d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 9) * 3420;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 9);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 3 = 1 and p mod 5 in [2, 3]) then
+            # 3.A6.2_3
+            # TODO is this subgroup really maximal?
+            # see Proposition 6.2.2
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 9) * 720;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 9);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 7 then
+            # 3.A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a7d15b.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := Filtered(S, s -> Degree(s) = 9);
+            if not general then
+                size := 7560;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        # (3.)L3_q^2(.3).2
+        S := AlmostSimpleDefiningCharacteristic_l3q2dim9l(q :
+                                                          general := general);
+        if not general then
+            if q mod 3 = 0 then
+                size := SizePSL(3, q^2) * 2;
+            elif q mod 3 = 2 then
+                size := SizePSL(3, q^2) * 6;
+            elif q mod 9 = 1 then
+                size := SizeSL(3, q^2) * 6;
+            elif q mod 9 in [4, 7] then
+                size := SizeSL(3, q^2) * 6;
+            fi;
+            SetSize(S, size);
+        fi;
+        if all then
+            numberOfConjugates := Gcd(q - 1, 3);
+            Append(result, ConjugatesInGeneralGroup(S,
+                                                    generatorGLMinusSL,
+                                                    numberOfConjugates));
+        else
+            Add(result, S);
+        fi;
+    elif n = 10 then
+        if novelties then
+            if (e = 1 and p <> 2 and p mod 28 in [1, 2, 9, 11, 15, 23, 25]) then
+                # 2.l34 (p = 11, 15, 23 mod 28) or 2.l34.2 otherwise
+                LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    if p mod 28 in [11, 15, 23] then
+                        size := QuoInt(Gcd(q - 1, 10), 2) * 40320;
+                    else
+                        size := Gcd(q - 1, 10) * 40320;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    if p mod 28 in [1, 9, 25] then
+                        numberOfConjugates := Gcd(q - 1, 10);
+                    else
+                        numberOfConjugates := QuoInt(Gcd(q - 1, 10), 2);
+                    fi;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p mod 19 in [1, 4, 5, 6, 7, 9, 11, 16, 17]) then
+            # SL2_19
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl219d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 10) * 3420;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 10);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 8 in [1, 3]) then
+            # 2.M12 (p = 3 mod 8) or 2.M12.2 (p = 1 mod 8)
+            LR := ReadAsFunction(Filename(CM_c9lib, "2m12d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                if p mod 8 = 3 then
+                    size := Gcd(q - 1, 10) * 95040;
+                else
+                    size := Gcd(q - 1, 10) * 190080;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                if p mod 8 = 1 then
+                    numberOfConjugates := Gcd(q - 1, 10);
+                else
+                    numberOfConjugates := QuoInt(Gcd(q - 1, 10), 2);
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if (e = 1 and p mod 28 in [1, 2, 9, 11, 15, 23, 25]) then
+            # 2.M22 (p = 11, 15, 23 mod 28) or 2.M22.2 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "2m22d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                if p mod 28 in [11, 15, 23] then
+                    size := Gcd(q - 1, 10) * 443520;
+                else
+                    size := Gcd(q - 1, 10) * 887040;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                if p mod 28 in [1, 2, 9, 25] then
+                    numberOfConjugates := Gcd(q - 1, 10);
+                else
+                    numberOfConjugates := QuoInt(Gcd(q - 1, 10), 2);
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if p >= 5 then
+            S := AlmostSimpleDefiningCharacteristic_l3qdim10(q :
+                                                             general := general);
+            if not general then
+                size := Gcd(q - 1, 10) * SizePSL(3, q) * Gcd(q - 1, 3);
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 10);
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+        if p >= 3 then
+            S := AlmostSimpleDefiningCharacteristic_l4qdim10(q :
+                                                             general := general);
+            if not general then
+                size := Gcd(q - 1, 10) * SizePSL(4, q) * QuoInt(Gcd(q - 1, 4), 2);
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 5);
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+        S := AlmostSimpleDefiningCharacteristic_l5qdim10(q :
+                                                         general := general);
+        if not general then
+            size := Gcd(q - 1, 2) * SizeSL(5, q);
+            SetSize(S, size);
+        fi;
+        if all then
+            numberOfConjugates := Gcd(q - 1, 2);
+            Append(result, ConjugatesInGeneralGroup(S,
+                                                    generatorGLMinusSL,
+                                                    numberOfConjugates));
+        else
+            Add(result, S);
+        fi;
+    elif n = 11 then
+        if novelties then
+            if q = 2 then
+                # L2_23
+                LR := ReadAsFunction(Filename(CM_c9lib, "l223d11.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                size := SizePSL(2, 23);
+                SetSize(S[1], size);
+                Add(result, S[1]);
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p mod 3 = 1) then
+            # U52
+            LR := ReadAsFunction(Filename(CM_c9lib, "u52d11.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 11) * SizeSU(5, 2);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 11);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 23 in [1, 2, 3, 4, 6, 8, 9, 12, 13, 16, 18] and p <> 2) then
+            # L2_23
+            LR := ReadAsFunction(Filename(CM_c9lib, "l223d11.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 11) * 6072;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 11);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 2 then
+            # M24
+            LR := ReadAsFunction(Filename(CM_c9lib, "m24d23.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := 244823040;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            Add(result, S[1]);
+            Add(result, S[2]);
+        fi;
+    elif n = 12 then
+        if novelties then
+            if (e = 1 and p mod 3 = 1 and p mod 5 in [1, 4]) or
+               (e = 2 and p mod 5 in [2, 3] and p > 3) then
+                # 6A6
+                LR := ReadAsFunction(Filename(CM_c9lib, "6a6d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                if not general then
+                    size := Gcd(q - 1, 12) * 360;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := Gcd(q - 1, 12);
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGLMinusSL,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p mod 23 in [1, 2, 3, 4, 6, 8, 9, 12, 13, 16, 18] and p <> 2) then
+            # 2.L2_23
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl223d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 12) * 6072;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 12);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 3 = 1) then
+            # 6.Suz
+            LR := ReadAsFunction(Filename(CM_c9lib, "6suzd12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            if not general then
+                size := Gcd(q - 1, 12) * 448345497600;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q - 1, 12);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 49 then
+            # 12.L3_4
+            S := ReadAsFunction(Filename(CM_c9lib, "12bl34d12f49.g"))();
+            if general then
+                S := Group(Concatenation(GeneratorsOfGroup(S),
+                                         [PrimitiveElement(GF(q))
+                                          * IdentityMat(n, Integers)]));
+            fi;
+            if not general then
+                size := 241920;
+            else
+                size := 967680;
+            fi;
+            SetSize(S, size);
+            if all then
+                numberOfConjugates := 12;
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGLMinusSL,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+    fi;
+    return result;
+end);
+
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialLinearGroup,
 function(n, q, classes...)
     local maximalSubgroups, factorisation, p, e;
@@ -426,6 +1257,21 @@ function(n, q, classes...)
         if n <> 2 then
             Append(maximalSubgroups, C8SubgroupsSpecialLinearGroupGeneric(n, q));
         fi;
+    fi;
+
+    if 9 in classes then
+        # Class C9 subgroups ######################################################
+        # Cf. Theorems 4.10.12 (n = 2), 4.10.2 (n = 3), 4.10.3 (n = 4),
+        #              4.10.4 (n = 5), 4.10.5 (n = 6), 4.10.6 (n = 7),
+        #              4.10.7 (n = 8), 4.10.8 (n = 9), 4.10.9 (n = 10),
+        #              4.10.10 (n = 11), 4.10.11 (n = 12) in [BHR13]
+        # Cf. Theorems 5.11.2 (n = 6), 5.11.3 (n = 9), 5.11.4 (n = 10)
+        #              in [BHR13]
+        # For all other n, class S2* is empty.
+        # Cf. Tables 8.2 (n = 2), 8.4 (n = 3), 8.9 (n = 4), 8.19 (n = 5),
+        #            8.25 (n = 6), 8.36 (n = 7), 8.45 (n = 8), 8.55 (n = 9),
+        #            8.61 (n = 10), 8.71 (n = 11), 8.77 (n = 12) in [BHR13]
+        Append(maximalSubgroups, C9SubgroupsSpecialLinearGroupGeneric(n, q));
     fi;
 
     return maximalSubgroups;
@@ -652,6 +1498,895 @@ function(n, q)
     return result;
 end);
 
+BindGlobal("C9SubgroupsSpecialUnitaryGroupGeneric",
+function(n, q)
+    local all, novelties, special, general, normaliser, result, factorisation,
+          p, e, generatorGUMinusSU, LR, S, size, numberOfConjugates;
+
+    all := ValueOption("all");
+    if all = fail then all := true; fi;
+    novelties := ValueOption("novelties");
+    if novelties = fail then novelties := false; fi;
+    special := ValueOption("special");
+    if special = fail then special := false; fi;
+    general := ValueOption("general");
+    if general = fail then general := false; fi;
+    normaliser := ValueOption("normaliser");
+    if normaliser = fail then normaliser := false; fi;
+
+    result := [];
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
+    generatorGUMinusSU := GUMinusSU(n, q);
+
+    if n = 3 then
+        if (novelties and q = 5) or
+           (not novelties and e = 1 and p <> 5 and p mod 7 in [3, 5, 6]) then
+            # L27
+            LR := ReadAsFunction(Filename(CM_c9lib, "l27d3.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 3) * SizePSL(2, 7);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(p + 1, 3);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if novelties then return result; fi;
+        if (e = 1 and p mod 3 = 2 and p mod 5 in [1, 4]) then
+            # 3.A6
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := 1080;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 5 then
+            # 3.A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            S := Filtered(S, s -> Degree(s) = 3);
+            if not general and not normaliser then
+                size := 7560;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+            # 3.M10
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := 2160;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 4 then
+        if (e = 1 and p mod 7 in [3, 5, 6]) then
+            if novelties then
+                if p <> 3 then
+                    # 2.L27
+                    LR := ReadAsFunction(Filename(CM_c9lib, "sl27d4.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not general and not normaliser then
+                        size := Gcd(q + 1, 4) * SizePSL(2, 7);
+                        SetSize(S[1], size);
+                    fi;
+                    if all then
+                        numberOfConjugates := Gcd(q + 1, 4);
+                        Append(result, ConjugatesInGeneralGroup(S[1],
+                                                                generatorGUMinusSU,
+                                                                numberOfConjugates));
+                    else
+                        Add(result, S[1]);
+                    fi;
+                fi;
+            else
+                # 2.A7
+                LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    size := Gcd(q + 1, 4) * 2520;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := Gcd(q + 1, 4);
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+        fi;
+        if novelties then return result; fi;
+        if (e = 1 and p mod 6 = 5) then
+            # 2.U42
+            LR := ReadAsFunction(Filename(CM_c9lib, "2u42d4.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 4) * SizePSU(4, 2);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 4);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 3 then
+            # 4_2.L34
+            LR := ReadAsFunction(Filename(CM_c9lib, "4bl34d20.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            S := Filtered(S, s -> Degree(s) = 4);
+            if not general and not normaliser then
+                size := 4 * SizePSL(3, 4);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 2;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 5 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 11 in [2, 6, 7, 8, 10]) then
+            # L2_11
+            LR := ReadAsFunction(Filename(CM_c9lib, "l211d5.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 5) * SizePSL(2, 11);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 5);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 6 = 5) then
+            # U42
+            LR := ReadAsFunction(Filename(CM_c9lib, "u42d5.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 5) * SizePSU(4, 2);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 5);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 6 then
+        if novelties then
+            if (e = 1 and p mod 24 in [11, 17]) then
+                # 6.L3_4
+                LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    size := 6 * SizePSL(3, 4);
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := 3;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if (e = 1 and p mod 24 in [17, 23]) then
+                # 6.A6
+                LR := ReadAsFunction(Filename(CM_c9lib, "6a6d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    size := 2160;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := 6;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if (e = 1 and p mod 24 in [5, 11, 17, 23] and p <> 5) then
+                # 3.A6
+                LR := ReadAsFunction(Filename(CM_c9lib, "3a6d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    if p mod 24 in [11, 17] then
+                        size := 2160;
+                    else
+                        size := 4320;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    if p mod 24 in [5, 23] then
+                        numberOfConjugates := 6;
+                    else
+                        numberOfConjugates := 3;
+                    fi;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p <> 2 and p mod 11 in [2, 6, 7, 8, 10]) then
+            # 2.L2_11 in 3.M22 for p = 2
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl211d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 6) * SizePSL(2, 11);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 6);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        elif q = 2 then
+            # 3.M22
+            LR := ReadAsFunction(Filename(CM_c9lib, "3m22d21.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := 1330560;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+            # 3.U4_3.2_2
+            LR := ReadAsFunction(Filename(CM_c9lib, "6au43d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := 3 * SizePSU(4, 3) * 2;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 12 in [5, 11]) then
+            # 6_1.U4_3 (p mod 12 = 5) or 6_1.U4_3.2_2 (p mod 12 = 11)
+            LR := ReadAsFunction(Filename(CM_c9lib, "6au43d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                if p mod 12 = 5 then
+                    size := 6 * SizePSU(4, 3);
+                else
+                    size := 6 * SizePSU(4, 3) * 2;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                if p mod 12 = 11 then
+                    numberOfConjugates := 6;
+                else
+                    numberOfConjugates := 3;
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 24 in [5, 23]) then
+            # 6.L3_4.2_1
+            LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := 6 * SizePSL(3, 4) * 2;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 6;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 24 in [17, 23]) then
+            # 6.A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "6a7d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := 15120;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                numberOfConjugates := 6;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if IsOddInt(q) then
+            S := AlmostSimpleDefiningCharacteristic_u3qdim6(q :
+                                                            general := general,
+                                                            normaliser := normaliser);
+            if not general and not normaliser then
+                size := 2 * SizeSU(3, q);
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := 2;
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+    elif n = 7 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 4 = 3 and p <> 3) then
+            # U33
+            LR := ReadAsFunction(Filename(CM_c9lib, "u33d7b.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 7) * SizePSU(3, 3);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 7);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 8 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 20 in [11, 19]) then
+            # 4_1.L3_4 if q mod 16 <> -1 or 4_1.L34.2_3 if q mod 16 = -1
+            LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                if p mod 80 in [11, 19, 39, 51, 59, 71] then
+                    size := Gcd(q + 1, 8) * SizePSL(3, 4);
+                else
+                    size := 8 * SizePSL(3, 4) * 2;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                if q mod 16 = 15 then
+                    numberOfConjugates := 8;
+                else
+                    numberOfConjugates := QuoInt(Gcd(q + 1, 8), 2);
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+    elif n = 9 then
+        if novelties then
+            if q = 2 then
+                # L2_19
+                LR := ReadAsFunction(Filename(CM_c9lib, "l219d9.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    size := 3 * SizePSL(2, 19);
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := Gcd(q + 1, 9);
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p mod 19 in [2, 3, 8, 10, 12, 13, 14, 15, 18] and p <> 2) then
+            # L2_19
+            LR := ReadAsFunction(Filename(CM_c9lib, "l219d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 9) * SizePSL(2, 19);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 9);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 3 = 2 and p mod 5 in [2, 3] and p > 2) then
+            # 3.A6.2_3
+            # TODO is this subgroup really maximal?
+            # see Proposition 6.2.2
+            LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 9) * 720;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 9);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 2 then
+            # 3J3
+            S := ReadAsFunction(Filename(CM_c9lib, "3j3d9f4.g"))();
+            if normaliser then
+                S := Group(Concatenation(GeneratorsOfGroup(S),
+                                         [PrimitiveElement(GF(4))
+                                          * IdentityMat(n, Integers)]));
+            fi;
+            if not general and not normaliser then
+                size := 150698880;
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := 3;
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+        # (3.)L3_q^2(.3).2
+        S := AlmostSimpleDefiningCharacteristic_l3q2dim9u(q :
+                                                          general := general,
+                                                          normaliser := normaliser);
+        if not general and not normaliser then
+            if q mod 3 = 0 then
+                size := SizePSL(3, q^2) * 2;
+            elif q mod 3 = 1 then
+                size := SizePSL(3, q^2) * 6;
+            elif q mod 9 = 8 then
+                size := SizeSL(3, q^2) * 2;
+            elif q mod 9 in [2, 5] then
+                size := SizeSL(3, q^2) * 6;
+            fi;
+            SetSize(S, size);
+        fi;
+        if all then
+            numberOfConjugates := Gcd(q + 1, 3);
+            Append(result, ConjugatesInGeneralGroup(S,
+                                                    generatorGUMinusSU,
+                                                    numberOfConjugates));
+        else
+            Add(result, S);
+        fi;
+    elif n = 10 then
+        if novelties then
+            if (e = 1 and p mod 28 in [3, 5, 13, 17, 19, 27] and p <> 3) then
+                # 2.L34 (p = 5, 13, 17 mod 28) or 2.L34.2 otherwise
+                LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    if p mod 28 in [5, 13, 17] then
+                        size := Gcd(q + 1, 10) * SizePSL(3, 4);
+                    else
+                        size := Gcd(q + 1, 10) * SizePSL(3, 4) * 2;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    if p mod 28 in [3, 19, 27] then
+                        numberOfConjugates := Gcd(q + 1, 10);
+                    else
+                        numberOfConjugates := QuoInt(Gcd(q + 1, 10), 2);
+                    fi;
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p mod 19 in [2, 3, 8, 10, 12, 13, 14, 15, 18] and p <> 2) then
+            # SL2_19
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl219d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 10) * SizePSL(2, 19);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 10);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 8 in [5, 7]) then
+            # 2.M12 (p = 5 mod 8) or 2.M12.2 (p = 7 mod 8)
+            LR := ReadAsFunction(Filename(CM_c9lib, "2m12d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                if p mod 8 = 5 then
+                    size := Gcd(q + 1, 10) * 95040;
+                else
+                    size := Gcd(q + 1, 10) * 95040 * 2;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                if p mod 8 = 7 then
+                    numberOfConjugates := Gcd(q + 1, 10);
+                else
+                    numberOfConjugates := QuoInt(Gcd(q + 1, 10), 2);
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if (e = 1 and p mod 28 in [3, 5, 13, 17, 19, 27]) then
+            # 2.M22 (p = 5, 13, 17 mod 28) or 2.M22.2 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "2m22d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                if p mod 28 in [5, 13, 17] then
+                    size := 2 * 443520;
+                else
+                    size := 2 * 443520 * 2;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all then
+                if p mod 28 in [3, 19, 27] then
+                    numberOfConjugates := Gcd(q + 1, 10);
+                else
+                    numberOfConjugates := QuoInt(Gcd(q + 1, 10), 2);
+                fi;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+                Append(result, ConjugatesInGeneralGroup(S[2],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if p >= 5 then
+            S := AlmostSimpleDefiningCharacteristic_u3qdim10(q :
+                                                             general := general,
+                                                             normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 10) * SizePSU(3, q) * Gcd(q + 1, 3);
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 10);
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+        if p >= 3 then
+            S := AlmostSimpleDefiningCharacteristic_u4qdim10(q :
+                                                             general := general,
+                                                             normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 10) * SizePSU(4, q) * QuoInt(Gcd(q + 1, 4), 2);
+                SetSize(S, size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 5);
+                Append(result, ConjugatesInGeneralGroup(S,
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S);
+            fi;
+        fi;
+        S := AlmostSimpleDefiningCharacteristic_u5qdim10(q :
+                                                         general := general,
+                                                         normaliser := normaliser);
+        if not general and not normaliser then
+            size := Gcd(q + 1, 10) * SizeSU(5, q);
+            SetSize(S, size);
+        fi;
+        if all then
+            numberOfConjugates := Gcd(q + 1, 2);
+            Append(result, ConjugatesInGeneralGroup(S,
+                                                    generatorGUMinusSU,
+                                                    numberOfConjugates));
+        else
+            Add(result, S);
+        fi;
+    elif n = 11 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 3 = 2 and p <> 2) then
+            # U52
+            LR := ReadAsFunction(Filename(CM_c9lib, "u52d11.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 11) * SizePSU(5, 2);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 11);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 23 in [5, 7, 10, 11, 14, 15, 17, 19, 20, 21, 22]) then
+            # L2_23
+            LR := ReadAsFunction(Filename(CM_c9lib, "l223d11.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 11) * SizePSL(2, 23);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 11);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 12 then
+        if novelties then
+            if (e = 1 and p mod 3 = 2 and p mod 5 in [1, 4]) then
+                # 6A6
+                LR := ReadAsFunction(Filename(CM_c9lib, "6a6d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not general and not normaliser then
+                    size := Gcd(q + 1, 12) * 360;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    numberOfConjugates := Gcd(q + 1, 12);
+                    Append(result, ConjugatesInGeneralGroup(S[1],
+                                                            generatorGUMinusSU,
+                                                            numberOfConjugates));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p mod 23 in [5, 7, 10, 11, 14, 15, 17, 19, 20, 21, 22]) then
+            # 2.L2_23
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl223d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                size := Gcd(q + 1, 12) * SizePSL(2, 23);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 12);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 3 = 2) then
+            # 6.Suz (or 3.Suz if p = 2)
+            LR := ReadAsFunction(Filename(CM_c9lib, "6suzd12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not general and not normaliser then
+                if p = 2 then
+                    size := 3 * 448345497600;
+                else
+                    size := Gcd(q + 1, 12) * 448345497600;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := Gcd(q + 1, 12);
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 5 then
+            # 6A7
+            # TODO is this subgroup really maximal?
+            # see Proposition 6.3.1 (iii)
+            LR := ReadAsFunction(Filename(CM_c9lib, "6a7d24.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q * q :
+                                                   general := general,
+                                                   normaliser := normaliser);
+            S := Filtered(S, s -> Degree(s) = 12);
+            if not general and not normaliser then
+                size := 15120;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                numberOfConjugates := 6;
+                Append(result, ConjugatesInGeneralGroup(S[1],
+                                                        generatorGUMinusSU,
+                                                        numberOfConjugates));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    fi;
+    return result;
+end);
+
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
 function(n, q, classes...)
     local maximalSubgroups, subfieldGroup, numberOfConjugates,
@@ -783,6 +2518,21 @@ function(n, q, classes...)
         # Cf. Proposition 3.8.6 (n = 9) in [BHR13]
         # For all other n, class C7 is empty.
         Append(maximalSubgroups, C7SubgroupsSpecialUnitaryGroupGeneric(n, q));
+    fi;
+
+    if 9 in classes then
+        # Class C9 subgroups ######################################################
+        # Cf. Theorems 4.10.2 (n = 3), 4.10.3 (n = 4), 4.10.4 (n = 5),
+        #              4.10.5 (n = 6), 4.10.6 (n = 7), 4.10.7 (n = 8),
+        #              4.10.8 (n = 9), 4.10.9 (n = 10), 4.10.10 (n = 11),
+        #              4.10.11 (n = 12) in [BHR13]
+        # Cf. Theorems 5.11.2 (n = 6), 5.11.3 (n = 9), 5.11.4 (n = 10)
+        #              in [BHR13]
+        # For all other n, class S2* is empty.
+        # Cf. Tables 8.6 (n = 3), 8.11 (n = 4), 8.21 (n = 5), 8.27 (n = 6),
+        #            8.38 (n = 7), 8.47 (n = 8), 8.57 (n = 9), 8.63 (n = 10),
+        #            8.73 (n = 11), 8.79 (n = 12) in [BHR13]
+        Append(maximalSubgroups, C9SubgroupsSpecialUnitaryGroupGeneric(n, q));
     fi;
 
     return maximalSubgroups;
@@ -994,6 +2744,562 @@ function(n, q)
     return [OrthogonalInSp(1, n, q), OrthogonalInSp(-1, n, q)];
 end);
 
+BindGlobal("C9SubgroupsSymplecticGroupGeneric",
+function(n, q)
+    local all, novelties, special, general, normaliser, result, factorisation,
+          p, e, generatorNormSpMinusSp, S, size, LR, M, C, A;
+    all := ValueOption("all");
+    if all = fail then all := true; fi;
+    novelties := ValueOption("novelties");
+    if novelties = fail then novelties := false; fi;
+    special := ValueOption("special");
+    if special = fail then special := false; fi;
+    general := ValueOption("general");
+    if general = fail then general := false; fi;
+    normaliser := ValueOption("normaliser");
+    if normaliser = fail then normaliser := false; fi;
+
+    result := [];
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
+    generatorNormSpMinusSp := NormSpMinusSp(n, q);
+
+    if n = 4 then
+        if novelties then
+            if q = 7 then
+                # 2.L2q
+                S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(4, q :
+                                                                      normaliser := normaliser);
+                if not normaliser then
+                    size := SizeSL(2, 7);
+                    SetSize(S, size);
+                fi;
+                Add(result, S);
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p <> 7 and p mod 12 in [1, 5, 7, 11]) then
+            # 2.A6 (p mod 12 in [5, 7]), 2.S6 (p mod 12 in [1, 11])
+            LR := ReadAsFunction(Filename(CM_c9lib, "2a6d4.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 12 in [5, 7] then
+                    size := 720;
+                else
+                    size := 1440;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 12 in [1, 11] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 7 then
+            # 2.A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                size := 5040;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+        if p >= 5 and q > 7 then
+            # 2.L2q
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(4, q :
+                                                                  normaliser := normaliser);
+            if not normaliser then
+                size := SizeSL(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+        if p = 2 and IsOddInt(e) and e > 1 then
+            # Szq
+            if normaliser then
+                Add(result, Group(Concatenation(GeneratorsOfGroup(Sz(q)),
+                                                [PrimitiveElement(GF(q))
+                                                 * IdentityMat(n, Integers)])));
+            else
+                Add(result, ConjugateToStandardForm(Sz(q), "S", GF(q)));
+            fi;
+        fi;
+    elif n = 6 then
+        if novelties then
+            if (e = 1 and p mod 8 in [3, 5] and p mod 5 in [1, 4]) then
+                # 2.A5
+                LR := ReadAsFunction(Filename(CM_c9lib, "sl25d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+                if not normaliser then
+                    size := 120;
+                    SetSize(S[1], size);
+                fi;
+                Add(result, S[1]);
+            fi;
+            if q = 9 then
+                # 2.L_2(7)
+                LR := ReadAsFunction(Filename(CM_c9lib, "sl27d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+                if not normaliser then
+                    size := 2 * SizePSL(2, 7);
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if (e = 1 and p mod 60 in [19, 29, 31, 41]) then
+                # 2 x U_3(3)
+                LR := ReadAsFunction(Filename(CM_c9lib, "u33d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+                if not normaliser then
+                    size := 2 * SizePSU(3, 3);
+                    SetSize(S[1], size);
+                fi;
+                Add(result, S[1]);
+            fi;
+            return result;
+        fi;
+        if e = 1 and (p mod 8 in [1, 7] or
+                      (p mod 8 in [3, 5] and p mod 5 in [2, 3])) then
+            # 2.S5 (p mod 8 in [1, 7]) or 2.A5 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl25d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 8 in [1, 7] then
+                    size := 240;
+                else
+                    size := 120;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 8 in [1, 7] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 16 in [1, 15]) or
+           (e = 1 and p mod 16 in [7, 9] and p <> 7) or
+           (e = 2 and p mod 16 in [3, 5, 11, 13] and p <> 3) then
+            # 2.L2_7.2 (e = 1 and p mod 16 in [1, 15]) or 2.L2_7 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl27d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if (e = 1 and p mod 16 in [1, 15]) then
+                    size := 2 * SizePSL(2, 7) * 2;
+                else
+                    size := 2 * SizePSL(2, 7);
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all and p mod 16 in [1, 15] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp,
+                                S[2], S[2] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if (e = 1 and p mod 13 in [1, 3, 4, 9, 10, 12]) or
+           (e = 2 and p mod 13 in [2, 5, 6, 7, 8, 11] and p <> 2) then
+            # 2.L2_13
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl213d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                size := 2 * SizePSL(2, 13);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1) and
+           (p mod 12 in [1, 11] or (p mod 12 in [5, 7] and p mod 5 in [2, 3])) then
+            # U33.2 (p mod 12 in [1, 11]) or U33 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "u33d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 12 in [1, 11] then
+                    size := 2 * SizePSU(3, 3) * 2;
+                else
+                    size := 2 * SizePSU(3, 3);
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 12 in [1, 11] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 5 in [0, 1, 4]) or
+           (e = 2 and p mod 5 in [2, 3] and p <> 2) then
+            # 2.J2
+            LR := ReadAsFunction(Filename(CM_c9lib, "2j2d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                size := 1209600;
+                SetSize(S[1], size);
+            fi;
+            if all and p <> 5 then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 9 then
+            # 2.A7
+            S := ReadAsFunction(Filename(CM_c9lib, "2a7d6f9.g"))();
+            ConjugateToStandardForm(S, "S", GF(q));
+            size := 5040;
+            SetSize(S, size);
+            Append(result, [S, S ^ generatorNormSpMinusSp]);
+        fi;
+        if p >= 7 then
+            # 2.L2q
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(6, q :
+                                                                  normaliser := normaliser);
+            if not normaliser then
+                size := 2 * SizePSL(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+        if p = 2 then
+            M := GModuleByMats(GeneratorsOfGroup(ChevalleyG(q)), GF(q));
+            C := List(MTX.CollectedFactors(M), c -> c[1]);
+            A := Group(MTX.Generators(First(C, c -> MTX.Dimension(c) = 6)));
+            A := ConjugateToStandardForm(A, "S", GF(q));
+            if normaliser then
+                A := Group(Concatenation(GeneratorsOfGroup(A),
+                                         [PrimitiveElement(GF(q))
+                                          * IdentityMat(n, Integers)]));
+            fi;
+            if not normaliser then
+                size := Size(ChevalleyG(q));
+                SetSize(A, size);
+            fi;
+            Add(result, A);
+        fi;
+    elif n = 8 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 12 in [1, 5, 7, 11] and p <> 7) then
+            # 2.L27 if p mod 12 in [5, 7], 2.L27.2 if p mod 12 in [1, 11]
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl27d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 12 in [5, 7] then
+                    size := 2 * SizePSL(2, 7);
+                else
+                    size := 2 * SizePSL(2, 7) * 2;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 12 in [1, 11] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 20 in [1, 9, 11, 19]) or
+           (e = 2 and p mod 5 in [2, 3] and p <> 2 and p <> 3) then
+            # 2.A6.2_2 if p mod 20 in [1, 19], 2.A6 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "2a6d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 20 in [1, 19] then
+                    size := 1440;
+                else
+                    size := 720;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 20 in [1, 19] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 17 in [1, 2, 4, 8, 9, 13, 15, 16]) or
+           (e = 2 and p mod 17 in [3, 5, 6, 7, 10, 11, 12, 14]) then
+            # 2.L2_17
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl217d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p = 2 then
+                    size := SizePSL(2, 17);
+                else
+                    size := 2 * SizePSL(2, 17);
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p <> 2 then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 2 then
+            # S10
+            LR := ReadAsFunction(Filename(CM_c9lib, "a10d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                size := 3628800;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+        if p >= 11 then
+            # 2.L2q
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(8, q :
+                                                                  normaliser := normaliser);
+            if not normaliser then
+                size := 2 * SizePSL(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+        if IsOddInt(q) then
+            S := AlmostSimpleDefiningCharacteristic_l2q3dim8(q :
+                                                             normaliser := normaliser);
+            if not normaliser then
+                size := 2 * SizePSL(2, q^3) * 3;
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+    elif n = 10 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 16 in [1, 7, 9, 15]) or
+           (e = 2 and p mod 16 in [3, 5, 11, 13] and p <> 3) then
+            # 2.A6.2_2 if p mod 16 in [1, 15], 2.A6 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "2a6d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 16 in [1, 15] then
+                    size := 1440;
+                else
+                    size := 720;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 16 in [1, 15] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 8 in [1, 3, 5, 7] and p <> 11) then
+            # 2.L2_11.2 if p mod 8 in [1, 7], 2.L2_11 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl211d10a.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 8 in [1, 7] then
+                    size := 2 * SizePSL(2, 11) * 2;
+                else
+                    size := 2 * SizePSL(2, 11);
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 8 in [1, 7] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 24 in [1, 11, 13, 23] and p <> 11) or
+           (e = 2 and p mod 24 in [5, 7, 17, 19]) then
+            # 2.L2_11 if p mod 24 in [11, 13], 2.L2_11.2 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl211d10b.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 24 in [11, 13] then
+                    size := 2 * SizePSL(2, 11);
+                else
+                    size := 2 * SizePSL(2, 11) * 2;
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all and p mod 24 in [1, 5, 7, 17, 19, 23] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, [S[2], S[2] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if (e = 1 and p mod 8 in [1, 3, 5, 7]) then
+            # U52.2 if p mod 8 in [1, 7], U52 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "u52d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 8 in [1, 7] then
+                    size := 2 * SizePSU(5, 2) * 2;
+                else
+                    size := SizePSU(5, 2) * 2;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 8 in [1, 7] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if p >= 11 then
+            # 2.L2q
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(10, q :
+                                                                  normaliser := normaliser);
+            if not normaliser then
+                size := 2 * SizePSU(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+    elif n = 12 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 5 in [1, 4] and p <> 11) or
+           (e = 2 and p mod 5 in [2, 3] and p <> 4) then
+            # 2.L2_11.2 (q mod 20 in [1, 19]), 2.L2_11 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl211d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if q mod 20 in [1, 19] then
+                    size := 2 * SizePSL(2, 11) * 2;
+                else
+                    size := 2 * SizePSL(2, 11);
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+            fi;
+            if all and p mod 20 in [1, 19] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, [S[2], S[2] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+            fi;
+        fi;
+        if (e = 1 and p mod 7 in [1, 6] and p <> 13) or
+           (e = 3 and p mod 7 in [2, 3, 4, 5]) then
+            # 2.L2_13.2 (q mod 28 in [1, 27]), 2.L2_13 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl213d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if (e = 1 and p mod 28 in [1, 27] or e = 3) then
+                    size := 2 * SizePSL(2, 13) * 2;
+                else
+                    size := 2 * SizePSL(2, 13);
+                fi;
+                SetSize(S[1], size);
+                SetSize(S[2], size);
+                SetSize(S[3], size);
+            fi;
+            if all and p mod 28 in [1, 27] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, [S[2], S[2] ^ generatorNormSpMinusSp]);
+                Append(result, [S[3], S[3] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+                Add(result, S[2]);
+                Add(result, S[3]);
+            fi;
+        fi;
+        if (e = 1 and p mod 5 in [2, 3] and p <> 3) then
+            # 2.L2_25 (p <> 2), L2_25.2 (p = 2)
+            LR := ReadAsFunction(Filename(CM_c9lib, "sl225d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p <> 2 then
+                    size := 2 * SizePSL(2, 25);
+                else
+                    size := SizePSL(2, 25) * 2;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+        if (e = 1 and p mod 5 in [0, 1, 4]) or
+           (e = 2 and p mod 5 in [2, 3]) then
+            # Sp4_5 (p <> 2) or PSp4_5 (p = 2)
+            LR := ReadAsFunction(Filename(CM_c9lib, "sp45d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p <> 2 then
+                    size := SizeSp(4, 5);
+                else
+                    size := SizePSp(4, 5);
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p <> 2 and p <> 5 then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p <> 2 and p <> 3) then
+            # 2.G24.2 (p mod 8 in [1, 7]), 2.G24 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "2g24d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                if p mod 8 in [1, 7] then
+                    size := 2 * Size(ChevalleyG(4)) * 2;
+                else
+                    size := 2 * Size(ChevalleyG(4));
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 8 in [1, 7] then
+                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 3 then
+            # 2.Suz
+            LR := ReadAsFunction(Filename(CM_c9lib, "6suzd12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                size := 896690995200;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+        if q = 2 then
+            # S_14
+            LR := ReadAsFunction(Filename(CM_c9lib, "a14d13.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            if not normaliser then
+                size := 87178291200;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+        if p >= 13 then
+            # 2.L2q
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(12, q :
+                                                                  normaliser := normaliser);
+            if not normaliser then
+                size := 2 * SizePSL(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+    fi;
+    return result;
+end);
+
 InstallGlobalFunction(MaximalSubgroupClassRepsSymplecticGroup,
 function(n, q, classes...)
     local maximalSubgroups;
@@ -1093,6 +3399,17 @@ function(n, q, classes...)
         if IsEvenInt(q) then
             Append(maximalSubgroups, C8SubgroupsSymplecticGroupGeneric(n, q));
         fi;
+    fi;
+
+    if 9 in classes then
+        # Class C9 subgroups ######################################################
+        # Cf. Theorems 4.10.13 (n = 4), 4.10.14 (n = 6), 4.10.15 (n = 8),
+        #              4.10.16 (n = 10), 4.10.17 (n = 12) in [BHR13]
+        # Cf. Theorems 5.11.6 (n = 4), 5.11.7 (n = 6), 5.11.8 (n = 8),
+        #              5.11.10 (n = 10), 5.11.10 (n = 12) in [BHR13]
+        # Cf. Tables 8.13, 8.14, 8.15 (all n = 4), 8.29 (n = 6),
+        #            8.48 (n = 8), 8.65 (n = 10), 8.81 (n = 12) in [BHR13]
+        Append(maximalSubgroups, C9SubgroupsSymplecticGroupGeneric(n, q));
     fi;
 
     return maximalSubgroups;
@@ -1655,6 +3972,1368 @@ function(epsilon, n, q)
     return result;
 end);
 
+BindGlobal("C9SubgroupsOrthogonalGroupGeneric",
+function(epsilon, n, q)
+    local all, novelties, special, general, normaliser, ConjugatesBySubsetsOfGenerators,
+          result, factorisation, p, e, generatorSOMinusOmega, generatorGOMinusSO,
+          generatorNormGOMinusGO, LR, S, size, elementsToConjugate;
+
+    all := ValueOption("all");
+    if all = fail then all := true; fi;
+    novelties := ValueOption("novelties");
+    if novelties = fail then novelties := false; fi;
+    special := ValueOption("special");
+    if special = fail then special := false; fi;
+    general := ValueOption("general");
+    if general = fail then general := false; fi;
+    normaliser := ValueOption("normaliser");
+    if normaliser = fail then normaliser := false; fi;
+
+    # TODO This should be moved to a more appropriate location.
+    #################################################
+    if epsilon = 0 and IsEvenInt(n) then
+        ErrorNoReturn("Degree must be odd for type \"O\"");
+    elif epsilon <> 0 and IsOddInt(n) then
+        ErrorNoReturn("Degree must be even for types \"O+\" or \"O-\"");
+    fi;
+    ################################################
+
+    ConjugatesBySubsetsOfGenerators := function(G, gens)
+        local result, powerSet, subset;
+        result := [];
+        powerSet := Combinations(gens);
+        for subset in powerSet do
+            if subset = [] then
+                Add(result, G);
+            else
+                Add(result, G ^ Product(subset));
+            fi;
+        od;
+        return result;
+    end;
+
+    result := [];
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
+    generatorSOMinusOmega := SOMinusOmega(epsilon, n, q);
+    if IsOddInt(q) then
+        generatorGOMinusSO := GOMinusSO(epsilon, n, q);
+        if IsEvenInt(n) then
+            generatorNormGOMinusGO := NormGOMinusGO(epsilon, n, q);
+        fi;
+    fi;
+
+    if n = 3 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 5 in [1, 4]) or
+           (e = 2 and p <> 2 and p mod 5 in [2, 3]) then
+            # A5
+            LR := ReadAsFunction(Filename(CM_c9lib, "a5d3.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := 60;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 4 then
+        # must have epsilon -1
+        if novelties then return result; fi;
+        if (e = 1 and p <> 2 and p mod 5 in [2, 3]) then
+            # A5
+            LR := ReadAsFunction(Filename(CM_c9lib, "a5d4.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := 60;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+    elif n = 5 then
+        if novelties then
+            if q = 7 then
+                # L2q
+                S := AlmostSimpleDefiningCharacteristic_OrthogSL2(5, q :
+                                                                  special := special,
+                                                                  general := general,
+                                                                  normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := SizePSL(2, q);
+                    SetSize(S, size);
+                fi;
+                Add(result, S);
+            fi;
+            return result;
+        fi;
+        if (e = 1 and p <> 7 and p mod 12 in [1, 5, 7, 11]) then
+            # A6 (p mod 12 in [5, 7]) or S6 (p mod 12 in [1, 11])
+            LR := ReadAsFunction(Filename(CM_c9lib, "a6d5.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                if p mod 12 in [5, 7] then
+                    size := 360;
+                else
+                    size := 720;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 12 in [1, 11] then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 7 then
+            # A7
+            LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := 2520;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+        fi;
+        if p >= 5 and q > 7 then
+            # L2q
+            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(5, q :
+                                                              special := special,
+                                                              general := general,
+                                                              normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+    elif n = 6 then
+        if novelties then
+            if e = 1 and ((epsilon = 1 and p mod 7 in [1, 2, 4]) or
+                          (epsilon = -1 and p mod 7 in [3, 5, 6])) then
+                # L_2(7)
+                LR := ReadAsFunction(Filename(CM_c9lib, "l27d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    if epsilon = 1 then
+                        size := QuoInt(Gcd(q - 1, 4), 2) * SizePSL(2, 7);
+                    else
+                        size := QuoInt(Gcd(q + 1, 4), 2) * SizePSL(2, 7);
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all and q mod 4 = 1 then
+                    if epsilon = -1 then
+                        elementsToConjugate := [generatorNormGOMinusGO];
+                    else
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorNormGOMinusGO];
+                    fi;
+                elif all and q mod 4 = 3 then
+                    if epsilon = 1 then
+                        elementsToConjugate := [generatorNormGOMinusGO];
+                    else
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorNormGOMinusGO];
+                    fi;
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            return result;
+        fi;
+        if epsilon = 1 then
+            if e = 1 and p mod 7 in [1, 2, 4] then
+                # A7
+                LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    if p = 2 then
+                        size := 2520;
+                    else
+                        size := QuoInt(Gcd(q - 1, 4), 2) * 2520;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all and q mod 4 = 1 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and q mod 4 = 3 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if e = 1 and p mod 6 = 1 then
+                # U42
+                LR := ReadAsFunction(Filename(CM_c9lib, "u42d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := QuoInt(Gcd(q - 1, 4), 2) * SizePSU(4, 2);
+                    SetSize(S[1], size);
+                fi;
+                if all and q mod 4 = 1 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and q mod 4 = 3 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+        elif epsilon = -1 then
+            if e = 1 and p mod 7 in [3, 5, 6] then
+                # A7
+                LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := QuoInt(Gcd(q + 1, 4), 2) * 2520;
+                    SetSize(S[1], size);
+                fi;
+                if all and q mod 4 = 3 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and q mod 4 = 1 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if e = 1 and p mod 6 = 5 then
+                # U42
+                LR := ReadAsFunction(Filename(CM_c9lib, "u42d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := QuoInt(Gcd(q + 1, 4), 2) * SizePSU(4, 2);
+                    SetSize(S[1], size);
+                fi;
+                if all and q mod 4 = 3 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and q mod 4 = 1 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if q = 3 then
+                # 2.L34
+                LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * SizePSL(3, 4);
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorGOMinusSO]));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+        fi;
+    elif n = 7 then
+        if novelties then return result; fi;
+        if e = 1 then
+            # Sp62
+            LR := ReadAsFunction(Filename(CM_c9lib, "s62d7.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizeSp(6, 2);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 3 then
+            # S9
+            LR := ReadAsFunction(Filename(CM_c9lib, "a9d8.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := 362880;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        S := ChevalleyG(q);
+        S := ConjugateToStandardForm(S, "O", GF(q));
+        if normaliser then
+            S := Group(Concatenation(GeneratorsOfGroup(S),
+                                     [PrimitiveElement(GF(q)) * IdentityMat(n, Integers)]));
+        elif general then
+            S := Group(Concatenation(GeneratorsOfGroup(S),
+                                     [(-1)*One(GF(q)) * IdentityMat(n, Integers)]));
+        fi;
+        if all then
+            Append(result, ConjugatesBySubsetsOfGenerators(S, [generatorSOMinusOmega]));
+        else
+            Add(result, S);
+        fi;
+    elif n = 8 then
+        if epsilon = 1 then
+            if novelties then return result; fi;
+            if (e = 1 and p >= 3) then
+                # 2.Omega+(8,2)
+                LR := ReadAsFunction(Filename(CM_c9lib, "2o8+2d8.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * SizeOmega(1, 8, 2);
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if q = 2 then
+                # A9 x3 (all fused under triality)
+                LR := ReadAsFunction(Filename(CM_c9lib, "a9d8.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 181440;
+                    SetSize(S[1], size);
+                fi;
+                Add(result, S[1]);
+                LR := ReadAsFunction(Filename(CM_c9lib, "2a9d8.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 181440;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if q = 5 then
+                # A10, 2.A10 (all fused under triality)
+                LR := ReadAsFunction(Filename(CM_c9lib, "a10d9.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 3628800;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                LR := ReadAsFunction(Filename(CM_c9lib, "2a10d16.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 3628800;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorGOMinusSO,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                # 2Sz8
+                S := ReadAsFunction(Filename(CM_c9lib, "2sz8d8f5.g"))();
+                if normaliser then
+                    S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
+                                                         [PrimitiveElement(GF(q))
+                                                          * IdentityMat(5, Integers)]));
+                fi;
+                if not special and not general and not normaliser then
+                    size := 58240;
+                    SetSize(S, size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorGOMinusSO,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+            fi;
+            if (q <> 2 and p <> 3) then
+                # PSL(3,q).3 or PSU(3,q).3
+                if q mod 3 = 1 then
+                    S := AlmostSimpleDefiningCharacteristic_l3qdim8(q :
+                                                                    special := special,
+                                                                    general := general,
+                                                                    normaliser := normaliser);
+                else
+                    S := AlmostSimpleDefiningCharacteristic_u3qdim8(q :
+                                                                    special := special,
+                                                                    general := general,
+                                                                    normaliser := normaliser);
+                fi;
+                if not special and not general and not normaliser then
+                    if q mod 3 = 1 then
+                        size := Gcd(q - 1, 2) * SizePSL(3, q) * 3;
+                    else
+                        size := Gcd(q - 1, 2) * SizePSU(3, q) * 3;
+                    fi;
+                    SetSize(S, size);
+                fi;
+                if all and IsOddInt(q) then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+            fi;
+            if e mod 3 = 0 then
+                S := Group(Concatenation(GeneratorsOfGroup(Chevalley3D4(RootInt(q, 3))),
+                                         [(-1)*One(GF(q)) * IdentityMat(8, Integers)]));
+                S := ConjugateToStandardForm(S, "O+", GF(q));
+                if not special and not general and not normaliser then
+                    size := Gcd(q - 1, 2) * Size(Chevalley3D4(RootInt(q, 3)));
+                    SetSize(S, size);
+                fi;
+                if all then
+                    if p = 2 then
+                        elementsToConjugate := [generatorSOMinusOmega];
+                    else
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorGOMinusSO,
+                                                generatorNormGOMinusGO];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+                else
+                    Add(result, S);
+                fi;
+            fi;
+            # 2.O(7,q)
+            if normaliser and p <> 2 then
+                Info(InfoWarning, 1, "2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q))",
+                                     " is not implemented yet.");
+            else
+                Info(InfoWarning, 1, "2.O(7,q) < O^+(8,q) is not implemented yet.");
+            fi;
+            # if normaliser and p <> 2 then
+            #     S := TwoO72(q);
+            # else
+            #     S := TwoO7(q);
+            # fi;
+            # if normaliser and p = 2 then
+            #     S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
+            #                                          [PrimitiveElement(GF(q))
+            #                                           * IdentityMat(8, Integers)]));
+            # fi;
+            # if not special and not general and not normaliser then
+            #     if p = 2 then
+            #         size := SizeOmega(0, 7, q);
+            #     else
+            #         size := 2 * SizeOmega(0, 7, q);
+            #     fi;
+            #     SetSize(S, size);
+            # fi;
+            # if all then
+            #     if p = 2 then
+            #         elementsToConjugate := [generatorSOMinusOmega];
+            #     else
+            #         elementsToConjugate := [generatorSOMinusOmega,
+            #                                 generatorGOMinusSO];
+            #     fi;
+            #     Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+            # else
+            #     Add(result, S);
+            # fi;
+            if IsEvenInt(e) then
+                # 2.O^-(8,q^(1/2))
+                if normaliser and p <> 2 then
+                    Info(InfoWarning, 1, "2.O^-(8,q^(1/2)).2 < N_{GL(8,q)}(O^+(8,q))",
+                                         " is not implemented yet.");
+                else
+                    Info(InfoWarning, 1, "2.O^-(8,q^(1/2)) < O^+(8,q)",
+                                         " is not implemented yet.");
+                fi;
+                # if normaliser and p <> 2 then
+                #     S := TwoOminus82(p ^ QuoInt(e, 2));
+                # else
+                #     S := TwoOminus8(p ^ QuoInt(e, 2));
+                # fi;
+                # if normaliser and p = 2 then
+                #     S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
+                #                                          [PrimitiveElement(GF(q))
+                #                                           * IdentityMat(8, Integers)]));
+                # fi;
+                # if not special and not general and not normaliser then
+                #     if p = 2 then
+                #         size := SizeOmega(-1, 8, p ^ QuoInt(e, 2));
+                #     else
+                #         size := 2 * SizeOmega(-1, 8, p ^ QuoInt(e, 2));
+                #     fi;
+                #     SetSize(S, size);
+                # fi;
+                # if all then
+                #     if p = 2 then
+                #         elementsToConjugate := [generatorSOMinusOmega];
+                #     else
+                #         elementsToConjugate := [generatorSOMinusOmega,
+                #                                 generatorGOMinusSO];
+                #     fi;
+                #     Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+                # else
+                #     Add(result, S);
+                # fi;
+            fi;
+        elif epsilon = -1 then
+            if novelties then return result; fi;
+            if p <> 3 then
+                # PSL(3,q) or PSU(3,q)
+                if q mod 3 = 2 then
+                    S := AlmostSimpleDefiningCharacteristic_l3qdim8(q :
+                                                                    special := special,
+                                                                    general := general,
+                                                                    normaliser := normaliser);
+                else
+                    S := AlmostSimpleDefiningCharacteristic_u3qdim8(q :
+                                                                    special := special,
+                                                                    general := general,
+                                                                    normaliser := normaliser);
+                fi;
+                if not special and not general and not normaliser then
+                    if q mod 3 = 2 then
+                        size := SizePSL(3, q);
+                    else
+                        size := SizePSU(3, q);
+                    fi;
+                    SetSize(S, size);
+                fi;
+                if all and IsOddInt(q) then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S, [generatorNormGOMinusGO]));
+                else
+                    Add(result, S);
+                fi;
+            fi;
+        fi;
+    elif n = 9 then
+        if novelties then return result; fi;
+        if (e = 1 and p mod 7 in [1, 6]) or
+           (e = 3 and p mod 7 in [2, 3, 4, 5]) then
+            LR := ReadAsFunction(Filename(CM_c9lib, "l28d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(2, 8);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p mod 17 in [1, 2, 4, 8, 9, 13, 15, 16]) or
+           (e = 2 and p mod 17 in [3, 5, 6, 7, 10, 11, 12, 14]) then
+            LR := ReadAsFunction(Filename(CM_c9lib, "l217d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(2, 17);
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if (e = 1 and p <> 11 and p mod 5 <> 0) then
+            # A10 (p mod 5 in [2, 3]) or A10.2 otherwise
+            LR := ReadAsFunction(Filename(CM_c9lib, "a10d9.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                if p mod 5 in [2, 3] then
+                    size := 1814400;
+                else
+                    size := 3628800;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 5 in [1, 4] then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 11 then
+            # A11.2
+            LR := ReadAsFunction(Filename(CM_c9lib, "a11d10.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := 39916800;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if p >= 11 then
+            # L2q
+            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(9, q :
+                                                              special := special,
+                                                              general := general,
+                                                              normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(2, q) * 2;
+                SetSize(S, size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S, [generatorSOMinusOmega]));
+            else
+                Add(result, S);
+            fi;
+        fi;
+        if q <> 3 then
+            # L2q^2
+            S := AlmostSimpleDefiningCharacteristic_l2q2dim9(q :
+                                                             special := special,
+                                                             general := general,
+                                                             normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(2, q^2) * 2;
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+    elif n = 10 then
+        if epsilon = 1 then
+            if novelties then
+                if (e = 1 and p mod 12 in [1, 5]) then
+                    # A6
+                    LR := ReadAsFunction(Filename(CM_c9lib, "a6d10.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        if p mod 12 = 1 then
+                            size := 1440;
+                        else
+                            size := 720;
+                        fi;
+                        SetSize(S[1], size);
+                    fi;
+                    if all and p mod 12 = 1 then
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorNormGOMinusGO];
+                    elif all and p mod 12 = 5 then
+                        elementsToConjugate := [generatorNormGOMinusGO];
+                    else
+                        elementsToConjugate := [];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                fi;
+                if (e = 1 and p mod 11 in [1, 3, 4, 5, 9] and p <> 3) then
+                    # L211b
+                    LR := ReadAsFunction(Filename(CM_c9lib, "l211d10b.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        if p mod 4 = 1 then
+                            size := 2 * SizePSL(2, 11);
+                        else
+                            size := SizePSL(2, 11);
+                        fi;
+                        SetSize(S[1], size);
+                    fi;
+                    if all and p mod 4 = 1 then
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorNormGOMinusGO];
+                    elif all and p mod 4 = 3 then
+                        elementsToConjugate := [generatorNormGOMinusGO];
+                    else
+                        elementsToConjugate := [];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                fi;
+                return result;
+            fi;
+            if (e = 1 and p mod 11 in [1, 3, 4, 5, 9] and p <> 3) then
+                # L2_11a
+                LR := ReadAsFunction(Filename(CM_c9lib, "l211d10a.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    if p mod 4 = 1 then
+                        size := 2 * SizePSL(2, 11);
+                    else
+                        size := SizePSL(2, 11);
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all and p mod 4 = 1 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and p mod 4 = 3 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if (e = 1 and p mod 11 in [1, 3, 4, 5, 9] and p <> 3) then
+                # A11
+                LR := ReadAsFunction(Filename(CM_c9lib, "a11d10.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    if p mod 4 = 1 then
+                        size := 39916800;
+                    else
+                        size := 19958400;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all and p mod 4 = 1 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and p mod 4 = 3 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if q = 3 then
+                # A12
+                LR := ReadAsFunction(Filename(CM_c9lib, "a12d11.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 239500800;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorNormGOMinusGO]));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if q mod 4 = 1 then
+                # Sp4q
+                S := AlmostSimpleDefiningCharacteristic_sp4qdim10(q :
+                                                                  special := special,
+                                                                  general := general,
+                                                                  normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * SizePSp(4, q);
+                    SetSize(S, size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorGOMinusSO,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+            fi;
+        elif epsilon = -1 then
+            if novelties then
+                if (e = 1 and p mod 12 in [7, 11]) then
+                    # A6
+                    LR := ReadAsFunction(Filename(CM_c9lib, "a6d10.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        if p mod 12 = 7 then
+                            size := 720;
+                        else
+                            size := 1440;
+                        fi;
+                        SetSize(S[1], size);
+                    fi;
+                    if all and p mod 12 = 11 then
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorNormGOMinusGO];
+                    elif all and p mod 12 = 7 then
+                        elementsToConjugate := [generatorNormGOMinusGO];
+                    else
+                        elementsToConjugate := [];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                fi;
+                if (e = 1 and p mod 11 in [2, 6, 7, 8, 10]) then
+                    # L211b
+                    # TODO is this subgroup really maximal for p = 2?
+                    # see Proposition 4.9.62
+                    LR := ReadAsFunction(Filename(CM_c9lib, "l211d10b.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        if p mod 4 = 3 then
+                            size := 2 * SizePSL(2, 11);
+                        else
+                            size := SizePSL(2, 11);
+                        fi;
+                        SetSize(S[1], size);
+                    fi;
+                    if all and p mod 4 = 3 then
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorNormGOMinusGO];
+                    elif all and p mod 4 = 1 then
+                        elementsToConjugate := [generatorNormGOMinusGO];
+                    else
+                        elementsToConjugate := [];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                fi;
+                if q = 2 then
+                    # M12
+                    LR := ReadAsFunction(Filename(CM_c9lib, "m12d11.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        size := 95040;
+                        SetSize(S[1], size);
+                    fi;
+                    Add(result, S[1]);
+                fi;
+                if q = 7 then
+                    # 2L34d10
+                    LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        size := 2 * SizePSL(3, 4);
+                        SetSize(S[1], size);
+                    fi;
+                    if all then
+                        Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorNormGOMinusGO]));
+                    else
+                        Add(result, S[1]);
+                    fi;
+                fi;
+                return result;
+            fi;
+            if (e = 1 and p mod 11 in [2, 6, 7, 8, 10] and p <> 2) then
+                # L2_11
+                LR := ReadAsFunction(Filename(CM_c9lib, "l211d10a.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    if p mod 4 = 3 then
+                        size := 2 * SizePSL(2, 11);
+                    else
+                        size := SizePSL(2, 11);
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all and p mod 4 = 3 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and p mod 4 = 1 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if (e = 1 and p mod 11 in [2, 6, 7, 8, 10] and p <> 2) then
+                # A11
+                LR := ReadAsFunction(Filename(CM_c9lib, "a11d10.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    if p mod 4 = 1 then
+                        size := 19958400;
+                    else
+                        size := 39916800;
+                    fi;
+                    SetSize(S[1], size);
+                fi;
+                if all and p mod 4 = 3 then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                elif all and p mod 4 = 1 then
+                    elementsToConjugate := [generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if q = 2 then
+                # A12
+                LR := ReadAsFunction(Filename(CM_c9lib, "a12d11.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 239500800;
+                    SetSize(S[1], size);
+                fi;
+                Add(result, S[1]);
+            fi;
+            if q = 7 then
+                # 2.M22
+                LR := ReadAsFunction(Filename(CM_c9lib, "2m22d10.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 887040;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if q mod 4 = 3 then
+                # Sp4q
+                S := AlmostSimpleDefiningCharacteristic_sp4qdim10(q :
+                                                                  special := special,
+                                                                  general := general,
+                                                                  normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * SizePSp(4, q);
+                    SetSize(S, size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorGOMinusSO,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+            fi;
+        fi;
+    elif n = 11 then
+        if (e = 1 and Gcd(p, 24) = 1 and p <> 13) then
+            # A12 (p mod 24 in [7, 11, 13, 17]) or A12.2 (p mod 24 in [1, 5, 19, 23])
+            LR := ReadAsFunction(Filename(CM_c9lib, "a12d11.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                if p mod 24 in [7, 11, 13, 17] then
+                    size := 239500800;
+                else
+                    size := 479001600;
+                fi;
+                SetSize(S[1], size);
+            fi;
+            if all and p mod 24 in [1, 5, 19, 23] then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if q = 13 then
+            # A13
+            LR := ReadAsFunction(Filename(CM_c9lib, "a13d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := 3113510400;
+                SetSize(S[1], size);
+            fi;
+            Add(result, S[1]);
+            # L33.2
+            LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
+            S := ModularReductionOfIntegralLattice(LR, q :
+                                                   special := special,
+                                                   general := general,
+                                                   normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(3, 3) * 2;
+                SetSize(S[1], size);
+            fi;
+            if all then
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorSOMinusOmega]));
+            else
+                Add(result, S[1]);
+            fi;
+        fi;
+        if p >= 11 and q <> 11 then
+            # L2q
+            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(11, q :
+                                                              special := special,
+                                                              general := general,
+                                                              normaliser := normaliser);
+            if not special and not general and not normaliser then
+                size := SizePSL(2, q);
+                SetSize(S, size);
+            fi;
+            Add(result, S);
+        fi;
+    elif n = 12 then
+        if epsilon = 1 then
+            if novelties then
+                if (e = 1 and p mod 13 in [1, 3, 4, 9, 10, 12] and p <> 3) then
+                    # L33
+                    LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        size := 2 * SizePSL(3, 3);
+                        SetSize(S[1], size);
+                    fi;
+                    if all and p mod 12 in [1, 11] then
+                        elementsToConjugate := [generatorGOMinusSO,
+                                                generatorNormGOMinusGO];
+                    elif all then
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorGOMinusSO];
+                    else
+                        elementsToConjugate := [];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                fi;
+                if (e = 1 and p >= 5 and p mod 24 in [5, 7, 11, 13, 17, 19]) then
+                    # 2.M12
+                    LR := ReadAsFunction(Filename(CM_c9lib, "2m12d12.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        size := 2 * 95040;
+                        SetSize(S[1], size);
+                    fi;
+                    if all and p mod 24 in [11, 13] then
+                        elementsToConjugate := [generatorGOMinusSO,
+                                                generatorNormGOMinusGO];
+                    elif all then
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorGOMinusSO];
+                    else
+                        elementsToConjugate := [];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                fi;
+                return result;
+            fi;
+            if (e = 1 and p mod 55 in [1, 16, 19, 24, 26, 29, 31, 36, 39, 54]) then
+                # L2_11
+                LR := ReadAsFunction(Filename(CM_c9lib, "l211d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * SizePSL(2, 11);
+                    SetSize(S[1], size);
+                    SetSize(S[2], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                Append(result, ConjugatesBySubsetsOfGenerators(S[2], elementsToConjugate));
+            fi;
+            if (p mod 13 in [1, 3, 4, 9, 10, 12]) and
+               ((e = 1 and p mod 7 in [1, 6]) or
+                (e = 3 and p mod 7 in [2, 3, 4, 5])) then
+                # L2_13
+                LR := ReadAsFunction(Filename(CM_c9lib, "l213d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * SizePSL(2, 13);
+                    SetSize(S[1], size);
+                    SetSize(S[2], size);
+                    SetSize(S[3], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+                Append(result, ConjugatesBySubsetsOfGenerators(S[2], elementsToConjugate));
+                Append(result, ConjugatesBySubsetsOfGenerators(S[3], elementsToConjugate));
+            fi;
+            if (e = 1 and p mod 13 in [1, 3, 4, 9, 10, 12]) then
+                # A13
+                LR := ReadAsFunction(Filename(CM_c9lib, "a13d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 6227020800;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if (e = 1 and p >= 5 and p mod 24 in [1, 23]) then
+                # 2.M12.2
+                LR := ReadAsFunction(Filename(CM_c9lib, "2m12d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 2 * 95040 * 2;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorGOMinusSO,
+                                            generatorNormGOMinusGO];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+        elif epsilon = -1 then
+            if novelties then
+                if (e = 1 and p mod 13 in [2, 5, 6, 7, 8, 11] and p mod 12 in [5, 7]) then
+                    # L33
+                    LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
+                    S := ModularReductionOfIntegralLattice(LR, q :
+                                                           special := special,
+                                                           general := general,
+                                                           normaliser := normaliser);
+                    if not special and not general and not normaliser then
+                        size := SizePSL(3, 3);
+                        SetSize(S[1], size);
+                    fi;
+                    if all then
+                        Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorGOMinusSO]));
+                    else
+                        Add(result, S[1]);
+                    fi;
+                fi;
+                return result;
+            fi;
+            if (e = 1 and p mod 55 in [4, 6, 9, 14, 21, 34, 41, 46, 49, 51]) or
+               (e = 2 and p mod 5 in [2, 3]) then
+                # L2_11
+                LR := ReadAsFunction(Filename(CM_c9lib, "l211d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := SizePSL(2, 11);
+                    SetSize(S[1], size);
+                    SetSize(S[2], size);
+                fi;
+                if all and p <> 2 then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorNormGOMinusGO]));
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[2], [generatorNormGOMinusGO]));
+                else
+                    Add(result, S[1]);
+                    Add(result, S[2]);
+                fi;
+            fi;
+            if (p mod 13 in [2, 5, 6, 7, 8, 11]) and
+               ((e = 1 and p mod 7 in [1, 6]) or
+                (e = 3 and p mod 7 in [2, 3, 4, 5])) then
+                # L2_13
+                LR := ReadAsFunction(Filename(CM_c9lib, "l213d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := SizePSL(2, 13);
+                    SetSize(S[1], size);
+                    SetSize(S[2], size);
+                    SetSize(S[3], size);
+                fi;
+                if all and p <> 2 then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorNormGOMinusGO]));
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[2], [generatorNormGOMinusGO]));
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[3], [generatorNormGOMinusGO]));
+                else
+                    Add(result, S[1]);
+                    Add(result, S[2]);
+                    Add(result, S[3]);
+                fi;
+            fi;
+            if (e = 1 and p mod 13 in [2, 5, 6, 7, 8, 11] and p mod 12 in [1, 2, 11]) then
+                # L33.2
+                LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := SizePSL(3, 3) * 2;
+                    SetSize(S[1], size);
+                fi;
+                if all and p mod 12 in [1, 11] then
+                    elementsToConjugate := [generatorGOMinusSO,
+                                            generatorNormGOMinusGO];
+                elif all and p = 2 then
+                    elementsToConjugate := [generatorSOMinusOmega];
+                else
+                    elementsToConjugate := [];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
+            fi;
+            if (e = 1 and p mod 13 in [2, 5, 6, 7, 8, 11] and p <> 7) then
+                # A13
+                LR := ReadAsFunction(Filename(CM_c9lib, "a13d12.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 3113510400;
+                    SetSize(S[1], size);
+                fi;
+                if all and p <> 2 then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorNormGOMinusGO]));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+            if q = 7 then
+                # A14
+                LR := ReadAsFunction(Filename(CM_c9lib, "a14d13.g"))();
+                S := ModularReductionOfIntegralLattice(LR, q :
+                                                       special := special,
+                                                       general := general,
+                                                       normaliser := normaliser);
+                if not special and not general and not normaliser then
+                    size := 43589145600;
+                    SetSize(S[1], size);
+                fi;
+                if all then
+                    Append(result, ConjugatesBySubsetsOfGenerators(S[1], [generatorNormGOMinusGO]));
+                else
+                    Add(result, S[1]);
+                fi;
+            fi;
+        fi;
+    fi;
+    return result;
+end);
+
 InstallGlobalFunction(MaximalSubgroupClassRepsOrthogonalGroup,
 function(epsilon, n, q, classes...)
     local maximalSubgroups, squareDiscriminant, numberOfConjugates, G;
@@ -1781,6 +5460,22 @@ function(epsilon, n, q, classes...)
         if n <> 8 then
             Append(maximalSubgroups, C7SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
         fi;
+    fi;
+
+    if 9 in classes then
+        # Class C9 subgroups ######################################################
+        # Cf. Theorems 4.10.18 (n = 7), 4.10.19 (n = 8), 4.10.20 (n = 9),
+        #              4.10.21 (n = 10), 4.10.22 (n = 11),
+        #              4.10.23 (n = 12) in [BHR13]
+        # Cf. Theorems 5.11.11 (n = 7), 5.11.12 (n = 8), 5.11.13 (n = 9),
+        #              5.11.14 (n = 10), 5.11.15 (n = 11),
+        #              5.11.16 (n = 12) in [BHR13]
+        # Cf. Tables 8.7 (n = 3), 8.17 (n = 4), 8.23 (n = 5),
+        #            8.32, 8.34 (all n = 6), 8.40 (n = 7),
+        #            8.50, 8.53 (all n = 8), 8.59 (n = 9),
+        #            8.67, 8.69 (all n = 10), 8.75 (n = 11),
+        #            8.83, 8.85 (all n = 12) in [BHR13]
+        Append(maximalSubgroups, C9SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
 
     return maximalSubgroups;
