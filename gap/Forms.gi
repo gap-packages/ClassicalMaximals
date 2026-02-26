@@ -379,11 +379,8 @@ InstallGlobalFunction("ConjugateToStandardFormAutoType",
 function(G, field)
     local forms;
 
-    # forms := ClassicalFormsNewNew(G, field);
     forms := CM_ClassicalForms(G, field);
-    if forms.formType = "linear" then
-        return G;
-    elif forms.formType = "unitary" then
+    if forms.formType = "unitary" then
         return ConjugateToStandardForm(G, "U", field);
     elif forms.formType = "symplectic" then
         return ConjugateToStandardForm(G, "S", field);
@@ -394,6 +391,7 @@ function(G, field)
     elif forms.formType = "orthogonalcircle" then
         return ConjugateToStandardForm(G, "O", field);
     else
-        ErrorNoReturn("Illegal form type");
+        # forms.formType = "linear"
+        return G;
     fi;
 end);
