@@ -2029,7 +2029,7 @@ function(n, q)
         fi;
         if (e = 1 and p mod 3 = 2 and p mod 5 in [2, 3] and p > 2) then
             # 3.A6.2_3
-            # TODO is this group really maximal?
+            # TODO is this subgroup really maximal?
             # see Proposition 6.2.2
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q :
@@ -2363,7 +2363,7 @@ function(n, q)
         fi;
         if q = 5 then
             # 6A7
-            # TODO is this group really maximal?
+            # TODO is this subgroup really maximal?
             # see Proposition 6.3.1 (iii)
             LR := ReadAsFunction(Filename(CM_c9lib, "6a7d24.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q :
@@ -4851,8 +4851,10 @@ function(epsilon, n, q)
                     fi;
                     Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
                 fi;
-                if (e = 1 and p mod 11 in [2, 6, 7, 8, 10]) then  # XXX error in magma? what with p = 2?
+                if (e = 1 and p mod 11 in [2, 6, 7, 8, 10]) then
                     # L211b
+                    # TODO is this subgroup really maximal for p = 2?
+                    # see Proposition 4.9.62
                     LR := ReadAsFunction(Filename(CM_c9lib, "l211d10b.g"))();
                     S := ModularReductionOfIntegralLattice(LR, q :
                                                            special := special,
