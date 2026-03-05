@@ -329,11 +329,8 @@ gap> TestC9SubgroupsOrthogonalGroupGeneric(0,7,31 : all:=false);  # Have n point
 #@fi
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,5 : novelties:=true, all:=false);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,5 : all:=false);
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,2 : all:=false);
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,3 : all:=false);
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,2^3 : all:=false);  # Have n points
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,5^3 : all:=false);  # Have n points

@@ -1209,70 +1209,54 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,31));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : novelties:=true));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5));  # 32
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-28
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : all:=false));  # 6
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-5
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : normaliser:=true));  # 32
-#I  2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-28
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : general:=true));  # 32
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-28
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7));  # 12
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-8
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : normaliser:=true));  # 12
-#I  2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-8
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : general:=true));  # 12
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-8
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2));  # 5
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2 : all:=false));  # 3
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3));  # 5
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3 : all:=false));  # 3
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3 : general:=true));  # 5
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^3));  # 16
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5));
+32
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : all:=false));
+6
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : normaliser:=true));  # expensive test
+32
+#@fi
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : general:=true));
+32
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7));
 12
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^3 : all:=false));  # 3
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : normaliser:=true));  # expensive test
+12
+#@fi
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : general:=true));
+12
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2));
+5
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2 : all:=false));
+3
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3));
+5
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3 : all:=false));
+3
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3 : general:=true));
+5
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^3));
+16
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^3 : all:=false));
+3
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^2));
+12
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^2 : all:=false));
+3
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true));
+8
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true, all:=false));  # expensive test
 2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^2));  # 12
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-#I  2.O^-(8,q^(1/2)) < O^+(8,q) is not implemented yet.
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^2 : all:=false));  # 3
-#I  2.O(7,q) < O^+(8,q) is not implemented yet.
-#I  2.O^-(8,q^(1/2)) < O^+(8,q) is not implemented yet.
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true));  # 8
-#I  2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true, all:=false));  # 2
-#I  2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true));  # 8
-#I  2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-#I  2.O^-(8,q^(1/2)).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true, all:=false));  # 2
-#I  2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-#I  2.O^-(8,q^(1/2)).2 < N_{GL(8,q)}(O^+(8,q)) is not implemented yet.
-0
+#@fi
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true));  # expensive test
+8
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true, all:=false));  # expensive test
+2
+#@fi
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,13 : novelties:=true));
 0
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,13));
