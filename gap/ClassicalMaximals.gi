@@ -4479,78 +4479,65 @@ function(epsilon, n, q)
             fi;
             # 2.O(7,q)
             if normaliser and p <> 2 then
-                Info(InfoWarning, 1, "2.O(7,q).2 < N_{GL(8,q)}(O^+(8,q))",
-                                     " is not implemented yet.");
+                S := AlmostSimpleDefiningCharacteristic_TwoO72(q);
             else
-                Info(InfoWarning, 1, "2.O(7,q) < O^+(8,q) is not implemented yet.");
+                S := AlmostSimpleDefiningCharacteristic_TwoO7(q);
             fi;
-            # if normaliser and p <> 2 then
-            #     S := TwoO72(q);
-            # else
-            #     S := TwoO7(q);
-            # fi;
-            # if normaliser and p = 2 then
-            #     S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
-            #                                          [PrimitiveElement(GF(q))
-            #                                           * IdentityMat(8, Integers)]));
-            # fi;
-            # if not special and not general and not normaliser then
-            #     if p = 2 then
-            #         size := SizeOmega(0, 7, q);
-            #     else
-            #         size := 2 * SizeOmega(0, 7, q);
-            #     fi;
-            #     SetSize(S, size);
-            # fi;
-            # if all then
-            #     if p = 2 then
-            #         elementsToConjugate := [generatorSOMinusOmega];
-            #     else
-            #         elementsToConjugate := [generatorSOMinusOmega,
-            #                                 generatorGOMinusSO];
-            #     fi;
-            #     Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
-            # else
-            #     Add(result, S);
-            # fi;
+            if normaliser and p = 2 then
+                S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
+                                                     [PrimitiveElement(GF(q))
+                                                      * IdentityMat(8, Integers)]));
+            fi;
+            if not special and not general and not normaliser then
+                if p = 2 then
+                    size := SizeOmega(0, 7, q);
+                else
+                    size := 2 * SizeOmega(0, 7, q);
+                fi;
+                SetSize(S, size);
+            fi;
+            if all then
+                if p = 2 then
+                    elementsToConjugate := [generatorSOMinusOmega];
+                else
+                    elementsToConjugate := [generatorSOMinusOmega,
+                                            generatorGOMinusSO];
+                fi;
+                Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+            else
+                Add(result, S);
+            fi;
             if IsEvenInt(e) then
                 # 2.O^-(8,q^(1/2))
                 if normaliser and p <> 2 then
-                    Info(InfoWarning, 1, "2.O^-(8,q^(1/2)).2 < N_{GL(8,q)}(O^+(8,q))",
-                                         " is not implemented yet.");
+                    S := AlmostSimpleDefiningCharacteristic_TwoOminus82(p ^ QuoInt(e, 2));
                 else
-                    Info(InfoWarning, 1, "2.O^-(8,q^(1/2)) < O^+(8,q)",
-                                         " is not implemented yet.");
+                    S := AlmostSimpleDefiningCharacteristic_TwoOminus8(p ^ QuoInt(e, 2));
                 fi;
-                # if normaliser and p <> 2 then
-                #     S := TwoOminus82(p ^ QuoInt(e, 2));
-                # else
-                #     S := TwoOminus8(p ^ QuoInt(e, 2));
-                # fi;
-                # if normaliser and p = 2 then
-                #     S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
-                #                                          [PrimitiveElement(GF(q))
-                #                                           * IdentityMat(8, Integers)]));
-                # fi;
-                # if not special and not general and not normaliser then
-                #     if p = 2 then
-                #         size := SizeOmega(-1, 8, p ^ QuoInt(e, 2));
-                #     else
-                #         size := 2 * SizeOmega(-1, 8, p ^ QuoInt(e, 2));
-                #     fi;
-                #     SetSize(S, size);
-                # fi;
-                # if all then
-                #     if p = 2 then
-                #         elementsToConjugate := [generatorSOMinusOmega];
-                #     else
-                #         elementsToConjugate := [generatorSOMinusOmega,
-                #                                 generatorGOMinusSO];
-                #     fi;
-                #     Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
-                # else
-                #     Add(result, S);
-                # fi;
+                if normaliser and p = 2 then
+                    S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
+                                                         [PrimitiveElement(GF(q))
+                                                          * IdentityMat(8, Integers)]));
+                fi;
+                if not special and not general and not normaliser then
+                    if p = 2 then
+                        size := SizeOmega(-1, 8, p ^ QuoInt(e, 2));
+                    else
+                        size := 2 * SizeOmega(-1, 8, p ^ QuoInt(e, 2));
+                    fi;
+                    SetSize(S, size);
+                fi;
+                if all then
+                    if p = 2 then
+                        elementsToConjugate := [generatorSOMinusOmega];
+                    else
+                        elementsToConjugate := [generatorSOMinusOmega,
+                                                generatorGOMinusSO];
+                    fi;
+                    Append(result, ConjugatesBySubsetsOfGenerators(S, elementsToConjugate));
+                else
+                    Add(result, S);
+                fi;
             fi;
         elif epsilon = -1 then
             if novelties then return result; fi;
