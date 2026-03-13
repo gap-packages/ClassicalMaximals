@@ -1,0 +1,39 @@
+# Standard generators of A7 are a and b where a is in class 3A, b has order 5
+# and ab has order 7.
+# Standard generators of the double cover 2.A7 are preimages A and B where A has
+# order 3, B has order 5 and AB has order 7. Any two of these conditions implies
+# the third.
+# Standard generators of the triple cover 3.A7 are preimages A and B where B has
+# order 5 and AB has order 7.
+# Standard generators of the sextuple cover 6.A7 are preimages A and B where B
+# has order 5 and AB has order 7.
+local _LR, a, b, A, B;
+_LR := rec();
+_LR.F := FreeGroup(2);
+
+a := _LR.F.1;
+b := _LR.F.2;
+_LR.AI := [ [ a^-1, b ] ];
+# two constituents interchanged by _LR.AI[1]
+
+A:=[[-1,1,0,0,0,-1,0,0],
+[-1,0,0,-1,0,-1,0,0],
+[0,0,-1,1,0,0,1,0],
+[0,0,0,0,0,1,0,0],
+[0,0,0,1,-1,0,0,1],
+[0,0,0,-1,0,-1,0,0],
+[0,0,-1,0,0,-1,0,0],
+[0,0,0,0,-1,-1,0,0]];
+
+B:=[[-1,0,1,0,-1,0,0,1],
+[0,0,0,1,-1,0,0,0],
+[0,-1,0,0,0,0,0,1],
+[1,-1,0,0,0,0,0,0],
+[1,-1,0,0,0,1,0,0],
+[0,1,0,0,0,0,-1,0],
+[0,0,0,0,0,1,-1,0],
+[0,0,0,0,-1,0,0,0]];
+
+_LR.G := GroupByGenerators([A,B]);
+
+return _LR;
