@@ -962,7 +962,9 @@ function(q)
         mu := mum[1,1];
         Assert(0, mum = mu * IdentityMat(8, GF(q^2)));
         x := RootFFE(GF(q^2), mu^-1, 2) * x;
-        if IsOddInt(Order(m)) and IsEvenInt(Order(x)) then
+        # Order is missing for IsPlistMatrixRep
+        # see https://github.com/gap-system/gap/issues/6270
+        if IsOddInt(Order(Unpack(m))) and IsEvenInt(Order(x)) then
             x := x * ((-1)*One(GF(q^2)) * IdentityMat(8));
         fi;
         return x;
@@ -1000,7 +1002,8 @@ function(q)
         fi;
     end);
     M8b := GModuleByMats(M8g, GF(q^2));
-    M8btoM8 := MTX.IsomorphismModules(M8b, M8);
+    Assert(0, MTX.IsIrreducible(M8b) and MTX.IsIrreducible(M8));
+    M8btoM8 := MTX.IsomorphismIrred(M8b, M8);
     Assert(0, M8btoM8 <> fail);
     # more efficient to go back to working over GF(q)
     M8g := List([1..ng], function(i)
@@ -1039,7 +1042,7 @@ function(q)
             return GeneratorsOfGroup(SG56)[inds[i]];
         fi;
     end);
-    # gh := GHom(SM56,TT); M56b := Image(gh.1); ?
+
     SM56 := GModuleByMats(SM56g, GF(q));
     gh1 := First(MTX.Homomorphisms(SM56, TT));
     gh1 := MTX.Homomorphism(SM56, TT, gh1);
@@ -1062,7 +1065,8 @@ function(q)
     # now need to get M56b back over to GF(q^2)
     M56bg := MTX.Generators(M56b);
     M56b := GModuleByMats(M56bg, GF(q^2));
-    M56btoM56 := MTX.IsomorphismModules(M56b, M56);
+    Assert(0, MTX.IsIrreducible(M56b) and MTX.IsIrreducible(M56));
+    M56btoM56 := MTX.IsomorphismIrred(M56b, M56);
     Assert(0, M56btoM56 <> fail);
 
     # Now we are ready to define the required map!
@@ -1107,7 +1111,8 @@ end);
 # 2.O^-(8,q).2 as C9-subgroup of normaliser in GL(8,q^2) of O^+(8,q^2)
 InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_TwoOminus82",
 function(q)
-    local G, go, z, AandB, a, b, mats, g, stdform, mat, ngo, f, H, Hg, Hgc, phi, Hgi, Hgci, M, Mi, x, Hgc2, Hgc2i, M2i;
+    local G, go, z, AandB, a, b, mats, g, stdform, mat, ngo, f, H, Hg, Hgc, phi,
+          Hgi, Hgci, M, Mi, x, Hgc2, Hgc2i, M2i;
     G := Omega(-1, 8, q);
     go := GOMinusSO(-1, 8, q);
     # Construct an element ngo of Normaliser(GL(8,q),GO^-(8,q)) - GO^-(8,q)

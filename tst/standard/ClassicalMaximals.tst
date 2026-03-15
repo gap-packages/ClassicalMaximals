@@ -1149,9 +1149,9 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,11 : all:=false));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7));
 1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7 : normaliser:=true));
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7 : novelties:=true, normaliser:=true));
 1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7 : general:=true));
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7 : novelties:=true, general:=true));
 1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,11 : novelties:=true));
 2
@@ -1213,18 +1213,14 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5));
 32
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : all:=false));
 6
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : normaliser:=true));  # expensive test
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : normaliser:=true));
 32
-#@fi
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5 : general:=true));
 32
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7));
 12
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : normaliser:=true));  # expensive test
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : normaliser:=true));
 12
-#@fi
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7 : general:=true));
 12
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2));
@@ -1247,16 +1243,12 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^2 : all:=false));
 3
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true));
 8
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true, all:=false));  # expensive test
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true, all:=false));
 2
-#@fi
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true));  # expensive test
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true));
 8
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true, all:=false));  # expensive test
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true, all:=false));
 2
-#@fi
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,13 : novelties:=true));
 0
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,13));
