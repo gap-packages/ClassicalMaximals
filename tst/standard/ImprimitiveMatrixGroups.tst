@@ -1,4 +1,6 @@
 gap> START_TEST("ImprimitiveMatrixGroups.tst");
+gap> oldOrbInfoLevel:=InfoLevel(InfoOrb);;
+gap> SetInfoLevel(InfoOrb, 0); # silence `Giving up, Schreier tree is not shallow.` warnings
 
 #
 gap> TestImprimitivesMeetSL := function(n, q, t)
@@ -153,4 +155,5 @@ gap> OmegaNonIsometricImprimitives(1, 6, 5);
 Error, discriminant must be nonsquare
 
 #
+gap> SetInfoLevel(InfoOrb, oldOrbInfoLevel);
 gap> STOP_TEST("ImprimitiveMatrixGroups.tst", 0);

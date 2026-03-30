@@ -1,4 +1,6 @@
 gap> START_TEST("SubfieldMatrixGroups.tst");
+gap> oldOrbInfoLevel:=InfoLevel(InfoOrb);;
+gap> SetInfoLevel(InfoOrb, 0); # silence `Giving up, Schreier tree is not shallow.` warnings
 
 #
 gap> TestSubfieldSL := function(n, p, e, f)
@@ -47,9 +49,7 @@ gap> TestSymplecticSubfieldSU := function(n, q)
 > end;;
 gap> TestSymplecticSubfieldSU(4, 5);
 gap> TestSymplecticSubfieldSU(2, 4);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestSymplecticSubfieldSU(4, 3); # FIXME: `Giving up, Schreier tree is not shallow.`
-#@fi
+gap> TestSymplecticSubfieldSU(4, 3);
 
 # Test error handling
 gap> SymplecticSubfieldSU(3, 3);
@@ -130,4 +130,5 @@ gap> SubfieldOmega(-1, 8, 3, 2, 1, 1);
 Error, <epsilon_0> ^ (<e> / <f>) must be equal to <epsilon>
 
 #
+gap> SetInfoLevel(InfoOrb, oldOrbInfoLevel);
 gap> STOP_TEST("SubfieldMatrixGroups.tst", 0);

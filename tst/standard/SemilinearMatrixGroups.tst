@@ -96,9 +96,7 @@ gap> TestOrthogonalSemilinearOmega := function(epsilon, epsilon1, d, q)
 >   CheckSize(G);
 > end;;
 gap> TestOrthogonalSemilinearOmega(1, 0, 6, 3);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOrthogonalSemilinearOmega(-1, 0, 6, 3); # FIXME: `with 2`
-#@fi
+gap> TestOrthogonalSemilinearOmega(-1, 0, 6, 3);
 gap> TestOrthogonalSemilinearOmega(1, 0, 6, 5);
 gap> TestOrthogonalSemilinearOmega(-1, 0, 6, 5);
 gap> TestOrthogonalSemilinearOmega(1, 1, 8, 7);

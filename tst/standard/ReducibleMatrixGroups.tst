@@ -123,9 +123,9 @@ gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, -1, 5);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 5, -1, 2);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 8, 1, 2);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 8, 1, 2); # `Error, !!!`, may be related to https://github.com/gap-packages/recog/issues/12
-gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, -1, 4); # Error, List Element: <list>[3] must have an assigned value
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 8, 1, 2); # FIXME: `Error, !!!`, may be related to https://github.com/gap-packages/recog/issues/12
 #@fi
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, -1, 4);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 5, 0, 1);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 7, 0, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 7, 0, 1);
@@ -133,9 +133,7 @@ gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 10, 7, 0, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, 0, 1);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 7, 0, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 7, 0, 1);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 10, 7, 0, 3);  # info messages: '#I  Have 58653 points' etc.
-#@fi
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 10, 7, 0, 3);
 
 # Test error handling
 gap> OmegaStabilizerOfNonDegenerateSubspace(2, 5, 5, 1, 2);
