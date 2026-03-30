@@ -333,7 +333,7 @@ function(q)
     tmat := ConjugateToStandardForm(DG, "O", GF(q))!.baseChangeMatrix;
     G := G^tmat;
     # adjust G.3 to fix form and G.4 to have determinant 1
-    form := CM_SymmetricBilinearForm(GroupByGenerators([G.1, G.2]), GF(q));
+    form := CM_BilinearForm(GroupByGenerators([G.1, G.2]), GF(q));
     tform := G.3 * form * TransposedMat(G.3);
     scal := form[1,9] / tform[1,9];
     rt := RootFFE(GF(q), scal, 2);
@@ -687,7 +687,7 @@ function(q)
     G := Group(MTX.Generators(M10));
     tmat := ConjugateToStandardFormAutoType(Group([G.1, G.2]), GF(q))!.baseChangeMatrix;
     G := G^tmat;
-    form := CM_SymmetricBilinearForm(Group([G.1, G.2]), GF(q));
+    form := CM_BilinearForm(Group([G.1, G.2]), GF(q));
     tform := G.3 * form * TransposedMat(G.3);
     scal := form[1,10] / tform[1,10];
     rt := RootFFE(GF(q), scal, 2);
@@ -949,7 +949,7 @@ function(q)
                        GF(q^2));
     AT := Group(MTX.Generators(T));
     # first construct map from AT to G1
-    form := CM_SymmetricBilinearForm(G1, GF(q^2));
+    form := CM_BilinearForm(G1, GF(q^2));
     Assert(0, form <> fail);
     formi := form^(-1);
     ATtoG1 := function(m)
