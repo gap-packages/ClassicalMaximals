@@ -1,4 +1,6 @@
 gap> START_TEST("ClassicalNormalizerMatrixGroups.tst");
+gap> oldOrbInfoLevel:=InfoLevel(InfoOrb);;
+gap> SetInfoLevel(InfoOrb, 0); # silence `Giving up, Schreier tree is not shallow.` warnings
 
 #
 gap> TestSymplecticNormalizerInSL := function(n, q)
@@ -37,9 +39,7 @@ gap> TestOrthogonalNormalizerInSL(-1, 4, 3); # FIXME: see https://github.com/gap
 #@fi
 gap> TestOrthogonalNormalizerInSL(1, 4, 3);
 gap> TestOrthogonalNormalizerInSL(-1, 4, 5);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOrthogonalNormalizerInSL(1, 4, 5); # FIXME: see https://github.com/gap-packages/recog/issues/316
-#@fi
+gap> TestOrthogonalNormalizerInSL(1, 4, 5);
 gap> TestOrthogonalNormalizerInSL(-1, 6, 3);
 
 #
@@ -51,10 +51,11 @@ gap> TestOrthogonalInSp := function(epsilon, n, q)
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestOrthogonalInSp(1, 4, 8); # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
-gap> TestOrthogonalInSp(-1, 6, 2); # FIXME: `Giving up, Schreier tree is not shallow.`
 #@fi
+gap> TestOrthogonalInSp(-1, 6, 2);
 gap> TestOrthogonalInSp(-1, 4, 4);
 gap> TestOrthogonalInSp(1, 6, 2);
 
 #
+gap> SetInfoLevel(InfoOrb, oldOrbInfoLevel);
 gap> STOP_TEST("ClassicalNormalizerMatrixGroups.tst", 0);

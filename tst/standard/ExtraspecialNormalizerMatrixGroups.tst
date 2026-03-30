@@ -1,4 +1,6 @@
 gap> START_TEST("ExtraspecialNormalizerMatrixGroups.tst");
+gap> oldOrbInfoLevel:=InfoLevel(InfoOrb);;
+gap> SetInfoLevel(InfoOrb, 0); # silence `Giving up, Schreier tree is not shallow.` warnings
 
 #
 gap> TestExtraspecialNormalizerInSL := function(r, m, q)
@@ -10,9 +12,7 @@ gap> TestExtraspecialNormalizerInSL := function(r, m, q)
 gap> TestExtraspecialNormalizerInSL(5, 1, 11);
 gap> TestExtraspecialNormalizerInSL(3, 1, 7);
 gap> TestExtraspecialNormalizerInSL(3, 2, 13);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestExtraspecialNormalizerInSL(2, 3, 5); # FIXME: `Giving up, Schreier tree is not shallow.`
-#@fi
+gap> TestExtraspecialNormalizerInSL(2, 3, 5);
 gap> TestExtraspecialNormalizerInSL(2, 2, 5);
 gap> TestExtraspecialNormalizerInSL(2, 2, 9);
 gap> TestExtraspecialNormalizerInSL(2, 1, 9);
@@ -27,10 +27,8 @@ gap> TestExtraspecialNormalizerInSU := function(r, m, q)
 >   CheckSize(G);
 > end;;
 gap> TestExtraspecialNormalizerInSU(5, 1, 4);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestExtraspecialNormalizerInSU(2, 3, 3); # FIXME: `Giving up, Schreier tree is not shallow.`
-gap> TestExtraspecialNormalizerInSU(2, 3, 7); # FIXME: `Error, the recognition described by this recognition node has failed!`
-#@fi
+gap> TestExtraspecialNormalizerInSU(2, 3, 3);
+gap> TestExtraspecialNormalizerInSU(2, 3, 7);
 gap> TestExtraspecialNormalizerInSU(2, 2, 3);
 gap> TestExtraspecialNormalizerInSU(2, 2, 7);
 gap> TestExtraspecialNormalizerInSU(3, 2, 5);
@@ -47,11 +45,9 @@ gap> TestExtraspecialNormalizerInSp := function(m, q)
 gap> TestExtraspecialNormalizerInSp(2, 3);
 gap> TestExtraspecialNormalizerInSp(2, 5);
 gap> TestExtraspecialNormalizerInSp(2, 7);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestExtraspecialNormalizerInSp(3, 3); # FIXME: `Error, the recognition described by this recognition node has failed!`
-gap> TestExtraspecialNormalizerInSp(3, 5); # FIXME: runs out of memory or `Error, This should never have happened (346), tell Max`
-gap> TestExtraspecialNormalizerInSp(3, 7); # FIXME: `Error, the recognition described by this recognition node has failed!`
-#@fi
+gap> TestExtraspecialNormalizerInSp(3, 3);
+gap> TestExtraspecialNormalizerInSp(3, 5);
+gap> TestExtraspecialNormalizerInSp(3, 7);
 
 #
 gap> TestOddExtraspecialGroup := function(r, m, q)
@@ -136,14 +132,10 @@ gap> TestExtraspecialNormalizerInOmega := function(m, q)
 >   CheckIsSubsetOmega(1, 2 ^ m, q, G);
 >   CheckSize(G);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestExtraspecialNormalizerInOmega(3, 3); # FIXME: 'Error, the recognition described by this recognition node has failed!' or 'Error, This should never have happened (346), tell Max.'
-#@fi
+gap> TestExtraspecialNormalizerInOmega(3, 3);
 gap> TestExtraspecialNormalizerInOmega(3, 5);
 gap> TestExtraspecialNormalizerInOmega(3, 7);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestExtraspecialNormalizerInOmega(4, 3); # FIXME: 'Error, the recognition described by this recognition node has failed!'
-#@fi
+gap> TestExtraspecialNormalizerInOmega(4, 3);
 gap> TestExtraspecialNormalizerInOmega(4, 5);
 
 # Test error handling
@@ -153,4 +145,5 @@ gap> ExtraspecialNormalizerInOmega(3, 4);
 Error, <r> must be prime and a divisor of <q> - 1
 
 #
+gap> SetInfoLevel(InfoOrb, oldOrbInfoLevel);
 gap> STOP_TEST("ExtraspecialNormalizerMatrixGroups.tst", 0);

@@ -25,9 +25,7 @@ gap> TestTensorProductStabilizerInSU := function(d1, d2, q)
 gap> TestTensorProductStabilizerInSU(2, 3, 2);
 gap> TestTensorProductStabilizerInSU(2, 3, 3);
 gap> TestTensorProductStabilizerInSU(2, 3, 4);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestTensorProductStabilizerInSU(2, 4, 3); # FIXME: see https://github.com/gap-packages/recog/issues/302
-#@fi
+gap> TestTensorProductStabilizerInSU(2, 4, 3);
 
 #
 gap> TestTensorProductStabilizerInSp := function(epsilon, d1, d2, q)
@@ -38,9 +36,7 @@ gap> TestTensorProductStabilizerInSp := function(epsilon, d1, d2, q)
 > end;;
 gap> TestTensorProductStabilizerInSp(0, 2, 3, 3);
 gap> TestTensorProductStabilizerInSp(0, 4, 3, 5);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestTensorProductStabilizerInSp(1, 2, 4, 5);  # FIXME: see https://github.com/gap-packages/recog/issues/316
-#@fi
+gap> TestTensorProductStabilizerInSp(1, 2, 4, 5);
 gap> TestTensorProductStabilizerInSp(-1, 2, 4, 5);
 
 # Test error handling
