@@ -102,7 +102,7 @@ gap> TestFormChangingFunctions([4, 7, "O-", Z(7) ^ 0 * DiagonalMat([Z(7), 1, 1, 
 gap> TestFormChangingFunctions([6, 7, "O-", IdentityMat(6, GF(7))]);
 gap> TestFormChangingFunctions([1, 5, "O", IdentityMat(1, GF(5))]);
 gap> TestFormChangingFunctions([1, 5, "O", Z(5) * IdentityMat(1, GF(5))]);
-gap> TestFormChangingFunctions([2, 2, "O-", Z(2) ^ 0 * [[1, 1], [0, 1]]]);
+gap> #TestFormChangingFunctions([2, 2, "O-", Z(2) ^ 0 * [[1, 1], [0, 1]]]);  # module is not abs. irred
 gap> TestFormChangingFunctions([6, 4, "O+", AntidiagonalMat(Z(4) ^ 0 * [1, 1, 1, 0, 0, 0], GF(4))]);
 gap> Q := CM_QuadraticForm(Group(GeneratorsOfGroup(SO(5, 5))), GF(5));;
 gap> Q / Q[5, 5] = InvariantQuadraticForm(SO(5, 5)).matrix;
