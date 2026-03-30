@@ -1,3 +1,6 @@
+gap> START_TEST("AlmostSimpleCrossCharacteristic.tst");
+
+#
 gap> TestModularReductionOfIntegralLattice := function(LR, q, expectedOrbitNumber)
 >     local special, general, normaliser, result;
 >     special := ValueOption("special");
@@ -95,3 +98,6 @@ gap> TestModularReductionOfIntegralLattice(LR, 43, 3);;
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "sl25d2.g"))();;
 gap> ModularReductionOfIntegralLattice(LR, 3);
 Error, Constituents are not absolutely irreducible over finite field.
+
+#
+gap> STOP_TEST("AlmostSimpleCrossCharacteristic.tst", 0);
