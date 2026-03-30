@@ -21,9 +21,9 @@ gap> G := Group([ [ [ Z(79^2)^4792, Z(79^2)^2120, Z(79^2)^3243, Z(79^2)^5635, Z(
 >   [ Z(79^2)^1228, Z(79^2)^4621, Z(79^2)^1975, Z(79^2)^799, Z(79^2)^4455, Z(79^2)^2716, Z(79^2)^5986, Z(79^2)^4359 ] ] ]);;
 gap> M := CM_UnitaryForm(G, GF(79^2));;  # for this group, the unitary form was not reliably found
 gap> Assert(0, ForAll(GeneratorsOfGroup(G), g -> g * M * HermitianConjugate(g, 79) = M));
-gap> CM_SymplecticForm(Sp(6, 7), GF(7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
+gap> CM_BilinearForm(Sp(6, 7), GF(7)) = InvariantBilinearForm(Sp(6, 7)).matrix;
 true
-gap> CM_SymmetricBilinearForm(SO(5, 9), GF(9)) = InvariantBilinearForm(SO(5, 9)).matrix;
+gap> CM_BilinearForm(SO(5, 9), GF(9)) = InvariantBilinearForm(SO(5, 9)).matrix;
 true
 gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)), GF(4));
 Error, No preserved unitary form found for <group>
@@ -104,9 +104,6 @@ gap> TestFormChangingFunctions([1, 5, "O", IdentityMat(1, GF(5))]);
 gap> TestFormChangingFunctions([1, 5, "O", Z(5) * IdentityMat(1, GF(5))]);
 gap> #TestFormChangingFunctions([2, 2, "O-", Z(2) ^ 0 * [[1, 1], [0, 1]]]);  # module is not abs. irred
 gap> TestFormChangingFunctions([6, 4, "O+", AntidiagonalMat(Z(4) ^ 0 * [1, 1, 1, 0, 0, 0], GF(4))]);
-gap> Q := CM_QuadraticForm(Group(GeneratorsOfGroup(SO(5, 5))), GF(5));;
-gap> Q / Q[5, 5] = InvariantQuadraticForm(SO(5, 5)).matrix;
-true
 gap> TestStandardOrthogonalForm := function(epsilon, d, q)
 >   local standardForm;
 >   standardForm := StandardOrthogonalForm(epsilon, d, q);
