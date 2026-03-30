@@ -1086,7 +1086,7 @@ end);
 # 2.O(7,q).2 as C9-subgroup of normaliser in GL(8,q) of O^+(8,q)
 InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_TwoO72",
 function(q)
-    local H, phi, Hgens;
+    local H, phi, Hgens, oldForm, newForm, baseChangeMatrix;
     H := OmegaStabilizerOfNonDegenerateSubspace(-1, 8, q, 0, 1);
     phi := CM_O8qMapToCover(q);
     Hgens := List([1..Length(GeneratorsOfGroup(H))], i -> phi(GeneratorsOfGroup(H)[i]));
@@ -1096,14 +1096,20 @@ function(q)
     H := GroupByGenerators([H.1, H.2, Z(q^2)^((q+1)/2) * H.3]);
     H := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H);
     Assert(0, Size(FieldOfMatrixGroup(H)) = q);
-    # TODO Conjugate H s.t. it preserves our standard form *up to a scalar*.
+    return H;
+    # Conjugate H s.t. it preserves our standard form *up to a scalar*.
     # Ideally, the function ConjugateToStandardForm should be extended to include this
     # functionality.
-    # The forms package does not reliably detect the preserved form.
-    # oldForm := PreservedSesquilinearForms(H)[1];
-    # newForm := BilinearFormByMatrix(InvariantBilinearForm(Omega(1, 8, q)).matrix, GF(q));
-    # baseChangeMatrix := BaseChangeToCanonical(oldForm)^-1 * BaseChangeToCanonical(newForm);
-    # H := MatrixGroup(GF(q), List(GeneratorsOfGroup(H), g -> g ^ baseChangeMatrix));
+    # The forms package does not reliably detect the preserved form of H directly,
+    # see https://github.com/gap-packages/forms/issues/83
+    if q = 3 then
+        oldForm := PreservedSesquilinearForms(Group([H.1,H.2*H.1,H.3*H.2*H.1]))[1];
+    else
+        oldForm := PreservedSesquilinearForms(Group([H.1,H.2,H.3*H.2]))[1];
+    fi;
+    newForm := BilinearFormByMatrix(InvariantBilinearForm(Omega(1, 8, q)).matrix, GF(q));
+    baseChangeMatrix := BaseChangeToCanonical(oldForm)^-1 * BaseChangeToCanonical(newForm);
+    H := MatrixGroup(GF(q), List(GeneratorsOfGroup(H), g -> g ^ baseChangeMatrix));
     return GroupByGenerators(Concatenation(GeneratorsOfGroup(H),
                                            [PrimitiveElement(GF(q)) * IdentityMat(8, GF(q))]));
 end);
@@ -1112,13 +1118,13 @@ end);
 InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_TwoOminus82",
 function(q)
     local G, go, z, AandB, a, b, mats, g, stdform, mat, ngo, f, H, Hg, Hgc, phi,
-          Hgi, Hgci, M, Mi, x, Hgc2, Hgc2i, M2i;
+          Hgi, Hgci, M, Mi, x, Hgc2, Hgc2i, M2i, oldForm, newForm, baseChangeMatrix;
     G := Omega(-1, 8, q);
     go := GOMinusSO(-1, 8, q);
     # Construct an element ngo of Normaliser(GL(8,q),GO^-(8,q)) - GO^-(8,q)
     # with determinant Z(q)^4 as in Magma's NormGOMinusGO(8,q,-1).
     # It induces the standard diagonal automorphism described in
-    # [BHR], 1.7.1 Standard outer automorphisms.
+    # [BHR13], 1.7.1 Standard outer automorphisms.
     z := PrimitiveElement(GF(q));
     AandB := SolveQuadraticCongruence(z, q);
     a := AandB.a; b := AandB.b;
@@ -1164,14 +1170,13 @@ function(q)
         Assert(0, x <> fail);
     fi;
     G := GroupByGenerators(Concatenation(Hgi, [x]));
-    # TODO Conjugate G s.t. it preserves our standard form *up to a scalar*.
+    # Conjugate G s.t. it preserves our standard form *up to a scalar*.
     # Ideally, the function ConjugateToStandardForm should be extended to include this
     # functionality.
-    # The forms package does not reliably detect the preserved form.
-    # oldForm := PreservedSesquilinearForms(G)[1];
-    # newForm := BilinearFormByMatrix(InvariantBilinearForm(Omega(1, 8, q^2)).matrix, GF(q^2));
-    # baseChangeMatrix := BaseChangeToCanonical(oldForm)^-1 * BaseChangeToCanonical(newForm);
-    # G := MatrixGroup(GF(q^2), List(GeneratorsOfGroup(G), g -> g ^ baseChangeMatrix));
+    oldForm := PreservedSesquilinearForms(G)[1];
+    newForm := BilinearFormByMatrix(InvariantBilinearForm(Omega(1, 8, q^2)).matrix, GF(q^2));
+    baseChangeMatrix := BaseChangeToCanonical(oldForm)^-1 * BaseChangeToCanonical(newForm);
+    G := MatrixGroup(GF(q^2), List(GeneratorsOfGroup(G), g -> g ^ baseChangeMatrix));
     return GroupByGenerators(Concatenation(GeneratorsOfGroup(G),
                                            [PrimitiveElement(GF(q^2)) * IdentityMat(8, GF(q^2))]));
 end);
