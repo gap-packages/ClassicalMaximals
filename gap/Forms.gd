@@ -3,8 +3,6 @@ DeclareGlobalFunction("ConjugateToStandardForm");
 DeclareGlobalFunction("StandardOrthogonalForm");
 DeclareGlobalFunction("CM_UnitaryForm");
 DeclareGlobalFunction("CM_BilinearForm");
-DeclareGlobalFunction("CM_SymplecticForm");
-DeclareGlobalFunction("CM_SymmetricBilinearForm");
 DeclareGlobalFunction("CM_QuadraticForm");
 
 #! @Chapter Group Recognition
