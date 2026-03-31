@@ -1096,7 +1096,6 @@ function(q)
     H := GroupByGenerators([H.1, H.2, Z(q^2)^((q+1)/2) * H.3]);
     H := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H);
     Assert(0, Size(FieldOfMatrixGroup(H)) = q);
-    return H;
     # Conjugate H s.t. it preserves our standard form *up to a scalar*.
     # Ideally, the function ConjugateToStandardForm should be extended to include this
     # functionality.
