@@ -249,6 +249,12 @@ function(epsilon, d, q)
     return rec(Q := Q, F := F);
 end);
 
+BindGlobal("CM_ConjugateModule",
+function(M, q)
+    return GModuleByMats(List(MTX.Generators(M), A -> ApplyFunctionToEntries(A, x -> x ^ q)),
+                         MTX.Field(M));
+end);
+
 # Assuming that the group G acts absolutely irreducibly, try to find a unitary
 # form which is G-invariant or prove that no such form exists.
 #

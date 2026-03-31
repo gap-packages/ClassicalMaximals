@@ -279,15 +279,17 @@ function(L, q)
                 # try to adjust by scalar to make iso fix form.
                 if quad then
                     got := false;
-                    mat := iso * form * TransposedMat(iso);
+                    # note that form is a lower triangular matrix,
+                    # not an upper triangular matrix as in Magma
+                    mat := List(iso * form * TransposedMat(iso), ShallowCopy);
                     for i in [2..d] do
                         for j in [1..i-1] do
-                            mat[j,i] := mat[j,i] + mat[i,j];
-                            if mat[j,i] <> Zero(GF(q)) and not got then
-                                scal := mat[j,i] * form[j,i]^-1;
+                            mat[i,j] := mat[i,j] + mat[j,i];
+                            if mat[i,j] <> Zero(GF(q)) and not got then
+                                scal := mat[i,j] * form[i,j]^-1;
                                 got := true;
                             fi;
-                            mat[i,j] := 0*mat[i,j];
+                            mat[j,i] := 0*mat[j,i];
                         od;
                     od;
                 else

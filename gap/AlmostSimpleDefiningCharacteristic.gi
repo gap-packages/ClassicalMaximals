@@ -200,8 +200,8 @@ function(q)
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2, q^3)),
                                          [DiagonalMat([w, One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^3));
-    M1 := ConjugateModule(M, q);
-    M2 := ConjugateModule(M1, q);
+    M1 := CM_ConjugateModule(M, q);
+    M2 := CM_ConjugateModule(M1, q);
     T := TensorProductGModule(M, TensorProductGModule(M1, M2));
     Assert(0, MTX.IsIrreducible(T));
     u := PermutationMat((2,3,5)(4,7,6), 8, GF(q^3));
@@ -317,7 +317,7 @@ function(q)
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q^2)),
                                          [DiagonalMat([w, One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^2));
-    M1 := ConjugateModule(M, q);
+    M1 := CM_ConjugateModule(M, q);
     T := TensorProductGModule(M, M1);
     Assert(0, MTX.IsIrreducible(T));
     u := PermutationMat((2,3), 4, GF(q^2));
@@ -382,7 +382,7 @@ function(q)
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),
                                          [DiagonalMat([w, One(w), One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^2));
-    M1 := ConjugateModule(M, q);
+    M1 := CM_ConjugateModule(M, q);
     T := TensorProductGModule(M, M1);
     Assert(0, MTX.IsIrreducible(T));
     u := PermutationMat((2,4)(3,7)(6,8), 9, GF(q^2));
@@ -423,7 +423,7 @@ function(q)
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),
                                          [DiagonalMat([w, One(w), One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^2));
-    M1 := ConjugateModule(M, q);
+    M1 := CM_ConjugateModule(M, q);
     T := TensorProductGModule(DualGModule(M), M1);
     Assert(0, MTX.IsIrreducible(T));
     u := PermutationMat((2,4)(3,7)(6,8), 9, GF(q^2));
