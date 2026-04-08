@@ -36,8 +36,7 @@ jobs:
           gap-version: ${{ matrix.gap-version }}
       - uses: gap-actions/install-pkg@v1
         with:
-          packages: gap-packages/recog@devel
-          packages: gap-packages/orb@devel
+          packages: gap-packages/recog@devel gap-packages/orb@devel
       - uses: gap-actions/build-pkg@v3
         with:
           extra-pkgs: orb
