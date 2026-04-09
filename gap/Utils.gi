@@ -783,11 +783,6 @@ function(F, gens, size)
     return result;
 end);
 
-InstallGlobalFunction("EntrywisePowerMat",
-function(A, q)
-    return ApplyFunctionToEntries(A, x -> x^q);
-end);
-
 # TODO This function should be revised and carefully documented.
 InstallGlobalFunction("CM_InOmega",
 function(g, d, q, sign)

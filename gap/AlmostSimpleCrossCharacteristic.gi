@@ -162,7 +162,7 @@ function(L, q)
                 iso := MTX.IsomorphismModules(C[i], M2);
                 Assert(0, iso <> fail);
                 # adjust by scalar to make iso fix form.
-                scal := (iso * form * TransposedMat(EntrywisePowerMat(iso, rq))* form^-1)[1,1];
+                scal := (iso * form * HermitianConjugate(iso, rq) * form^-1)[1,1];
                 v := RootFFE(GF(q), scal * One(GF(q)), rq+1);
                 Assert(0, v <> fail);
                 iso := iso * (v^-1 * IdentityMat(d, GF(q)));

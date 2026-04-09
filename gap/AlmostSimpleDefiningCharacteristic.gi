@@ -20,7 +20,8 @@ function(n, q)
     local G, gens, mat, G2;
     Assert(0, n >= 3);
     G := GU(n, q);
-    gens := List(GeneratorsOfGroup(G), g -> DirectSumMat(g, EntrywisePowerMat(g, q)));
+    gens := List(GeneratorsOfGroup(G),
+                 g -> DirectSumMat(g, ApplyFunctionToEntries(g, x -> x ^ q)));
     mat := NullMat(2*n, 2*n, GF(q^2));
     mat{[1..n]}{[n+1..2*n]} := One(G);
     mat{[n+1..2*n]}{[1..n]} := One(G);
