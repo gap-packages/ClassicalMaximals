@@ -1,4 +1,6 @@
 gap> START_TEST("ReducibleMatrixGroups.tst");
+gap> oldOrbInfoLevel:=InfoLevel(InfoOrb);;
+gap> SetInfoLevel(InfoOrb, 0); # silence `Giving up, Schreier tree is not shallow.` warnings
 
 #
 gap> TestSLStabilizerOfSubspace := function(n, q, k)
@@ -198,4 +200,5 @@ gap> OmegaStabilizerOfNonSingularVector(-1, 2, 4);
 Error, <d> must be greater than 2
 
 #
+gap> SetInfoLevel(InfoOrb, oldOrbInfoLevel);
 gap> STOP_TEST("ReducibleMatrixGroups.tst", 0);
