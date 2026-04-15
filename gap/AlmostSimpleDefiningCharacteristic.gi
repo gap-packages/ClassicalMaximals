@@ -63,7 +63,7 @@ function(d, q)
     Assert(0, IsOddInt(d));
     Assert(0, IsOddInt(q));
     # construct GL(2, q) as SL(2, q) with extra generator
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q)),
                                          [DiagonalMat([w, One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
@@ -103,7 +103,7 @@ function(d, q)
     Assert(0, IsEvenInt(d));
     Assert(0, IsOddInt(q));
     # construct GL(2,q) as SL(2,q) with extra generator
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q)),
                                          [DiagonalMat([w, One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
@@ -135,7 +135,7 @@ function(q)
     if general = fail then general := false; fi;
 
     Assert(0, IsOddInt(q));
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     if general then
         G := GL(3,q);
     else
@@ -166,7 +166,7 @@ function(q)
 
     Assert(0, IsOddInt(q));
     if normaliser then general := true; fi;
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     if general then
         G := GU(3, q);
     else
@@ -197,7 +197,7 @@ function(q)
     if normaliser = fail then normaliser := false; fi;
 
     # SL(2,q^3).3 <= Sp(8,q)
-    w := PrimitiveElement(GF(q^3));
+    w := Z(q^3);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2, q^3)),
                                          [DiagonalMat([w, One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^3));
@@ -231,7 +231,7 @@ function(q)
     if normaliser = fail then normaliser := false; fi;
 
     # SL(3,q)(.3) <= O+(8,q), q mod 3 = 1 or O-(8,q), q mod 3 = 2
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GLExtensionByGraphAutomorphism(3,q);
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
     T := TensorProductGModule(M, M);
@@ -269,7 +269,7 @@ function(q)
     if normaliser = fail then normaliser := false; fi;
 
     # SU(3,q)(.3) <= O+(8,q), q mod 3 = 2 or O-(8,q), q mod 3 = 1
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GUExtensionByFrobeniusAutomorphism(3,q);
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^2));
     T := TensorProductGModule(M, M);
@@ -313,7 +313,7 @@ function(q)
     if normaliser = fail then normaliser := false; fi;
 
     # L(2,q^2).2 <= O(9,q)
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     z := w^(q + 1);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(2,q^2)),
                                          [DiagonalMat([w, One(w)])]));
@@ -378,7 +378,7 @@ function(q)
     if general = fail then general := false; fi;
 
     # (3.)L(3,q^2)(.3).2 <= L(9,q)
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     z := w^(q + 1);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),
                                          [DiagonalMat([w, One(w), One(w)])]));
@@ -419,7 +419,7 @@ function(q)
     if normaliser = fail then normaliser := false; fi;
 
     # (3.)L(3,q^2)(.3).2 <= L(9,q)
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     z := w^(q - 1);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),
                                          [DiagonalMat([w, One(w), One(w)])]));
@@ -462,7 +462,7 @@ function(q)
     if general = fail then general := false; fi;
 
     Assert(0, PrimePowersInt(q)[1] >= 5);
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q)),
                                          [DiagonalMat([w, One(w), One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
@@ -497,7 +497,7 @@ function(q)
 
     Assert(0, PrimePowersInt(q)[1] >= 5);
     if normaliser then general := true; fi;
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SU(3,q)),
                                          [GUMinusSU(3,q)]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^2));
@@ -535,7 +535,7 @@ function(q)
     if general = fail then general := false; fi;
 
     Assert(0, PrimePowersInt(q)[1] >= 3);
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(4,q)),
                                          [DiagonalMat([w, One(w), One(w), One(w)])]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
@@ -570,7 +570,7 @@ function(q)
 
     Assert(0, PrimePowersInt(q)[1] >= 3);
     if normaliser then general := true; fi;
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SU(4,q)),
                                          [GUMinusSU(4,q)]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q^2));
@@ -607,7 +607,7 @@ function(q)
     general := ValueOption("general");
     if general = fail then general := false; fi;
 
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     if general then
         G := GL(5,q);
     else
@@ -637,7 +637,7 @@ function(q)
     if normaliser = fail then normaliser := false; fi;
 
     if normaliser then general := true; fi;
-    w := PrimitiveElement(GF(q^2));
+    w := Z(q^2);
     if general then
         G := GU(5,q);
     else
@@ -678,7 +678,7 @@ function(q)
 
     # Sp4q <= O^+(10,q) (q = 1 mod 4) of O^-(10,q) (q = 3 mod 4)
     Assert(0, IsOddInt(q));
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(Sp(4,q)),
                                          [NormSpMinusSp(4,q)]));
     M := GModuleByMats(GeneratorsOfGroup(G), GF(q));
@@ -725,7 +725,7 @@ function(q)
     local F, o, b, bb, c, cc, a, aa, G, x8;
     F := GF(q^2);
     o := One(F);
-    b := PrimitiveElement(F);
+    b := Z(q^2);
     bb := 1 / b;
     c := b^(q - 1);
     cc := 1 / c;
@@ -1111,7 +1111,7 @@ function(q)
     baseChangeMatrix := BaseChangeToCanonical(oldForm)^-1 * BaseChangeToCanonical(newForm);
     H := MatrixGroup(GF(q), List(GeneratorsOfGroup(H), g -> g ^ baseChangeMatrix));
     return GroupByGenerators(Concatenation(GeneratorsOfGroup(H),
-                                           [PrimitiveElement(GF(q)) * IdentityMat(8, GF(q))]));
+                                           [Z(q) * IdentityMat(8, GF(q))]));
 end);
 
 # 2.O^-(8,q).2 as C9-subgroup of normaliser in GL(8,q^2) of O^+(8,q^2)
@@ -1125,7 +1125,7 @@ function(q)
     # with determinant Z(q)^4 as in Magma's NormGOMinusGO(8,q,-1).
     # It induces the standard diagonal automorphism described in
     # [BHR13], 1.7.1 Standard outer automorphisms.
-    z := PrimitiveElement(GF(q));
+    z := Z(q);
     AandB := SolveQuadraticCongruence(z, q);
     a := AandB.a; b := AandB.b;
     mats := List([1..3], i -> [[a, -b], [b, a]]);
@@ -1178,5 +1178,5 @@ function(q)
     baseChangeMatrix := BaseChangeToCanonical(oldForm)^-1 * BaseChangeToCanonical(newForm);
     G := MatrixGroup(GF(q^2), List(GeneratorsOfGroup(G), g -> g ^ baseChangeMatrix));
     return GroupByGenerators(Concatenation(GeneratorsOfGroup(G),
-                                           [PrimitiveElement(GF(q^2)) * IdentityMat(8, GF(q^2))]));
+                                           [Z(q^2) * IdentityMat(8, GF(q^2))]));
 end);

@@ -1093,8 +1093,7 @@ function(n, q)
             S := ReadAsFunction(Filename(CM_c9lib, "12bl34d12f49.g"))();
             if general then
                 S := Group(Concatenation(GeneratorsOfGroup(S),
-                                         [PrimitiveElement(GF(q))
-                                          * IdentityMat(n, Integers)]));
+                                         [Z(q) * IdentityMat(n, Integers)]));
             fi;
             if not general then
                 size := 241920;
@@ -2053,8 +2052,7 @@ function(n, q)
             S := ReadAsFunction(Filename(CM_c9lib, "3j3d9f4.g"))();
             if normaliser then
                 S := Group(Concatenation(GeneratorsOfGroup(S),
-                                         [PrimitiveElement(GF(4))
-                                          * IdentityMat(n, Integers)]));
+                                         [Z(4) * IdentityMat(n, Integers)]));
             fi;
             if not general and not normaliser then
                 size := 150698880;
@@ -2821,8 +2819,7 @@ function(n, q)
             # Szq
             if normaliser then
                 Add(result, Group(Concatenation(GeneratorsOfGroup(Sz(q)),
-                                                [PrimitiveElement(GF(q))
-                                                 * IdentityMat(n, Integers)])));
+                                                [Z(q) * IdentityMat(n, Integers)])));
             else
                 Add(result, ConjugateToStandardForm(Sz(q), "S", GF(q)));
             fi;
@@ -2981,8 +2978,7 @@ function(n, q)
             A := ConjugateToStandardForm(A, "S", GF(q));
             if normaliser then
                 A := Group(Concatenation(GeneratorsOfGroup(A),
-                                         [PrimitiveElement(GF(q))
-                                          * IdentityMat(n, Integers)]));
+                                         [Z(q) * IdentityMat(n, Integers)]));
             fi;
             if not normaliser then
                 size := Size(ChevalleyG(q));
@@ -4313,7 +4309,7 @@ function(epsilon, n, q)
         S := ConjugateToStandardForm(S, "O", GF(q));
         if normaliser then
             S := Group(Concatenation(GeneratorsOfGroup(S),
-                                     [PrimitiveElement(GF(q)) * IdentityMat(n, Integers)]));
+                                     [Z(q) * IdentityMat(n, Integers)]));
         elif general then
             S := Group(Concatenation(GeneratorsOfGroup(S),
                                      [(-1)*One(GF(q)) * IdentityMat(n, Integers)]));
@@ -4411,8 +4407,7 @@ function(epsilon, n, q)
                 S := ReadAsFunction(Filename(CM_c9lib, "2sz8d8f5.g"))();
                 if normaliser then
                     S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
-                                                         [PrimitiveElement(GF(q))
-                                                          * IdentityMat(5, Integers)]));
+                                                         [Z(q) * IdentityMat(5, Integers)]));
                 fi;
                 if not special and not general and not normaliser then
                     size := 58240;
@@ -4485,8 +4480,7 @@ function(epsilon, n, q)
             fi;
             if normaliser and p = 2 then
                 S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
-                                                     [PrimitiveElement(GF(q))
-                                                      * IdentityMat(8, Integers)]));
+                                                     [Z(q) * IdentityMat(8, Integers)]));
             fi;
             if not special and not general and not normaliser then
                 if p = 2 then
@@ -4516,8 +4510,7 @@ function(epsilon, n, q)
                 fi;
                 if normaliser and p = 2 then
                     S := GroupByGenerators(Concatenation(GeneratorsOfGroup(S),
-                                                         [PrimitiveElement(GF(q))
-                                                          * IdentityMat(8, Integers)]));
+                                                         [Z(q) * IdentityMat(8, Integers)]));
                 fi;
                 if not special and not general and not normaliser then
                     if p = 2 then

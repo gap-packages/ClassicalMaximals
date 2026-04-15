@@ -63,7 +63,7 @@ function(L, q)
     AG := Group(perms);
     OAG := Orbits(AG, [1..nc]);
     gps := [];
-    w := PrimitiveElement(GF(q));
+    w := Z(q);
     for o in OAG do
         i := Representative(o);
         d := Degree(AC[i]);
