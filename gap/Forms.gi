@@ -380,7 +380,6 @@ end);
 
 # Call CM_ClassicalForms to find a form fixed by the absolutely irreducible
 # group G < GL(n, field) and conjugate G via ConjugateToStandardForm.
-# TODO This function should be revised and carefully documented.
 InstallGlobalFunction("ConjugateToStandardFormAutoType",
 function(G, field)
     local forms;

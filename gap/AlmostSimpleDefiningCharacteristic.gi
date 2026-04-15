@@ -35,8 +35,7 @@ end);
 # and its natural G-module, decide whether G has an equivalent representation over
 # a subfield of F. If so, return the representation over the smallest possible
 # field.
-# TODO this function should most likely be revised (especially the use of
-# SetFieldOfMatrixGroup) and carefully documented.
+# The use of SetFieldOfMatrixGroup should probably be revised.
 InstallGlobalFunction("CM_OverSmallerField",
 function(M, G)
     local b, H;
@@ -1147,7 +1146,7 @@ function(q)
     while not IsAbsolutelyIrreducible(H) do
         H := GroupByGenerators(Concatenation(GeneratorsOfGroup(H), [g^PseudoRandom(G)]));
     od;
-    while false do  # TODO while not RecogniseClassical(H)
+    while RecogniseClassical(H).isOmegaContained <> true do
         H := GroupByGenerators(Concatenation(GeneratorsOfGroup(H), [g^PseudoRandom(G)]));
     od;
     Hg := GeneratorsOfGroup(H);

@@ -783,7 +783,6 @@ function(F, gens, size)
     return result;
 end);
 
-# TODO This function should be revised and carefully documented.
 InstallGlobalFunction("CM_InOmega",
 function(g, d, q, sign)
     return IsOne(FancySpinorNorm(InvariantBilinearForm(Omega(sign, d, q)).matrix, GF(q), g));
