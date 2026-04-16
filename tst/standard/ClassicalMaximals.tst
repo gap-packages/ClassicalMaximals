@@ -1057,8 +1057,8 @@ gap> Length(C9SubgroupsSymplecticGroupGeneric(6,11 : all:=false));
 3
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,3^2));
 4
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,3^2 : all:=false));
-3
+gap> Length(C9SubgroupsSymplecticGroupGeneric(6,3^2 : all:=false));  # error in magma
+2
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,2));
 1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,2 : normaliser:=true));

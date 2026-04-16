@@ -2957,9 +2957,15 @@ function(n, q)
             # 2.A7
             S := ReadAsFunction(Filename(CM_c9lib, "2a7d6f9.g"))();
             ConjugateToStandardForm(S, "S", GF(q));
-            size := 5040;
-            SetSize(S, size);
-            Append(result, [S, S ^ generatorNormSpMinusSp]);
+            if not normaliser then
+                size := 5040;
+                SetSize(S, size);
+            fi;
+            if all then
+                Append(result, [S, S ^ generatorNormSpMinusSp]);
+            else
+                Add(result, S);  # error in magma: there always c=2
+            fi;
         fi;
         if p >= 7 then
             # 2.L2q
