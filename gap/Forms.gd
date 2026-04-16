@@ -45,3 +45,4 @@ DeclareGlobalFunction("CM_QuadraticForm");
 #!    <C>sesquilinearForm</C>.
 #!  * <C>"linear"</C>: <A>G</A> does not fix any classical form.
 DeclareGlobalFunction("CM_ClassicalForms");
+DeclareGlobalFunction("ConjugateToStandardFormAutoType");
