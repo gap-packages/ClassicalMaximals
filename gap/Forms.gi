@@ -68,6 +68,7 @@ function(group, type, gramMatrix, field)
     if gapForm = newForm then
         # nothing to be done
         result := group;
+        result!.baseChangeMatrix := IdentityMat(d, field);
     # The Forms package has a bug for d = 1 so we need to make this exception
     elif d <> 1 then
         # the following if condition can only ever be fulfilled if <group> is an
@@ -79,6 +80,7 @@ function(group, type, gramMatrix, field)
         fi;
         baseChangeMatrix := BaseChangeToCanonical(gapForm)^-1 * BaseChangeToCanonical(newForm);
         result := MatrixGroup(field, List(GeneratorsOfGroup(group), g -> g ^ baseChangeMatrix));
+        result!.baseChangeMatrix := baseChangeMatrix;
 
         # Set useful attributes
         UseIsomorphismRelation(group, result);
@@ -89,6 +91,7 @@ function(group, type, gramMatrix, field)
                           " form described by the Gram matrix <gramMatrix>.");
         fi;
         result := group;
+        result!.baseChangeMatrix := IdentityMat(d, field);
     fi;
 
     if type = "S" then
@@ -246,6 +249,12 @@ function(epsilon, d, q)
     return rec(Q := Q, F := F);
 end);
 
+BindGlobal("CM_ConjugateModule",
+function(M, q)
+    return GModuleByMats(List(MTX.Generators(M), A -> ApplyFunctionToEntries(A, x -> x ^ q)),
+                         MTX.Field(M));
+end);
+
 # Assuming that the group G acts absolutely irreducibly, try to find a unitary
 # form which is G-invariant or prove that no such form exists.
 #
@@ -367,4 +376,27 @@ function(G, field)
         fi;
     fi;
     return forms;
+end);
+
+# Call CM_ClassicalForms to find a form fixed by the absolutely irreducible
+# group G < GL(n, field) and conjugate G via ConjugateToStandardForm.
+InstallGlobalFunction("ConjugateToStandardFormAutoType",
+function(G, field)
+    local forms;
+
+    forms := CM_ClassicalForms(G, field);
+    if forms.formType = "unitary" then
+        return ConjugateToStandardForm(G, "U", field);
+    elif forms.formType = "symplectic" then
+        return ConjugateToStandardForm(G, "S", field);
+    elif forms.formType = "orthogonalplus" then
+        return ConjugateToStandardForm(G, "O+", field);
+    elif forms.formType = "orthogonalminus" then
+        return ConjugateToStandardForm(G, "O-", field);
+    elif forms.formType = "orthogonalcircle" then
+        return ConjugateToStandardForm(G, "O", field);
+    else
+        # forms.formType = "linear"
+        return G;
+    fi;
 end);
