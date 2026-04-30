@@ -91,9 +91,9 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">= 4.11",
+  GAP := ">= 4.15",
   NeededOtherPackages := [
-          ["Forms", ">=1.2.5"],
+          ["Forms", ">=1.2.12"],
     ],
   SuggestedOtherPackages := [ ],
   ExternalConditions := [ ],
