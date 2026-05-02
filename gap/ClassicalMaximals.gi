@@ -6,6 +6,9 @@
 # Implementations
 #
 
+BindGlobal("CM_c9lib",
+DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
+
 # For most classes of subgroups, we have to conjugate the subgroups we
 # determined by an element C from the general group, which is not in the
 # special (or quasisimple) group, in order to get representatives for all
@@ -15,10 +18,6 @@ BindGlobal("ConjugatesInGeneralGroup",
 function(S, C, r)
     return List([0..r - 1], i -> S ^ (C ^ i));
 end);
-
-# TODO This needs to be moved to a more suitable location.
-BindGlobal("CM_c9lib",
-DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
 
 InstallGlobalFunction(ClassicalMaximalsGeneric,
 function(type, n, q, classes...)
@@ -2402,7 +2401,7 @@ function(n, q, classes...)
 
     if n = 2 then
         Error("We assume <n> to be greater or equal to 3 in case 'U' since",
-              "SU(2, q) and SL(2, q) are isomorphic.");
+              " SU(2, q) and SL(2, q) are isomorphic");
     fi;
     if (n = 3 and q = 2) then
         Error("PSU(3, 2) is soluble");
@@ -3318,7 +3317,7 @@ function(n, q, classes...)
 
     if n = 2 then
         Error("We assume <n> to be greater or equal to 4 in case 'S' since",
-              "Sp(2, q) and SL(2, q) are isomorphic");
+              " Sp(2, q) and SL(2, q) are isomorphic");
     fi;
 
     if n = 4 and q = 2 then
@@ -3486,58 +3485,73 @@ end);
     
 BindGlobal("C1SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local result, m, listOfks, G;
+    local result, m, G, k, i;
 
     result := [];
 
     m := QuoInt(n, 2);
 
     # Isotropic type, number of conjugates according to Proposition 4.1.20 (I) in [KL90]
-    if epsilon = -1 then
-        listOfks := [1..m - 1];
-    elif epsilon = 0 then
-        listOfks := [1..m];
-    elif epsilon = 1 then
-        listOfks := [1..m - 2];
-        Add(listOfks, m);
-        G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, m - 1);
-        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
-    fi;
-    Append(result, List(listOfks, k -> OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k)));
+    for k in [1..m] do
+        # Cf. Tables 3.5.E and 3.5.F in [KL90]
+        if (epsilon = 1 and k = m - 1) or (epsilon = -1 and k = m) then
+            continue;
+        fi;
+        # The construction in OmegaStabilizerOfIsotropicSubspace fails for n < 5
+        # This affects the quasisimple groups O(3,q) and O^-(4,q)
+        if n < 5 then
+            Info(InfoClassicalMaximals, 1, "List incomplete.",
+                 " Missing subgroup in C1 of isotropic type P_", k);
+            continue;
+        fi;
+        G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k);
+        if epsilon = 1 and k = m then
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+        else
+            Add(result, G);
+        fi;
+    od;
 
     # Non-degenerate type, number of conjugates according to Proposition 4.1.6 (I) in [KL90]
     if epsilon = 0 then
 
-        listOfks := 2 * [1..m] - 1;
-        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, k)));
-
-        # Cf. Proposition 2.3.2 (iii) in [BHR13]
-        if q = 3 then
-            RemoveSet(listOfks, n - 2);
-        fi;
-        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, k)));
+        for i in 2 * [1..m] do
+            # Cf. Proposition 2.3.2 (iii) in [BHR13]
+            if (i > 2 or q >= 5) and (n > 3 or q > 11) then
+                Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, n - i));
+            fi;
+            if (i > 2 or q >= 5 or n <> 5) and (n > 3 or not q in [7, 9]) then
+                Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, n - i));
+            fi;
+        od;
 
     else
 
-        if IsOddInt(q) then
-            listOfks := 2 * [1..QuoInt(m, 2)] - 1;
-            Append(result, Flat(List(listOfks, k -> ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, k), 2))));
-        fi;
-
-        listOfks := 2 * [1..QuoInt(m - 1, 2)];
-
-        if epsilon = -1 and IsEvenInt(m) then
-            Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, m));
-        fi;
-
-        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, k)));
-
-        # Cf. Proposition 2.3.2 (iii) in [BHR13]
-        if q in [2, 3] then
-            RemoveSet(listOfks, 2);
-        fi;
-
-        Append(result, List(listOfks, k -> OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, k)));
+        for i in [1..m] do
+            if IsEvenInt(i) then
+                if epsilon = 1 then
+                    if i < m then  # in imprimitive group if i = m
+                        if i > 2 or q > 3 then
+                            Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, i));
+                        fi;
+                        # conjugate to OmegaStabilizerOfIsotropicSubspace(1, 8, q, 1)
+                        # under graph automorphism in case (n, i) = (8, 2)
+                        Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, i));
+                    fi;
+                else  # epsilon = -1
+                    if (i > 2 or q > 3) and not (n = 4 and q = 2) then
+                        Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, i));
+                    fi;
+                    if i < m and (n <> 6 or q <> 2) then
+                        Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, i));
+                    fi;
+                fi;
+            else
+                if i < m and IsOddInt(q) then
+                    Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, i), 2));
+                fi;
+            fi;
+        od;
 
     fi;
 
@@ -3551,61 +3565,75 @@ end);
 
 BindGlobal("C2SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local result, squareDiscriminant, listOfms, genericPlusExceptions, numberOfConjugates, G, m, t;
+    local result, factorisation, p, e, squareDiscriminant, listOfms, t, G, m;
 
     result := [];
+    factorisation := PrimePowersInt(q);
+    p := factorisation[1];
+    e := factorisation[2];
 
     squareDiscriminant := epsilon = (-1) ^ QuoInt((q - 1) * n, 4);
-    listOfms := Difference(DivisorsInt(n), [1, n]);
+    listOfms := Difference(DivisorsInt(n), [n]);
 
-    # This case is nonmaximal according to Proposition 2.3.6 (x) in [BHR13]
-    if q = 3 then
-        listOfms := Difference(listOfms, [3]);
-    fi;
-
-    # These cases are also nonmaximal if epsilon = epsilon _0 = 1 according
-    # to Proposition 2.3.6 (vii), (viii), (iv), (vi) in [BHR13]
-    genericPlusExceptions := [[2, 2], [2, 3], [2, 4], [4, 2]];
-
-    # Non-degenerate type with m = 1, this case needs special treatment
-    # according to Proposition 4.2.15 in [KL90]
-    if IsPrimeInt(q) and q <> 2 and (IsOddInt(n) or squareDiscriminant) then
-        numberOfConjugates := Gcd(2, n);
-        if q mod 8 in [1, 7] then
-            numberOfConjugates := 2 * numberOfConjugates;
-        fi;
-        G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, n);
-        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugates));
-    fi;
-
-    # Non-degenerate type with m > 1
+    # Non-degenerate type
     for m in listOfms do
 
         t := QuoInt(n, m);
 
         if IsEvenInt(m) then
-            # number of conjugates according to Proposition 4.2.11 (I) in [KL90]
-            if epsilon = 1 and not (m, q) in genericPlusExceptions then
+            # Number of conjugates according to Proposition 4.2.11 (I) in [KL90]
+            # These cases are nonmaximal if epsilon = epsilon _0 = 1 according
+            # to Proposition 2.3.6 (vii), (viii), (ix), (xi) in [BHR13]
+            if epsilon = 1 and (m <> 2 or q > 5) and (m <> 4 or q <> 2) then
                 Add(result, OmegaNonDegenerateImprimitives(epsilon, n, q, 1, t));
             fi;
-            if (-1) ^ t = epsilon then
+            if (-1) ^ t = epsilon and (m <> 2 or q <> 3) then
                 Add(result, OmegaNonDegenerateImprimitives(epsilon, n, q, -1, t));
             fi;
-        elif (IsOddInt(t) or squareDiscriminant) and IsOddInt(q) then
-            # number of conjugates according to Proposition 4.2.14 (I) in [KL90]
-            G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, t);
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, Gcd(2, t)));
+        else
+            # This case is nonmaxial according to Table 3.5.E in [KL90]
+            if IsEvenInt(q) then continue; fi;
+            # This case is a novelty
+            if m = 1 and (e <> 1 or n = 3 and p mod 5 in [1, 4] and p mod 8 in [3, 5]) then
+                continue;
+            fi;
+            # This case is nonmaximal according to Proposition 2.3.6 (x) in [BHR13]
+            if q = 3 and m = 3 then continue; fi;
+            if IsEvenInt(t) then
+                if squareDiscriminant then
+                    G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, t);
+                    # Number of conjugates according to Proposition 4.2.14 (I) in [KL90]
+                    # Non-degenerate type with m = 1 needs special treatment
+                    # according to Proposition 4.2.15 in [KL90]
+                    if m = 1 then
+                        if q mod 8 in [1, 7] then
+                            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
+                        elif n <> 8 then  # in O_8(2) if n = 8
+                            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                        fi;
+                    else
+                        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                    fi;
+                fi;
+            else  # m*t odd
+                G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, t);
+                if m = 1 and q mod 8 in [1, 7] then
+                    Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                else
+                    Add(result, G);
+                fi;
+            fi;
         fi;
 
     od;
 
-
     if IsEvenInt(n) then
 
         # Isotropic type, number of conjugates according to Proposition 4.2.7 (I) in [KL90]
-        if epsilon = 1 then
+        # Cf. Table 3.5.E in [KL90] and Table 8.50 in [BHR13] (novelty for (n, q) = (8, 3))
+        if epsilon = 1 and n mod 4 = 0 and (n <> 8 or q > 3) then
             G := OmegaIsotropicImprimitives(n, q);
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, Gcd(2, QuoInt(n, 2))));
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
         fi;
 
         # Non-degenerate non-isometric type, number of conjugates is 1 according to Proposition 4.2.16 (I) in [KL90]
@@ -3629,7 +3657,8 @@ function(epsilon, n, q)
 
     # type GO(epsilon, n / s, q ^ s)
     for s in primeDivisorsOfn do
-        if not n / s > 2 then 
+        # Cf. Table 8.17 in [BHR13]
+        if not n / s > 2 and (n <> 4 or epsilon <> -1 or q = 3) then
             continue;
         fi;
 
@@ -3658,7 +3687,7 @@ function(epsilon, n, q)
         orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, 0, n, q);
         if q mod 4 = 2 + epsilon then
             numberOfConjugates := 1;
-        else    
+        else
             numberOfConjugates := 2;
         fi;
         Append(result, ConjugateSubgroupOmega(epsilon, n, q,
@@ -3678,102 +3707,99 @@ function(epsilon, n, q)
                                               unitaryTypeSubgroup,
                                               numberOfConjugates));
     fi;
-    
+
     return result;
 end);
 
 BindGlobal("C4SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q)
-    local result, listOfn1s, n1, n2, numberOfConjugates, listOfn1sFiltered, G;
+    local result, listOfn1s, n2, G, n1;
 
     result := [];
 
-    # These are the orthogonal type subgroups with epsilon_2 = 0
-    if epsilon = 0 then
+    listOfn1s := Filtered(DivisorsInt(n), n1 -> n1 <= QuoInt(n, n1));
+    RemoveSet(listOfn1s, 1);
 
-        listOfn1s := Filtered(DivisorsInt(n), n1 -> n1 * n1 < n);
-        RemoveSet(listOfn1s, 1);
-
-        # number of conjugates is 1 according to [KL90] Proposition 4.4.18 (I)
-        Append(result, List(listOfn1s, n1 -> OrthogonalTensorProductStabilizerInOmega(0, 0, 0, n1, n2, q)));
-
-    elif IsOddInt(q) then
-
-        listOfn1s := Filtered(DivisorsInt(n), IsEvenInt);
-        RemoveSet(listOfn1s, 2);
-
-        # This is nonmaximal, see Proposition 2.3.22 (v) in [BHR13]
-        if q = 3 then
-            RemoveSet(listOfn1s, n / 3);
-        fi;
-
-        for n1 in listOfn1s do
-            n2 := QuoInt(n, n1);
-            if IsOddInt(n2) and n2 <> 1 then
-                # number of conjugates is 1 according to [KL90] Proposition 4.4.17 (I)
-                Add(result, OrthogonalTensorProductStabilizerInOmega(epsilon, epsilon, 0, n1, n2, q));
-            fi;
-        od;
-
-    fi;
-
-    
-    if epsilon = 1 and n mod 4 = 0 then
-        
-        listOfn1s := 2 * DivisorsInt(QuoInt(n, 2));
-        listOfn1sFiltered := Filtered(listOfn1s, n1 -> n1 * n1 < n);
-
-        # These are the orthogonal type subgroups with epsilon_i <> 0
-        if IsOddInt(q) then
-
-            # This is epsilon_1 = epsilon_2
-            for n1 in listOfn1sFiltered do
-                n2 := QuoInt(n, n1);
-                if IsEvenInt(n2) and n1 <> 2 and n2 <> 2 then
-                    # number of conjugates according to [KL90] Proposition 4.4.14 (I)
-                    if n mod 8 = 4 or (q mod 4 = 3 and (n1 mod 4 = 2 or n2 mod 4 = 2)) then
-                        numberOfConjugates := 2;
-                    else
-                        numberOfConjugates := 4;
-                    fi;
-                    G := OrthogonalTensorProductStabilizerInOmega(1, 1, 1, n1, n2, q);
-                    Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
-                    # number of conjugates according to [KL90] Proposition 4.4.16 (I)
-                    G := OrthogonalTensorProductStabilizerInOmega(1, -1, -1, n1, n2, q);
-                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
-                fi;
-            od;
-
-            # This is epsilon_1 = 1, epsilon_2 = -1
-            for n1 in listOfn1s do
-                n2 := QuoInt(n, n1);
-                if IsEvenInt(n2) and n1 <> 2 and n2 <> 2 then
-                    # number of conjugates according to [KL90] Proposition 4.4.15 (I)
-                    G := OrthogonalTensorProductStabilizerInOmega(1, 1, -1, n1, n2, q);
-                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 3 - (-1) ^ QuoInt((n1 - 2) * n2 * (q - 1), 8)));
-                fi;
-            od;
-
-        fi;
+    for n1 in listOfn1s do
+        n2 := QuoInt(n, n1);
 
         # These are the symplectic type subgroups
-        
-        # This is nonmaximal, see Proposition 2.3.22 (iv) in [BHR13]
-        if q = 2 then
-            RemoveSet(listOfn1sFiltered, 2);
-        fi;
-
-        # number of conjugates according to [KL90] Proposition 4.4.12 (I)
-        numberOfConjugates := 3 - (-1) ^ (q * QuoInt(n - 4, 4));
-        for n1 in listOfn1sFiltered do
-            n2 := QuoInt(n, n1);
-            if IsEvenInt(n2) then
-                G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
-                Append(result, ConjugateSubgroupOmega(1, n, q, G, numberOfConjugates));
+        if epsilon = 1 and IsEvenInt(n1) and IsEvenInt(n2) and n1 < n2 then
+            # This is nonmaximal, see Proposition 2.3.22 (iv) in [BHR13]
+            if q = 2 and n1 = 2 then continue; fi;
+            # if d=8, OrthSpTensor(2,4,q) conjugate to O(3,q)xO(5,q) under graph auto
+            # if q even OrthSpTensor(2,4,q) <= irreducible Sp(6,q)
+            if n1 = 2 and n2 = 4 and IsEvenInt(q) then continue; fi;
+            G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
+            # number of conjugates according to [KL90] Proposition 4.4.12 (I)
+            if IsOddInt(q) and n mod 8 = 0 then
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
+            else
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
             fi;
-        od;
+        fi;
+        if IsEvenInt(q) or n1 <= 2 then continue; fi;
 
-    fi;
+        # These are the orthogonal type subgroups with epsilon_2 = 0
+        if IsOddInt(n1) and IsOddInt(n2) and n1 < n2 then
+            # This is nonmaximal, see Table 3.5.D in [KL90]
+            if n1 = 3 and q = 3 then continue; fi;
+            # number of conjugates is 1 according to [KL90] Proposition 4.4.18 (I)
+            Add(result, OrthogonalTensorProductStabilizerInOmega(0, 0, 0, n1, n2, q));
+        elif IsOddInt(n1) and IsEvenInt(n2) then
+            # This is nonmaximal, see Proposition 2.3.22 (v) in [BHR13]
+            if n1 = 3 and q = 3 then continue; fi;
+            # This is nonmaximal, see Table 3.5.E in [KL90]
+            if n2 = 4 and epsilon = 1 then continue; fi;
+            # number of conjugates is 1 according to [KL90] Proposition 4.4.17 (I)
+            Add(result, OrthogonalTensorProductStabilizerInOmega(epsilon, epsilon, 0, n2, n1, q));
+        elif IsEvenInt(n1) and IsOddInt(n2) then
+            # This is nonmaximal, see Table 3.5.E in [KL90]
+            if n1 = 4 and epsilon = 1 then continue; fi;
+            # number of conjugates is 1 according to [KL90] Proposition 4.4.17 (I)
+            Add(result, OrthogonalTensorProductStabilizerInOmega(epsilon, epsilon, 0, n1, n2, q));
+        elif epsilon = 1 then  # n1, n2 even (i.e. n mod 4 = 0)
+
+        # These are the orthogonal type subgroups with epsilon_i <> 0
+
+            # This is epsilon_1 = epsilon_2
+            if n1 < n2 then
+                G := OrthogonalTensorProductStabilizerInOmega(1, -1, -1, n1, n2, q);
+                # number of conjugates according to [KL90] Proposition 4.4.16 (I)
+                Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                G := OrthogonalTensorProductStabilizerInOmega(1, 1, 1, n1, n2, q);
+                # number of conjugates according to [KL90] Proposition 4.4.14 (I)
+                if q mod 4 = 3 and (n1 mod 4 = 2 or n2 mod 4 = 2) or n mod 8 = 4 then
+                    # The case n1 = 4 is not maximal, see Table 3.5.E in [KL90]
+                    if n1 > 4 then
+                        Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                    fi;
+                else
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+                fi;
+            fi;
+
+            # This is epsilon_1 = 1, epsilon_2 = -1
+            # number of conjugates according to [KL90] Proposition 4.4.15 (I)
+            G := OrthogonalTensorProductStabilizerInOmega(epsilon, 1, -1, n1, n2, q);
+            if q mod 4 = 3 and n1 mod 4 = 0 and n2 mod 4 = 2 then
+                Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+            else
+                if n1 > 4 then
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                fi;
+            fi;
+            if n1 < n2 then  # error in magma
+                # number of conjugates according to [KL90] Proposition 4.4.15 (I)
+                G := OrthogonalTensorProductStabilizerInOmega(epsilon, 1, -1, n2, n1, q);
+                if q mod 4 = 3 and n2 mod 4 = 0 and n1 mod 4 = 2 then
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+                else
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                fi;
+            fi;
+        fi;
+    od;
 
     return result;
 end);
@@ -3861,8 +3887,8 @@ function(epsilon, n, q)
     if epsilon = 1 and r = 2 and e = 1 then
         extraspecialNormalizerSubgroup := ExtraspecialNormalizerInOmega(m, q);
         # Cf. Tables 3.5.E and 3.5.G in [KL90]
-        if (q - 1) mod 8 = 0  or (q - 7) mod 8 = 0 then
-            numberOfConjugates := 8;    
+        if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
+            numberOfConjugates := 8;
         else
             numberOfConjugates := 4;
         fi;
@@ -3990,15 +4016,6 @@ function(epsilon, n, q)
     if general = fail then general := false; fi;
     normaliser := ValueOption("normaliser");
     if normaliser = fail then normaliser := false; fi;
-
-    # TODO This should be moved to a more appropriate location.
-    #################################################
-    if epsilon = 0 and IsEvenInt(n) then
-        ErrorNoReturn("Degree must be odd for type \"O\"");
-    elif epsilon <> 0 and IsOddInt(n) then
-        ErrorNoReturn("Degree must be even for types \"O+\" or \"O-\"");
-    fi;
-    ################################################
 
     ConjugatesBySubsetsOfGenerators := function(G, gens)
         local result, powerSet, subset;
@@ -5322,7 +5339,7 @@ end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsOrthogonalGroup,
 function(epsilon, n, q, classes...)
-    local maximalSubgroups, squareDiscriminant, numberOfConjugates, G;
+    local maximalSubgroups;
 
     if Length(classes) = 0 then
         classes := [1..9];
@@ -5333,11 +5350,22 @@ function(epsilon, n, q, classes...)
         ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
+    if epsilon = 0 and IsEvenInt(n) then
+        ErrorNoReturn("Degree must be odd for type 'O'");
+    elif epsilon <> 0 and IsOddInt(n) then
+        ErrorNoReturn("Degree must be even for types 'O+' or 'O-'");
+    fi;
 
-    if n < 7 then
-        Error("We assume <n> to be greater or equal to 7 in case 'O' since",
-              " otherwise Omega(epsilon, n, q) is either not quasisimple or",
-              " isomorphic to another classical group");
+    if n < 3 then
+        Error("We assume <n> to be greater or equal to 3 in cases 'O', 'O+' or 'O-'");
+    fi;
+
+    if (n = 3 and q <= 3) then
+        Error("O(3,2) and O(3,3) are soluble");
+    fi;
+
+    if (epsilon = 1 and n = 4) then
+        Error("O^+(4,q) is not quasisimple");
     fi;
 
     maximalSubgroups := [];
@@ -5345,8 +5373,11 @@ function(epsilon, n, q, classes...)
     if 1 in classes then
         # Class C1 subgroups ######################################################
         # Cf. Propositions 3.6.1 (n = 7), 3.7.1 (n = 8), 3.8.1 (n = 9),
-        # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12)
-        # and Table 8.50 (n = 8) in [BHR13]
+        # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12) in [BHR13]
+        # Cf. Tables 8.7 (n = 3), 8.17 (n = 4), 8.22 (n = 5),
+        # 8.31, 8.33 (all n = 6), 8.39 (n = 7), 8.50, 8.52 (all n = 8),
+        # 8.58 (n = 9), 8.66, 8.86 (all n = 10), 8.74 (n = 11),
+        # 8.82, 8.84 (all n = 12) in [BHR13]
         Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
 
@@ -5354,85 +5385,46 @@ function(epsilon, n, q, classes...)
         # Class C2 subgroups ######################################################
         # Cf. Propositions 3.6.2 (n = 7), 3.7.2, 3.7.3, 3.7.4 (all n = 8),
         # 3.8.2 (n = 9), 3.9.2, 3.9.3, 3.9.4 (all n = 10), 3.10.2 (n = 11),
-        # 3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12)
-        # and Table 8.50 (n = 8) in [BHR13]
-        if n = 10 then
-            squareDiscriminant := epsilon = (-1) ^ QuoInt(q - 1, 2);
-            if IsPrimeInt(q) and q <> 2 and squareDiscriminant then
-                numberOfConjugates := 2;
-                if q mod 8 in [1, 7] then
-                    numberOfConjugates := 2 * numberOfConjugates;
-                fi;
-                G := OmegaNonDegenerateImprimitives(epsilon, 10, q, 0, 10);
-                Append(maximalSubgroups, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugates));
-            fi;
-            if (epsilon = 1 and q > 5) or (epsilon = -1 and q <> 3) then
-                Add(maximalSubgroups, OmegaNonDegenerateImprimitives(epsilon, 10, q, epsilon, 5));
-            fi;
-            if IsOddInt(q) then
-                if squareDiscriminant then
-                    G := OmegaNonDegenerateImprimitives(epsilon, 10, q, 0, 2);
-                    Append(maximalSubgroups, ConjugateSubgroupOmega(epsilon, 10, q, G, 2));
-                else
-                    Add(maximalSubgroups, OmegaNonIsometricImprimitives(epsilon, 10, q));
-                fi;
-            fi;
-        elif n = 12 and epsilon = 1 and q < 7 then
-            if q in [3, 5] then
-                G := OmegaNonDegenerateImprimitives(1, 12, q, 0, 12);
-                Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, G, 2));
-            fi;
-            if q <> 3 then
-                Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, -1, 6));
-            fi;
-            if q = 5 then
-                G := OmegaNonDegenerateImprimitives(1, 12, 5, 0, 4);
-                Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, 5, G, 2));
-            fi;
-            if q <> 2 then
-                Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, 1, 3));
-            fi;
-            Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, -1, 2));
-            Add(maximalSubgroups, OmegaNonDegenerateImprimitives(1, 12, q, 1, 2));
-            G := OmegaIsotropicImprimitives(12, q);
-            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, G, 2));
-        else
-            Append(maximalSubgroups, C2SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
-        fi;
+        # 3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12) in [BHR13]
+        # Cf. Tables 8.2 (n = 3), 8.22 (n = 5), 8.31, 8.33 (all n = 6)
+        # 8.39 (n = 7), 8.50 (n = 8), 8.58 (n = 9), 8.66, 8.68 (all n = 10)
+        # 8.74 (n = 11), 8.82, 8.84 (all n = 12) in [BHR13]
+        Append(maximalSubgroups, C2SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
-    
+
     if 3 in classes then
         # Class C3 subgroups ######################################################
-        # Cf. Propositions 3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9), 
+        # Cf. Propositions 3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9),
         # 3.9.5 (n = 10), 3.10.3 (n = 11) and 3.11.7 (n = 12) in [BHR13]
+        # Cf. Tables 8.17 (n = 4), 8.31, 8.33 (all n = 6), 8.50, 8.52 (all n = 8)
+        # 8.58 (n = 9), 8.66, 8.68 (all n = 10), 8.82, 8.84 (all n = 12)
+        # in [BHR13]
         Append(maximalSubgroups, C3SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
 
     if 4 in classes then
         # Class C4 subgroups ######################################################
-        # Cf. Propositions 3.7.7 (n = 8), Propositions 3.9.6 (n = 10),
-        # Propositions 3.11.8 (n = 12) and Table 8.50 (n = 8) in [BHR13]
+        # Cf. Propositions 3.7.7 (n = 8), 3.9.6 (n = 10), 3.11.8 (n = 12) in [BHR13]
+        # Cf. Tables 8.50 (n = 8), 8.82, 8.84 (all n = 12) in [BHR13]
         # For all other n, class C4 is empty.
-        if n = 12 and epsilon = 1 and q <> 2 then
-            # number of conjugates is 2 according to [KL90] Proposition 4.4.12 (I)
-            G := SymplecticTensorProductStabilizerInOmega(2, 6, q);
-            Append(maximalSubgroups, ConjugateSubgroupOmega(1, 12, q, G, 2));
-        elif q <> 2 and not (epsilon = 1 and n = 8) then
-            Append(maximalSubgroups, C4SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
-        fi;
+        Append(maximalSubgroups, C4SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
 
     if 5 in classes then
         # Class C5 subgroups ######################################################
         # Cf. Propositions 3.6.3 (n = 7), 3.7.8 (n = 8), 3.8.4 (n = 9),
-        # 3.9.7 (n = 10), 3.10.3 (n = 11), 3.11.9 (n = 12) and Table 8.50 (n = 8)
+        # 3.9.7 (n = 10), 3.10.3 (n = 11), 3.11.9 (n = 12) in [BHR13]
+        # Cf. Tables 8.2 (n = 3), 8.17 (n = 4), 8.22 (n = 5),
+        # 8.31, 8.33 (all n = 6), 8.39 (n = 7), 8.50, 8.52 (all n = 8), 8.58 (n = 9),
+        # 8.66, 8.68 (all n = 10), 8.74 (n = 11), 8.82, 8.84 (all n = 12)
         # in [BHR13]
         Append(maximalSubgroups, C5SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
     fi;
 
     if 6 in classes then
         # Class C6 subgroups ######################################################
-        # Cf. Proposition 3.7.9 and Table 8.50 (n = 8) in [BHR13]
+        # Cf. Proposition 3.7.9 (n = 8) in [BHR13]
+        # Cf. Table 8.50 (n = 8) in [BHR13]
         # For all other n, class C6 is empty.
         if not (q - 3) mod 8 = 0 and not (q - 5) mod 8 = 0 then
             Append(maximalSubgroups, C6SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
@@ -5441,7 +5433,8 @@ function(epsilon, n, q, classes...)
 
     if 7 in classes then
         # Class C7 subgroups ######################################################
-        # Cf. Table 8.50 (n = 8) and Proposition 3.8.3 (n = 9) in [BHR13]
+        # Cf. Proposition 3.8.3 (n = 9) in [BHR13]
+        # Cf. Table 8.58 (n = 9) in [BHR13]
         # For all other n, class C7 is empty.
         if n <> 8 then
             Append(maximalSubgroups, C7SubgroupsOrthogonalGroupGeneric(epsilon, n, q));

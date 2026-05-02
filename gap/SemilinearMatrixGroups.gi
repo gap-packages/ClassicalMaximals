@@ -807,7 +807,7 @@ function(epsilon, epsilon1, d, q)
         if IsOddInt(d / 2) then
             ErrorNoReturn("<epsilon1> must be 0 if <d> / 2 is odd");
         fi;
-        if d / 2 < 3 then
+        if d / 2 < 3 and (d = 3 and epsilon = -1 and q <> 3) then
             ErrorNoReturn("<d> / 2 must be at least 3 if <epsilon> = <epsilon1>");
         fi;
     elif epsilon1 = 0 then
