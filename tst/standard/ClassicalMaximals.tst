@@ -1,4 +1,42 @@
 gap> START_TEST("ClassicalMaximals.tst");
+gap> oldClassicalMaximalsInfoLevel:=InfoLevel(InfoClassicalMaximals);;
+gap> SetInfoLevel(InfoClassicalMaximals, 1);
+
+# Test error handling
+gap> ClassicalMaximalsGeneric("L", 2, 4, [0]);
+Error, <classes> must be a subset of [1..9]
+gap> ClassicalMaximalsGeneric("", 2, 4);
+Error, Type must be in ['L', 'U', 'S', 'O-', 'O', 'O+']
+gap> MaximalSubgroupClassRepsSpecialLinearGroup(2, 4, [0]);
+Error, <classes> must be a subset of [1..9]
+gap> MaximalSubgroupClassRepsSpecialLinearGroup(2, 2);
+Error, SL(2, 2) and SL(2, 3) are soluble
+gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 5, [0]);
+Error, <classes> must be a subset of [1..9]
+gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(2, 3);
+Error, <n> must be at least 3 in case 'U' since SU(2, q) and SL(2, q) are isom\
+orphic
+gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 2);
+Error, PSU(3, 2) is soluble
+gap> MaximalSubgroupClassRepsSymplecticGroup(4, 3, [0]);
+Error, <classes> must be a subset of [1..9]
+gap> MaximalSubgroupClassRepsSymplecticGroup(2, 3);
+Error, <n> must be at least 4 in case 'S' since Sp(2, q) and SL(2, q) are isom\
+orphic
+gap> MaximalSubgroupClassRepsSymplecticGroup(4, 2);
+Error, Sp(4, 2) is not quasisimple
+gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 2, 3);
+Error, <n> must be at least 3 in cases 'O', 'O+' or 'O-'
+gap> MaximalSubgroupClassRepsOrthogonalGroup(-1, 4, 3, [0]);
+Error, <classes> must be a subset of [1..9]
+gap> MaximalSubgroupClassRepsOrthogonalGroup(0, 4, 3);
+Error, Degree must be odd for type 'O'
+gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 3, 5);
+Error, Degree must be even for types 'O+' or 'O-'
+gap> MaximalSubgroupClassRepsOrthogonalGroup(0, 3, 2);
+Error, O(3,2) and O(3,3) are soluble
+gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 4, 3);
+Error, O^+(4,q) is not quasisimple
 
 #
 gap> Length(ClassicalMaximalsGeneric("L", 2, 4));
@@ -509,6 +547,169 @@ gap> Length(ClassicalMaximalsGeneric("S", 12, 19));
 26
 
 #
+gap> Length(ClassicalMaximalsGeneric("O", 3, 5));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+2
+gap> Length(ClassicalMaximalsGeneric("O", 3, 7));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+2
+gap> Length(ClassicalMaximalsGeneric("O", 3, 9));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O", 3, 11));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+3
+gap> Length(ClassicalMaximalsGeneric("O", 3, 13));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+3
+gap> Length(ClassicalMaximalsGeneric("O", 3, 17));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O", 3, 19));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 2));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+2
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 3));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 4));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+3
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 5));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 7));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+6
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 8));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 9));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 11));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 13));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+6
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 16));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+3
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 17));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+6
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 19));
+#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
+4
+gap> Length(ClassicalMaximalsGeneric("O", 5, 3));
+5
+gap> Length(ClassicalMaximalsGeneric("O", 5, 5));
+8
+gap> Length(ClassicalMaximalsGeneric("O", 5, 7));
+9
+gap> Length(ClassicalMaximalsGeneric("O", 5, 9));
+8
+gap> Length(ClassicalMaximalsGeneric("O", 5, 11));
+10
+gap> Length(ClassicalMaximalsGeneric("O", 5, 13));
+10
+gap> Length(ClassicalMaximalsGeneric("O", 5, 17));
+10
+gap> Length(ClassicalMaximalsGeneric("O", 5, 19));
+9
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 2));
+6
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 3));
+8
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 4));
+8
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 5));
+13
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 7));
+12
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 8));
+8
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 9));
+18
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 11));
+12
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 13));
+18
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 16));
+9
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 17));
+16
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 19));
+12
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 25));
+18
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 2));
+5
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 3));
+16
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 4));
+7
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 5));
+14
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 7));
+16
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 8));
+8
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 9));
+10
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 11));
+18
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 13));
+12
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 16));
+7
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 17));
+14
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 19));
+18
+gap> Length(ClassicalMaximalsGeneric("O", 7, 3));
+15
+gap> Length(ClassicalMaximalsGeneric("O", 7, 5));
+14
+gap> Length(ClassicalMaximalsGeneric("O", 7, 7));
+15
+gap> Length(ClassicalMaximalsGeneric("O", 7, 9));
+13
+gap> Length(ClassicalMaximalsGeneric("O", 7, 11));
+14
+gap> Length(ClassicalMaximalsGeneric("O", 7, 13));
+14
+gap> Length(ClassicalMaximalsGeneric("O", 7, 17));
+15
+gap> Length(ClassicalMaximalsGeneric("O", 7, 19));
+14
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 2));
+17
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 3));
+27
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 4));
+23
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 5));
+55
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 7));
+48
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 8));
+23
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 9));
+38
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 11));
+36
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 13));
+36
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 16));
+24
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 17));
+48
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 19));
+36
 gap> Length(ClassicalMaximalsGeneric("O-", 8, 2));
 8
 gap> Length(ClassicalMaximalsGeneric("O-", 8, 3));
@@ -550,29 +751,29 @@ gap> Length(ClassicalMaximalsGeneric("O", 9, 17));
 gap> Length(ClassicalMaximalsGeneric("O", 9, 19));
 23
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 2));
-10
+9
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 3));
-17
+16
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 4));
-13
+12
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 5));
-32
+31
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 7));
-17
+16
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 8));
-13
+12
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 9));
-29
+28
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 11));
-17
+16
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 13));
-25
+24
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 16));
-14
+13
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 17));
-27
+26
 gap> Length(ClassicalMaximalsGeneric("O+", 10, 19));
-17
+16
 gap> Length(ClassicalMaximalsGeneric("O-", 10, 2));
 11
 gap> Length(ClassicalMaximalsGeneric("O-", 10, 3));
@@ -614,29 +815,29 @@ gap> Length(ClassicalMaximalsGeneric("O", 11, 17));
 gap> Length(ClassicalMaximalsGeneric("O", 11, 19));
 19
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 2));
-21
+20
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 3));
-34
+33
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 4));
-27
+26
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 5));
-34
+33
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 7));
-37
+36
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 8));
-27
+26
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 9));
-39
+38
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 11));
-35
+34
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 13));
-35
+34
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 16));
-28
+27
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 17));
-41
+40
 gap> Length(ClassicalMaximalsGeneric("O+", 12, 19));
-43
+42
 gap> Length(ClassicalMaximalsGeneric("O-", 12, 2));
 16
 gap> Length(ClassicalMaximalsGeneric("O-", 12, 3));
@@ -661,6 +862,16 @@ gap> Length(ClassicalMaximalsGeneric("O-", 12, 17));
 20
 gap> Length(ClassicalMaximalsGeneric("O-", 12, 19));
 22
+
+#
+gap> Length(ClassicalMaximalsGeneric("O", 15, 5));
+27
+gap> Length(ClassicalMaximalsGeneric("O-", 20, 3));
+31
+gap> Length(ClassicalMaximalsGeneric("O+", 48, 3, [4]));
+30
+gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, [4]));
+31
 
 #
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,4));
@@ -1245,6 +1456,8 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true));
 8
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3 : normaliser:=true, all:=false));
 2
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,4 : normaliser:=true));
+5
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true));
 8
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2 : normaliser:=true, all:=false));
@@ -1331,6 +1544,8 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,11 : novelties:=true));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,11 : novelties:=true, all:=false));
 1
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,13 : novelties:=true));
+2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,19 : novelties:=true));
 6
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,2 : novelties:=true));
@@ -1415,4 +1630,5 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,7 : all:=false));
 1
 
 #
+gap> SetInfoLevel(InfoClassicalMaximals, oldClassicalMaximalsInfoLevel);
 gap> STOP_TEST("ClassicalMaximals.tst", 0);

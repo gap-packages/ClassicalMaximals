@@ -2,6 +2,9 @@
 # ClassicalMaximals: Maximal subgroups of classical groups
 #
 DeclareInfoClass("InfoClassicalMaximalsTests");
+DeclareInfoClass("InfoClassicalMaximals");
+SetInfoLevel(InfoClassicalMaximals, 1);
+DeclareGlobalName("CM_c9lib");
 
 #! @Chapter Maximal Subgroups of Classical Groups
 
