@@ -25,6 +25,7 @@ gap> TestSUIsotropicImprimitives := function(n, q)
 gap> TestSUIsotropicImprimitives(6, 2);
 gap> TestSUIsotropicImprimitives(4, 3);
 gap> TestSUIsotropicImprimitives(2, 5);
+gap> TestSUIsotropicImprimitives(4, 5^2);
 
 #
 gap> TestSUNonDegenerateImprimitives := function(n, q, t)
