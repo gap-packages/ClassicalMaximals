@@ -1,5 +1,7 @@
 #! @Chapter Maximal Subgroups of Classical Groups
+
 #! @Section Groups in Class S: cross characteristic
+
 #! @Arguments LR, q : special := false, general := false, normaliser := false
 #! @Returns
 #!  A list of matrix groups over $\mathrm{GF}(q)$, one for each orbit of irreducible
