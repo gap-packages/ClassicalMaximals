@@ -13,24 +13,20 @@ gap> MaximalSubgroupClassRepsSpecialLinearGroup(2, 2);
 Error, SL(2, 2) and SL(2, 3) are soluble
 gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 5, [0]);
 Error, <classes> must be a subset of [1..9]
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(2, 3);  # FIXME: Unstable output formatting (line breaks) in error message
-Error, We assume <n> to be greater or equal to 3 in case 'U' since SU(2, q) and SL(2, q) are isomorphic
-#@fi
+gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(2, 3);
+Error, <n> must be at least 3 in case 'U' since SU(2, q) and SL(2, q) are isom\
+orphic
 gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 2);
 Error, PSU(3, 2) is soluble
 gap> MaximalSubgroupClassRepsSymplecticGroup(4, 3, [0]);
 Error, <classes> must be a subset of [1..9]
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> MaximalSubgroupClassRepsSymplecticGroup(2, 3);  # FIXME: Unstable output formatting (line breaks) in error message
-Error, We assume <n> to be greater or equal to 4 in case 'S' since Sp(2, q) and SL(2, q) are isomorphic
-#@fi
+gap> MaximalSubgroupClassRepsSymplecticGroup(2, 3);
+Error, <n> must be at least 4 in case 'S' since Sp(2, q) and SL(2, q) are isom\
+orphic
 gap> MaximalSubgroupClassRepsSymplecticGroup(4, 2);
 Error, Sp(4, 2) is not quasisimple
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 2, 3);  # FIXME: Unstable output formatting (line breaks) in error message
-Error, We assume <n> to be greater or equal to 3 in cases 'O', 'O+' or 'O-'
-#@fi
+gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 2, 3);
+Error, <n> must be at least 3 in cases 'O', 'O+' or 'O-'
 gap> MaximalSubgroupClassRepsOrthogonalGroup(-1, 4, 3, [0]);
 Error, <classes> must be a subset of [1..9]
 gap> MaximalSubgroupClassRepsOrthogonalGroup(0, 4, 3);

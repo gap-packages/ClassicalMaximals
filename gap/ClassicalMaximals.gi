@@ -2399,8 +2399,8 @@ function(n, q, classes...)
     fi;
 
 
-    if n = 2 then
-        Error("We assume <n> to be greater or equal to 3 in case 'U' since",
+    if n < 3 then
+        Error("<n> must be at least 3 in case 'U' since",
               " SU(2, q) and SL(2, q) are isomorphic");
     fi;
     if (n = 3 and q = 2) then
@@ -3315,8 +3315,8 @@ function(n, q, classes...)
     fi;
 
 
-    if n = 2 then
-        Error("We assume <n> to be greater or equal to 4 in case 'S' since",
+    if n < 4 then
+        Error("<n> must be at least 4 in case 'S' since",
               " Sp(2, q) and SL(2, q) are isomorphic");
     fi;
 
@@ -5357,7 +5357,7 @@ function(epsilon, n, q, classes...)
     fi;
 
     if n < 3 then
-        Error("We assume <n> to be greater or equal to 3 in cases 'O', 'O+' or 'O-'");
+        Error("<n> must be at least 3 in cases 'O', 'O+' or 'O-'");
     fi;
 
     if (n = 3 and q <= 3) then

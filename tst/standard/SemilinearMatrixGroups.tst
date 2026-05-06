@@ -65,7 +65,7 @@ gap> TestGammaLMeetOmega := function(epsilon, d, q, s)
 >   CheckSize(G);
 > end;;
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestGammaLMeetOmega(0, 9, 7, 3);  # FIXME: `Error, Could not find has function for sample object` (recog issue #123)
+gap> TestGammaLMeetOmega(0, 9, 7, 3);  # FIXME: `Error, Could not find hash function for sample object` (recog issue #123)
 #@fi
 gap> TestGammaLMeetOmega(0, 15, 3, 3);
 gap> TestGammaLMeetOmega(0, 15, 3, 5);
