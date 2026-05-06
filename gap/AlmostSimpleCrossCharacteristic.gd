@@ -1,7 +1,4 @@
-#! @Chapter Maximal Subgroups of Classical Groups
-
-#! @Section Groups in Class S: cross characteristic
-
+#! @BeginChunk ModularReductionOfIntegralLattice
 #! @Arguments LR, q : special := false, general := false, normaliser := false
 #! @Returns
 #!  A list of matrix groups over $\mathrm{GF}(q)$, one for each orbit of irreducible
@@ -82,4 +79,5 @@
 #! gap> ModularReductionOfIntegralLattice(LR, 11);
 #! [ <matrix group with 2 generators> ]
 #! @EndExampleSession
+#! @EndChunk
 DeclareGlobalFunction("ModularReductionOfIntegralLattice");

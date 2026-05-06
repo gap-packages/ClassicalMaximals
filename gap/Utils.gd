@@ -1,4 +1,5 @@
 #! @Chapter Utility Functions
+#! @ChapterLabel Utils
 
 #! @Section Matrix Functions
 
@@ -39,7 +40,6 @@ DeclareGlobalFunction("AntidiagonalHalfOneMat");
 #! is more efficient than matrix multiplication.
 DeclareGlobalFunction("RotateMat");
 
-
 #! @Section Creating Matrix Groups
 
 #! @Arguments F, gens
@@ -61,13 +61,111 @@ DeclareGlobalFunction("MatrixGroup");
 #! setting the group's size, this does the same as <Ref Func="MatrixGroup"/>.
 DeclareGlobalFunction("MatrixGroupWithSize");
 
+#! @Section Special generators for classical groups
+#! This section provides functions to construct explicit generating sets for
+#! classical groups, namely orthogonal and linear groups over finite fields,
+#! as used in <Cite Key="HR05" /> and <Cite Key="HR10" />.
+
+#! @Arguments epsilon n q
+#! @Returns a record with components `generatorsOfSO`, `D` and `E`.
+#! @Description
+#! Constructs generators for the orthogonal groups with the properties listed
+#! in <Cite Key="HR05" Where="Lemma 2.4" />.
+#! Construction as in <Cite Key="R-D13" Where="Lemma 2.4" />.
+DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
+
+#! @Arguments epsilon n q
+#! @Returns a record with components `generatorsOfOmega`, `S`, `G` and `D`.
+#! @Description
+#! Constructs standard generators `generatorsOfOmega`, `S`,
+#! `G`, `D` for the orthogonal groups with respect to our standard
+#! form as used in <Cite Key="HR10" />, with the following properties:
+#! * `generatorsOfOmega` generate $\Omega^\varepsilon_n(q)$
+#! * `generatorsOfOmega` and `S` generate ${\rm SO}_n(q)$
+#! * `generatorsOfOmega` and `G` generate ${\rm GO}_n(q)$
+#! * the spinor norm of `G` is $1$
+#! * `D` generates ${\rm CO}^\varepsilon_n(q)$ modulo ${\rm GO}^\varepsilon_n(q)$.
+#!
+#! Construction as in Theorem 3.9 loc. cit.
+DeclareGlobalFunction("StandardGeneratorsOfOrthogonalGroup");
+
+#! @Arguments n q squareDiscriminant
+#! @Returns a record with components `generatorsOfOmega`, `S`, `G` and `D`.
+#! @Description
+#! Constructs standard generators `generatorsOfOmega`, `S`,
+#! `G`, `D` for the orthogonal groups with respect to our
+#! **diagonal form** of given discriminant as used in <Cite Key="HR10" />.
+#!
+#! The generators satisfy exactly the same properties as those returned
+#! by <Ref Func="StandardGeneratorsOfOrthogonalGroup"/>, except that
+#! they are constructed with respect to a diagonal form (rather than the
+#! standard form used there).
+#!
+#! Note that the parameter $\varepsilon$ is uniquely determined by
+#! <A>n</A>, <A>q</A> and <A>squareDiscriminant</A>.
+#!
+#! Construction as in Theorem 3.9 loc. cit.
+#!
+#! <A>q</A> must be odd.
+DeclareGlobalFunction("AlternativeGeneratorsOfOrthogonalGroup");
+
+#! @Arguments n q
+#! @Returns a record with components `L1`, `L2` and `L3`.
+#! @Description
+#! Constructs standard generators `L1`, `L2`, `L3` as
+#! used in <Cite Key="HR10" /> with the following properties (analogous to
+#! Theorem 3.11 loc. cit.):
+#! * `L1` and `L2` generate ${\rm GL}_n(q)$.
+#! * `L1` and `L3` generate ${\rm SL}_n(q)$.
+#! * all matrix entries lie in $\{0, \pm 1, \pm \zeta^{\pm 1}\}$, where
+#!   $\zeta$ is a primitive element of $\mathbb{F}_q$.
+#! * If `q` is odd, `L1` and `L2^2` generate the unique subgroup of
+#!   index 2 in ${\rm GL}_n(q)$, often denoted $\frac{1}{2} {\rm GL}_n(q)$.
+#! The construction is taken from <Cite Key="T87" />.
+DeclareGlobalFunction("StandardGeneratorsOfLinearGroup");
+
+#! @Section Sizes of classical groups
+#! This section provides functions to compute the orders of various classical groups
+#! over finite fields, using the information collected in <Cite Key="BHR13" />.
+
+#! @Arguments n q
+#! @Returns the size of the group <C>Sp</C>( <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Theorem 1.6.22"/>.
 DeclareGlobalFunction("SizeSp");
+
+#! @Arguments n q
+#! @Returns the size of the group <C>PSp</C>( <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizePSp");
+
+#! @Arguments n q
+#! @Returns the size of the group <C>SU</C>( <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Theorem 1.6.22"/>.
 DeclareGlobalFunction("SizeSU");
+
+#! @Arguments n q
+#! @Returns the size of the group <C>PSU</C>( <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizePSU");
+
+#! @Arguments n q
+#! @Returns the size of the group <C>GU</C>( <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizeGU");
+
+#! @Arguments epsilon n q
+#! @Returns the size of the group <C>GO</C>( <A>epsilon</A>, <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Theorem 1.6.22"/>.
 DeclareGlobalFunction("SizeGO");
+
+#! @Arguments epsilon n q
+#! @Returns the size of the group <C>SO</C>( <A>epsilon</A>, <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizeSO");
+
+#! @Arguments epsilon n q
+#! @Returns the size of the group <C>Omega</C>( <A>epsilon</A>, <A>n</A> , <A>q</A> ),
+#! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizeOmega");
 
 DeclareGlobalFunction("CM_InOmega");
