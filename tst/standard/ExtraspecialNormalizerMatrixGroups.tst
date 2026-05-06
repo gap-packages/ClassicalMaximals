@@ -36,6 +36,7 @@ gap> TestExtraspecialNormalizerInSU(2, 2, 7);
 gap> TestExtraspecialNormalizerInSU(3, 2, 5);
 gap> TestExtraspecialNormalizerInSU(3, 1, 8);
 gap> TestExtraspecialNormalizerInSU(3, 1, 5);
+gap> TestExtraspecialNormalizerInSU(13, 1, 25);
 
 #
 gap> TestExtraspecialNormalizerInSp := function(m, q)
