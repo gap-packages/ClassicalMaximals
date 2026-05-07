@@ -42,9 +42,12 @@ maximal subgroups organised according to the classification arising from Aschbac
 An illustrive call looks as follows:
 @BeginLogSession
 gap> ClassicalMaximalsGeneric("L", 3, 4, [1..8]);
-[ <matrix group of size 2880 with 5 generators>, <matrix group of size 2880 with 5 generators>,
-  <matrix group of size 504 with 3 generators>, <matrix group of size 504 with 3 generators>,
-  <matrix group of size 504 with 3 generators>, <matrix group of size 216 with 3 generators> ]
+[ <matrix group of size 2880 with 5 generators>,
+  <matrix group of size 2880 with 5 generators>,
+  <matrix group of size 504 with 3 generators>,
+  <matrix group of size 504 with 3 generators>,
+  <matrix group of size 504 with 3 generators>,
+  <matrix group of size 216 with 3 generators> ]
 @EndLogSession
 
 @Section Overview over this manual

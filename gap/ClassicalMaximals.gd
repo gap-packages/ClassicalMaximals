@@ -82,21 +82,21 @@ DeclareGlobalFunction("NormSpMinusSp");
 #! @Returns an element of
 #! ${\rm SO}^\varepsilon_n(q) \setminus \Omega^\varepsilon_n(q)$
 #! which preserves our standard orthogonal form
-#! (see <Ref Label="tab:standardclassicalforms"/>).
+#! (see <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>).
 DeclareGlobalFunction("SOMinusOmega");
 
 #! @Arguments epsilon n q
 #! @Returns an element of
 #! ${\rm GO}^\varepsilon_n(q) \setminus {\rm SO}^\varepsilon_n(q)$
 #! which preserves our standard orthogonal form
-#! (see <Ref Label="tab:standardclassicalforms"/>).
+#! (see <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>).
 DeclareGlobalFunction("GOMinusSO");
 
 #! @Arguments epsilon n q
 #! @Returns an element of
 #! ${\rm N}_{{\rm GL}_n(q)}({\rm GO}^\varepsilon_n(q)) \setminus {\rm GO}^\varepsilon_n(q)$
 #! which preserves our standard orthogonal form
-#! (see <Ref Label="tab:standardclassicalforms"/>)
+#! (see <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>)
 #! modulo a scalar.
 DeclareGlobalFunction("NormGOMinusGO");
 
@@ -110,7 +110,8 @@ DeclareGlobalFunction("NormGOMinusGO");
 #!
 #! Consequently the element returned by `GOMinusSO(-1,n,q)`
 #! preserves the form associated with `Omega(-1,n,q)`
-#! (our standard orthogonal form, see <Ref Label="tab:standardclassicalforms"/>)
+#! (our standard orthogonal form, see
+#! <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>)
 #! but does **not** necessarily preserve the form associated with `SO(-1,n,q)`
 #! (as one would expect from the name).
 #!
