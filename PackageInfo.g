@@ -45,6 +45,17 @@ Persons := [
     Institution   := "RPTU Kaiserslautern-Landau",
   ),
   rec(
+    FirstNames    := "Christian",
+    LastName      := "Seeger",
+    IsAuthor      := true,
+    IsMaintainer  := true,
+    Email         := "christian.seeger@edu.rptu.de",
+    #WWWHome       := "",
+    GitHubUsername:= "chseeger",
+    Place         := "Kaiserslautern, Germany",
+    Institution   := "RPTU Kaiserslautern-Landau",
+  ),
+  rec(
     FirstNames    := "Sergio",
     LastName      := "Siccha",
     IsAuthor      := true,
