@@ -114,9 +114,7 @@ gap> TestSymplecticTensorProductStabilizerInOmega := function(d1, d2, q)
 >   CheckIsSubsetOmega(1, d1 * d2, q, G);
 >   CheckSize(G);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestSymplecticTensorProductStabilizerInOmega(2, 4, 8); # Error, !!!. See ./ReducibleMatrixGroups.tst for more info and examples
-#@fi
+gap> TestSymplecticTensorProductStabilizerInOmega(2, 4, 8);
 gap> TestSymplecticTensorProductStabilizerInOmega(2, 4, 7);
 gap> TestSymplecticTensorProductStabilizerInOmega(2, 6, 4);
 gap> TestSymplecticTensorProductStabilizerInOmega(2, 6, 5);

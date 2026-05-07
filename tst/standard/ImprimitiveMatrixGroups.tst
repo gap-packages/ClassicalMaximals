@@ -10,9 +10,7 @@ gap> TestImprimitivesMeetSL := function(n, q, t)
 >   CheckSize(G);
 > end;;
 gap> TestImprimitivesMeetSL(2, 3, 2);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestImprimitivesMeetSL(4, 8, 2); # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
-#@fi
+gap> TestImprimitivesMeetSL(4, 8, 2);
 gap> TestImprimitivesMeetSL(6, 5, 3);
 
 #
@@ -84,14 +82,14 @@ gap> TestOmegaNonDegenerateImprimitives := function(epsilon, n, q, epsilon_0, t)
 >   CheckSize(G);
 > end;;
 gap> TestOmegaNonDegenerateImprimitives(0, 7, 7, 0, 7);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestOmegaNonDegenerateImprimitives(0, 9, 9, 0, 3);
-#@fi
 gap> TestOmegaNonDegenerateImprimitives(0, 15, 3, 0, 3);
 gap> TestOmegaNonDegenerateImprimitives(0, 15, 3, 0, 5);
 gap> TestOmegaNonDegenerateImprimitives(1, 8, 8, -1, 2);
-gap> TestOmegaNonDegenerateImprimitives(1, 8, 5, 1, 4);
-gap> TestOmegaNonDegenerateImprimitives(1, 8, 11, 0, 8);
+#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
+gap> TestOmegaNonDegenerateImprimitives(1, 8, 5, 1, 4);  # Error, the recognition described by this recognition node has failed!
+gap> TestOmegaNonDegenerateImprimitives(1, 8, 11, 0, 8); # ditto, see https://github.com/gap-packages/recog/issues/472
+#@fi
 gap> TestOmegaNonDegenerateImprimitives(-1, 10, 4, -1, 5);
 gap> TestOmegaNonDegenerateImprimitives(-1, 12, 3, -1, 3);
 
@@ -138,10 +136,8 @@ gap> TestOmegaNonIsometricImprimitives := function(epsilon, n, q)
 >   CheckIsSubsetOmega(epsilon, n, q, G);
 >   CheckSize(G);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestOmegaNonIsometricImprimitives(1, 6, 7);
-gap> TestOmegaNonIsometricImprimitives(-1, 6, 9); # see https://github.com/gap-packages/ClassicalMaximals/pull/111
-#@fi
+gap> TestOmegaNonIsometricImprimitives(-1, 6, 9);
 gap> TestOmegaNonIsometricImprimitives(1, 10, 3);
 gap> TestOmegaNonIsometricImprimitives(-1, 10, 5);
 

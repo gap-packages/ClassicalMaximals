@@ -101,9 +101,7 @@ gap> TestC9SubgroupsSpecialLinearGroupGeneric(7,5 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(7,29 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,29 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,3^2 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,17^2 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,17^2 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,41 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,241 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(8,5 : all:=false);
@@ -127,9 +125,7 @@ gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,31 : all:=false);
 gap> TestC9SubgroupsSpecialLinearGroupGeneric(12,49 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(3,5 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(3,13 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(3,29 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(3,29 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(3,5 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(4,13 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(4,13 : all:=false);
@@ -138,50 +134,36 @@ gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(4,3 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(4,3^2 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(5,5 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(5,7 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(5,19 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(5,29 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(5,19 : all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(5,29 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,11 : novelties:=true, all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,17 : novelties:=true, all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,23 : novelties:=true, all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,17 : novelties:=true, all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,23 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,7 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,17 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,17 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,2 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,23 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(6,23 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(7,7 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(7,7 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(7,83 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(7,83 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,11 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,11 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,19 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,59 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,71 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,31 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,79 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,19 : all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,59 : all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,71 : all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,31 : all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(8,79 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(9,2 : novelties:=true, all:=false);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(9,107 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(9,107 : all:=false);  # Error, Orbit too long, increase opt.OrbitLengthLimit
 #@fi
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(9,2 : all:=false);
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,19 : novelties:=true, all:=false);
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,19 : novelties:=true, all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,31 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,31 : all:=false);  # Error, Orbit too long, increase opt.OrbitLengthLimit
 #@fi
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(11,5 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(11,43 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(11,43 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(12,11 : novelties:=true, all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(12,11 : all:=false);
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(12,5 : all:=false);
@@ -271,9 +253,7 @@ gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,7 : novelties:=true, all:=false
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,41 : all:=false);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,3^2 : all:=false);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,2^2 : all:=false);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,11^3 : all:=false);  # FIXME: `Error, Could not find hash function` (recog issue #123)
-#@fi
+gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,11^3 : all:=false);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,11 : all:=false);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,2 : all:=false);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,12,7 : all:=false);
