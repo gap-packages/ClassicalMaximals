@@ -49,13 +49,11 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 - Precompute group sizes for `special`, `general`, `normaliser` options
 - Streamline repetitive construction logic (especially in `ClassicalMaximals.gi`)
 
-#### General features & Refactoring
+#### General features
 - **User-defined target forms**: Enable users to provide custom forms;
   subgroups will be returned conjugated to preserve these specific forms
   ([#7](https://github.com/gap-packages/ClassicalMaximals/issues/7),
   [#144](https://github.com/gap-packages/ClassicalMaximals/issues/144)).
-- Refactor code invoking `ConjugateToStandardForm`
-  ([#142](https://github.com/gap-packages/ClassicalMaximals/issues/142))
 - Adapt `ConjugateToStandardForm` to support forms preserved up to a scalar
   (depending on future updates in the `forms` package)
 
