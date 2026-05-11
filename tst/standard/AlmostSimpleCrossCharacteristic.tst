@@ -3,12 +3,9 @@ gap> START_TEST("AlmostSimpleCrossCharacteristic.tst");
 #
 gap> TestModularReductionOfIntegralLattice := function(LR, q, expectedOrbitNumber)
 >     local special, general, normaliser, result;
->     special := ValueOption("special");
->     if special = fail then special := false; fi;
->     general := ValueOption("general");
->     if general = fail then general := false; fi;
->     normaliser := ValueOption("normaliser");
->     if normaliser = fail then normaliser := false; fi;
+>     special := ValueOption("special") = true;  # default to false
+>     general := ValueOption("general") = true;  # default to false
+>     normaliser := ValueOption("normaliser") = true;  # default to false
 >     result := ModularReductionOfIntegralLattice(LR, q :
 >                                                 special := special,
 >                                                 general := general,

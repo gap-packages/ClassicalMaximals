@@ -51,12 +51,9 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_OrthogSL2",
 function(d, q)
     local special, general, normaliser, w, G, M, MM, T, A, S, forms, i;
 
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # construct SL(2, q) in O(d, q) for d odd
     Assert(0, IsOddInt(d));
@@ -95,8 +92,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_SymplecticSL2",
 function(d, q)
     local normaliser, w, G, M, MM, T, A, S, DA, tmat, i;
 
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # construct SL(2,q) in Sp(d,q) for d even
     Assert(0, IsEvenInt(d));
@@ -130,8 +126,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l3qdim6",
 function(q)
     local general, w, G, M, T, MM, A, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
+    general := ValueOption("general") = true;  # default to false
 
     Assert(0, IsOddInt(q));
     w := Z(q);
@@ -158,10 +153,8 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_u3qdim6",
 function(q)
     local general, normaliser, w, G, M, T, MM, A, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     Assert(0, IsOddInt(q));
     if normaliser then general := true; fi;
@@ -192,8 +185,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l2q3dim8",
 function(q)
     local normaliser, w, G, M, M1, M2, T, u, H;
 
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # SL(2,q^3).3 <= Sp(8,q)
     w := Z(q^3);
@@ -222,12 +214,9 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l3qdim8",
 function(q)
     local special, general, normaliser, w, G, M, T, C, M8, G8;
 
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # SL(3,q)(.3) <= O+(8,q), q mod 3 = 1 or O-(8,q), q mod 3 = 2
     w := Z(q);
@@ -260,12 +249,9 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_u3qdim8",
 function(q)
     local special, general, normaliser, w, G, M, T, C, M8, G8, G8q;
 
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # SU(3,q)(.3) <= O+(8,q), q mod 3 = 2 or O-(8,q), q mod 3 = 1
     w := Z(q);
@@ -304,12 +290,9 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l2q2dim9",
 function(q)
     local special, general, normaliser, w, z, G, M, M1, T, u, H, C, DG, tmat, form, tform, scal, rt, g3, g4, gg;
 
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # L(2,q^2).2 <= O(9,q)
     w := Z(q^2);
@@ -373,8 +356,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l3q2dim9l",
 function(q)
     local general, w, z, G, M, M1, T, u, H, g4;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
+    general := ValueOption("general") = true;  # default to false
 
     # (3.)L(3,q^2)(.3).2 <= L(9,q)
     w := Z(q^2);
@@ -412,10 +394,8 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l3q2dim9u",
 function(q)
     local general, normaliser, w, z, G, M, M1, T, u, tmat, g4;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # (3.)L(3,q^2)(.3).2 <= L(9,q)
     w := Z(q^2);
@@ -457,8 +437,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l3qdim10",
 function(q)
     local general, w, G, M, T, MM, o, tp, g3, rt, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
+    general := ValueOption("general") = true;  # default to false
 
     Assert(0, PrimePowersInt(q)[1] >= 5);
     w := Z(q);
@@ -489,10 +468,8 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_u3qdim10",
 function(q)
     local general, normaliser, w, G, M, T, MM, A, o, tp, g3, rt, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     Assert(0, PrimePowersInt(q)[1] >= 5);
     if normaliser then general := true; fi;
@@ -530,8 +507,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l4qdim10",
 function(q)
     local general, w, G, M, T, MM, o, tp, g3, rt, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
+    general := ValueOption("general") = true;  # default to false
 
     Assert(0, PrimePowersInt(q)[1] >= 3);
     w := Z(q);
@@ -562,10 +538,8 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_u4qdim10",
 function(q)
     local general, normaliser, w, G, M, T, MM, A, o, tp, g3, rt, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     Assert(0, PrimePowersInt(q)[1] >= 3);
     if normaliser then general := true; fi;
@@ -603,8 +577,7 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_l5qdim10",
 function(q)
     local general, w, G, M, T, MM, A, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
+    general := ValueOption("general") = true;  # default to false
 
     w := Z(q);
     if general then
@@ -630,10 +603,8 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_u5qdim10",
 function(q)
     local general, normaliser, w, G, M, T, MM, A, S;
 
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     if normaliser then general := true; fi;
     w := Z(q^2);
@@ -668,12 +639,9 @@ InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_sp4qdim10",
 function(q)
     local special, general, normaliser, w, G, M, T, C, M10, tmat, form, tform, scal, rt, g3, sign;
 
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     # Sp4q <= O^+(10,q) (q = 1 mod 4) of O^-(10,q) (q = 3 mod 4)
     Assert(0, IsOddInt(q));
