@@ -51,14 +51,14 @@ Gram matrices in Subsection
 @Subsection Non-degeneracy
 @SubsectionLabel Theory:ClassicalGroups:NonDegeneracy
 A sesquilinear form $\beta$ is **non-degenerate** if its radical
-$${\rm Rad}(\beta) = \{v \in V : \beta(u, v) = 0 \,\forall u \in V\}$$
+$${\rm Rad}(\beta) = \{v \in V : \beta(u, v) = 0 \,\text{ for all } u \in V\}$$
 is trivial. A quadratic form is non-degenerate if its polar form is
 non-degenerate.
 
 @Subsection Isometries and similarities
 @SubsectionLabel Theory:ClassicalGroups:Isometries
 Let $g \in {\rm GL}(V)$. Then $g$ is an **isometry of $\beta$** if
-$$\beta(ug, vg) = \beta(u, v) \,\forall u, v \in V$$
+$$\beta(ug, vg) = \beta(u, v) \,\text{ for all } u, v \in V$$
 and an isometry of $Q$ if $Q(vg) = Q(v)$ for all $v$.
 If instead equality holds up to a non-zero scalar $\lambda \in K^\times$,
 $g$ is a **similarity**.
