@@ -150,7 +150,7 @@ In odd characteristic, we specify quadratic forms via the matrix of their
 associated polar form rather than the quadratic form itself.
 We use the notation $\nu=Z(q^2)$ and $\xi=Z(q)$.
 
-<Table Not="LaTeX" Align="c|c|c|c|c">
+<Table Align="c|c|c|c|c">
   <Caption>Standard classical forms</Caption>
   <HorLine/>
   <Row>
@@ -203,11 +203,16 @@ We use the notation $\nu=Z(q^2)$ and $\xi=Z(q)$.
   <HorLine/>
   <Row>
     <Item>${\bf O}^-$</Item>
-    <Item>$q$ odd, $n$ even<Br/>$n>2$</Item>
+    <Item>
+      <Alt Not="LaTeX">$q$ odd, $n$ even<Br/>$n>2$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}$q$ odd, $n$ even \\ $n>2$\end{tabular}</Alt>
+    </Item>
     <Item>symmetric</Item>
     <Item>${\rm GO}^-_n(q)$</Item>
-    <Item>${\rm antidiag}(1,\dots,1,-\nu-\nu^q,-\nu-\nu^q,1,\dots,1)$
-          <Br/>$-2E_{m,m}-2\xi E_{m+1,m+1}$</Item>
+    <Item>
+      <Alt Not="LaTeX">${\rm antidiag}(1,\dots,1,-\nu-\nu^q,-\nu-\nu^q,1,\dots,1)$<Br/>$-2E_{m,m}-2\xi E_{m+1,m+1}$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}${\rm antidiag}(1,\dots,1,-\nu-\nu^q,-\nu-\nu^q,1,\dots,1)$ \\ $-2E_{m,m}-2\xi E_{m+1,m+1}$\end{tabular}</Alt>
+    </Item>
   </Row>
   <HorLine/>
   <Row>
@@ -220,85 +225,19 @@ We use the notation $\nu=Z(q^2)$ and $\xi=Z(q)$.
   <HorLine/>
   <Row>
     <Item>${\bf O}^-$</Item>
-    <Item>$q$ even, $n$ even<Br/>$n>2$</Item>
+    <Item>
+      <Alt Not="LaTeX">$q$ even, $n$ even<Br/>$n>2$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}$q$ even, $n$ even \\ $n>2$\end{tabular}</Alt>
+    </Item>
     <Item>quadratic</Item>
     <Item>${\rm GO}^-_n(q)$</Item>
-    <Item>${\rm antidiag}(1,\dots,1,-\nu-\nu^q,0,0,\dots,0)$
-          <Br/>$-E_{m,m}-\xi E_{m+1,m+1}$</Item>
+    <Item>
+      <Alt Not="LaTeX">${\rm antidiag}(1,\dots,1,-\nu-\nu^q,0,0,\dots,0)$<Br/>$-E_{m,m}-\xi E_{m+1,m+1}$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}${\rm antidiag}(1,\dots,1,-\nu-\nu^q,0,0,\dots,0)$ \\ $-E_{m,m}-\xi E_{m+1,m+1}$\end{tabular}</Alt>
+    </Item>
   </Row>
   <HorLine/>
 </Table>
-
-@BeginLatexOnly
-\mbox{}\begin{center}
-\begin{tabular}{c|c|c|c|c}
-\hline
-Case & conditions & form type & isom.\ grp. & form \\
-\hline
-${\bf L}$ &
---- &
-zero &
-${\rm GL}_n(q)$ &
-$0_{n \times n}$ \\
-\hline
-${\bf U}$ &
---- &
-hermitian &
-${\rm GU}_n(q)$ &
-${\rm antidiag}(1,\dots,1)$ \\
-\hline
-${\bf S}$ &
-$n$ even &
-alternating &
-${\rm Sp}_n(q)$ &
-${\rm antidiag}(1,\dots,1,-1,\dots,-1)$ \\
-\hline
-${\bf O}$ &
-$q$ odd, $n$ odd &
-symmetric &
-${\rm GO}_n(q)$ &
-${\rm antidiag}(1,\dots,1,\frac{1}{2},1,\dots,1)$ \\
-\hline
-${\bf O}^+$ &
-$q$ odd, $n$ even &
-symmetric &
-${\rm GO}^+_n(q)$ &
-${\rm antidiag}(1,\dots,1)$ \\
-\hline
-${\bf O}^-$ &
-\begin{tabular}[c]{c}
-$q$ odd, $n$ even \\
-$n>2$
-\end{tabular} &
-symmetric &
-${\rm GO}^-_n(q)$ &
-\begin{tabular}[c]{c}
-${\rm antidiag}(1,\dots,1,-\nu-\nu^q,-\nu-\nu^q,1,\dots,1)$ \\
-$-2E_{m,m}-2\xi E_{m+1,m+1}$
-\end{tabular} \\
-\hline
-${\bf O}^+$ &
-$q$ even, $n$ even &
-quadratic &
-${\rm GO}^+_n(q)$ &
-${\rm antidiag}(1,\dots,1,0,\dots,0)$ \\
-\hline
-${\bf O}^-$ &
-\begin{tabular}[c]{c}
-$q$ even, $n$ even \\
-$n>2$
-\end{tabular} &
-quadratic &
-${\rm GO}^-_n(q)$ &
-\begin{tabular}[c]{c}
-${\rm antidiag}(1,\dots,1,-\nu-\nu^q,0,0,\dots,0)$ \\
-$-E_{m,m}-\xi E_{m+1,m+1}$
-\end{tabular} \\
-\hline
-\end{tabular}\\[2mm]
-\textbf{Table: }Standard classical forms
-\end{center}
-@EndLatexOnly
 
 These are exactly the forms preserved by the groups returned by &GAP;'s
 constructors `SL`, `SU`, `Sp`, and `Omega`.
@@ -333,7 +272,7 @@ Let $H$ be a maximal subgroup of $G$. Then one of the following holds:
 The following table gives a rough description of the eight geometric Aschbacher classes,
 based on <Cite Key="KL90" Where="Table 1.2.A" />.
 
-<Table Not="LaTeX" Align="c|c|c">
+<Table Align="c|c|c">
   <Caption>Rough descriptions of geometric Aschbacher classes</Caption>
   <HorLine/>
   <Row>
@@ -374,8 +313,14 @@ based on <Cite Key="KL90" Where="Table 1.2.A" />.
   <HorLine/>
   <Row>
     <Item>${\cal C}_6$</Item>
-    <Item>**extraspecial normaliser**<Br/>**groups**</Item>
-    <Item>normalisers of symplectic-type or extraspecial groups<Br/>in absolutely irreducible representations</Item>
+    <Item>
+      <Alt Not="LaTeX">**extraspecial normaliser**<Br/>**groups**</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}\textit{extraspecial normaliser} \\ \textit{groups}\end{tabular}</Alt>
+    </Item>
+    <Item>
+      <Alt Not="LaTeX">normalisers of symplectic-type or extraspecial groups<Br/>in absolutely irreducible representations</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}normalisers of symplectic-type or extraspecial groups \\ in absolutely irreducible representations\end{tabular}</Alt>
+    </Item>
   </Row>
   <HorLine/>
   <Row>
@@ -391,57 +336,3 @@ based on <Cite Key="KL90" Where="Table 1.2.A" />.
   </Row>
   <HorLine/>
 </Table>
-
-@BeginLatexOnly
-\mbox{}\begin{center}
-\begin{tabular}{c|c|c}
-\hline
-Class & Type & Rough description \\
-\hline
-${\cal C}_1$ &
-\textit{reducible groups} &
-stabilisers of totally singular or non-singular subspaces \\
-\hline
-${\cal C}_2$ &
-\textit{imprimitive groups} &
-stabilisers of decompositions
-$V=\bigoplus_{i=1}^t V_i,\ {\rm dim}(V_i)=n/t$ \\
-\hline
-${\cal C}_3$ &
-\textit{semilinear groups} &
-stabilisers of extension fields of $\mathbb{F}_q$
-of prime index dividing $n$ \\
-\hline
-${\cal C}_4$ &
-\textit{tensor product groups} &
-stabilisers of tensor product decompositions
-$V=V_1 \otimes V_2$ \\
-\hline
-${\cal C}_5$ &
-\textit{subfield groups} &
-stabilisers of subfields of $\mathbb{F}_q$
-of prime index \\
-\hline
-${\cal C}_6$ &
-\begin{tabular}[c]{c}
-\textit{extraspecial normaliser} \\
-\textit{groups}
-\end{tabular} &
-\begin{tabular}[c]{c}
-normalisers of symplectic-type or extraspecial groups \\
-in absolutely irreducible representations
-\end{tabular} \\
-\hline
-${\cal C}_7$ &
-\textit{tensor induced groups} &
-stabilisers of decompositions
-$V=\bigotimes_{i=1}^t V_i,\ {\rm dim}(V_i)=a,\ n=a^t$ \\
-\hline
-${\cal C}_8$ &
-\textit{classical normaliser groups} &
-groups of similarities of non-degenerate classical forms \\
-\hline
-\end{tabular}\\[2mm]
-\textbf{Table: }Rough descriptions of geometric Aschbacher classes
-\end{center}
-@EndLatexOnly
