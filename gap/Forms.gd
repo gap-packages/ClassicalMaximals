@@ -5,8 +5,7 @@ DeclareGlobalFunction("CM_UnitaryForm");
 DeclareGlobalFunction("CM_BilinearForm");
 DeclareGlobalFunction("CM_QuadraticForm");
 
-#! @Chapter Group Recognition
-#! @Section Classical Forms
+#! @BeginChunk CM_ClassicalForms
 #! @Arguments G field
 #! @Description
 #!  Assuming that the matrix group <A>G</A> is acting absolutely irreducibly on a vector
@@ -44,5 +43,7 @@ DeclareGlobalFunction("CM_QuadraticForm");
 #!  * <C>"unitary"</C>: <A>G</A> fixes a unitary form. The form matrix is given in
 #!    <C>sesquilinearForm</C>.
 #!  * <C>"linear"</C>: <A>G</A> does not fix any classical form.
+#! @EndChunk
 DeclareGlobalFunction("CM_ClassicalForms");
+
 DeclareGlobalFunction("ConjugateToStandardFormAutoType");

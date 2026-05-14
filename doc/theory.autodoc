@@ -1,0 +1,338 @@
+@Chapter Classical Groups and Aschbacher's Theorem
+@ChapterLabel Theory
+
+@Section Classical Groups
+@SectionLabel Theory:ClassicalGroups
+Classical groups in this package are realized as matrix groups over finite
+fields that preserve a specific form on a vector space. These forms are
+represented explicitly by their Gram matrices (with respect to a standard
+basis), and all constructions in the package are carried out relative to
+fixed choices of such matrices.
+
+Let $V$ be an $n$-dimensional vector space over a finite field $K=\mathbb{F}_q$.
+A classical form on $V$ is either a $\sigma$-sesquilinear form
+$\beta: V \times V \to K$ (for some field automorphism
+$\sigma \in {\rm Aut}(K)$) or a quadratic form $Q: V \to K$.
+
+@Subsection Sesquilinear forms
+@SubsectionLabel Theory:ClassicalGroups:SesquilinearForms
+A map $\beta: V \times V \to K$ is a $\sigma$-sesquilinear form if it is
+additive in both arguments and satisfies
+$$\beta(\lambda u, \mu v) = \lambda \mu^\sigma \beta(u, v)$$
+for all $u, v \in V$ and $\lambda, \mu \in K$.
+When $\sigma = 1$ (the identity automorphism), $\beta$ is simply called
+**bilinear**.
+The form is **symmetric** if $\beta(u, v) = \beta(v, u)$ for all $u, v$.
+
+@Subsection Quadratic forms
+@SubsectionLabel Theory:ClassicalGroups:QuadraticForms
+A map $Q: V \to K$ is a **quadratic form** if $Q(\lambda v) = \lambda^2 Q(v)$
+for all $v \in V$ and $\lambda \in K$, and the associated **polar form**
+$$\beta(u, v) := Q(u + v) - Q(u) - Q(v)$$
+is a symmetric bilinear form. Note that $Q$ and $\beta$ uniquely determine
+each other if ${\rm char}(K) \neq 2$.
+
+@Subsection Matrix realizations of classical forms
+@SubsectionLabel Theory:ClassicalGroups:MatrixRealizations
+In this package, classical forms on $V$
+are realized as (Gram) matrices.
+
+For a $\sigma$-sesquilinear form $\beta$, the Gram matrix $B$ satisfies
+$$\beta(u, v) = u B v^{\sigma {\rm T}}$$
+for all column vectors $u, v \in V$.
+For a quadratic form $Q$, the Gram matrix $A$ satisfies
+$$Q(v) = v A v^{\rm T}$$
+for all column vectors $v \in V$.
+
+For relevant classical forms, the package fixes a standard choice of
+Gram matrices in Subsection
+<Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>.
+
+@Subsection Non-degeneracy
+@SubsectionLabel Theory:ClassicalGroups:NonDegeneracy
+A sesquilinear form $\beta$ is **non-degenerate** if its radical
+$${\rm Rad}(\beta) = \{v \in V \mid \forall u \in V: \beta(u, v) = 0 \}$$
+is trivial. A quadratic form is non-degenerate if its polar form is
+non-degenerate.
+
+@Subsection Isometries and similarities
+@SubsectionLabel Theory:ClassicalGroups:Isometries
+Let $g \in {\rm GL}(V)$. Then $g$ is an **isometry of $\beta$** if
+$$\forall u, v \in V: \beta(ug, vg) = \beta(u, v)$$
+and an isometry of $Q$ if $Q(vg) = Q(v)$ for all $v$.
+If instead equality holds up to a non-zero scalar $\lambda \in K^\times$,
+$g$ is a **similarity**.
+
+@Subsection Classification of sesquilinear forms
+@SubsectionLabel Theory:ClassicalGroups:FormsClassification
+By the following fundamental result (<Cite Key="BHR13" Where="Theorem 1.5.13" />)
+the $\sigma$-sesquilinear forms fall into a small number of types
+(up to similarity):
+
+Let $\beta$ be a $\sigma$-sesquilinear form on $V$, and let
+$\lambda \in K^\times$, $\tau \in {\rm Aut}(K)$ satisfy
+$\lambda \beta(u, v)^\tau = \beta(u, v)$ for all $u, v$. Then, up to
+similarity, one of the following holds.
+<Enum>
+ <Item>$\beta = 0$.</Item>
+ <Item>$\sigma = 1$, $\lambda = -1$ and $\beta(v, v) = 0$ for all $v$.
+       $\beta$ is called **alternating** or **symplectic**.</Item>
+ <Item>$\sigma^2 = 1 \neq \sigma$, $\lambda = 1$
+       (i.e. $\beta(v, u) = \beta(u, v)^\sigma$).
+       $\beta$ is called **$\sigma$-Hermitian** or **unitary**.</Item>
+ <Item>$\sigma = 1$, $\lambda = 1$ (i.e. $\beta(v, u) = \beta(u, v)$).
+       $\beta$ is **symmetric bilinear**.</Item>
+</Enum>
+In characteristic 2 the symplectic and symmetric cases overlap.
+Otherwise all cases are mutually exclusive.
+
+@Subsection Linear Groups (Case <M>{\bf L}</M>)
+@SubsectionLabel Theory:ClassicalGroups:L 
+Linear groups preserve the zero form. We will denote the isometry group by ${\rm GL}_n(q)$.
+
+@Subsection Unitary Groups (Case <M>{\bf U}</M>)
+@SubsectionLabel Theory:ClassicalGroups:U
+Unitary groups preserve non-degenerate unitary forms, where $\sigma$ is
+a field automorphism of order 2. So they are only defined over $\mathbb{F}_{q^2}$
+with $\sigma: x\mapsto x^q$. We will use ${\rm antidiag}(1,\dots,1)$
+as our standard unitary form matrix and denote the isometry group by ${\rm GU}_n(q)$.
+
+@Subsection Symplectic Groups (Case <M>{\bf S}</M>)
+@SubsectionLabel Theory:ClassicalGroups:S
+Symplectic groups preserve non-degenerate symplectic forms. We will use
+${\rm antidiag}(1,\dots,1,-1,\dots,-1)$ as our standard symplectic form matrix and
+denote the isometry group by ${\rm Sp}_n(q)$. Note that $n$ must be even.
+
+@Subsection Orthogonal groups in odd dimension (Case <M>{\bf O}</M>)
+@SubsectionLabel Theory:ClassicalGroups:Oodd
+If $Q$ is a quadratic form on $\mathbb{F}_q^n$ with $q$ even and $n$ odd,
+then the isometry group of $Q$ is isomorphic to a symplectic group of dimension $n-1$.
+
+For this reason, we restrict attention to orthogonal groups of odd dimension over fields
+of odd characteristic.
+It is sufficient to define the polar form of $Q$.
+We will use ${\rm antidiag}(1,\dots,1,\frac{1}{2},1,\dots,1)$ as our standard non-degenerate
+symmetric bilinear form matrix and denote the isometry group by ${\rm GO}_n(q)$.
+In odd dimension, there are two isometry classes of non-degenerate symmetric bilinear forms,
+distinguished by whether the determinant of the form matrix is a square or a non-square in
+$\mathbb{F}_q^\times$.
+These two isometry classes, however, belong to the same similarity class.
+
+@Subsection Orthogonal groups in even dimension (Cases <M>{\bf O}^+</M> and <M>{\bf O}^-</M>)
+@SubsectionLabel Theory:ClassicalGroups:Oeven
+In even dimension, non-degenerate quadratic forms fall into two distinct isometry classes,
+which also correspond to two different similarity classes.
+Let $\beta$ denote the polar form associated with a quadratic form $Q$.
+Over a field of odd characteristic, $\beta$ and $Q$ uniquely determine each other.
+
+Assume that $q$ is odd, let $\beta$ be a non-degenerate symmetric bilinear form on
+$\mathbb{F}_q^n$ with $n$ even.
+Then $\beta$ is of **plus-type** if it is isometric to our standard form matrix
+${\rm antidiag}(1,\dots,1)$, and otherwise of **minus-type**.
+
+In even characteristic, a non-degenerate quadratic form $Q$ in even dimension
+is of plus-type if it is isometric to our standard form matrix
+${\rm antidiag}(1,\dots,1,0,\dots,0)$ and of minus-type otherwise.
+We denote the isometry group of a standard quadratic or bilinear form of plus-type
+by ${\rm GO}_n^+(q)$ and the isometry group of a standard form of minus-type
+(see <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>) by ${\rm GO}_n^-(q)$.
+
+@Subsection Standard forms in &ClassicalMaximals;
+@SubsectionLabel Theory:ClassicalGroups:StandardForms
+Let $G$ be the isometry group of one of the following forms on $\mathbb{F}_q^n$:
+the zero form, a unitary form, a symplectic form, a symmetric bilinear form,
+or a quadratic form, as described above.
+
+The following table lists the corresponding form matrices preserved by $G$,
+which we adopt as our **standard form matrices**.
+
+In odd characteristic, we specify quadratic forms via the matrix of their
+associated polar form rather than the quadratic form itself.
+We use the notation $\nu=Z(q^2)$ and $\xi=Z(q)$.
+
+<Table Align="c|c|c|c|c">
+  <Caption>Standard classical forms</Caption>
+  <HorLine/>
+  <Row>
+    <Item>Case</Item>
+    <Item>conditions</Item>
+    <Item>form type</Item>
+    <Item>isom. grp.</Item>
+    <Item>form</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf L}$</Item>
+    <Item>—</Item>
+    <Item>zero</Item>
+    <Item>${\rm GL}_n(q)$</Item>
+    <Item>$0_{n \times n}$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf U}$</Item>
+    <Item>—</Item>
+    <Item>hermitian</Item>
+    <Item>${\rm GU}_n(q)$</Item>
+    <Item>${\rm antidiag}(1,\dots,1)$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf S}$</Item>
+    <Item>$n$ even</Item>
+    <Item>alternating</Item>
+    <Item>${\rm Sp}_n(q)$</Item>
+    <Item>${\rm antidiag}(1,\dots,1,-1,\dots,-1)$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf O}$</Item>
+    <Item>$q$ odd, $n$ odd</Item>
+    <Item>symmetric</Item>
+    <Item>${\rm GO}_n(q)$</Item>
+    <Item>${\rm antidiag}(1,\dots,1,\frac{1}{2},1,\dots,1)$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf O}^+$</Item>
+    <Item>$q$ odd, $n$ even</Item>
+    <Item>symmetric</Item>
+    <Item>${\rm GO}^+_n(q)$</Item>
+    <Item>${\rm antidiag}(1,\dots,1)$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf O}^-$</Item>
+    <Item>
+      <Alt Not="LaTeX">$q$ odd, $n$ even<Br/>$n>2$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}$q$ odd, $n$ even \\ $n>2$\end{tabular}</Alt>
+    </Item>
+    <Item>symmetric</Item>
+    <Item>${\rm GO}^-_n(q)$</Item>
+    <Item>
+      <Alt Not="LaTeX">${\rm antidiag}(1,\dots,1,-\nu-\nu^q,-\nu-\nu^q,1,\dots,1)$<Br/>$-2E_{m,m}-2\xi E_{m+1,m+1}$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}${\rm antidiag}(1,\dots,1,-\nu-\nu^q,-\nu-\nu^q,1,\dots,1)$ \\ $-2E_{m,m}-2\xi E_{m+1,m+1}$\end{tabular}</Alt>
+    </Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf O}^+$</Item>
+    <Item>$q$ even, $n$ even</Item>
+    <Item>quadratic</Item>
+    <Item>${\rm GO}^+_n(q)$</Item>
+    <Item>${\rm antidiag}(1,\dots,1,0,\dots,0)$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\bf O}^-$</Item>
+    <Item>
+      <Alt Not="LaTeX">$q$ even, $n$ even<Br/>$n>2$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}$q$ even, $n$ even \\ $n>2$\end{tabular}</Alt>
+    </Item>
+    <Item>quadratic</Item>
+    <Item>${\rm GO}^-_n(q)$</Item>
+    <Item>
+      <Alt Not="LaTeX">${\rm antidiag}(1,\dots,1,-\nu-\nu^q,0,0,\dots,0)$<Br/>$-E_{m,m}-\xi E_{m+1,m+1}$</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}${\rm antidiag}(1,\dots,1,-\nu-\nu^q,0,0,\dots,0)$ \\ $-E_{m,m}-\xi E_{m+1,m+1}$\end{tabular}</Alt>
+    </Item>
+  </Row>
+  <HorLine/>
+</Table>
+
+These are exactly the forms preserved by the groups returned by &GAP;'s
+constructors `SL`, `SU`, `Sp`, and `Omega`.
+
+@Section Aschbacher's Theorem
+@SectionLabel Theory:Aschbacher
+Aschbacher's theorem is the organising principle behind the entire package.
+It says that maximal subgroups of finite classical groups fall into nine broad families:
+
+Let $G$ be a quasisimple classical group acting naturally
+on a vector space $V$ of dimension $n \geq 2$ over $\mathbb{F}_q$
+and one of ${\rm SL}_n(q)$, ${\rm SU}_n(q)$, ${\rm Sp}_n(q)$ or $\Omega^\varepsilon_n(q)$.
+
+Let $H$ be a maximal subgroup of $G$. Then one of the following holds:
+<Enum>
+ <Item>$H$ is a **geometric subgroup** and
+  belongs to one of the **geometric** Aschbacher classes
+  ${\cal C}_1,\dots,{\cal C}_8$. These classes consist roughly of
+  groups that preserve some kind of geometric structure on $V$.</Item>
+ <Item>$H$ belongs to the **non-geometric** class ${\cal S}$
+  (sometimes called ${\cal C}_9$). In this case,
+  <List>
+   <Item>$H$ is almost simple modulo scalars,</Item>
+   <Item>$H^\infty$ acts absolutely irreducibly,</Item>
+   <Item>there does not exist a $g \in {\rm GL}_n(q)$ such that
+    $(H^\infty)^g$ is defined over a proper subfield of $\mathbb{F}_q$,</Item>
+   <Item>$H^\infty$ does not preserve a non-zero classical form on $V$
+    other than those already preserved by $G$.</Item>
+  </List></Item>
+</Enum>
+
+The following table gives a rough description of the eight geometric Aschbacher classes,
+based on <Cite Key="KL90" Where="Table 1.2.A" />.
+
+<Table Align="c|c|c">
+  <Caption>Rough descriptions of geometric Aschbacher classes</Caption>
+  <HorLine/>
+  <Row>
+    <Item>Class</Item>
+    <Item>Type</Item>
+    <Item>Rough description</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_1$</Item>
+    <Item>**reducible groups**</Item>
+    <Item>stabilisers of totally singular or non-singular subspaces</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_2$</Item>
+    <Item>**imprimitive groups**</Item>
+    <Item>stabilisers of decompositions $V=\bigoplus_{i=1}^t V_i, {\rm dim}(V_i)=n/t$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_3$</Item>
+    <Item>**semilinear groups**</Item>
+    <Item>stabilisers of extension fields of $\mathbb{F}_q$ of prime index dividing $n$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_4$</Item>
+    <Item>**tensor product groups**</Item>
+    <Item>stabilisers of tensor product decompositions $V=V_1 \otimes V_2$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_5$</Item>
+    <Item>**subfield groups**</Item>
+    <Item>stabilisers of subfields of $\mathbb{F}_q$ of prime index</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_6$</Item>
+    <Item>
+      <Alt Not="LaTeX">**extraspecial normaliser**<Br/>**groups**</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}\textit{extraspecial normaliser} \\ \textit{groups}\end{tabular}</Alt>
+    </Item>
+    <Item>
+      <Alt Not="LaTeX">normalisers of symplectic-type or extraspecial groups<Br/>in absolutely irreducible representations</Alt>
+      <Alt Only="LaTeX">\begin{tabular}[c]{c}normalisers of symplectic-type or extraspecial groups \\ in absolutely irreducible representations\end{tabular}</Alt>
+    </Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_7$</Item>
+    <Item>**tensor induced groups**</Item>
+    <Item>stabilisers of decompositions $V=\bigotimes_{i=1}^t V_i, {\rm dim}(V_i)=a, n=a^t$</Item>
+  </Row>
+  <HorLine/>
+  <Row>
+    <Item>${\cal C}_8$</Item>
+    <Item>**classical normaliser groups**</Item>
+    <Item>groups of similarities of non-degenerate classical forms</Item>
+  </Row>
+  <HorLine/>
+</Table>

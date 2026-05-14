@@ -244,7 +244,6 @@ function(m, n)
     fi;
 end);
 
-# Compute the size of Sp(n, q) according to Theorem 1.6.22 in [BHR13]
 InstallGlobalFunction("SizeSp",
 function(n, q)
     local m, result, powerOfq, i;
@@ -261,15 +260,11 @@ function(n, q)
     return result;
 end);
 
-# Compute the size of PSp(n, q) according to Table 1.3 in [BHR13],
 InstallGlobalFunction("SizePSp",
 function(n, q)
     return QuoInt(SizeSp(n, q), Gcd(2, q - 1));
 end);
 
-# Compute the size of SU(n, q) according to Theorem 1.6.22 in [BHR13]
-# using the formula for GU(n, q) but starting with i = 2
-# because Table 1.3 gives [GU(n, q):SU(n, q)] = q + 1.
 InstallGlobalFunction("SizeSU",
 function(n, q)
     local result, powerOfq, sign, i;
@@ -284,22 +279,16 @@ function(n, q)
     return result;
 end);
 
-# Compute the size of PSU(n, q) according to Table 1.3 in [BHR13]
-# Namely, we have | G / Z(G) : S / Z(S) | = | G : S | * |Z(S)| / |Z(G)| so due
-# to | G : S | = q + 1, |Z(G)| = q + 1 and | G / Z(G) : S / Z(S) | = (q + 1, n), 
-# which are given in said table, this gives |Z(S)| = (q + 1, n). 
 InstallGlobalFunction("SizePSU",
 function(n, q)
     return SizeSU(n, q) / Gcd(n, q + 1);
 end);
 
-# Compute the size of GU(n, q) according to Table 1.3 in [BHR13]
 InstallGlobalFunction("SizeGU",
 function(n, q)
     return (q + 1) * SizeSU(n, q);
 end);
 
-# Compute the size of GO(epsilon, n, q) according to Theorem 1.6.22 in [BHR13]
 InstallGlobalFunction("SizeGO",
 function(epsilon, n, q)
     local m, result, powerOfq, i;
@@ -338,13 +327,11 @@ function(epsilon, n, q)
     return result;
 end);
 
-# Compute the size of SO(epsilon, n, q) according to Table 1.3 in [BHR13]
 InstallGlobalFunction("SizeSO",
 function(epsilon, n, q)
     return QuoInt(SizeGO(epsilon, n, q), Gcd(2, q - 1));
 end);
 
-# Compute the size of Omega(epsilon, n, q) according to Table 1.3 in [BHR13]
 InstallGlobalFunction("SizeOmega",
 function(epsilon, n, q)
     if IsOddInt(n) and IsEvenInt(q) then
@@ -399,13 +386,7 @@ function(n, q, gramMatrix, type, v)
     return reflectionMatrix;
 end);
 
-# Construct generators for the orthogonal groups with the properties listed in
-# Lemma 2.4 of [HR05].
-# Construction as in: C. M. Roney-Dougal. "Conjugacy of Subgroups of the
-# General Linear Group." Experimental Mathematics, vol. 13 no. 2, 2004, pp.
-# 151-163. Lemma 2.4.
-# We take the notation from [HR05].
-BindGlobal("GeneratorsOfOrthogonalGroup",
+InstallGlobalFunction("GeneratorsOfOrthogonalGroup",
 function(epsilon, n, q)
     local F, gramMatrix, generatorsOfSO, vectorOfSquareNorm, D, E, zeta, a, b,
     solutionOfQuadraticCongruence;
@@ -489,16 +470,7 @@ function(epsilon, n, q)
     return rec(generatorsOfSO := generatorsOfSO, D := D, E := E);
 end);
 
-# Construct standard generators generatorsOfOmega, S, G, D for the orthogonal
-# groups with respect to our standard form as used in [HR10], with the
-# following properties:
-#   * generatorsOfOmega generate Omega(epsilon, d, q)
-#   * generatorsOfOmega and S generate SO(epsilon, d, q)
-#   * generatorsOfOmega, S and G generate GO(epsilon, d, q)
-#   * the spinor norm of G is 1
-#   * D generates CO(epsilon, d, q) mod GO(epsilon, d, q)
-# Construction as in Theorem 3.9 loc. cit.
-BindGlobal("StandardGeneratorsOfOrthogonalGroup",
+InstallGlobalFunction("StandardGeneratorsOfOrthogonalGroup",
 function(epsilon, d, q)
     local field, one, zeta, standardForm, Q, m, conjugatedOmega, 
     generatorsOfOmega, e, p, R0, R1, S, G, D, xi;
@@ -601,18 +573,7 @@ function(epsilon, d, q)
     return rec(generatorsOfOmega := generatorsOfOmega, S := S, G := G, D := D);
 end);
 
-# Construct standard generators generatorsOfOmega, S, G, D for the orthogonal
-# groups with respect to our diagonal form of given discriminant as used in [HR10],
-# with the following properties (note that epsilon is uniquely determined by
-# the given parameters):
-#   * generatorsOfOmega generate Omega(epsilon, d, q)
-#   * generatorsOfOmega and S generate SO(epsilon, d, q)
-#   * generatorsOfOmega, S and G generate GO(epsilon, d, q)
-#   * the spinor norm of G is 1
-#   * D generates CO(epsilon, d, q) mod GO(epsilon, d, q)
-# Construction as in Theorem 3.9 loc. cit., but with different vectors.
-# Recall that q must be odd in this case.
-BindGlobal("AlternativeGeneratorsOfOrthogonalGroup",
+InstallGlobalFunction("AlternativeGeneratorsOfOrthogonalGroup",
 function(d, q, squareDiscriminant)
     local field, one, zeta, epsilon, F, nonZeroEntries, vectorOfNonSquareForm,
     vectorOfSquareForm, R0, R1, generatorsOfOmega, S, G, D;
@@ -662,16 +623,7 @@ function(d, q, squareDiscriminant)
     return rec(generatorsOfOmega := generatorsOfOmega, S := S, G := G, D := D);
 end);
 
-# Construct standard generators L1, L2, L3 as used in [HR10]
-# with the following properties similar to Theorem 3.11 in [HR10]:
-#   * L1 and L2 generate GL(d, q)
-#   * L1 and L3 generate SL(d, q)
-#   * all matrix entries lie in {0, \pm 1, \pm zeta^{\pm 1}}, where
-#       zeta is a primitive element of GF(q)
-#   * If q is odd, L1 and L2^2 generate the unique subgroup
-#       of index 2 of GL(d, q), often denoted (1 / 2) GL(d, q).
-# Construction as in [T87]
-BindGlobal("StandardGeneratorsOfLinearGroup",
+InstallGlobalFunction("StandardGeneratorsOfLinearGroup",
 function(d, q)
     local field, one, zeta, L1, L2, L3;
 

@@ -1,17 +1,69 @@
 @Chapter Introduction
 
-This package implements functions for producing the
-maximal subgroups of classical matrix groups.
+@Section Philosophy
+The package &ClassicalMaximals; provides functionality for computing maximal subgroups 
+of finite classical quasisimple groups in their natural matrix representations
+(as returned by the &GAP; functions `SL`, `SU`, `Sp` and `Omega`).
+Its primary purpose is to return a list of representatives of the conjugacy classes
+of maximal subgroups of a given classical group defined over a finite field.
 
-The code is based on descriptions in
-<Cite Key="BHR13" />,
-<Cite Key="HR05" />,
-<Cite Key="KL90" />,
-<Cite Key="HR10" />.
+The implementation follows the classification given in the book by
+Bray, Holt and Roney-Dougal <Cite Key="BHR13" />.
+The maximal subgroups of finite classical groups are divided, according to
+Aschbacher's theorem, into nine classes. The subgroups in the first eight classes
+are referred to as **geometric subgroups**.
+These admit a uniform description, which is developed in detail in the literature
+(see, for example, <Cite Key="KL90" />).
+In particular, their construction can be implemented in a systematic way,
+which is done in this package by directly implementing algorithms from the papers
+<Cite Key="HR05" /> and <Cite Key="HR10" />.
 
+In contrast, subgroups in the ninth class ${\cal S}$ do not admit such a
+uniform description and must be determined separately for each dimension.
+The lists given in <Cite Key="HM01" /> and <Cite Key="L01" /> contain,
+in principle, sufficient information to determine these subgroups up to dimension 250.
+However, explicit computations have so far only been carried out up to dimension 17,
+<Cite Key="BHR13" /> does so up to dimension 12 and for these dimensions our returned
+lists should therefore be complete.
+For higher dimensions we give no completeness guarantee; in particular,
+all subgroups in class ${\cal S}$ are missing in these cases.
 
-@Chapter Maximal Subgroups of Classical Groups
+For the maximal subgroups in class ${\cal S}$, our code is in several parts
+— and in some cases almost entirely — a translation of Magma's `ClassicalMaximals`
+function (written by Derek Holt and Colva Roney-Dougal).
+The package therefore benefits from the extensive prior work done in Magma
+while attempting to adapt it to the &GAP; system.
 
-@Section The Main function
+The central entry point of &ClassicalMaximals; is the function
+<Ref Func="ClassicalMaximalsGeneric"/>.
+This function takes parameters that define a classical group, together with options
+controlling the type of subgroups to compute, and returns representatives of
+maximal subgroups organised according to the classification arising from Aschbacher's theorem.
+An illustrive call looks as follows:
+@BeginLogSession
+gap> ClassicalMaximalsGeneric("L", 3, 4, [1..8]);
+[ <matrix group of size 2880 with 5 generators>,
+  <matrix group of size 2880 with 5 generators>,
+  <matrix group of size 504 with 3 generators>,
+  <matrix group of size 504 with 3 generators>,
+  <matrix group of size 504 with 3 generators>,
+  <matrix group of size 216 with 3 generators> ]
+@EndLogSession
 
-@Section Groups in Class S: cross characteristic
+@Section Overview over this manual
+Chapter <Ref Chap="Chapter_Theory"/> provides a brief theoretical introduction
+to classical groups and Aschbacher's theorem, focusing on the concepts essential
+for this package.
+
+Chapter <Ref Chap="Chapter_MaximalSubgroups"/> documents the package's core
+functionality, specifically the main function <Ref Func="ClassicalMaximalsGeneric"/>.
+
+Chapter <Ref Chap="Chapter_Examples"/> contains examples illustrating the typical
+use of the main function.
+
+Chapter <Ref Chap="Chapter_Utils"/> lists utility functions that, while auxiliary,
+may be of independent interest to the user.
+
+@Section Feedback and Support
+Report bugs, questions and issues on the &ClassicalMaximals; issue tracker:
+<URL>https://github.com/gap-packages/ClassicalMaximals/issues</URL>
