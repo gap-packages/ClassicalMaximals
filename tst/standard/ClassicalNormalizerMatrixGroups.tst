@@ -34,9 +34,7 @@ gap> TestOrthogonalNormalizerInSL := function(epsilon, n, q)
 gap> TestOrthogonalNormalizerInSL(0, 3, 5);
 gap> TestOrthogonalNormalizerInSL(-1, 6, 5);
 gap> TestOrthogonalNormalizerInSL(1, 6, 5);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOrthogonalNormalizerInSL(-1, 4, 3); # FIXME: see https://github.com/gap-packages/recog/issues/313
-#@fi
+gap> TestOrthogonalNormalizerInSL(-1, 4, 3);
 gap> TestOrthogonalNormalizerInSL(1, 4, 3);
 gap> TestOrthogonalNormalizerInSL(-1, 4, 5);
 gap> TestOrthogonalNormalizerInSL(1, 4, 5);
@@ -49,9 +47,7 @@ gap> TestOrthogonalInSp := function(epsilon, n, q)
 >   CheckIsSubsetSp(n, q, G);
 >   CheckSize(G);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOrthogonalInSp(1, 4, 8); # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
-#@fi
+gap> TestOrthogonalInSp(1, 4, 8);
 gap> TestOrthogonalInSp(-1, 6, 2);
 gap> TestOrthogonalInSp(-1, 4, 4);
 gap> TestOrthogonalInSp(1, 6, 2);

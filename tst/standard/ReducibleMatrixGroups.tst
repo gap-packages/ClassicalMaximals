@@ -11,9 +11,7 @@ gap> TestSLStabilizerOfSubspace := function(n, q, k)
 >   CheckSize(G);
 > end;;
 gap> TestSLStabilizerOfSubspace(4, 3, 2);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestSLStabilizerOfSubspace(3, 8, 2); # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
-#@fi
+gap> TestSLStabilizerOfSubspace(3, 8, 2);
 gap> TestSLStabilizerOfSubspace(2, 7, 1);
 
 #
@@ -84,9 +82,7 @@ gap> TestOmegaStabilizerOfIsotropicSubspace := function(epsilon, d, q, k)
 >   CheckIsSubsetOmega(epsilon, d, q, G);
 >   CheckSize(G);
 > end;;
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);  # FIXME: `Error, !!!`, see https://github.com/gap-packages/recog/issues/12
-#@fi
+gap> TestOmegaStabilizerOfIsotropicSubspace(1, 6, 8, 2);
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 4);
 gap> TestOmegaStabilizerOfIsotropicSubspace(0, 5, 7, 2);
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 8, 5, 3);
@@ -124,9 +120,7 @@ gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, 1, 3);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(0, 7, 5, -1, 5);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 5, -1, 2);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 6, 8, 1, 2);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 8, 1, 2); # FIXME: `Error, !!!`, may be related to https://github.com/gap-packages/recog/issues/12
-#@fi
+gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 6, 8, 1, 2);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(-1, 8, 5, -1, 4);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 5, 0, 1);
 gap> TestOmegaStabilizerOfNonDegenerateSubspace(1, 8, 7, 0, 3);

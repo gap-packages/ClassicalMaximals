@@ -52,14 +52,10 @@ gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega := function(m, t,
 >   CheckSize(G);
 > end;;
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 2, 5);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 3, 8); # Error, !!!. See ./ReducibleMatrixGroups.tst for more info.
-gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 4, 5); # Error, List Element: <list>[3] must have an assigned value
-#@fi
+gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 3, 8);
+gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(2, 4, 5);
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 2, 3);
-#@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
-gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 3, 2); # Error, This should never have happened (346), tell Max.
-#@fi
+gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(4, 3, 2);
 gap> TestSymplecticTensorInducedDecompositionStabilizerInOmega(6, 2, 5);
 
 # Test error handling

@@ -1,4 +1,5 @@
 LoadPackage("recog");
+LoadPackage( "ClassicalMaximals" );
 
 CheckSize := function(G)
   local lvl, ri;
