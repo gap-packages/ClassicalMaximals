@@ -292,16 +292,11 @@ function(n, q)
     local all, novelties, special, general, normaliser, result, factorisation,
           p, e, generatorGLMinusSL, LR, S, size, numberOfConjugates;
     
-    all := ValueOption("all");
-    if all = fail then all := true; fi;
-    novelties := ValueOption("novelties");
-    if novelties = fail then novelties := false; fi;
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    all := ValueOption("all") <> false;  # default to true
+    novelties := ValueOption("novelties") = true;  # default to false
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -1501,16 +1496,11 @@ function(n, q)
     local all, novelties, special, general, normaliser, result, factorisation,
           p, e, generatorGUMinusSU, LR, S, size, numberOfConjugates;
 
-    all := ValueOption("all");
-    if all = fail then all := true; fi;
-    novelties := ValueOption("novelties");
-    if novelties = fail then novelties := false; fi;
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    all := ValueOption("all") <> false;  # default to true
+    novelties := ValueOption("novelties") = true;  # default to false
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -2745,16 +2735,11 @@ BindGlobal("C9SubgroupsSymplecticGroupGeneric",
 function(n, q)
     local all, novelties, special, general, normaliser, result, factorisation,
           p, e, generatorNormSpMinusSp, S, size, LR, M, C, A;
-    all := ValueOption("all");
-    if all = fail then all := true; fi;
-    novelties := ValueOption("novelties");
-    if novelties = fail then novelties := false; fi;
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    all := ValueOption("all") <> false;  # default to true
+    novelties := ValueOption("novelties") = true;  # default to false
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -4006,16 +3991,11 @@ function(epsilon, n, q)
           result, factorisation, p, e, generatorSOMinusOmega, generatorGOMinusSO,
           generatorNormGOMinusGO, LR, S, size, elementsToConjugate;
 
-    all := ValueOption("all");
-    if all = fail then all := true; fi;
-    novelties := ValueOption("novelties");
-    if novelties = fail then novelties := false; fi;
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    all := ValueOption("all") <> false;  # default to true
+    novelties := ValueOption("novelties") = true;  # default to false
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
 
     ConjugatesBySubsetsOfGenerators := function(G, gens)
         local result, powerSet, subset;

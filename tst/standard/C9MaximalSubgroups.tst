@@ -4,23 +4,9 @@ gap> SetInfoLevel(InfoOrb, 0); # silence `Giving up, Schreier tree is not shallo
 
 #
 gap> TestC9SubgroupsSpecialLinearGroupGeneric := function(n, q)
->     local all, novelties, special, general, normaliser, result, G;
->     all := ValueOption("all");
->     if all = fail then all := true; fi;
->     novelties := ValueOption("novelties");
->     if novelties = fail then novelties := false; fi;
->     special := ValueOption("special");
->     if special = fail then special := false; fi;
->     general := ValueOption("general");
->     if general = fail then general := false; fi;
->     normaliser := ValueOption("normaliser");
->     if normaliser = fail then normaliser := false; fi;
->     result := C9SubgroupsSpecialLinearGroupGeneric(n, q :
->                                                    all := all,
->                                                    novelties := novelties,
->                                                    special := special,
->                                                    general := general,
->                                                    normaliser := normaliser);
+>     local general, result, G;
+>     general := ValueOption("general") = true;  # default to false
+>     result := C9SubgroupsSpecialLinearGroupGeneric(n, q : general := general);
 >     for G in result do
 >         CheckIsSubsetSL(n, q, G);
 >         if not general then
@@ -29,21 +15,10 @@ gap> TestC9SubgroupsSpecialLinearGroupGeneric := function(n, q)
 >     od;
 > end;;
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
->     local all, novelties, special, general, normaliser, result, G;
->     all := ValueOption("all");
->     if all = fail then all := true; fi;
->     novelties := ValueOption("novelties");
->     if novelties = fail then novelties := false; fi;
->     special := ValueOption("special");
->     if special = fail then special := false; fi;
->     general := ValueOption("general");
->     if general = fail then general := false; fi;
->     normaliser := ValueOption("normaliser");
->     if normaliser = fail then normaliser := false; fi;
+>     local general, normaliser, result, G;
+>     general := ValueOption("general") = true;  # default to false
+>     normaliser := ValueOption("normaliser") = true;  # default to false
 >     result := C9SubgroupsSpecialUnitaryGroupGeneric(n, q :
->                                                     all := all,
->                                                     novelties := novelties,
->                                                     special := special,
 >                                                     general := general,
 >                                                     normaliser := normaliser);
 >     for G in result do
@@ -58,23 +33,9 @@ gap> TestC9SubgroupsSpecialUnitaryGroupGeneric := function(n, q)
 >     od;
 > end;;
 gap> TestC9SubgroupsSymplecticGroupGeneric := function(n, q)
->     local all, novelties, special, general, normaliser, result, G;
->     all := ValueOption("all");
->     if all = fail then all := true; fi;
->     novelties := ValueOption("novelties");
->     if novelties = fail then novelties := false; fi;
->     special := ValueOption("special");
->     if special = fail then special := false; fi;
->     general := ValueOption("general");
->     if general = fail then general := false; fi;
->     normaliser := ValueOption("normaliser");
->     if normaliser = fail then normaliser := false; fi;
->     result := C9SubgroupsSymplecticGroupGeneric(n, q :
->                                                 all := all,
->                                                 novelties := novelties,
->                                                 special := special,
->                                                 general := general,
->                                                 normaliser := normaliser);
+>     local normaliser, result, G;
+>     normaliser := ValueOption("normaliser") = true;  # default to false
+>     result := C9SubgroupsSymplecticGroupGeneric(n, q : normaliser := normaliser);
 >     for G in result do
 >         if not normaliser then
 >             CheckIsSubsetSp(n, q, G);
@@ -87,20 +48,11 @@ gap> TestC9SubgroupsSymplecticGroupGeneric := function(n, q)
 >     od;
 > end;;
 gap> TestC9SubgroupsOrthogonalGroupGeneric := function(epsilon, n, q)
->     local all, novelties, special, general, normaliser, result, G;
->     all := ValueOption("all");
->     if all = fail then all := true; fi;
->     novelties := ValueOption("novelties");
->     if novelties = fail then novelties := false; fi;
->     special := ValueOption("special");
->     if special = fail then special := false; fi;
->     general := ValueOption("general");
->     if general = fail then general := false; fi;
->     normaliser := ValueOption("normaliser");
->     if normaliser = fail then normaliser := false; fi;
+>     local special, general, normaliser, result, G;
+>     special := ValueOption("special") = true;  # default to false
+>     general := ValueOption("general") = true;  # default to false
+>     normaliser := ValueOption("normaliser") = true;  # default to false
 >     result := C9SubgroupsOrthogonalGroupGeneric(epsilon, n, q :
->                                                 all := all,
->                                                 novelties := novelties,
 >                                                 special := special,
 >                                                 general := general,
 >                                                 normaliser := normaliser);

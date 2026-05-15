@@ -5,12 +5,9 @@ function(L, q)
           a, iso, det, v, projectiveOrderIso, po, x, ox, f, ff, co, u, rts, got,
           form, rq, scal, quad, type, H, tmat, dsq, sgn, mat, c, j, o, k;
 
-    special := ValueOption("special");
-    if special = fail then special := false; fi;
-    general := ValueOption("general");
-    if general = fail then general := false; fi;
-    normaliser := ValueOption("normaliser");
-    if normaliser = fail then normaliser := false; fi;
+    special := ValueOption("special") = true;  # default to false
+    general := ValueOption("general") = true;  # default to false
+    normaliser := ValueOption("normaliser") = true;  # default to false
     if normaliser then general := true; fi;
     if general then special := true; fi;
 
