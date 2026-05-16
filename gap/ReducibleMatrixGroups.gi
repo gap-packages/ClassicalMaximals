@@ -652,7 +652,7 @@ function(epsilon, d, q, k)
         if IsEvenInt(q) then
             gamma := FindGamma(q);
         else
-            xi := PrimitiveElement(GF(q ^ 2));
+            xi := PrimitiveRoot(GF(q ^ 2));
             gamma := xi ^ (q + 1) * (xi + xi ^ q) ^ -2;
         fi;
         eta := (1 - 4 * gamma) ^ -1;
