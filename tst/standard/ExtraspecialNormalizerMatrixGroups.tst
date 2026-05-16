@@ -86,7 +86,7 @@ gap> TestSymplecticTypeNormalizerInGL := function(m, q)
 >   normalizer, zeta, F;
 >   r := 2;
 >   F := GF(q);
->   zeta := PrimitiveElement(F);
+>   zeta := PrimitiveRoot(F);
 >   gensNormalizer := SymplecticTypeNormalizerInGL(m, q);
 >   gensExtraspecial := OddExtraspecialGroup(r, m, q);
 >   extraspecialGroup := Group(Concatenation(gensExtraspecial.listOfXi,
@@ -109,7 +109,7 @@ gap> TestExtraspecial2MinusTypeNormalizerInGL := function(m, q)
 >   local r, gensNormalizer, extraspecialGroup, normalizer, zeta, F;
 >   r := 2;
 >   F := GF(q);
->   zeta := PrimitiveElement(F);
+>   zeta := PrimitiveRoot(F);
 >   gensNormalizer := Extraspecial2MinusTypeNormalizerInGL(m, q);
 >   extraspecialGroup := Group(Concatenation(gensNormalizer.listOfXi,
 >                                            gensNormalizer.listOfYi));

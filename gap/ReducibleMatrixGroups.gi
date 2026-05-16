@@ -6,7 +6,7 @@ BindGlobal("SLStabilizerOfSubspace",
 function(n, q, k)
     local F, A5, dirProd, z, T, size;
     F := GF(q);
-    z := PrimitiveElement(F);
+    z := PrimitiveRoot(F);
     A5 := DiagonalMat(
         Concatenation([z], List([2..n - 1], i -> z ^ 0), [z ^ -1])
     );
@@ -29,7 +29,7 @@ function(d, q, k)
     fi;
 
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     generators := [];
     J := AntidiagonalMat(k, F);
 
@@ -135,7 +135,7 @@ function(d, q, k)
     fi;
 
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     generators := [];
     kHalf := QuoInt(k, 2);
     dHalf := QuoInt(d, 2);
@@ -776,7 +776,7 @@ function(epsilon, d, q, epsilon_0, k)
         squareDiscriminant := epsilon = (-1) ^ QuoInt((q - 1) * d, 4);
         if not squareDiscriminant then
         # Recall that q must be odd here since k is odd.
-            Q[k + 1, k + 1] := PrimitiveElement(field) / 2;
+            Q[k + 1, k + 1] := PrimitiveRoot(field) / 2;
         fi;
 
         # We have D(Q) = D(Q_1) * D(Q_2), so this always works.

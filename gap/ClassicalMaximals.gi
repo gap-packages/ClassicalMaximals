@@ -1275,7 +1275,7 @@ InstallGlobalFunction("GUMinusSU",
 function(n, q)
     local F, zeta, result, halfOfn;
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     result := IdentityMat(n, F);
     result[1, 1] := zeta;
     result[n, n] := zeta ^ (-q);
@@ -2537,7 +2537,7 @@ function(n, q)
     fi;
 
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     halfOfn := QuoInt(n, 2);
     result := DiagonalMat(Concatenation(List([1..halfOfn], i -> zeta),
                                         List([1..halfOfn], i -> zeta ^ 0)));

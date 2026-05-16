@@ -7,7 +7,7 @@ function(d, q)
     fi;
 
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     standardForm := AntidiagonalHalfOneMat(d, F);
 
     AandB := ShallowCopy(GeneratorsOfGroup(ConjugateToSesquilinearForm(Sp(d, q), 
@@ -54,7 +54,7 @@ function(d, q)
 
     F := GF(q);
     q0 := p^(QuoInt(e, 2));
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     C := zeta^(QuoInt((q - 1), Gcd(q - 1, d))) * IdentityMat(d, F); # generates the center of SL(d, q)
     g := Gcd(q - 1, d);
     c := QuoInt(Gcd(q0 + 1, d) * (q - 1), Lcm(q0 + 1, QuoInt(q - 1, g)) * g);
@@ -91,7 +91,7 @@ function(epsilon, d, q)
     fi;
     
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     generatingScalar := zeta ^ QuoInt(q - 1, Gcd(q - 1, d)) * IdentityMat(d, F);
     generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
     # These are A_epsilon, B_epsilon and C in [HR05]

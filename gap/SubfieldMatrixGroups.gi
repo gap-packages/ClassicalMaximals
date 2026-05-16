@@ -16,7 +16,7 @@ function(n, p, e, f)
 
     F := GF(p ^ e);
     AandB := ShallowCopy(GeneratorsOfGroup(SL(n, p ^ f)));
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     k := Gcd(p ^ e - 1, n);
     c := QuoInt((k * Lcm(p ^ f - 1, QuoInt((p ^ e - 1), k))), (p ^ e - 1));
     C := zeta ^ (QuoInt(p ^ e - 1, k)) * IdentityMat(n, F);
@@ -56,7 +56,7 @@ function(d, p, e, f)
                                                                        "U",
                                                                        AntidiagonalMat(d, F),
                                                                        F)));
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     k := Gcd(q + 1, d);
     c := QuoInt(k * Lcm(p ^ f + 1, QuoInt(q + 1, k)), q + 1);
     # generates the center of SU(d, q)
@@ -105,7 +105,7 @@ function(d, q)
                                                                             "S", 
                                                                             form,
                                                                             F)));
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     k := Gcd(q + 1, d);
     # generates the center of SU(d, q)
     C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, F);
@@ -158,7 +158,7 @@ function(epsilon, d, q)
     fi;
 
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     k := Gcd(q + 1, d);
     # generates the center of SU(d, q)
     C := zeta ^ QuoInt(q ^ 2 - 1, k) * IdentityMat(d, F);
@@ -314,8 +314,8 @@ function (d, p, e, f)
         # the C5-subgroup, so we just need to adjust the base field.
         result := MatrixGroupWithSize(field, gens, SizeSp(d, q0));
     else
-        zeta := PrimitiveElement(field);
-        omega := PrimitiveElement(GF(q0));
+        zeta := PrimitiveRoot(field);
+        omega := PrimitiveRoot(GF(q0));
         zetaPower := zeta ^ - QuoInt(q0 + 1, 2);
 
         # This matrix C preserves the form and is constructed to
@@ -403,7 +403,7 @@ function (epsilon, d, p, e, f, epsilon_0)
 
     field := GF(p ^ e);
     one := One(field);
-    zeta := PrimitiveElement(field);
+    zeta := PrimitiveRoot(field);
     lambda := zeta ^ QuoInt(q0 + 1, 2);
     lambdaInv := lambda ^ -1;
     m := QuoInt(d, 2);

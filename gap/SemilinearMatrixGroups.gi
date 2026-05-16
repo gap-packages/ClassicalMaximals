@@ -540,7 +540,7 @@ function(d, q)
     # By Lemma 6.2 det(B2) = (-1) ^ (s - 1) = -1.
     B2 := gammaL1.B;
 
-    omega := PrimitiveElement(GF(q ^ 2));
+    omega := PrimitiveRoot(GF(q ^ 2));
     AandB := GeneralUnitaryGroupGens(d / 2, q, Indeterminate(GF(q ^ 2)));
     AandB := List(AandB, g -> MapGammaLToGLRatFun(g, A2));
 
@@ -646,7 +646,7 @@ function(epsilon, d, q, s)
 
     Q := StandardOrthogonalForm(epsilon, d / s, q).Q;
     conjugatedOmega := ConjugateToSesquilinearForm(Omega(epsilon, d / s, q ^ s), "O-Q", Q, GF(q ^ s));
-    zeta := PrimitiveElement(GF(q ^ s));
+    zeta := PrimitiveRoot(GF(q ^ s));
     # These matrices generate a group isomorphic to Omega(epsilon, d / s, q ^ s) 
     # as a subgroup of Omega(epsilon, d, q)
     AandB := List(GeneratorsOfGroup(conjugatedOmega), g -> MapGammaLToGL(g, gammaA, zeta));
@@ -817,7 +817,7 @@ function(epsilon, epsilon1, d, q)
     fi;
 
     F := GF(q);
-    zeta := PrimitiveElement(GF(q ^ 2));
+    zeta := PrimitiveRoot(GF(q ^ 2));
     gammaL1 := MatricesInducingGaloisGroupOfGFQToSOverGFQ(2, q);
     gammaA := gammaL1.A;
     # By Lemma 6.2 of [HR05], det(gammaB) = -1.
