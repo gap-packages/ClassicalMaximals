@@ -65,23 +65,17 @@ $g$ is a **similarity**.
 
 @Subsection Classification of sesquilinear forms
 @SubsectionLabel Theory:ClassicalGroups:FormsClassification
-By the following fundamental result (<Cite Key="BHR13" Where="Theorem 1.5.13" />)
-the $\sigma$-sesquilinear forms fall into a small number of types
-(up to similarity):
-
-Let $\beta$ be a $\sigma$-sesquilinear form on $V$, and let
-$\lambda \in K^\times$, $\tau \in {\rm Aut}(K)$ satisfy
-$\lambda \beta(u, v)^\tau = \beta(u, v)$ for all $u, v$. Then, up to
-similarity, one of the following holds.
+Let $\beta$ be a $\sigma$-sesquilinear form on $V$. Then following
+<Cite Key="BHR13" Where="Theorem 1.5.13" />, we focus on the following four classes
+of such forms:
 <Enum>
  <Item>$\beta = 0$.</Item>
- <Item>$\sigma = 1$, $\lambda = -1$ and $\beta(v, v) = 0$ for all $v$.
-       $\beta$ is called **alternating** or **symplectic**.</Item>
- <Item>$\sigma^2 = 1 \neq \sigma$, $\lambda = 1$
-       (i.e. $\beta(v, u) = \beta(u, v)^\sigma$).
-       $\beta$ is called **$\sigma$-Hermitian** or **unitary**.</Item>
- <Item>$\sigma = 1$, $\lambda = 1$ (i.e. $\beta(v, u) = \beta(u, v)$).
-       $\beta$ is **symmetric bilinear**.</Item>
+ <Item>$\sigma = 1$, $\beta(u, v) = -\beta(v, u)$ for all $u, v$, and $\beta(v, v) = 0$ for all $v$.
+       Then $\beta$ is called **alternating** or **symplectic**.</Item>
+ <Item>$\sigma^2 = 1 \neq \sigma$ and $\beta(v, u) = \beta(u, v)^\sigma$) for all $u, v$.
+       Then $\beta$ is called **$\sigma$-Hermitian** or **unitary**.</Item>
+ <Item>$\sigma = 1$ and $\beta(v, u) = \beta(u, v)$ for all $u, v$.
+       Then $\beta$ is **symmetric bilinear**.</Item>
 </Enum>
 In characteristic 2 the symplectic and symmetric cases overlap.
 Otherwise all cases are mutually exclusive.
@@ -90,18 +84,18 @@ Otherwise all cases are mutually exclusive.
 @SubsectionLabel Theory:ClassicalGroups:L 
 Linear groups preserve the zero form. We will denote the isometry group by ${\rm GL}_n(q)$.
 
+@Subsection Symplectic Groups (Case <M>{\bf S}</M>)
+@SubsectionLabel Theory:ClassicalGroups:S
+Symplectic groups preserve non-degenerate symplectic forms. We will use
+${\rm antidiag}(1,\dots,1,-1,\dots,-1)$ as our standard symplectic form matrix and
+denote the isometry group by ${\rm Sp}_n(q)$. Note that $n$ must be even.
+
 @Subsection Unitary Groups (Case <M>{\bf U}</M>)
 @SubsectionLabel Theory:ClassicalGroups:U
 Unitary groups preserve non-degenerate unitary forms, where $\sigma$ is
 a field automorphism of order 2. So they are only defined over $\mathbb{F}_{q^2}$
 with $\sigma: x\mapsto x^q$. We will use ${\rm antidiag}(1,\dots,1)$
 as our standard unitary form matrix and denote the isometry group by ${\rm GU}_n(q)$.
-
-@Subsection Symplectic Groups (Case <M>{\bf S}</M>)
-@SubsectionLabel Theory:ClassicalGroups:S
-Symplectic groups preserve non-degenerate symplectic forms. We will use
-${\rm antidiag}(1,\dots,1,-1,\dots,-1)$ as our standard symplectic form matrix and
-denote the isometry group by ${\rm Sp}_n(q)$. Note that $n$ must be even.
 
 @Subsection Orthogonal groups in odd dimension (Case <M>{\bf O}</M>)
 @SubsectionLabel Theory:ClassicalGroups:Oodd
