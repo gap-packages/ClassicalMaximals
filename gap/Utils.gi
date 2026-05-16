@@ -395,7 +395,7 @@ function(epsilon, n, q)
     fi;
 
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     if IsOddInt(n) then
             gramMatrix := IdentityMat(n, F);
             generatorsOfSO := GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon, n, q),
@@ -490,7 +490,7 @@ function(epsilon, d, q)
 
     field := GF(q);
     one := One(field);
-    zeta := PrimitiveElement(field);
+    zeta := PrimitiveRoot(field);
 
     # In this case, 1 = Omega = SO, GO = Z_2 and CO = Z_(q - 1)
     # up to isomorphisms.
@@ -562,7 +562,7 @@ function(epsilon, d, q)
         D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m, zeta),
                                        ListWithIdenticalEntries(m, one)));
     elif IsOddInt(q) then
-        xi := PrimitiveElement(GF(q ^ 2));
+        xi := PrimitiveRoot(GF(q ^ 2));
         D := DiagonalMat(Concatenation(ListWithIdenticalEntries(m - 1, zeta),
                                        one * [0, 0],
                                        ListWithIdenticalEntries(m - 1, one)));
@@ -584,7 +584,7 @@ function(d, q, squareDiscriminant)
 
     field := GF(q);
     one := One(field);
-    zeta := PrimitiveElement(field);
+    zeta := PrimitiveRoot(field);
 
     # In this case, 1 = Omega = SO, GO = Z_2 and CO = Z_(q - 1)
     # up to isomorphisms.
@@ -629,7 +629,7 @@ function(d, q)
 
     field := GF(q);
     one := One(field);
-    zeta := PrimitiveElement(field);
+    zeta := PrimitiveRoot(field);
 
     if d = 1 then
 

@@ -9,7 +9,7 @@ function(r, m, q)
         ErrorNoReturn("<r> must be prime and a divisor of <q> - 1");
     fi;
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     omega := zeta ^ (QuoInt(q - 1, r));
     X := DiagonalMat(List([0..r - 1], i -> omega ^ i));
     Y := PermutationMat(CycleFromList([1..r]), r, F);
@@ -46,7 +46,7 @@ function(r, m, q, type...)
     fi;
 
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     omega := zeta ^ (QuoInt(q - 1, r));
     U := DiagonalMat(List([1..r], i -> omega ^ (i * (i - 1) / 2)));
     V := NullMat(r, r, F);
@@ -150,7 +150,7 @@ function(m, q, type...)
     # order q - 1 (whereas Z has only order (q - 1) / 4), making Z redundant.
 
     F := GF(q);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     psi := zeta ^ (QuoInt(q - 1, 4));
     U := DiagonalMat([zeta ^ 0, psi]);
     # Determinant psi ^ (2 ^ (m - 1)) = (zeta ^ ((q - 1) / 2)) ^ (2 ^ (m - 2))
@@ -264,7 +264,7 @@ function(r, m, q, type)
 
     F := GF(q);
     d := r ^ m;
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
 
     generatorsOfNormalizerInGL := OddExtraspecialNormalizerInGL(r, m, q, "U");
     listOfUi := generatorsOfNormalizerInGL.listOfUi;
@@ -388,7 +388,7 @@ function(m, q, type)
     factorization := PrimePowersInt(q);
     p := factorization[1];
     e := factorization[2];
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
 
     generatorsOfNormalizerInGL := SymplecticTypeNormalizerInGL(m, q, type);
     listOfUi := generatorsOfNormalizerInGL.listOfUi;
@@ -536,7 +536,7 @@ function(m, q, type)
     factorization := PrimePowersInt(q);
     p := factorization[1];
     e := factorization[2];
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
 
     generatorsOfNormalizerInGL := Extraspecial2MinusTypeNormalizerInGL(m, q, type);
     U1 := generatorsOfNormalizerInGL.listOfUi[1];

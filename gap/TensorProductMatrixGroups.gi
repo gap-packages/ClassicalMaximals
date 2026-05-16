@@ -12,7 +12,7 @@ function(d1, d2, q)
     k := Gcd(d, q - 1);
     g := Gcd(d1, d2, q - 1);
     c := QuoInt(Gcd(d1, q - 1) * Gcd(d2, q - 1) * g, k);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     C := zeta^(QuoInt((q - 1), k)) * IdentityMat(d, F); # generates the center of SL(d, q)
     Id1 := One(SL(d1 ,q));
     Id2 := One(SL(d2 ,q));
@@ -55,7 +55,7 @@ function(d1, d2, q)
 
     d := d1 * d2;
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     generators := [];
 
     # generate the central product SU(d1, q) o SU(d2, q)
@@ -166,7 +166,7 @@ function(epsilon, d1, d2, q)
     elif epsilon = -1 then
         standardBilinearForm := IdentityMat(d2, field);
         if IsEvenInt(d2 * (q - 1) / 4) then
-            standardBilinearForm[1, 1] := PrimitiveElement(field);
+            standardBilinearForm[1, 1] := PrimitiveRoot(field);
         fi;
     fi;
     
@@ -255,7 +255,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     fi;
 
     field := GF(q);
-    zeta := PrimitiveElement(field);
+    zeta := PrimitiveRoot(field);
     gens := [];
 
     # Size according to Table 2.7 in [BHR13], another factor
@@ -307,7 +307,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
         # The following is dark magic from Proposition 7.1 in [HR10], with
         # the idea being that alpha ^ 2 + beta ^ 2 = zeta.
         one := One(field);
-        xi := PrimitiveElement(GF(q ^ 2));
+        xi := PrimitiveRoot(GF(q ^ 2));
         alpha := xi ^ QuoInt(q + 1, 2) * (xi - xi ^ q) / (xi + xi ^ q);
         beta := 2 * zeta / (xi + xi ^ q);
         A := [[alpha, beta], [beta, -alpha]];
@@ -449,7 +449,7 @@ function(d1, d2, q)
     if d mod 8 = 4 or IsEvenInt(q) then
         size := QuoInt(size, gcd);
     else
-        zeta := PrimitiveElement(field);
+        zeta := PrimitiveRoot(field);
         A := IdentityMat(d1, field);
         A{[1..d1 / 2]}{[1..d1 / 2]} := zeta * IdentityMat(d1 / 2, field);
         B := IdentityMat(d2, field);

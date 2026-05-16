@@ -27,7 +27,7 @@ function(n, q, t)
         fi;
     od;
     F := GF(q);
-    z := PrimitiveElement(F);
+    z := PrimitiveRoot(F);
     E := DiagonalMat(
         Concatenation([z], List([2..m], i -> z ^ 0),
                       [z ^ -1], List([m + 2..n], i -> z ^ 0))
@@ -52,7 +52,7 @@ function(d, q, t)
     m := QuoInt(d, t);
     generators := [];
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
 
     # generate SU(m, q)
     #
@@ -122,7 +122,7 @@ function(d, q)
     fi;
 
     F := GF(q ^ 2);
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     generators := [];
     J := AntidiagonalMat(d / 2, F);
 
@@ -441,7 +441,7 @@ function(epsilon, d, q, epsilon_0, t)
 
                 # In this case we need to correct the spinor norm.
                 if not squareDiscriminant then
-                    Qm[1, 1] := PrimitiveElement(field) / 2;
+                    Qm[1, 1] := PrimitiveRoot(field) / 2;
                     P{[1..m]}{[m + 1..2 * m]} := orthogonalGens.S;
                 fi;
 
@@ -561,7 +561,7 @@ function(epsilon, d, q)
     gens := [];
 
     Q := IdentityMat(d, field) / 2;
-    Q[m + 1, m + 1] := PrimitiveElement(field) / 2;
+    Q[m + 1, m + 1] := PrimitiveRoot(field) / 2;
 
     orthogonalGens_1 := AlternativeGeneratorsOfOrthogonalGroup(m, q, true);
     orthogonalGens_2 := AlternativeGeneratorsOfOrthogonalGroup(m, q, false);

@@ -68,7 +68,7 @@ function(m, t, q)
 
     F := GF(q);
     d := m ^ t;
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     D := DiagonalMat(Concatenation([zeta], List([1..m - 1], i -> zeta ^ 0)));
     C := zeta ^ ((q - 1) / Gcd(q - 1, d)) * IdentityMat(d, F);
 
@@ -160,7 +160,7 @@ function(m, t, q)
 
     F := GF(q ^ 2);
     d := m ^ t;
-    zeta := PrimitiveElement(F);
+    zeta := PrimitiveRoot(F);
     D := DiagonalMat(Concatenation([zeta], 
                                    List([1..m - 2], i -> zeta ^ 0),
                                    [zeta ^ (- q)]));
@@ -464,7 +464,7 @@ function(epsilon, m, t, q)
 
     d := m ^ t;
     field := GF(q);
-    zeta := PrimitiveElement(field);
+    zeta := PrimitiveRoot(field);
     I := IdentityMat(m, field);
 
     squareDiscriminant := epsilon = (-1) ^ QuoInt((q - 1) * m, 4);
@@ -501,7 +501,7 @@ function(epsilon, m, t, q)
     # The following is dark magic from Proposition 7.1 in [HR10], with
     # the idea being that alpha ^ 2 + beta ^ 2 = zeta.
     one := One(field);
-    xi := PrimitiveElement(GF(q ^ 2));
+    xi := PrimitiveRoot(GF(q ^ 2));
     alpha := xi ^ QuoInt(q + 1, 2) * (xi - xi ^ q) / (xi + xi ^ q);
     beta := 2 * zeta / (xi + xi ^ q);
     A := [[alpha, beta], [beta, -alpha]];
