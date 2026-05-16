@@ -14,8 +14,7 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 - **Type L**: Complete for dimensions 2-12
 - **Type U**: Complete for dimensions 3-12
 - **Type S**: Complete for dimensions 4-12
-- **Type O**: Complete for dimensions 5-12
-    - **C2-C8**: Complete for dimensions 3-12
+- **Type O**: Complete for dimensions 3-12
     - **C2 & C4**: Complete for all dimensions
 
 #### Almost simple groups (Class S)
@@ -25,7 +24,7 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
     - `novelties`: Intersections of novelty maximal subgroups with the quasisimple group
     - `special`: Normalisers in SO(n,q)
     - `general`: Normalisers in GL(n,q), GU(n,q), or GO(n,q)
-    - `normaliser`: Normalizers in the full conformal group (preserving form modulo scalars)
+    - `normaliser`: Normalisers in the full conformal group (preserving form modulo scalars)
         - forms preserved up to scalars are not stored (awaiting full GAP support for conformal groups)
     - all these options complete for dimensions up to 12
     - ... but group sizes for `special`, `general`, `normaliser` are not precomputed and stored
@@ -39,8 +38,6 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 ### Roadmap / TODO
 
 #### Geometric maximal subgroups (Aschbacher Classes C1-C8)
-- Finalize **C1** for dimensions 3 and 4
-  ([#155](https://github.com/gap-packages/ClassicalMaximals/issues/155))
 - Generalize other Aschbacher classes to work for all dimensions
 - Implement `all`, `novelties`, `special`, `general`, `normaliser` for all geometric classes
 

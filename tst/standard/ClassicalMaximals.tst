@@ -1,6 +1,4 @@
 gap> START_TEST("ClassicalMaximals.tst");
-gap> oldClassicalMaximalsInfoLevel:=InfoLevel(InfoClassicalMaximals);;
-gap> SetInfoLevel(InfoClassicalMaximals, 1);
 
 # Test error handling
 gap> ClassicalMaximalsGeneric("L", 2, 4, [0]);
@@ -548,62 +546,43 @@ gap> Length(ClassicalMaximalsGeneric("S", 12, 19));
 
 #
 gap> Length(ClassicalMaximalsGeneric("O", 3, 5));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-2
+3
 gap> Length(ClassicalMaximalsGeneric("O", 3, 7));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-2
+3
 gap> Length(ClassicalMaximalsGeneric("O", 3, 9));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O", 3, 11));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-3
+4
 gap> Length(ClassicalMaximalsGeneric("O", 3, 13));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-3
+4
 gap> Length(ClassicalMaximalsGeneric("O", 3, 17));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O", 3, 19));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 2));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-2
+3
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 3));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 4));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-3
+4
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 5));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 7));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-6
+7
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 8));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 9));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 11));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-4
+5
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 13));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-6
+7
 gap> Length(ClassicalMaximalsGeneric("O-", 4, 16));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-3
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 17));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
-6
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 19));
-#I  List incomplete. Missing subgroup in C1 of isotropic type P_1
 4
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 17));
+7
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 19));
+5
 gap> Length(ClassicalMaximalsGeneric("O", 5, 3));
 5
 gap> Length(ClassicalMaximalsGeneric("O", 5, 5));
@@ -1630,5 +1609,4 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,7 : all:=false));
 1
 
 #
-gap> SetInfoLevel(InfoClassicalMaximals, oldClassicalMaximalsInfoLevel);
 gap> STOP_TEST("ClassicalMaximals.tst", 0);

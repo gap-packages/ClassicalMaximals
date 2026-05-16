@@ -546,9 +546,8 @@ function(epsilon, d, q, k)
         ErrorNoReturn("<k> must not be equal to <m> for <epsilon> = -1");
     fi;
 
-    # the construction referenced above fails for d < 5
-    if d < 5 then
-        ErrorNoReturn("<d> must be at least 5");
+    if d < 3 then
+        ErrorNoReturn("<d> must be at least 3");
     fi;
 
     field := GF(q);
@@ -561,6 +560,7 @@ function(epsilon, d, q, k)
     if IsEvenInt(q) then
 
         for L in [linearGens.L1, linearGens.L2] do
+            if IsOne(L) then continue; fi;
             H_1or2 := IdentityMat(d, field);
             H_1or2{[1..k]}{[1..k]} := L;
             H_1or2{[d - k + 1..d]}{[d - k + 1..d]} := RotateMat(TransposedMat(L ^ -1));
@@ -586,6 +586,7 @@ function(epsilon, d, q, k)
         if k = m then
             
             for L in [linearGens.L1, linearGens.L2 ^ 2] do
+                if IsOne(L) then continue; fi;
                 H_1or2 := IdentityMat(d, field);
                 H_1or2{[1..k]}{[1..k]} := L;
                 H_1or2{[d - k + 1..d]}{[d - k + 1..d]} := RotateMat(TransposedMat(L ^ -1));
@@ -604,6 +605,7 @@ function(epsilon, d, q, k)
 
             orthogonalGens := StandardGeneratorsOfOrthogonalGroup(epsilon, d - 2 * k, q);
             for matrices in [[linearGens.L1, IdentityMat(d - 2 * k, field)], [linearGens.L2, orthogonalGens.S]] do
+                if IsOne(matrices[1]) and IsOne(matrices[2]) then continue; fi;
                 H_1or2 := IdentityMat(d, field);
                 H_1or2{[1..k]}{[1..k]} := matrices[1];
                 H_1or2{[k + 1..d - k]}{[k + 1..d - k]} := matrices[2];
@@ -625,41 +627,36 @@ function(epsilon, d, q, k)
     fi;
 
     # We now construct the p-core of the stabilizer.
-    if k = 1 then
-
-        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[2, 1, one], [d, d - 1, -one]]));
-
-    elif k < QuoInt(d - 1, 2) then
+    if k > 1 then
 
         Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
+
+    fi;
+
+    if (d > 2*k + 2) or (d = 2*k + 2 and epsilon = 1) then
+
         Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
-
-    elif IsEvenInt(d) and k = m - 1 then
-
-        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
-        if epsilon = 1 then
-            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one]]));
+        if d = 2*k + 2 and epsilon = 1 then
             # [HR10] wants the matrix
             # IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d - k - 1, 1, -one]])
             # here, but that just makes no sense. Instead, this works :)
             Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 2, 1, one], [d, d - k - 1, -one]]));
-        else
-            if IsEvenInt(q) then
-                gamma := FindGamma(q);
-            else
-                xi := PrimitiveElement(GF(q ^ 2));
-                gamma := xi ^ (q + 1) * (xi + xi ^ q) ^ -2;
-            fi;
-            eta := (1 - 4 * gamma) ^ -1;
-            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, 1, gamma * eta], [d, k + 1, 2 * gamma * eta], [d, k + 2, -eta]]));
         fi;
-            
-    else
 
-        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[d - 1, 1, one], [d, 2, -one]]));
-        if IsOddInt(d) then
-            Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one], [d, 1, -one / 2]]));
+    elif d = 2*k + 1 then  # odd case
+
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, d - k, -one], [d, 1, -one / 2]]));
+
+    elif d = 2*k + 2 and epsilon = -1 then
+
+        if IsEvenInt(q) then
+            gamma := FindGamma(q);
+        else
+            xi := PrimitiveRoot(GF(q ^ 2));
+            gamma := xi ^ (q + 1) * (xi + xi ^ q) ^ -2;
         fi;
+        eta := (1 - 4 * gamma) ^ -1;
+        Add(gens, IdentityMat(d, field) + MatrixByEntries(field, d, d, [[k + 1, 1, one], [d, 1, gamma * eta], [d, k + 1, 2 * gamma * eta], [d, k + 2, -eta]]));
 
     fi;
 

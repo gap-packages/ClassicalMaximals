@@ -32,10 +32,7 @@ DeclareGlobalName("CM_c9lib");
 #! which Aschbacher classes are to be computed.
 #! If omitted, all classes ${\cal C}_1, \dots, {\cal C}_9$ are considered.
 #!
-#! The lists are complete for $n \leq 12$. In dimensions 3 and 4, there is a known
-#! exception in class ${\cal C}_1$ for orthogonal types; in these cases a warning
-#! is issued via the info class `InfoClassicalMaximals`.
-#!
+#! The lists are complete for $n \leq 12$.
 #! For $n > 12$, no completeness guarantee is given. In particular, maximal subgroups
 #! in class ${\cal C}_9$ are not included in these cases.
 #!
