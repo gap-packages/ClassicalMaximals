@@ -3482,13 +3482,6 @@ function(epsilon, n, q)
         if (epsilon = 1 and k = m - 1) or (epsilon = -1 and k = m) then
             continue;
         fi;
-        # The construction in OmegaStabilizerOfIsotropicSubspace fails for n < 5
-        # This affects the quasisimple groups O(3,q) and O^-(4,q)
-        if n < 5 then
-            Info(InfoClassicalMaximals, 1, "List incomplete.",
-                 " Missing subgroup in C1 of isotropic type P_", k);
-            continue;
-        fi;
         G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k);
         if epsilon = 1 and k = m then
             Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
