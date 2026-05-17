@@ -99,9 +99,8 @@ DeclareGlobalFunction("NormGOMinusGO");
 
 #! @Subsection Warning concerning orthogonal groups of minus type
 #! <Ref Func="SOMinusOmega"/>, <Ref Func="GOMinusSO"/> and <Ref Func="NormGOMinusGO"/>
-#! are affected by a historical inconsistency in the choice of the
-#! invariant bilinear form for orthogonal groups of minus type.
-#!
+#! are affected by a historical inconsistency in &GAP;'s choice of the
+#! invariant bilinear form for orthogonal groups of minus type:
 #! For $\varepsilon = -1$ the forms kept invariant by
 #! `Omega(-1,n,q)` and `SO(-1,n,q)` need not coincide.
 #!
