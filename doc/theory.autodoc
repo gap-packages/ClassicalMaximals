@@ -1,13 +1,8 @@
 @Chapter Classical Groups and Aschbacher's Theorem
 @ChapterLabel Theory
 
-@Section Classical Groups
-@SectionLabel Theory:ClassicalGroups
-Classical groups in this package are realized as matrix groups over finite
-fields that preserve a specific form on a vector space. These forms are
-represented explicitly by their Gram matrices (with respect to a standard
-basis), and all constructions in the package are carried out relative to
-fixed choices of such matrices.
+@Section Classical Forms
+@SectionLabel Theory:ClassicalForms
 
 Let $V$ be an $n$-dimensional vector space over a finite field $K=\mathbb{F}_q$.
 A classical form on $V$ is either a $\sigma$-sesquilinear form
@@ -67,7 +62,7 @@ $g$ is a **similarity**.
 @SubsectionLabel Theory:ClassicalGroups:FormsClassification
 Let $\beta$ be a $\sigma$-sesquilinear form on $V$. Then following
 <Cite Key="BHR13" Where="Theorem 1.5.13" />, we focus on the following four classes
-of such forms:
+of such forms, and the corresponding isometry groups:
 <Enum>
  <Item>$\beta = 0$.</Item>
  <Item>$\sigma = 1$, $\beta(u, v) = -\beta(v, u)$ for all $u, v$, and $\beta(v, v) = 0$ for all $v$.
@@ -79,6 +74,14 @@ of such forms:
 </Enum>
 In characteristic 2 the symplectic and symmetric cases overlap.
 Otherwise all cases are mutually exclusive.
+
+@Section Classical Groups
+@SectionLabel Theory:ClassicalGroups
+Classical groups in this package are realized as matrix groups over finite
+fields that preserve a specific form on a vector space. These forms are
+represented explicitly by their Gram matrices (with respect to a standard
+basis), and all constructions in the package are carried out relative to
+fixed choices of such matrices.
 
 @Subsection Linear Groups (Case <M>{\bf L}</M>)
 @SubsectionLabel Theory:ClassicalGroups:L 
