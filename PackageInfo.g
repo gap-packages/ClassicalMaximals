@@ -10,8 +10,8 @@ SetPackageInfo( rec(
 
 PackageName := "ClassicalMaximals",
 Subtitle := "Maximal subgroups of classical groups",
-Version := "0.1",
-Date := "07/07/2021", # dd/mm/yyyy format
+Version := "1.0",
+Date := "17/05/2026", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [
@@ -104,9 +104,12 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">= 4.15",
   NeededOtherPackages := [
-          ["Forms", ">=1.2.12"],
+      ["Forms", "1.2.12"],
     ],
   SuggestedOtherPackages := [ ],
+  TestPackages := [
+      [ "recog", "1.5.0" ],
+  ],
   ExternalConditions := [ ],
 ),
 
@@ -114,8 +117,4 @@ AvailabilityTest := ReturnTrue,
 
 TestFile := "tst/testall.g",
 
-#Keywords := [ "TODO" ],
-
 ));
-
-
