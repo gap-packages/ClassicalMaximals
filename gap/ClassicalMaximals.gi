@@ -288,15 +288,16 @@ function(n, q)
 end);
 
 BindGlobal("C9SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local all, novelties, special, general, normaliser, result, factorisation,
           p, e, generatorGLMinusSL, LR, S, size, numberOfConjugates;
-    
-    all := ValueOption("all") <> false;  # default to true
-    novelties := ValueOption("novelties") = true;  # default to false
-    special := ValueOption("special") = true;  # default to false
-    general := ValueOption("general") = true;  # default to false
-    normaliser := ValueOption("normaliser") = true;  # default to false
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+    novelties := IsBound(opts.novelties) and opts.novelties;  # default to false
+    special := IsBound(opts.special) and opts.special;  # default to false
+    general := IsBound(opts.general) and opts.general;  # default to false
+    normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -310,7 +311,7 @@ function(n, q)
            (e = 2 and p <> 2 and p mod 5 in [2, 3]) then
             # 2.A5
             LR := ReadAsFunction(Filename(CM_c9lib, "sl25d2.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             size := 120;
             SetSize(S[1], size);
             if all then
@@ -327,7 +328,7 @@ function(n, q)
         if (e = 1 and p <> 2 and p mod 7 in [1, 2, 4]) then
             # L27
             LR := ReadAsFunction(Filename(CM_c9lib, "l27d3.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if general then
                 size := (q - 1) * 168;
             else
@@ -347,7 +348,7 @@ function(n, q)
            (e = 2 and p <> 3 and p mod 5 in [2, 3]) then
             # 3.A6
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if general then
                 size := (q - 1) * 360;
             else
@@ -368,7 +369,7 @@ function(n, q)
             if novelties then
                 # 2.L27
                 LR := ReadAsFunction(Filename(CM_c9lib, "sl27d4.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     size := Gcd(q - 1, 4) * 168;
                     SetSize(S[1], size);
@@ -384,7 +385,7 @@ function(n, q)
             else
                 # 2.A7
                 LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     size := Gcd(q - 1, 4) * 2520;
                     SetSize(S[1], size);
@@ -403,7 +404,7 @@ function(n, q)
         if (e = 1 and p mod 6 = 1) then
             # 2.U42
             LR := ReadAsFunction(Filename(CM_c9lib, "2u42d4.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 4) * 25920;
                 SetSize(S[1], size);
@@ -420,7 +421,7 @@ function(n, q)
         if q = 2 then
             # A7
             LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 2520;
                 SetSize(S[1], size);
@@ -432,7 +433,7 @@ function(n, q)
            (not novelties and e = 1 and p > 3 and p mod 11 in [1, 3, 4, 5, 9]) then
             # L2_11
             LR := ReadAsFunction(Filename(CM_c9lib, "l211d5.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 5) * 660;
                 SetSize(S[1], size);
@@ -450,7 +451,7 @@ function(n, q)
         if (e = 1 and p mod 6 = 1) then
             # U42
             LR := ReadAsFunction(Filename(CM_c9lib, "u42d5.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 5) * 25920;
                 SetSize(S[1], size);
@@ -467,7 +468,7 @@ function(n, q)
         if q = 3 then
             # M11
             LR := ReadAsFunction(Filename(CM_c9lib, "m11d11.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 7920;
                 SetSize(S[1], size);
@@ -489,7 +490,7 @@ function(n, q)
             if (e = 1 and p mod 24 in [7, 13]) then
                 # 6.L3_4
                 LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     size := 120960;
                     SetSize(S[1], size);
@@ -507,7 +508,7 @@ function(n, q)
                (e = 2 and p mod 24 in [5, 11, 13, 19]) then
                 # 6.A6
                 LR := ReadAsFunction(Filename(CM_c9lib, "6a6d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     size := 2160;
                     SetSize(S[1], size);
@@ -524,7 +525,7 @@ function(n, q)
             if (e = 1 and p mod 24 in [1, 7, 13, 19]) then
                 # 3.A6
                 LR := ReadAsFunction(Filename(CM_c9lib, "3a6d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     if p mod 24 in [1, 19] then
                         size := 4320;
@@ -551,7 +552,7 @@ function(n, q)
         if (e = 1 and p <> 3 and p mod 11 in [1, 3, 4, 5, 9]) then
             # 2.L2_11 in 2.M12 for p = 3
             LR := ReadAsFunction(Filename(CM_c9lib, "sl211d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 6) * 660;
                 SetSize(S[1], size);
@@ -567,7 +568,7 @@ function(n, q)
         elif q = 3 then
             # 2.M12
             LR := ReadAsFunction(Filename(CM_c9lib, "2m12d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 190080;
                 SetSize(S[1], size);
@@ -584,7 +585,7 @@ function(n, q)
         if (e = 1 and p mod 12 in [1, 7]) then
             # 6_1.U4_3 (p mod 12 = 7) or 6_1.U4_3.2_2 (p mod 12 = 1)
             LR := ReadAsFunction(Filename(CM_c9lib, "6au43d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 if p mod 12 = 1 then
                     size := 39191040;
@@ -609,7 +610,7 @@ function(n, q)
         if (e = 1 and p mod 24 in [1, 19]) then
             # 6.L3_4.2_1
             LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 241920;
                 SetSize(S[1], size);
@@ -627,7 +628,7 @@ function(n, q)
            (e = 2 and p mod 24 in [5, 11, 13, 19]) then
             # 6.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "6a7d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 15120;
                 SetSize(S[1], size);
@@ -647,8 +648,7 @@ function(n, q)
             fi;
         fi;
         if IsOddInt(q) then
-            S := AlmostSimpleDefiningCharacteristic_l3qdim6(q :
-                                                            general := general);
+            S := AlmostSimpleDefiningCharacteristic_l3qdim6(q, opts);
             if not general then
                 size := 2 * SizeSL(3, q);
                 SetSize(S, size);
@@ -667,7 +667,7 @@ function(n, q)
         if (e = 1 and p mod 4 = 1) then
             # U33
             LR := ReadAsFunction(Filename(CM_c9lib, "u33d7b.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 7) * 6048;
                 SetSize(S[1], size);
@@ -687,7 +687,7 @@ function(n, q)
            (e = 2 and p mod 20 in [3, 7, 13, 17]) then
             # 4_1.L3_4 if q mod 16 <> 1 or 4_1.L34.2_3 if q mod 16 = 1
             LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 if (e = 1 and p mod 80 in [9, 21, 29, 41, 61, 69]) then
                     size := Gcd(q - 1, 8) * SizePSL(3, 4);
@@ -723,7 +723,7 @@ function(n, q)
         if q = 5 then
             # 4_1.L3_4 once
             LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 80640;
                 SetSize(S[1], size);
@@ -742,7 +742,7 @@ function(n, q)
         if (e = 1 and p mod 19 in [1, 4, 5, 6, 7, 9, 11, 16, 17]) then
             # L2_19
             LR := ReadAsFunction(Filename(CM_c9lib, "l219d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 9) * 3420;
                 SetSize(S[1], size);
@@ -761,7 +761,7 @@ function(n, q)
             # TODO is this subgroup really maximal?
             # see Proposition 6.2.2
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 9) * 720;
                 SetSize(S[1], size);
@@ -778,7 +778,7 @@ function(n, q)
         if q = 7 then
             # 3.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "3a7d15b.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             S := Filtered(S, s -> Degree(s) = 9);
             if not general then
                 size := 7560;
@@ -794,8 +794,7 @@ function(n, q)
             fi;
         fi;
         # (3.)L3_q^2(.3).2
-        S := AlmostSimpleDefiningCharacteristic_l3q2dim9l(q :
-                                                          general := general);
+        S := AlmostSimpleDefiningCharacteristic_l3q2dim9l(q, opts);
         if not general then
             if q mod 3 = 0 then
                 size := SizePSL(3, q^2) * 2;
@@ -821,7 +820,7 @@ function(n, q)
             if (e = 1 and p <> 2 and p mod 28 in [1, 2, 9, 11, 15, 23, 25]) then
                 # 2.l34 (p = 11, 15, 23 mod 28) or 2.l34.2 otherwise
                 LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     if p mod 28 in [11, 15, 23] then
                         size := QuoInt(Gcd(q - 1, 10), 2) * 40320;
@@ -848,7 +847,7 @@ function(n, q)
         if (e = 1 and p mod 19 in [1, 4, 5, 6, 7, 9, 11, 16, 17]) then
             # SL2_19
             LR := ReadAsFunction(Filename(CM_c9lib, "sl219d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 10) * 3420;
                 SetSize(S[1], size);
@@ -865,7 +864,7 @@ function(n, q)
         if (e = 1 and p mod 8 in [1, 3]) then
             # 2.M12 (p = 3 mod 8) or 2.M12.2 (p = 1 mod 8)
             LR := ReadAsFunction(Filename(CM_c9lib, "2m12d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 if p mod 8 = 3 then
                     size := Gcd(q - 1, 10) * 95040;
@@ -895,7 +894,7 @@ function(n, q)
         if (e = 1 and p mod 28 in [1, 2, 9, 11, 15, 23, 25]) then
             # 2.M22 (p = 11, 15, 23 mod 28) or 2.M22.2 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "2m22d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 if p mod 28 in [11, 15, 23] then
                     size := Gcd(q - 1, 10) * 443520;
@@ -923,8 +922,7 @@ function(n, q)
             fi;
         fi;
         if p >= 5 then
-            S := AlmostSimpleDefiningCharacteristic_l3qdim10(q :
-                                                             general := general);
+            S := AlmostSimpleDefiningCharacteristic_l3qdim10(q, opts);
             if not general then
                 size := Gcd(q - 1, 10) * SizePSL(3, q) * Gcd(q - 1, 3);
                 SetSize(S, size);
@@ -939,8 +937,7 @@ function(n, q)
             fi;
         fi;
         if p >= 3 then
-            S := AlmostSimpleDefiningCharacteristic_l4qdim10(q :
-                                                             general := general);
+            S := AlmostSimpleDefiningCharacteristic_l4qdim10(q, opts);
             if not general then
                 size := Gcd(q - 1, 10) * SizePSL(4, q) * QuoInt(Gcd(q - 1, 4), 2);
                 SetSize(S, size);
@@ -954,8 +951,7 @@ function(n, q)
                 Add(result, S);
             fi;
         fi;
-        S := AlmostSimpleDefiningCharacteristic_l5qdim10(q :
-                                                         general := general);
+        S := AlmostSimpleDefiningCharacteristic_l5qdim10(q, opts);
         if not general then
             size := Gcd(q - 1, 2) * SizeSL(5, q);
             SetSize(S, size);
@@ -973,7 +969,7 @@ function(n, q)
             if q = 2 then
                 # L2_23
                 LR := ReadAsFunction(Filename(CM_c9lib, "l223d11.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 size := SizePSL(2, 23);
                 SetSize(S[1], size);
                 Add(result, S[1]);
@@ -983,7 +979,7 @@ function(n, q)
         if (e = 1 and p mod 3 = 1) then
             # U52
             LR := ReadAsFunction(Filename(CM_c9lib, "u52d11.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 11) * SizeSU(5, 2);
                 SetSize(S[1], size);
@@ -1000,7 +996,7 @@ function(n, q)
         if (e = 1 and p mod 23 in [1, 2, 3, 4, 6, 8, 9, 12, 13, 16, 18] and p <> 2) then
             # L2_23
             LR := ReadAsFunction(Filename(CM_c9lib, "l223d11.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 11) * 6072;
                 SetSize(S[1], size);
@@ -1017,7 +1013,7 @@ function(n, q)
         if q = 2 then
             # M24
             LR := ReadAsFunction(Filename(CM_c9lib, "m24d23.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := 244823040;
                 SetSize(S[1], size);
@@ -1032,7 +1028,7 @@ function(n, q)
                (e = 2 and p mod 5 in [2, 3] and p > 3) then
                 # 6A6
                 LR := ReadAsFunction(Filename(CM_c9lib, "6a6d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : general := general);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
                     size := Gcd(q - 1, 12) * 360;
                     SetSize(S[1], size);
@@ -1051,7 +1047,7 @@ function(n, q)
         if (e = 1 and p mod 23 in [1, 2, 3, 4, 6, 8, 9, 12, 13, 16, 18] and p <> 2) then
             # 2.L2_23
             LR := ReadAsFunction(Filename(CM_c9lib, "sl223d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 12) * 6072;
                 SetSize(S[1], size);
@@ -1068,7 +1064,7 @@ function(n, q)
         if (e = 1 and p mod 3 = 1) then
             # 6.Suz
             LR := ReadAsFunction(Filename(CM_c9lib, "6suzd12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : general := general);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
                 size := Gcd(q - 1, 12) * 448345497600;
                 SetSize(S[1], size);
@@ -1492,15 +1488,16 @@ function(n, q)
 end);
 
 BindGlobal("C9SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local all, novelties, special, general, normaliser, result, factorisation,
           p, e, generatorGUMinusSU, LR, S, size, numberOfConjugates;
 
-    all := ValueOption("all") <> false;  # default to true
-    novelties := ValueOption("novelties") = true;  # default to false
-    special := ValueOption("special") = true;  # default to false
-    general := ValueOption("general") = true;  # default to false
-    normaliser := ValueOption("normaliser") = true;  # default to false
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+    novelties := IsBound(opts.novelties) and opts.novelties;  # default to false
+    special := IsBound(opts.special) and opts.special;  # default to false
+    general := IsBound(opts.general) and opts.general;  # default to false
+    normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -1513,9 +1510,7 @@ function(n, q)
            (not novelties and e = 1 and p <> 5 and p mod 7 in [3, 5, 6]) then
             # L27
             LR := ReadAsFunction(Filename(CM_c9lib, "l27d3.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 3) * SizePSL(2, 7);
                 SetSize(S[1], size);
@@ -1533,9 +1528,7 @@ function(n, q)
         if (e = 1 and p mod 3 = 2 and p mod 5 in [1, 4]) then
             # 3.A6
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := 1080;
                 SetSize(S[1], size);
@@ -1552,9 +1545,7 @@ function(n, q)
         if q = 5 then
             # 3.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             S := Filtered(S, s -> Degree(s) = 3);
             if not general and not normaliser then
                 size := 7560;
@@ -1570,9 +1561,7 @@ function(n, q)
             fi;
             # 3.M10
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := 2160;
                 SetSize(S[1], size);
@@ -1592,9 +1581,7 @@ function(n, q)
                 if p <> 3 then
                     # 2.L27
                     LR := ReadAsFunction(Filename(CM_c9lib, "sl27d4.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                     if not general and not normaliser then
                         size := Gcd(q + 1, 4) * SizePSL(2, 7);
                         SetSize(S[1], size);
@@ -1611,9 +1598,7 @@ function(n, q)
             else
                 # 2.A7
                 LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     size := Gcd(q + 1, 4) * 2520;
                     SetSize(S[1], size);
@@ -1632,9 +1617,7 @@ function(n, q)
         if (e = 1 and p mod 6 = 5) then
             # 2.U42
             LR := ReadAsFunction(Filename(CM_c9lib, "2u42d4.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 4) * SizePSU(4, 2);
                 SetSize(S[1], size);
@@ -1651,9 +1634,7 @@ function(n, q)
         if q = 3 then
             # 4_2.L34
             LR := ReadAsFunction(Filename(CM_c9lib, "4bl34d20.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             S := Filtered(S, s -> Degree(s) = 4);
             if not general and not normaliser then
                 size := 4 * SizePSL(3, 4);
@@ -1673,9 +1654,7 @@ function(n, q)
         if (e = 1 and p mod 11 in [2, 6, 7, 8, 10]) then
             # L2_11
             LR := ReadAsFunction(Filename(CM_c9lib, "l211d5.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 5) * SizePSL(2, 11);
                 SetSize(S[1], size);
@@ -1692,9 +1671,7 @@ function(n, q)
         if (e = 1 and p mod 6 = 5) then
             # U42
             LR := ReadAsFunction(Filename(CM_c9lib, "u42d5.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 5) * SizePSU(4, 2);
                 SetSize(S[1], size);
@@ -1713,9 +1690,7 @@ function(n, q)
             if (e = 1 and p mod 24 in [11, 17]) then
                 # 6.L3_4
                 LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     size := 6 * SizePSL(3, 4);
                     SetSize(S[1], size);
@@ -1732,9 +1707,7 @@ function(n, q)
             if (e = 1 and p mod 24 in [17, 23]) then
                 # 6.A6
                 LR := ReadAsFunction(Filename(CM_c9lib, "6a6d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     size := 2160;
                     SetSize(S[1], size);
@@ -1751,9 +1724,7 @@ function(n, q)
             if (e = 1 and p mod 24 in [5, 11, 17, 23] and p <> 5) then
                 # 3.A6
                 LR := ReadAsFunction(Filename(CM_c9lib, "3a6d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     if p mod 24 in [11, 17] then
                         size := 2160;
@@ -1780,9 +1751,7 @@ function(n, q)
         if (e = 1 and p <> 2 and p mod 11 in [2, 6, 7, 8, 10]) then
             # 2.L2_11 in 3.M22 for p = 2
             LR := ReadAsFunction(Filename(CM_c9lib, "sl211d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 6) * SizePSL(2, 11);
                 SetSize(S[1], size);
@@ -1798,9 +1767,7 @@ function(n, q)
         elif q = 2 then
             # 3.M22
             LR := ReadAsFunction(Filename(CM_c9lib, "3m22d21.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := 1330560;
                 SetSize(S[1], size);
@@ -1815,9 +1782,7 @@ function(n, q)
             fi;
             # 3.U4_3.2_2
             LR := ReadAsFunction(Filename(CM_c9lib, "6au43d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := 3 * SizePSU(4, 3) * 2;
                 SetSize(S[1], size);
@@ -1834,9 +1799,7 @@ function(n, q)
         if (e = 1 and p mod 12 in [5, 11]) then
             # 6_1.U4_3 (p mod 12 = 5) or 6_1.U4_3.2_2 (p mod 12 = 11)
             LR := ReadAsFunction(Filename(CM_c9lib, "6au43d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 if p mod 12 = 5 then
                     size := 6 * SizePSU(4, 3);
@@ -1861,9 +1824,7 @@ function(n, q)
         if (e = 1 and p mod 24 in [5, 23]) then
             # 6.L3_4.2_1
             LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := 6 * SizePSL(3, 4) * 2;
                 SetSize(S[1], size);
@@ -1880,9 +1841,7 @@ function(n, q)
         if (e = 1 and p mod 24 in [17, 23]) then
             # 6.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "6a7d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := 15120;
                 SetSize(S[1], size);
@@ -1902,9 +1861,7 @@ function(n, q)
             fi;
         fi;
         if IsOddInt(q) then
-            S := AlmostSimpleDefiningCharacteristic_u3qdim6(q :
-                                                            general := general,
-                                                            normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_u3qdim6(q, opts);
             if not general and not normaliser then
                 size := 2 * SizeSU(3, q);
                 SetSize(S, size);
@@ -1923,9 +1880,7 @@ function(n, q)
         if (e = 1 and p mod 4 = 3 and p <> 3) then
             # U33
             LR := ReadAsFunction(Filename(CM_c9lib, "u33d7b.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 7) * SizePSU(3, 3);
                 SetSize(S[1], size);
@@ -1944,9 +1899,7 @@ function(n, q)
         if (e = 1 and p mod 20 in [11, 19]) then
             # 4_1.L3_4 if q mod 16 <> -1 or 4_1.L34.2_3 if q mod 16 = -1
             LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 if p mod 80 in [11, 19, 39, 51, 59, 71] then
                     size := Gcd(q + 1, 8) * SizePSL(3, 4);
@@ -1978,9 +1931,7 @@ function(n, q)
             if q = 2 then
                 # L2_19
                 LR := ReadAsFunction(Filename(CM_c9lib, "l219d9.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     size := 3 * SizePSL(2, 19);
                     SetSize(S[1], size);
@@ -1999,9 +1950,7 @@ function(n, q)
         if (e = 1 and p mod 19 in [2, 3, 8, 10, 12, 13, 14, 15, 18] and p <> 2) then
             # L2_19
             LR := ReadAsFunction(Filename(CM_c9lib, "l219d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 9) * SizePSL(2, 19);
                 SetSize(S[1], size);
@@ -2020,9 +1969,7 @@ function(n, q)
             # TODO is this subgroup really maximal?
             # see Proposition 6.2.2
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 9) * 720;
                 SetSize(S[1], size);
@@ -2057,9 +2004,7 @@ function(n, q)
             fi;
         fi;
         # (3.)L3_q^2(.3).2
-        S := AlmostSimpleDefiningCharacteristic_l3q2dim9u(q :
-                                                          general := general,
-                                                          normaliser := normaliser);
+        S := AlmostSimpleDefiningCharacteristic_l3q2dim9u(q, opts);
         if not general and not normaliser then
             if q mod 3 = 0 then
                 size := SizePSL(3, q^2) * 2;
@@ -2085,9 +2030,7 @@ function(n, q)
             if (e = 1 and p mod 28 in [3, 5, 13, 17, 19, 27] and p <> 3) then
                 # 2.L34 (p = 5, 13, 17 mod 28) or 2.L34.2 otherwise
                 LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     if p mod 28 in [5, 13, 17] then
                         size := Gcd(q + 1, 10) * SizePSL(3, 4);
@@ -2114,9 +2057,7 @@ function(n, q)
         if (e = 1 and p mod 19 in [2, 3, 8, 10, 12, 13, 14, 15, 18] and p <> 2) then
             # SL2_19
             LR := ReadAsFunction(Filename(CM_c9lib, "sl219d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 10) * SizePSL(2, 19);
                 SetSize(S[1], size);
@@ -2133,9 +2074,7 @@ function(n, q)
         if (e = 1 and p mod 8 in [5, 7]) then
             # 2.M12 (p = 5 mod 8) or 2.M12.2 (p = 7 mod 8)
             LR := ReadAsFunction(Filename(CM_c9lib, "2m12d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 if p mod 8 = 5 then
                     size := Gcd(q + 1, 10) * 95040;
@@ -2165,9 +2104,7 @@ function(n, q)
         if (e = 1 and p mod 28 in [3, 5, 13, 17, 19, 27]) then
             # 2.M22 (p = 5, 13, 17 mod 28) or 2.M22.2 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "2m22d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 if p mod 28 in [5, 13, 17] then
                     size := 2 * 443520;
@@ -2195,9 +2132,7 @@ function(n, q)
             fi;
         fi;
         if p >= 5 then
-            S := AlmostSimpleDefiningCharacteristic_u3qdim10(q :
-                                                             general := general,
-                                                             normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_u3qdim10(q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 10) * SizePSU(3, q) * Gcd(q + 1, 3);
                 SetSize(S, size);
@@ -2212,9 +2147,7 @@ function(n, q)
             fi;
         fi;
         if p >= 3 then
-            S := AlmostSimpleDefiningCharacteristic_u4qdim10(q :
-                                                             general := general,
-                                                             normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_u4qdim10(q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 10) * SizePSU(4, q) * QuoInt(Gcd(q + 1, 4), 2);
                 SetSize(S, size);
@@ -2228,9 +2161,7 @@ function(n, q)
                 Add(result, S);
             fi;
         fi;
-        S := AlmostSimpleDefiningCharacteristic_u5qdim10(q :
-                                                         general := general,
-                                                         normaliser := normaliser);
+        S := AlmostSimpleDefiningCharacteristic_u5qdim10(q, opts);
         if not general and not normaliser then
             size := Gcd(q + 1, 10) * SizeSU(5, q);
             SetSize(S, size);
@@ -2248,9 +2179,7 @@ function(n, q)
         if (e = 1 and p mod 3 = 2 and p <> 2) then
             # U52
             LR := ReadAsFunction(Filename(CM_c9lib, "u52d11.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 11) * SizePSU(5, 2);
                 SetSize(S[1], size);
@@ -2267,9 +2196,7 @@ function(n, q)
         if (e = 1 and p mod 23 in [5, 7, 10, 11, 14, 15, 17, 19, 20, 21, 22]) then
             # L2_23
             LR := ReadAsFunction(Filename(CM_c9lib, "l223d11.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 11) * SizePSL(2, 23);
                 SetSize(S[1], size);
@@ -2288,9 +2215,7 @@ function(n, q)
             if (e = 1 and p mod 3 = 2 and p mod 5 in [1, 4]) then
                 # 6A6
                 LR := ReadAsFunction(Filename(CM_c9lib, "6a6d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q * q, opts);
                 if not general and not normaliser then
                     size := Gcd(q + 1, 12) * 360;
                     SetSize(S[1], size);
@@ -2309,9 +2234,7 @@ function(n, q)
         if (e = 1 and p mod 23 in [5, 7, 10, 11, 14, 15, 17, 19, 20, 21, 22]) then
             # 2.L2_23
             LR := ReadAsFunction(Filename(CM_c9lib, "sl223d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 size := Gcd(q + 1, 12) * SizePSL(2, 23);
                 SetSize(S[1], size);
@@ -2328,9 +2251,7 @@ function(n, q)
         if (e = 1 and p mod 3 = 2) then
             # 6.Suz (or 3.Suz if p = 2)
             LR := ReadAsFunction(Filename(CM_c9lib, "6suzd12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
                 if p = 2 then
                     size := 3 * 448345497600;
@@ -2353,9 +2274,7 @@ function(n, q)
             # TODO is this subgroup really maximal?
             # see Proposition 6.3.1 (iii)
             LR := ReadAsFunction(Filename(CM_c9lib, "6a7d24.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q * q :
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             S := Filtered(S, s -> Degree(s) = 12);
             if not general and not normaliser then
                 size := 15120;
@@ -2732,14 +2651,16 @@ function(n, q)
 end);
 
 BindGlobal("C9SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local all, novelties, special, general, normaliser, result, factorisation,
           p, e, generatorNormSpMinusSp, S, size, LR, M, C, A;
-    all := ValueOption("all") <> false;  # default to true
-    novelties := ValueOption("novelties") = true;  # default to false
-    special := ValueOption("special") = true;  # default to false
-    general := ValueOption("general") = true;  # default to false
-    normaliser := ValueOption("normaliser") = true;  # default to false
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+    novelties := IsBound(opts.novelties) and opts.novelties;  # default to false
+    special := IsBound(opts.special) and opts.special;  # default to false
+    general := IsBound(opts.general) and opts.general;  # default to false
+    normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -2751,8 +2672,7 @@ function(n, q)
         if novelties then
             if q = 7 then
                 # 2.L2q
-                S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(4, q :
-                                                                      normaliser := normaliser);
+                S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(4, q, opts);
                 if not normaliser then
                     size := SizeSL(2, 7);
                     SetSize(S, size);
@@ -2764,7 +2684,7 @@ function(n, q)
         if (e = 1 and p <> 7 and p mod 12 in [1, 5, 7, 11]) then
             # 2.A6 (p mod 12 in [5, 7]), 2.S6 (p mod 12 in [1, 11])
             LR := ReadAsFunction(Filename(CM_c9lib, "2a6d4.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 12 in [5, 7] then
                     size := 720;
@@ -2782,7 +2702,7 @@ function(n, q)
         if q = 7 then
             # 2.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "2a7d4.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 size := 5040;
                 SetSize(S[1], size);
@@ -2791,8 +2711,7 @@ function(n, q)
         fi;
         if p >= 5 and q > 7 then
             # 2.L2q
-            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(4, q :
-                                                                  normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(4, q, opts);
             if not normaliser then
                 size := SizeSL(2, q);
                 SetSize(S, size);
@@ -2813,7 +2732,7 @@ function(n, q)
             if (e = 1 and p mod 8 in [3, 5] and p mod 5 in [1, 4]) then
                 # 2.A5
                 LR := ReadAsFunction(Filename(CM_c9lib, "sl25d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not normaliser then
                     size := 120;
                     SetSize(S[1], size);
@@ -2823,7 +2742,7 @@ function(n, q)
             if q = 9 then
                 # 2.L_2(7)
                 LR := ReadAsFunction(Filename(CM_c9lib, "sl27d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not normaliser then
                     size := 2 * SizePSL(2, 7);
                     SetSize(S[1], size);
@@ -2837,7 +2756,7 @@ function(n, q)
             if (e = 1 and p mod 60 in [19, 29, 31, 41]) then
                 # 2 x U_3(3)
                 LR := ReadAsFunction(Filename(CM_c9lib, "u33d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not normaliser then
                     size := 2 * SizePSU(3, 3);
                     SetSize(S[1], size);
@@ -2850,7 +2769,7 @@ function(n, q)
                       (p mod 8 in [3, 5] and p mod 5 in [2, 3])) then
             # 2.S5 (p mod 8 in [1, 7]) or 2.A5 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl25d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 8 in [1, 7] then
                     size := 240;
@@ -2870,7 +2789,7 @@ function(n, q)
            (e = 2 and p mod 16 in [3, 5, 11, 13] and p <> 3) then
             # 2.L2_7.2 (e = 1 and p mod 16 in [1, 15]) or 2.L2_7 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl27d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if (e = 1 and p mod 16 in [1, 15]) then
                     size := 2 * SizePSL(2, 7) * 2;
@@ -2892,7 +2811,7 @@ function(n, q)
            (e = 2 and p mod 13 in [2, 5, 6, 7, 8, 11] and p <> 2) then
             # 2.L2_13
             LR := ReadAsFunction(Filename(CM_c9lib, "sl213d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 size := 2 * SizePSL(2, 13);
                 SetSize(S[1], size);
@@ -2907,7 +2826,7 @@ function(n, q)
            (p mod 12 in [1, 11] or (p mod 12 in [5, 7] and p mod 5 in [2, 3])) then
             # U33.2 (p mod 12 in [1, 11]) or U33 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "u33d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 12 in [1, 11] then
                     size := 2 * SizePSU(3, 3) * 2;
@@ -2926,7 +2845,7 @@ function(n, q)
            (e = 2 and p mod 5 in [2, 3] and p <> 2) then
             # 2.J2
             LR := ReadAsFunction(Filename(CM_c9lib, "2j2d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 size := 1209600;
                 SetSize(S[1], size);
@@ -2953,8 +2872,7 @@ function(n, q)
         fi;
         if p >= 7 then
             # 2.L2q
-            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(6, q :
-                                                                  normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(6, q, opts);
             if not normaliser then
                 size := 2 * SizePSL(2, q);
                 SetSize(S, size);
@@ -2981,7 +2899,7 @@ function(n, q)
         if (e = 1 and p mod 12 in [1, 5, 7, 11] and p <> 7) then
             # 2.L27 if p mod 12 in [5, 7], 2.L27.2 if p mod 12 in [1, 11]
             LR := ReadAsFunction(Filename(CM_c9lib, "sl27d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 12 in [5, 7] then
                     size := 2 * SizePSL(2, 7);
@@ -3000,7 +2918,7 @@ function(n, q)
            (e = 2 and p mod 5 in [2, 3] and p <> 2 and p <> 3) then
             # 2.A6.2_2 if p mod 20 in [1, 19], 2.A6 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "2a6d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 20 in [1, 19] then
                     size := 1440;
@@ -3019,7 +2937,7 @@ function(n, q)
            (e = 2 and p mod 17 in [3, 5, 6, 7, 10, 11, 12, 14]) then
             # 2.L2_17
             LR := ReadAsFunction(Filename(CM_c9lib, "sl217d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p = 2 then
                     size := SizePSL(2, 17);
@@ -3037,7 +2955,7 @@ function(n, q)
         if q = 2 then
             # S10
             LR := ReadAsFunction(Filename(CM_c9lib, "a10d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 size := 3628800;
                 SetSize(S[1], size);
@@ -3046,8 +2964,7 @@ function(n, q)
         fi;
         if p >= 11 then
             # 2.L2q
-            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(8, q :
-                                                                  normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(8, q, opts);
             if not normaliser then
                 size := 2 * SizePSL(2, q);
                 SetSize(S, size);
@@ -3055,8 +2972,7 @@ function(n, q)
             Add(result, S);
         fi;
         if IsOddInt(q) then
-            S := AlmostSimpleDefiningCharacteristic_l2q3dim8(q :
-                                                             normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_l2q3dim8(q, opts);
             if not normaliser then
                 size := 2 * SizePSL(2, q^3) * 3;
                 SetSize(S, size);
@@ -3069,7 +2985,7 @@ function(n, q)
            (e = 2 and p mod 16 in [3, 5, 11, 13] and p <> 3) then
             # 2.A6.2_2 if p mod 16 in [1, 15], 2.A6 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "2a6d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 16 in [1, 15] then
                     size := 1440;
@@ -3087,7 +3003,7 @@ function(n, q)
         if (e = 1 and p mod 8 in [1, 3, 5, 7] and p <> 11) then
             # 2.L2_11.2 if p mod 8 in [1, 7], 2.L2_11 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl211d10a.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 8 in [1, 7] then
                     size := 2 * SizePSL(2, 11) * 2;
@@ -3106,7 +3022,7 @@ function(n, q)
            (e = 2 and p mod 24 in [5, 7, 17, 19]) then
             # 2.L2_11 if p mod 24 in [11, 13], 2.L2_11.2 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl211d10b.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 24 in [11, 13] then
                     size := 2 * SizePSL(2, 11);
@@ -3127,7 +3043,7 @@ function(n, q)
         if (e = 1 and p mod 8 in [1, 3, 5, 7]) then
             # U52.2 if p mod 8 in [1, 7], U52 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "u52d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 8 in [1, 7] then
                     size := 2 * SizePSU(5, 2) * 2;
@@ -3144,8 +3060,7 @@ function(n, q)
         fi;
         if p >= 11 then
             # 2.L2q
-            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(10, q :
-                                                                  normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(10, q, opts);
             if not normaliser then
                 size := 2 * SizePSU(2, q);
                 SetSize(S, size);
@@ -3158,7 +3073,7 @@ function(n, q)
            (e = 2 and p mod 5 in [2, 3] and p <> 4) then
             # 2.L2_11.2 (q mod 20 in [1, 19]), 2.L2_11 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl211d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if q mod 20 in [1, 19] then
                     size := 2 * SizePSL(2, 11) * 2;
@@ -3180,7 +3095,7 @@ function(n, q)
            (e = 3 and p mod 7 in [2, 3, 4, 5]) then
             # 2.L2_13.2 (q mod 28 in [1, 27]), 2.L2_13 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl213d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if (e = 1 and p mod 28 in [1, 27] or e = 3) then
                     size := 2 * SizePSL(2, 13) * 2;
@@ -3204,7 +3119,7 @@ function(n, q)
         if (e = 1 and p mod 5 in [2, 3] and p <> 3) then
             # 2.L2_25 (p <> 2), L2_25.2 (p = 2)
             LR := ReadAsFunction(Filename(CM_c9lib, "sl225d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p <> 2 then
                     size := 2 * SizePSL(2, 25);
@@ -3219,7 +3134,7 @@ function(n, q)
            (e = 2 and p mod 5 in [2, 3]) then
             # Sp4_5 (p <> 2) or PSp4_5 (p = 2)
             LR := ReadAsFunction(Filename(CM_c9lib, "sp45d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p <> 2 then
                     size := SizeSp(4, 5);
@@ -3237,7 +3152,7 @@ function(n, q)
         if (e = 1 and p <> 2 and p <> 3) then
             # 2.G24.2 (p mod 8 in [1, 7]), 2.G24 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "2g24d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 if p mod 8 in [1, 7] then
                     size := 2 * Size(ChevalleyG(4)) * 2;
@@ -3255,7 +3170,7 @@ function(n, q)
         if q = 3 then
             # 2.Suz
             LR := ReadAsFunction(Filename(CM_c9lib, "6suzd12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 size := 896690995200;
                 SetSize(S[1], size);
@@ -3265,7 +3180,7 @@ function(n, q)
         if q = 2 then
             # S_14
             LR := ReadAsFunction(Filename(CM_c9lib, "a14d13.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q : normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not normaliser then
                 size := 87178291200;
                 SetSize(S[1], size);
@@ -3274,8 +3189,7 @@ function(n, q)
         fi;
         if p >= 13 then
             # 2.L2q
-            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(12, q :
-                                                                  normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_SymplecticSL2(12, q, opts);
             if not normaliser then
                 size := 2 * SizePSL(2, q);
                 SetSize(S, size);
@@ -3979,16 +3893,17 @@ function(epsilon, n, q)
 end);
 
 BindGlobal("C9SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
+function(epsilon, n, q, opts...)
     local all, novelties, special, general, normaliser, ConjugatesBySubsetsOfGenerators,
           result, factorisation, p, e, generatorSOMinusOmega, generatorGOMinusSO,
           generatorNormGOMinusGO, LR, S, size, elementsToConjugate;
 
-    all := ValueOption("all") <> false;  # default to true
-    novelties := ValueOption("novelties") = true;  # default to false
-    special := ValueOption("special") = true;  # default to false
-    general := ValueOption("general") = true;  # default to false
-    normaliser := ValueOption("normaliser") = true;  # default to false
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+    novelties := IsBound(opts.novelties) and opts.novelties;  # default to false
+    special := IsBound(opts.special) and opts.special;  # default to false
+    general := IsBound(opts.general) and opts.general;  # default to false
+    normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
 
     ConjugatesBySubsetsOfGenerators := function(G, gens)
         local result, powerSet, subset;
@@ -4022,10 +3937,7 @@ function(epsilon, n, q)
            (e = 2 and p <> 2 and p mod 5 in [2, 3]) then
             # A5
             LR := ReadAsFunction(Filename(CM_c9lib, "a5d3.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := 60;
                 SetSize(S[1], size);
@@ -4042,10 +3954,7 @@ function(epsilon, n, q)
         if (e = 1 and p <> 2 and p mod 5 in [2, 3]) then
             # A5
             LR := ReadAsFunction(Filename(CM_c9lib, "a5d4.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := 60;
                 SetSize(S[1], size);
@@ -4060,10 +3969,7 @@ function(epsilon, n, q)
         if novelties then
             if q = 7 then
                 # L2q
-                S := AlmostSimpleDefiningCharacteristic_OrthogSL2(5, q :
-                                                                  special := special,
-                                                                  general := general,
-                                                                  normaliser := normaliser);
+                S := AlmostSimpleDefiningCharacteristic_OrthogSL2(5, q, opts);
                 if not special and not general and not normaliser then
                     size := SizePSL(2, q);
                     SetSize(S, size);
@@ -4075,10 +3981,7 @@ function(epsilon, n, q)
         if (e = 1 and p <> 7 and p mod 12 in [1, 5, 7, 11]) then
             # A6 (p mod 12 in [5, 7]) or S6 (p mod 12 in [1, 11])
             LR := ReadAsFunction(Filename(CM_c9lib, "a6d5.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 if p mod 12 in [5, 7] then
                     size := 360;
@@ -4096,10 +3999,7 @@ function(epsilon, n, q)
         if q = 7 then
             # A7
             LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := 2520;
                 SetSize(S[1], size);
@@ -4108,10 +4008,7 @@ function(epsilon, n, q)
         fi;
         if p >= 5 and q > 7 then
             # L2q
-            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(5, q :
-                                                              special := special,
-                                                              general := general,
-                                                              normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(5, q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(2, q);
                 SetSize(S, size);
@@ -4124,10 +4021,7 @@ function(epsilon, n, q)
                           (epsilon = -1 and p mod 7 in [3, 5, 6])) then
                 # L_2(7)
                 LR := ReadAsFunction(Filename(CM_c9lib, "l27d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     if epsilon = 1 then
                         size := QuoInt(Gcd(q - 1, 4), 2) * SizePSL(2, 7);
@@ -4161,10 +4055,7 @@ function(epsilon, n, q)
             if e = 1 and p mod 7 in [1, 2, 4] then
                 # A7
                 LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     if p = 2 then
                         size := 2520;
@@ -4186,10 +4077,7 @@ function(epsilon, n, q)
             if e = 1 and p mod 6 = 1 then
                 # U42
                 LR := ReadAsFunction(Filename(CM_c9lib, "u42d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := QuoInt(Gcd(q - 1, 4), 2) * SizePSU(4, 2);
                     SetSize(S[1], size);
@@ -4208,10 +4096,7 @@ function(epsilon, n, q)
             if e = 1 and p mod 7 in [3, 5, 6] then
                 # A7
                 LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := QuoInt(Gcd(q + 1, 4), 2) * 2520;
                     SetSize(S[1], size);
@@ -4229,10 +4114,7 @@ function(epsilon, n, q)
             if e = 1 and p mod 6 = 5 then
                 # U42
                 LR := ReadAsFunction(Filename(CM_c9lib, "u42d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := QuoInt(Gcd(q + 1, 4), 2) * SizePSU(4, 2);
                     SetSize(S[1], size);
@@ -4250,10 +4132,7 @@ function(epsilon, n, q)
             if q = 3 then
                 # 2.L34
                 LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * SizePSL(3, 4);
                     SetSize(S[1], size);
@@ -4270,10 +4149,7 @@ function(epsilon, n, q)
         if e = 1 then
             # Sp62
             LR := ReadAsFunction(Filename(CM_c9lib, "s62d7.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := SizeSp(6, 2);
                 SetSize(S[1], size);
@@ -4287,10 +4163,7 @@ function(epsilon, n, q)
         if q = 3 then
             # S9
             LR := ReadAsFunction(Filename(CM_c9lib, "a9d8.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := 362880;
                 SetSize(S[1], size);
@@ -4321,10 +4194,7 @@ function(epsilon, n, q)
             if (e = 1 and p >= 3) then
                 # 2.Omega+(8,2)
                 LR := ReadAsFunction(Filename(CM_c9lib, "2o8+2d8.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * SizeOmega(1, 8, 2);
                     SetSize(S[1], size);
@@ -4340,20 +4210,14 @@ function(epsilon, n, q)
             if q = 2 then
                 # A9 x3 (all fused under triality)
                 LR := ReadAsFunction(Filename(CM_c9lib, "a9d8.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 181440;
                     SetSize(S[1], size);
                 fi;
                 Add(result, S[1]);
                 LR := ReadAsFunction(Filename(CM_c9lib, "2a9d8.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 181440;
                     SetSize(S[1], size);
@@ -4367,10 +4231,7 @@ function(epsilon, n, q)
             if q = 5 then
                 # A10, 2.A10 (all fused under triality)
                 LR := ReadAsFunction(Filename(CM_c9lib, "a10d9.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 3628800;
                     SetSize(S[1], size);
@@ -4383,10 +4244,7 @@ function(epsilon, n, q)
                 fi;
                 Append(result, ConjugatesBySubsetsOfGenerators(S[1], elementsToConjugate));
                 LR := ReadAsFunction(Filename(CM_c9lib, "2a10d16.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 3628800;
                     SetSize(S[1], size);
@@ -4421,15 +4279,9 @@ function(epsilon, n, q)
             if (q <> 2 and p <> 3) then
                 # PSL(3,q).3 or PSU(3,q).3
                 if q mod 3 = 1 then
-                    S := AlmostSimpleDefiningCharacteristic_l3qdim8(q :
-                                                                    special := special,
-                                                                    general := general,
-                                                                    normaliser := normaliser);
+                    S := AlmostSimpleDefiningCharacteristic_l3qdim8(q, opts);
                 else
-                    S := AlmostSimpleDefiningCharacteristic_u3qdim8(q :
-                                                                    special := special,
-                                                                    general := general,
-                                                                    normaliser := normaliser);
+                    S := AlmostSimpleDefiningCharacteristic_u3qdim8(q, opts);
                 fi;
                 if not special and not general and not normaliser then
                     if q mod 3 = 1 then
@@ -4533,15 +4385,9 @@ function(epsilon, n, q)
             if p <> 3 then
                 # PSL(3,q) or PSU(3,q)
                 if q mod 3 = 2 then
-                    S := AlmostSimpleDefiningCharacteristic_l3qdim8(q :
-                                                                    special := special,
-                                                                    general := general,
-                                                                    normaliser := normaliser);
+                    S := AlmostSimpleDefiningCharacteristic_l3qdim8(q, opts);
                 else
-                    S := AlmostSimpleDefiningCharacteristic_u3qdim8(q :
-                                                                    special := special,
-                                                                    general := general,
-                                                                    normaliser := normaliser);
+                    S := AlmostSimpleDefiningCharacteristic_u3qdim8(q, opts);
                 fi;
                 if not special and not general and not normaliser then
                     if q mod 3 = 2 then
@@ -4563,10 +4409,7 @@ function(epsilon, n, q)
         if (e = 1 and p mod 7 in [1, 6]) or
            (e = 3 and p mod 7 in [2, 3, 4, 5]) then
             LR := ReadAsFunction(Filename(CM_c9lib, "l28d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(2, 8);
                 SetSize(S[1], size);
@@ -4580,10 +4423,7 @@ function(epsilon, n, q)
         if (e = 1 and p mod 17 in [1, 2, 4, 8, 9, 13, 15, 16]) or
            (e = 2 and p mod 17 in [3, 5, 6, 7, 10, 11, 12, 14]) then
             LR := ReadAsFunction(Filename(CM_c9lib, "l217d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(2, 17);
                 SetSize(S[1], size);
@@ -4597,10 +4437,7 @@ function(epsilon, n, q)
         if (e = 1 and p <> 11 and p mod 5 <> 0) then
             # A10 (p mod 5 in [2, 3]) or A10.2 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "a10d9.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 if p mod 5 in [2, 3] then
                     size := 1814400;
@@ -4618,10 +4455,7 @@ function(epsilon, n, q)
         if q = 11 then
             # A11.2
             LR := ReadAsFunction(Filename(CM_c9lib, "a11d10.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := 39916800;
                 SetSize(S[1], size);
@@ -4634,10 +4468,7 @@ function(epsilon, n, q)
         fi;
         if p >= 11 then
             # L2q
-            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(9, q :
-                                                              special := special,
-                                                              general := general,
-                                                              normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(9, q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(2, q) * 2;
                 SetSize(S, size);
@@ -4650,10 +4481,7 @@ function(epsilon, n, q)
         fi;
         if q <> 3 then
             # L2q^2
-            S := AlmostSimpleDefiningCharacteristic_l2q2dim9(q :
-                                                             special := special,
-                                                             general := general,
-                                                             normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_l2q2dim9(q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(2, q^2) * 2;
                 SetSize(S, size);
@@ -4666,10 +4494,7 @@ function(epsilon, n, q)
                 if (e = 1 and p mod 12 in [1, 5]) then
                     # A6
                     LR := ReadAsFunction(Filename(CM_c9lib, "a6d10.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         if p mod 12 = 1 then
                             size := 1440;
@@ -4691,10 +4516,7 @@ function(epsilon, n, q)
                 if (e = 1 and p mod 11 in [1, 3, 4, 5, 9] and p <> 3) then
                     # L211b
                     LR := ReadAsFunction(Filename(CM_c9lib, "l211d10b.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         if p mod 4 = 1 then
                             size := 2 * SizePSL(2, 11);
@@ -4718,10 +4540,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 11 in [1, 3, 4, 5, 9] and p <> 3) then
                 # L2_11a
                 LR := ReadAsFunction(Filename(CM_c9lib, "l211d10a.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     if p mod 4 = 1 then
                         size := 2 * SizePSL(2, 11);
@@ -4743,10 +4562,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 11 in [1, 3, 4, 5, 9] and p <> 3) then
                 # A11
                 LR := ReadAsFunction(Filename(CM_c9lib, "a11d10.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     if p mod 4 = 1 then
                         size := 39916800;
@@ -4768,10 +4584,7 @@ function(epsilon, n, q)
             if q = 3 then
                 # A12
                 LR := ReadAsFunction(Filename(CM_c9lib, "a12d11.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 239500800;
                     SetSize(S[1], size);
@@ -4784,10 +4597,7 @@ function(epsilon, n, q)
             fi;
             if q mod 4 = 1 then
                 # Sp4q
-                S := AlmostSimpleDefiningCharacteristic_sp4qdim10(q :
-                                                                  special := special,
-                                                                  general := general,
-                                                                  normaliser := normaliser);
+                S := AlmostSimpleDefiningCharacteristic_sp4qdim10(q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * SizePSp(4, q);
                     SetSize(S, size);
@@ -4805,10 +4615,7 @@ function(epsilon, n, q)
                 if (e = 1 and p mod 12 in [7, 11]) then
                     # A6
                     LR := ReadAsFunction(Filename(CM_c9lib, "a6d10.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         if p mod 12 = 7 then
                             size := 720;
@@ -4832,10 +4639,7 @@ function(epsilon, n, q)
                     # TODO is this subgroup really maximal for p = 2?
                     # see Proposition 4.9.62
                     LR := ReadAsFunction(Filename(CM_c9lib, "l211d10b.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         if p mod 4 = 3 then
                             size := 2 * SizePSL(2, 11);
@@ -4857,10 +4661,7 @@ function(epsilon, n, q)
                 if q = 2 then
                     # M12
                     LR := ReadAsFunction(Filename(CM_c9lib, "m12d11.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         size := 95040;
                         SetSize(S[1], size);
@@ -4870,10 +4671,7 @@ function(epsilon, n, q)
                 if q = 7 then
                     # 2L34d10
                     LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         size := 2 * SizePSL(3, 4);
                         SetSize(S[1], size);
@@ -4889,10 +4687,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 11 in [2, 6, 7, 8, 10] and p <> 2) then
                 # L2_11
                 LR := ReadAsFunction(Filename(CM_c9lib, "l211d10a.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     if p mod 4 = 3 then
                         size := 2 * SizePSL(2, 11);
@@ -4914,10 +4709,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 11 in [2, 6, 7, 8, 10] and p <> 2) then
                 # A11
                 LR := ReadAsFunction(Filename(CM_c9lib, "a11d10.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     if p mod 4 = 1 then
                         size := 19958400;
@@ -4939,10 +4731,7 @@ function(epsilon, n, q)
             if q = 2 then
                 # A12
                 LR := ReadAsFunction(Filename(CM_c9lib, "a12d11.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 239500800;
                     SetSize(S[1], size);
@@ -4952,10 +4741,7 @@ function(epsilon, n, q)
             if q = 7 then
                 # 2.M22
                 LR := ReadAsFunction(Filename(CM_c9lib, "2m22d10.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 887040;
                     SetSize(S[1], size);
@@ -4970,10 +4756,7 @@ function(epsilon, n, q)
             fi;
             if q mod 4 = 3 then
                 # Sp4q
-                S := AlmostSimpleDefiningCharacteristic_sp4qdim10(q :
-                                                                  special := special,
-                                                                  general := general,
-                                                                  normaliser := normaliser);
+                S := AlmostSimpleDefiningCharacteristic_sp4qdim10(q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * SizePSp(4, q);
                     SetSize(S, size);
@@ -4991,10 +4774,7 @@ function(epsilon, n, q)
         if (e = 1 and Gcd(p, 24) = 1 and p <> 13) then
             # A12 (p mod 24 in [7, 11, 13, 17]) or A12.2 (p mod 24 in [1, 5, 19, 23])
             LR := ReadAsFunction(Filename(CM_c9lib, "a12d11.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 if p mod 24 in [7, 11, 13, 17] then
                     size := 239500800;
@@ -5012,10 +4792,7 @@ function(epsilon, n, q)
         if q = 13 then
             # A13
             LR := ReadAsFunction(Filename(CM_c9lib, "a13d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := 3113510400;
                 SetSize(S[1], size);
@@ -5023,10 +4800,7 @@ function(epsilon, n, q)
             Add(result, S[1]);
             # L33.2
             LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
-            S := ModularReductionOfIntegralLattice(LR, q :
-                                                   special := special,
-                                                   general := general,
-                                                   normaliser := normaliser);
+            S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(3, 3) * 2;
                 SetSize(S[1], size);
@@ -5039,10 +4813,7 @@ function(epsilon, n, q)
         fi;
         if p >= 11 and q <> 11 then
             # L2q
-            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(11, q :
-                                                              special := special,
-                                                              general := general,
-                                                              normaliser := normaliser);
+            S := AlmostSimpleDefiningCharacteristic_OrthogSL2(11, q, opts);
             if not special and not general and not normaliser then
                 size := SizePSL(2, q);
                 SetSize(S, size);
@@ -5055,10 +4826,7 @@ function(epsilon, n, q)
                 if (e = 1 and p mod 13 in [1, 3, 4, 9, 10, 12] and p <> 3) then
                     # L33
                     LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         size := 2 * SizePSL(3, 3);
                         SetSize(S[1], size);
@@ -5077,10 +4845,7 @@ function(epsilon, n, q)
                 if (e = 1 and p >= 5 and p mod 24 in [5, 7, 11, 13, 17, 19]) then
                     # 2.M12
                     LR := ReadAsFunction(Filename(CM_c9lib, "2m12d12.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         size := 2 * 95040;
                         SetSize(S[1], size);
@@ -5101,10 +4866,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 55 in [1, 16, 19, 24, 26, 29, 31, 36, 39, 54]) then
                 # L2_11
                 LR := ReadAsFunction(Filename(CM_c9lib, "l211d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * SizePSL(2, 11);
                     SetSize(S[1], size);
@@ -5124,10 +4886,7 @@ function(epsilon, n, q)
                 (e = 3 and p mod 7 in [2, 3, 4, 5])) then
                 # L2_13
                 LR := ReadAsFunction(Filename(CM_c9lib, "l213d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * SizePSL(2, 13);
                     SetSize(S[1], size);
@@ -5147,10 +4906,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 13 in [1, 3, 4, 9, 10, 12]) then
                 # A13
                 LR := ReadAsFunction(Filename(CM_c9lib, "a13d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 6227020800;
                     SetSize(S[1], size);
@@ -5166,10 +4922,7 @@ function(epsilon, n, q)
             if (e = 1 and p >= 5 and p mod 24 in [1, 23]) then
                 # 2.M12.2
                 LR := ReadAsFunction(Filename(CM_c9lib, "2m12d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 2 * 95040 * 2;
                     SetSize(S[1], size);
@@ -5188,10 +4941,7 @@ function(epsilon, n, q)
                 if (e = 1 and p mod 13 in [2, 5, 6, 7, 8, 11] and p mod 12 in [5, 7]) then
                     # L33
                     LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
-                    S := ModularReductionOfIntegralLattice(LR, q :
-                                                           special := special,
-                                                           general := general,
-                                                           normaliser := normaliser);
+                    S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
                         size := SizePSL(3, 3);
                         SetSize(S[1], size);
@@ -5208,10 +4958,7 @@ function(epsilon, n, q)
                (e = 2 and p mod 5 in [2, 3]) then
                 # L2_11
                 LR := ReadAsFunction(Filename(CM_c9lib, "l211d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := SizePSL(2, 11);
                     SetSize(S[1], size);
@@ -5230,10 +4977,7 @@ function(epsilon, n, q)
                 (e = 3 and p mod 7 in [2, 3, 4, 5])) then
                 # L2_13
                 LR := ReadAsFunction(Filename(CM_c9lib, "l213d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := SizePSL(2, 13);
                     SetSize(S[1], size);
@@ -5253,10 +4997,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 13 in [2, 5, 6, 7, 8, 11] and p mod 12 in [1, 2, 11]) then
                 # L33.2
                 LR := ReadAsFunction(Filename(CM_c9lib, "l33d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := SizePSL(3, 3) * 2;
                     SetSize(S[1], size);
@@ -5274,10 +5015,7 @@ function(epsilon, n, q)
             if (e = 1 and p mod 13 in [2, 5, 6, 7, 8, 11] and p <> 7) then
                 # A13
                 LR := ReadAsFunction(Filename(CM_c9lib, "a13d12.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 3113510400;
                     SetSize(S[1], size);
@@ -5291,10 +5029,7 @@ function(epsilon, n, q)
             if q = 7 then
                 # A14
                 LR := ReadAsFunction(Filename(CM_c9lib, "a14d13.g"))();
-                S := ModularReductionOfIntegralLattice(LR, q :
-                                                       special := special,
-                                                       general := general,
-                                                       normaliser := normaliser);
+                S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not special and not general and not normaliser then
                     size := 43589145600;
                     SetSize(S[1], size);

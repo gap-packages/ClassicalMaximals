@@ -1,5 +1,5 @@
 #! @BeginChunk ModularReductionOfIntegralLattice
-#! @Arguments LR, q : special := false, general := false, normaliser := false
+#! @Arguments LR, q
 #! @Returns
 #!  A list of matrix groups over $\mathrm{GF}(q)$, one for each orbit of irreducible
 #!  constituents under the induced automorphism action.
@@ -40,19 +40,6 @@
 #!  According to the type of invariant form preserved by the module (linear, unitary,
 #!  symplectic or orthogonal), the resulting group is realised as a subgroup of the
 #!  corresponding finite classical group.
-#!
-#!  The optional flags modify the construction as follows:
-#!  * if <C>special = true</C> (orthogonal case only), the normaliser in the special
-#!    orthogonal group $\mathrm{SO}$ is constructed.
-#!  * if <C>general = true</C> (linear, unitary or orthogonal cases), the normaliser
-#!    in the full general group $\mathrm{GL}$, $\mathrm{GU}$ or $\mathrm{GO}$,
-#!    respectively, is constructed.
-#!  * if <C>normaliser = true</C> (symplectic, unitary or orthogonal cases), the
-#!    normaliser in $\mathrm{GL}$ is constructed.
-#!
-#!  It is guaranteed that the returned groups respect the standard form used in this
-#!  package, except when <C>normaliser = true</C>. In that case, preservation of a
-#!  standard form ("up to scalars") is not ensured.
 #!
 #! @BeginExampleSession
 #! gap> LR := rec();;

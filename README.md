@@ -19,7 +19,7 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 
 #### Almost simple groups (Class S)
 - Complete for types L, U, S, O in dimensions up to 12
-- **Supported options** (currently as `ValueOption`s, undocumented):
+- **Supported options** (via option records, undocumented):
     - `all`: Conjugacy classes under the full automorphism group of the simple classical group
     - `novelties`: Intersections of novelty maximal subgroups with the quasisimple group
     - `special`: Normalisers in SO(n,q)

@@ -1,13 +1,14 @@
 InstallGlobalFunction("ModularReductionOfIntegralLattice",
-function(L, q)
+function(L, q, opts...)
     local special, general, normaliser, G, AI, F, d, Q, M, C, CC, AC, modims, i,
           phi, M2, new, nc, na, perms, AG, OAG, gps, w, forms, ww, gens, sgens,
           a, iso, det, v, projectiveOrderIso, po, x, ox, f, ff, co, u, rts, got,
           form, rq, scal, quad, type, H, tmat, dsq, sgn, mat, c, j, o, k;
 
-    special := ValueOption("special") = true;  # default to false
-    general := ValueOption("general") = true;  # default to false
-    normaliser := ValueOption("normaliser") = true;  # default to false
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    special := IsBound(opts.special) and opts.special;  # default to false
+    general := IsBound(opts.general) and opts.general;  # default to false
+    normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
     if normaliser then general := true; fi;
     if general then special := true; fi;
 
