@@ -1,15 +1,13 @@
 gap> START_TEST("AlmostSimpleCrossCharacteristic.tst");
 
 #
-gap> TestModularReductionOfIntegralLattice := function(LR, q, expectedOrbitNumber)
+gap> TestModularReductionOfIntegralLattice := function(LR, q, expectedOrbitNumber, opts...)
 >     local special, general, normaliser, result;
->     special := ValueOption("special") = true;  # default to false
->     general := ValueOption("general") = true;  # default to false
->     normaliser := ValueOption("normaliser") = true;  # default to false
->     result := ModularReductionOfIntegralLattice(LR, q :
->                                                 special := special,
->                                                 general := general,
->                                                 normaliser := normaliser);
+>     if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+>     special := IsBound(opts.special) and opts.special;  # default to false
+>     general := IsBound(opts.general) and opts.general;  # default to false
+>     normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
+>     result := ModularReductionOfIntegralLattice(LR, q, opts);
 >     Assert(0, Length(result) = expectedOrbitNumber);
 > end;;
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "sl25d2.g"))();;
@@ -21,7 +19,7 @@ gap> TestModularReductionOfIntegralLattice(LR, 3, 2);;  # na = 0, so perm () add
 
 #
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "l27d3.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 11, 1 : general:=true);;  # "linear", general
+gap> TestModularReductionOfIntegralLattice(LR, 11, 1, rec(general:=true));;  # "linear", general
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 13, 1);;  # "linear", stabil. automorphism
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();;
@@ -33,17 +31,17 @@ gap> TestModularReductionOfIntegralLattice(LR, 19, 1);;  # "linear", ox > 1
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 17^2, 2);;  # "linear", RootsOfUPol not empty
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 7, 1 : general:=true);;  # "linear", v * I_d has det 1
+gap> TestModularReductionOfIntegralLattice(LR, 7, 1, rec(general:=true));;  # "linear", v * I_d has det 1
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 29, 2 : general:=true);;  # "linear", if general and not got
+gap> TestModularReductionOfIntegralLattice(LR, 29, 2, rec(general:=true));;  # "linear", if general and not got
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 19, 1);  # "linear", last scalar adjoined
 
 #
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2 : normaliser:=true);;  # "unitary", normaliser
+gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2, rec(normaliser:=true));;  # "unitary", normaliser
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2 : general:=true);;  # "unitary", general
+gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2, rec(general:=true));;  # "unitary", general
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 5^2, 1);;  # "unitary", stabil. automorphism
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();;
@@ -53,11 +51,11 @@ gap> TestModularReductionOfIntegralLattice(LR, 3^2, 2);;  # "unitary", not gener
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a6d3.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 5^2, 1);;  # "unitary", v * I_d has det 1 and is in GU
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "6l34d6.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 11^2, 1 : normaliser:=true);;  # if normaliser and not got
+gap> TestModularReductionOfIntegralLattice(LR, 11^2, 1, rec(normaliser:=true));;  # if normaliser and not got
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2 : general:=true);;  # "unitary", last scalar adjoined
+gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2, rec(general:=true));;  # "unitary", last scalar adjoined
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2 : normaliser:=true);;  # "unitary, last scalar adjoined
+gap> TestModularReductionOfIntegralLattice(LR, 5^2, 2, rec(normaliser:=true));;  # "unitary, last scalar adjoined
 
 #
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "a9d8.g"))();;
@@ -79,9 +77,9 @@ gap> TestModularReductionOfIntegralLattice(LR, 3, 1);;  # "else", else (dsq, iso
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 7, 1);;  # "else", orthogonalcircle and iso not in Omega, continue
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "a6d10.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 13, 1 : normaliser:=true);;  # "else", special and ox > 1, normaliser and not got
+gap> TestModularReductionOfIntegralLattice(LR, 13, 1, rec(normaliser:=true));;  # "else", special and ox > 1, normaliser and not got
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();;
-gap> TestModularReductionOfIntegralLattice(LR, 7, 1 : normaliser:=true);;  # "else", last scalar adjoined
+gap> TestModularReductionOfIntegralLattice(LR, 7, 1, rec(normaliser:=true));;  # "else", last scalar adjoined
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "a7d6.g"))();;
 gap> TestModularReductionOfIntegralLattice(LR, 7, 1);;  # "else", last scalar adjoined
 
