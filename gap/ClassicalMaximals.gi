@@ -779,7 +779,7 @@ function(n, q, opts...)
             # 3.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "3a7d15b.g"))();
             S := ModularReductionOfIntegralLattice(LR, q, opts);
-            S := Filtered(S, s -> Degree(s) = 9);
+            S := Filtered(S, s -> DimensionOfMatrixGroup(s) = 9);
             if not general then
                 size := 7560;
                 SetSize(S[1], size);
@@ -1546,7 +1546,7 @@ function(n, q, opts...)
             # 3.A7
             LR := ReadAsFunction(Filename(CM_c9lib, "3a7d21b.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q, opts);
-            S := Filtered(S, s -> Degree(s) = 3);
+            S := Filtered(S, s -> DimensionOfMatrixGroup(s) = 3);
             if not general and not normaliser then
                 size := 7560;
                 SetSize(S[1], size);
@@ -1635,7 +1635,7 @@ function(n, q, opts...)
             # 4_2.L34
             LR := ReadAsFunction(Filename(CM_c9lib, "4bl34d20.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q, opts);
-            S := Filtered(S, s -> Degree(s) = 4);
+            S := Filtered(S, s -> DimensionOfMatrixGroup(s) = 4);
             if not general and not normaliser then
                 size := 4 * SizePSL(3, 4);
                 SetSize(S[1], size);
@@ -2275,7 +2275,7 @@ function(n, q, opts...)
             # see Proposition 6.3.1 (iii)
             LR := ReadAsFunction(Filename(CM_c9lib, "6a7d24.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q, opts);
-            S := Filtered(S, s -> Degree(s) = 12);
+            S := Filtered(S, s -> DimensionOfMatrixGroup(s) = 12);
             if not general and not normaliser then
                 size := 15120;
                 SetSize(S[1], size);
