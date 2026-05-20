@@ -1128,7 +1128,7 @@ function(q)
         g := g^(2^f[1,2]);
     fi;
     H := GroupByGenerators([g, g^PseudoRandom(G)]);
-    while not IsAbsolutelyIrreducible(H) do
+    while not MTX.IsAbsolutelyIrreducible(NaturalGModule(H, GF(q))) do
         H := GroupByGenerators(Concatenation(GeneratorsOfGroup(H), [g^PseudoRandom(G)]));
     od;
     while RecogniseClassical(H).isOmegaContained <> true do

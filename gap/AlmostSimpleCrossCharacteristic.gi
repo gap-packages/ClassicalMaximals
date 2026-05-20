@@ -64,7 +64,7 @@ function(L, q, opts...)
     w := Z(q);
     for o in OAG do
         i := Representative(o);
-        d := Degree(AC[i]);
+        d := DimensionOfMatrixGroup(AC[i]);
         # test if the group fixes a form, and act accordingly.
         forms := CM_ClassicalForms(AC[i], GF(q));
         if forms.formType = "linear" then
