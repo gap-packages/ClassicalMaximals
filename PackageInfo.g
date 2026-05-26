@@ -114,6 +114,6 @@ Dependencies := rec(
 
 AvailabilityTest := ReturnTrue,
 
-TestFile := "tst/testall.g",
+TestFile := "tst/testquick.g",
 
 ));
