@@ -40,6 +40,9 @@ jobs:
         with:
           extra-pkgs: orb
       - uses: gap-actions/run-pkg-tests@v4
+      - uses: gap-actions/run-pkg-tests@v4
+        with:
+          mode: onlyneeded
       - uses: gap-actions/process-coverage@v3
       - uses: codecov/codecov-action@v6
         with:
