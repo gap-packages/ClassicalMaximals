@@ -6,6 +6,10 @@ CheckSize := function(G)
   if not HasSize(G) then
     Error("size not set");
   fi;
+  # skip extra tests using group recognition?
+  if IsBound(QUICK_CLASSICAL_MAXIMALS_TESTS) then
+    return;
+  fi;
   lvl:=InfoLevel(InfoRecog);
   SetInfoLevel(InfoRecog, 0);
   ri := RecogniseGroup(G);

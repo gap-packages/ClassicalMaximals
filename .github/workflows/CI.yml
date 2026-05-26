@@ -40,8 +40,11 @@ jobs:
         with:
           extra-pkgs: orb
       - uses: gap-actions/run-pkg-tests@v4
+        with:
+          testfile: tst/testall.g
       - uses: gap-actions/run-pkg-tests@v4
         with:
+          testfile: tst/testall.g
           mode: onlyneeded
       - uses: gap-actions/process-coverage@v3
       - uses: codecov/codecov-action@v6
