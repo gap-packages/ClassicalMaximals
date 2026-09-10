@@ -33,8 +33,8 @@ DeclareGlobalName("CM_c9lib");
 #! If omitted, all classes ${\cal C}_1, \dots, {\cal C}_9$ are considered.
 #!
 #! The lists are complete for $n \leq 12$.
-#! For $n > 12$, no completeness guarantee is given. In particular, maximal subgroups
-#! in class ${\cal C}_9$ are not included in these cases.
+#! For $n > 12$, the lists should be complete except for maximal subgroups
+#! in class ${\cal C}_9$, which are not included.
 #!
 #! The orders of the returned subgroups are precomputed and stored with the groups.
 #!

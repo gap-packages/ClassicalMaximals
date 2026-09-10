@@ -1,32 +1,42 @@
 gap> START_TEST("ClassicalMaximals.tst");
 
 # Test error handling
+gap> ClassicalMaximalsGeneric("L", 2, 4, [1], rec( classes := [1] ));
+Error, only one optional argument allowed: must be a list or record
 gap> ClassicalMaximalsGeneric("L", 2, 4, [0]);
 Error, <classes> must be a subset of [1..9]
 gap> ClassicalMaximalsGeneric("", 2, 4);
 Error, Type must be in ['L', 'U', 'S', 'O-', 'O', 'O+']
+gap> MaximalSubgroupClassRepsSpecialLinearGroup(2, 4, [1], rec( classes := [1] ));
+Error, only one optional argument allowed: must be a list or record
 gap> MaximalSubgroupClassRepsSpecialLinearGroup(2, 4, [0]);
 Error, <classes> must be a subset of [1..9]
 gap> MaximalSubgroupClassRepsSpecialLinearGroup(2, 2);
 Error, SL(2, 2) and SL(2, 3) are soluble
-gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 5, [0]);
+gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 4, [1], rec( classes := [1] ));
+Error, only one optional argument allowed: must be a list or record
+gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 4, [0]);
 Error, <classes> must be a subset of [1..9]
 gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(2, 3);
 Error, <n> must be at least 3 in case 'U' since SU(2, q) and SL(2, q) are isom\
 orphic
 gap> MaximalSubgroupClassRepsSpecialUnitaryGroup(3, 2);
 Error, PSU(3, 2) is soluble
-gap> MaximalSubgroupClassRepsSymplecticGroup(4, 3, [0]);
+gap> MaximalSubgroupClassRepsSymplecticGroup(4, 4, [1], rec( classes := [1] ));
+Error, only one optional argument allowed: must be a list or record
+gap> MaximalSubgroupClassRepsSymplecticGroup(4, 4, [0]);
 Error, <classes> must be a subset of [1..9]
 gap> MaximalSubgroupClassRepsSymplecticGroup(2, 3);
 Error, <n> must be at least 4 in case 'S' since Sp(2, q) and SL(2, q) are isom\
 orphic
 gap> MaximalSubgroupClassRepsSymplecticGroup(4, 2);
 Error, Sp(4, 2) is not quasisimple
+gap> MaximalSubgroupClassRepsOrthogonalGroup(0, 3, 5, [1], rec( classes := [1] ));
+Error, only one optional argument allowed: must be a list or record
+gap> MaximalSubgroupClassRepsOrthogonalGroup(0, 3, 5, [0]);
+Error, <classes> must be a subset of [1..9]
 gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 2, 3);
 Error, <n> must be at least 3 in cases 'O', 'O+' or 'O-'
-gap> MaximalSubgroupClassRepsOrthogonalGroup(-1, 4, 3, [0]);
-Error, <classes> must be a subset of [1..9]
 gap> MaximalSubgroupClassRepsOrthogonalGroup(0, 4, 3);
 Error, Degree must be odd for type 'O'
 gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 3, 5);
@@ -381,14 +391,42 @@ gap> Length(ClassicalMaximalsGeneric("U", 6, 7));
 18
 gap> Length(ClassicalMaximalsGeneric("U", 6, 8));
 17
+gap> Length(ClassicalMaximalsGeneric("U", 6, 9));
+16
+gap> Length(ClassicalMaximalsGeneric("U", 6, 11));
+28
+gap> Length(ClassicalMaximalsGeneric("U", 6, 13));
+18
+gap> Length(ClassicalMaximalsGeneric("U", 6, 16));
+12
+gap> Length(ClassicalMaximalsGeneric("U", 6, 17));
+43
+gap> Length(ClassicalMaximalsGeneric("U", 6, 19));
+18
 gap> Length(ClassicalMaximalsGeneric("U", 7, 2));
 8
 gap> Length(ClassicalMaximalsGeneric("U", 7, 3));
 9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 4));
+8
+gap> Length(ClassicalMaximalsGeneric("U", 7, 5));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 7));
+10
 gap> Length(ClassicalMaximalsGeneric("U", 7, 8));
 9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 9));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 11));
+10
 gap> Length(ClassicalMaximalsGeneric("U", 7, 13));
 22
+gap> Length(ClassicalMaximalsGeneric("U", 7, 16));
+8
+gap> Length(ClassicalMaximalsGeneric("U", 7, 17));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 7, 19));
+10
 gap> Length(ClassicalMaximalsGeneric("U", 8, 2));
 11
 gap> Length(ClassicalMaximalsGeneric("U", 8, 3));
@@ -397,8 +435,22 @@ gap> Length(ClassicalMaximalsGeneric("U", 8, 4));
 13
 gap> Length(ClassicalMaximalsGeneric("U", 8, 5));
 17
+gap> Length(ClassicalMaximalsGeneric("U", 8, 7));
+33
 gap> Length(ClassicalMaximalsGeneric("U", 8, 8));
 14
+gap> Length(ClassicalMaximalsGeneric("U", 8, 9));
+17
+gap> Length(ClassicalMaximalsGeneric("U", 8, 11));
+29
+gap> Length(ClassicalMaximalsGeneric("U", 8, 13));
+17
+gap> Length(ClassicalMaximalsGeneric("U", 8, 16));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 8, 17));
+17
+gap> Length(ClassicalMaximalsGeneric("U", 8, 19));
+29
 gap> Length(ClassicalMaximalsGeneric("U", 9, 2));
 20
 gap> Length(ClassicalMaximalsGeneric("U", 9, 3));
@@ -407,22 +459,88 @@ gap> Length(ClassicalMaximalsGeneric("U", 9, 4));
 13
 gap> Length(ClassicalMaximalsGeneric("U", 9, 5));
 23
+gap> Length(ClassicalMaximalsGeneric("U", 9, 7));
+14
 gap> Length(ClassicalMaximalsGeneric("U", 9, 8));
 20
+gap> Length(ClassicalMaximalsGeneric("U", 9, 9));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 9, 11));
+23
+gap> Length(ClassicalMaximalsGeneric("U", 9, 13));
+15
+gap> Length(ClassicalMaximalsGeneric("U", 9, 16));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 9, 17));
+44
+gap> Length(ClassicalMaximalsGeneric("U", 9, 19));
+14
 gap> Length(ClassicalMaximalsGeneric("U", 10, 2));
 15
 gap> Length(ClassicalMaximalsGeneric("U", 10, 3));
 27
+gap> Length(ClassicalMaximalsGeneric("U", 10, 4));
+21
+gap> Length(ClassicalMaximalsGeneric("U", 10, 5));
+27
+gap> Length(ClassicalMaximalsGeneric("U", 10, 7));
+27
+gap> Length(ClassicalMaximalsGeneric("U", 10, 8));
+18
+gap> Length(ClassicalMaximalsGeneric("U", 10, 9));
+37
+gap> Length(ClassicalMaximalsGeneric("U", 10, 11));
+23
+gap> Length(ClassicalMaximalsGeneric("U", 10, 13));
+29
+gap> Length(ClassicalMaximalsGeneric("U", 10, 16));
+17
 gap> Length(ClassicalMaximalsGeneric("U", 10, 17));
 25
+gap> Length(ClassicalMaximalsGeneric("U", 10, 19));
+67
 gap> Length(ClassicalMaximalsGeneric("U", 11, 2));
 12
 gap> Length(ClassicalMaximalsGeneric("U", 11, 3));
 13
+gap> Length(ClassicalMaximalsGeneric("U", 11, 4));
+12
+gap> Length(ClassicalMaximalsGeneric("U", 11, 5));
+15
+gap> Length(ClassicalMaximalsGeneric("U", 11, 7));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 11, 8));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 11, 9));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 11, 11));
+15
+gap> Length(ClassicalMaximalsGeneric("U", 11, 16));
+12
 gap> Length(ClassicalMaximalsGeneric("U", 12, 2));
 24
 gap> Length(ClassicalMaximalsGeneric("U", 12, 3));
 27
+gap> Length(ClassicalMaximalsGeneric("U", 12, 4));
+21
+gap> Length(ClassicalMaximalsGeneric("U", 12, 5));
+51
+gap> Length(ClassicalMaximalsGeneric("U", 12, 7));
+31
+gap> Length(ClassicalMaximalsGeneric("U", 12, 8));
+26
+gap> Length(ClassicalMaximalsGeneric("U", 12, 9));
+25
+gap> Length(ClassicalMaximalsGeneric("U", 12, 11));
+63
+gap> Length(ClassicalMaximalsGeneric("U", 12, 13));
+25
+gap> Length(ClassicalMaximalsGeneric("U", 12, 16));
+21
+gap> Length(ClassicalMaximalsGeneric("U", 12, 17));
+45
+gap> Length(ClassicalMaximalsGeneric("U", 12, 19));
+31
 
 #
 gap> Length(ClassicalMaximalsGeneric("S", 4, 3));
@@ -842,75 +960,193 @@ gap> Length(ClassicalMaximalsGeneric("O-", 12, 17));
 gap> Length(ClassicalMaximalsGeneric("O-", 12, 19));
 22
 
-#
-gap> Length(ClassicalMaximalsGeneric("O", 15, 5));
+# Test selected higher-dimensional cases
+gap> Length(ClassicalMaximalsGeneric("L", 36, 3, [1..8]));
+53
+gap> Length(ClassicalMaximalsGeneric("U", 36, 5, [1..8]));
+66
+gap> Length(ClassicalMaximalsGeneric("O", 15, 5, [1..8]));
 27
-gap> Length(ClassicalMaximalsGeneric("O-", 20, 3));
+gap> Length(ClassicalMaximalsGeneric("O-", 20, 3, [1..8]));
 31
 gap> Length(ClassicalMaximalsGeneric("O+", 48, 3, [4]));
 30
+gap> Length(ClassicalMaximalsGeneric("O+", 64, 3, [7]));  # Magma also returns O^+(4,q) wr S_t for n = 4^t, t > 2, contrary to [KL90] Table 3.5.E
+14
 gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, [4]));
 31
 
+# Test all option
+gap> Length(ClassicalMaximalsGeneric("L", 2, 11, rec( all := false )));
+3
+gap> Length(ClassicalMaximalsGeneric("L", 3, 9, rec( all := false )));
+6
+gap> Length(ClassicalMaximalsGeneric("L", 3, 11, rec( all := false )));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 3, 19, rec( all := false )));
+6
+gap> Length(ClassicalMaximalsGeneric("L", 4, 7, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 4, 11, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 5, 3, rec( all := false )));
+5
+gap> Length(ClassicalMaximalsGeneric("L", 6, 5, rec( all := false )));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 6, 7, rec( all := false )));
+16
+gap> Length(ClassicalMaximalsGeneric("L", 6, 19, rec( all := false )));
+15
+gap> Length(ClassicalMaximalsGeneric("L", 7, 5, rec( all := false )));
+7
+gap> Length(ClassicalMaximalsGeneric("L", 8, 5, rec( all := false )));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 9, 5, rec( all := false )));
+11
+gap> Length(ClassicalMaximalsGeneric("L", 9, 7, rec( all := false )));
+14
+gap> Length(ClassicalMaximalsGeneric("L", 10, 11, rec( all := false )));
+22
+gap> Length(ClassicalMaximalsGeneric("L", 11, 7, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("L", 11, 13, rec( all := false )));
+10
+gap> Length(ClassicalMaximalsGeneric("L", 12, 13, rec( all := false )));
+20
+
 #
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,4));
-0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,11));
-2
+gap> Length(ClassicalMaximalsGeneric("U", 3, 5, rec( all := false )));
+4
+gap> Length(ClassicalMaximalsGeneric("U", 4, 11, rec( all := false )));
+11
+gap> Length(ClassicalMaximalsGeneric("U", 4, 13, rec( all := false )));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 4, 3, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 5, 19, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("U", 6, 2, rec( all := false )));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 6, 8, rec( all := false )));
+13
+gap> Length(ClassicalMaximalsGeneric("U", 6, 17, rec( all := false )));
+19
+gap> Length(ClassicalMaximalsGeneric("U", 7, 7, rec( all := false )));
+10
+gap> Length(ClassicalMaximalsGeneric("U", 8, 11, rec( all := false )));
+18
+gap> Length(ClassicalMaximalsGeneric("U", 9, 2, rec( all := false )));
+14
+gap> Length(ClassicalMaximalsGeneric("U", 9, 3, rec( all := false )));
+15
+gap> Length(ClassicalMaximalsGeneric("U", 10, 3, rec( all := false )));
+23
+gap> Length(ClassicalMaximalsGeneric("U", 11, 5, rec( all := false )));
+15
+gap> Length(ClassicalMaximalsGeneric("U", 12, 5, rec( all := false )));
+26
+gap> Length(ClassicalMaximalsGeneric("U", 12, 11, rec( all := false )));
+25
+
+#
+gap> Length(ClassicalMaximalsGeneric("S", 4, 4, rec( all := false )));
+4
+gap> Length(ClassicalMaximalsGeneric("S", 4, 11, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("S", 6, 7, rec( all := false )));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 6, 9, rec( all := false )));  # error in magma
+12
+gap> Length(ClassicalMaximalsGeneric("S", 6, 11, rec( all := false )));
+12
+gap> Length(ClassicalMaximalsGeneric("S", 6, 17, rec( all := false )));
+15
+gap> Length(ClassicalMaximalsGeneric("S", 8, 11, rec( all := false )));
+17
+gap> Length(ClassicalMaximalsGeneric("S", 8, 19, rec( all := false )));
+18
+gap> Length(ClassicalMaximalsGeneric("S", 10, 7, rec( all := false )));
+15
+gap> Length(ClassicalMaximalsGeneric("S", 12, 11, rec( all := false )));
+20
+
+#
+gap> Length(ClassicalMaximalsGeneric("O", 3, 11, rec( all := false )));
+3
+gap> Length(ClassicalMaximalsGeneric("O-", 4, 7, rec( all := false )));
+5
+gap> Length(ClassicalMaximalsGeneric("O", 5, 11, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 3, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 11, rec( all := false )));
+11
+gap> Length(ClassicalMaximalsGeneric("O+", 6, 13, rec( all := false )));
+10
+gap> Length(ClassicalMaximalsGeneric("O-", 6, 19, rec( all := false )));
+11
+gap> Length(ClassicalMaximalsGeneric("O", 7, 3, rec( all := false )));
+12
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 2, rec( all := false )));
+9
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 5, rec( all := false )));
+17
+gap> Length(ClassicalMaximalsGeneric("O+", 8, 8, rec( all := false )));
+14
+gap> Length(ClassicalMaximalsGeneric("O", 9, 9, rec( all := false )));
+18
+gap> Length(ClassicalMaximalsGeneric("O", 9, 11, rec( all := false )));
+19
+gap> Length(ClassicalMaximalsGeneric("O", 9, 13, rec( all := false )));
+21
+gap> Length(ClassicalMaximalsGeneric("O+", 10, 3, rec( all := false )));
+12
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 7, rec( all := false )));
+19
+gap> Length(ClassicalMaximalsGeneric("O-", 10, 13, rec( all := false )));
+16
+gap> Length(ClassicalMaximalsGeneric("O", 11, 5, rec( all := false )));
+17
+gap> Length(ClassicalMaximalsGeneric("O", 11, 13, rec( all := false )));
+19
+gap> Length(ClassicalMaximalsGeneric("O-", 12, 7, rec( all := false )));
+18
+gap> Length(ClassicalMaximalsGeneric("O-", 12, 11, rec( all := false )));
+19
+gap> Length(ClassicalMaximalsGeneric("O+", 12, 19, rec( all := false )));
+26
+gap> Length(ClassicalMaximalsGeneric("O+", 16, 3, rec( all := false )));
+28
+gap> Length(ClassicalMaximalsGeneric("O+", 48, 3, rec( classes := [4], all := false )));
+10
+gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, rec( classes := [4], all := false)));
+11
+
+#
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,7^2));
 2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,11, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,11, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,11));
-1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,11, rec(general:=true)));
 1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,11, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,11, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,19));
-3
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,19, rec(general:=true)));
 3
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,7^2));
 3
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(3,19, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,11));
-2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,11, rec(novelties:=true)));
-2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,11, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,7));
 2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,7, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,7, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,13));
-4
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(4,2));
-1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,3, rec(novelties:=true)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,5));
 1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,31));
 10
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,31, rec(all:=false)));
 2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,7));
-1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,7, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,3));
-2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(5,3, rec(all:=false)));
-1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,13, rec(novelties:=true)));
 6
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,7, rec(novelties:=true)));
@@ -923,38 +1159,18 @@ gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,19, rec(novelties:=true)));
 6
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,19, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,5));
-4
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,5, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,5, rec(general:=true)));
 4
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,3));
-4
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,7));
-17
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,7, rec(all:=false)));
-4
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,19));
-11
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,19, rec(all:=false)));
-3
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(6,13^2));
 14
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(7,5, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(7,5));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(7,5, rec(all:=false)));
-1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(7,29));
 7
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(7,29, rec(all:=false)));
 1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,29));
 4
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,3^2));
-8
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,17^2));
 16
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,17^2, rec(all:=false)));
@@ -965,22 +1181,10 @@ gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,41, rec(all:=false)));
 2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,241));
 16
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,5));
-2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(8,5, rec(all:=false)));
-1
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,5, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,5));
-2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,5, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,5, rec(general:=true)));
 2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,7));
-12
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,7, rec(all:=false)));
-4
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,37));
 12
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(9,37, rec(all:=false)));
@@ -995,32 +1199,14 @@ gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,9, rec(novelties:=true)));
 0
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,53, rec(novelties:=true)));
 2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,5));
-7
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,5, rec(general:=true)));
 7
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,3));
-5
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,11));
-47
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,11, rec(all:=false)));
-8
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,37));
 9
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(10,37, rec(all:=false)));
 5
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(11, 2, rec(novelties:=true)));
 1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(11,7));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(11,7, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(11,13));
-2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(11,13, rec(all:=false)));
-2
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(11,2));
-2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,31, rec(novelties:=true)));
 6
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,31, rec(novelties:=true, all:=false)));
@@ -1029,10 +1215,6 @@ gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,13^2, rec(novelties:=true)))
 12
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,13^2, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,13));
-24
-gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,13, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,31));
 12
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(12,31, rec(all:=false)));
@@ -1049,42 +1231,16 @@ gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,5, rec(novelties:=true)));
 3
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,5, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,13));
-1
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,29));
 3
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,29, rec(all:=false)));
 1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,5));
-6
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(3,5, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,13, rec(novelties:=true)));
 2
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,13, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,13));
-2
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,13, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,11));
-4
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,11, rec(all:=false)));
-1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,3));
-6
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,3, rec(all:=false)));
-2
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(4,3^2));
-0
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(5,5, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(5,7));
-1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(5,19));
-5
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(5,19, rec(all:=false)));
-1
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(5,29));
 10
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(5,29, rec(all:=false)));
@@ -1101,42 +1257,22 @@ gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,23, rec(novelties:=true)));
 12
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,23, rec(novelties:=true, all:=false)));
 2
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,7));
-4
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,7, rec(general:=true)));
 4
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,7, rec(normaliser:=true)));
 4
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,17));
-23
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,17, rec(all:=false)));
-5
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,2));
-6
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,2, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,23));
 26
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(6,23, rec(all:=false)));
 5
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(7,7, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(7,7));
-1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(7,7, rec(all:=false)));
-1
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(7,83));
 7
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(7,83, rec(all:=false)));
 1
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(8,11, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(8,11));
-4
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(8,11, rec(all:=false)));
-2
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(8,19));
-4
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(8,59));
 4
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(8,71));
@@ -1149,16 +1285,10 @@ gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,2, rec(novelties:=true)));
 3
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,2, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,13));
-2
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,107));
 21
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,107, rec(all:=false)));
 3
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,2));
-6
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,2, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,2, rec(normaliser:=true)));
 6
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(9,2, rec(normaliser:=true, all:=false)));
@@ -1171,24 +1301,14 @@ gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,19, rec(novelties:=true)));
 10
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,19, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,3));
-9
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,3, rec(all:=false)));
-5
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,31));
 15
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,31, rec(all:=false)));
 8
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,5));
-9
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,5, rec(general:=true)));
 9
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(10,5, rec(normaliser:=true)));
 9
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(11,5));
-2
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(11,5, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(11,43));
 11
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(11,43, rec(all:=false)));
@@ -1197,27 +1317,11 @@ gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(12,11, rec(novelties:=true)));
 12
 gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(12,11, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(12,11));
-24
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(12,11, rec(all:=false)));
-2
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(12,5));
-18
-gap> Length(C9SubgroupsSpecialUnitaryGroupGeneric(12,5, rec(all:=false)));
-3
 
 #
 gap> Length(C9SubgroupsSymplecticGroupGeneric(4,7, rec(novelties:=true)));
 1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(4,7, rec(novelties:=true, normaliser:=true)));
-1
-gap> Length(C9SubgroupsSymplecticGroupGeneric(4,7));
-1
-gap> Length(C9SubgroupsSymplecticGroupGeneric(4,11));
-3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(4,11, rec(all:=false)));
-2
-gap> Length(C9SubgroupsSymplecticGroupGeneric(4,2^3));
 1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(4,2^3, rec(normaliser:=true)));
 1
@@ -1229,60 +1333,24 @@ gap> Length(C9SubgroupsSymplecticGroupGeneric(6,9, rec(novelties:=true, all:=fal
 1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,19, rec(novelties:=true)));
 2
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,7));
-4
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,7, rec(all:=false)));
-3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,17));
-10
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,17, rec(all:=false)));
-6
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,5^2));
 4
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,5^2, rec(all:=false)));
 3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,11));
-5
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,11, rec(all:=false)));
-3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,3^2));
-4
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,3^2, rec(all:=false)));  # error in magma
-2
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,2));
-1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,2, rec(normaliser:=true)));
-1
-gap> Length(C9SubgroupsSymplecticGroupGeneric(6,2^2));
 1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(6,2^2, rec(normaliser:=true)));
 1
 gap> Length(C9SubgroupsSymplecticGroupGeneric(8,5, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSymplecticGroupGeneric(8,5));
-2
 gap> Length(C9SubgroupsSymplecticGroupGeneric(8,5, rec(normaliser:=true)));
 2
-gap> Length(C9SubgroupsSymplecticGroupGeneric(8,11));
-5
-gap> Length(C9SubgroupsSymplecticGroupGeneric(8,11, rec(all:=false)));
-4
-gap> Length(C9SubgroupsSymplecticGroupGeneric(8,19));
-7
-gap> Length(C9SubgroupsSymplecticGroupGeneric(8,19, rec(all:=false)));
-5
 gap> Length(C9SubgroupsSymplecticGroupGeneric(8,7^2));
 4
 gap> Length(C9SubgroupsSymplecticGroupGeneric(8,7^2, rec(all:=false)));
 3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(8,2));
-2
 gap> Length(C9SubgroupsSymplecticGroupGeneric(10,7, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSymplecticGroupGeneric(10,7));
-5
-gap> Length(C9SubgroupsSymplecticGroupGeneric(10,7, rec(all:=false)));
-3
 gap> Length(C9SubgroupsSymplecticGroupGeneric(10,5^2));
 5
 gap> Length(C9SubgroupsSymplecticGroupGeneric(10,23));
@@ -1291,10 +1359,6 @@ gap> Length(C9SubgroupsSymplecticGroupGeneric(10,23, rec(all:=false)));
 6
 gap> Length(C9SubgroupsSymplecticGroupGeneric(12,11, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsSymplecticGroupGeneric(12,11));
-3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(12,11, rec(all:=false)));
-2
 gap> Length(C9SubgroupsSymplecticGroupGeneric(12,7^2));
 4
 gap> Length(C9SubgroupsSymplecticGroupGeneric(12,7^2, rec(all:=false)));
@@ -1307,37 +1371,15 @@ gap> Length(C9SubgroupsSymplecticGroupGeneric(12,3^3));
 3
 gap> Length(C9SubgroupsSymplecticGroupGeneric(12,29));
 12
-gap> Length(C9SubgroupsSymplecticGroupGeneric(12,7));
-3
-gap> Length(C9SubgroupsSymplecticGroupGeneric(12,3));
-1
-gap> Length(C9SubgroupsSymplecticGroupGeneric(12,2));
-2
 
 #
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,3,11, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,3,11));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,3,11, rec(all:=false)));
-1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,3,7^2));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,4,7, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,4,7));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,4,7, rec(all:=false)));
-1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7, rec(novelties:=true)));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,5));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,11));
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,11, rec(all:=false)));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7));
 1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,5,7, rec(novelties:=true, normaliser:=true)));
 1
@@ -1353,44 +1395,14 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,31, rec(novelties:=true, all:
 1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,29, rec(novelties:=true)));
 4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,11));
-2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,29));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,29, rec(all:=false)));
 1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,7));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,13));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,13, rec(all:=false)));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,6,2));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,13));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,19));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,19, rec(all:=false)));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,11));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,11, rec(all:=false)));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,17));
-4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,29));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,3));
-6
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,6,3, rec(all:=false)));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,3, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,3));
-6
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,3, rec(all:=false)));
-3
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,5, rec(normaliser:=true)));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,5, rec(general:=true)));
@@ -1399,28 +1411,14 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,7,31));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5));
-32
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5, rec(all:=false)));
-6
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5, rec(normaliser:=true)));
 32
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5, rec(general:=true)));
 32
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7));
-12
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7, rec(normaliser:=true)));
 12
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,7, rec(general:=true)));
 12
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2));
-5
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2, rec(all:=false)));
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3));
-5
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3, rec(all:=false)));
-3
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,2^3, rec(general:=true)));
 5
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,5^3));
@@ -1443,48 +1441,24 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,8,3^2, rec(normaliser:=true, all
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,13, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,13));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,5));
-2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,5, rec(normaliser:=true)));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,5, rec(general:=true)));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,7));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,7, rec(normaliser:=true)));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,7, rec(general:=true)));
 2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,2));
-1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,8,2, rec(general:=true)));
 1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,13, rec(novelties:=true)));
 0
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,13));
-8
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,13, rec(all:=false)));
-5
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,3^3));
 3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,3^2));
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,3^2, rec(all:=false)));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,11));
-5
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,11, rec(all:=false)));
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,5));
-1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,5, rec(general:=true)));
 1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,5, rec(normaliser:=true)));
 1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,7));
-2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,7, rec(general:=true)));
 2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,9,7, rec(normaliser:=true)));
@@ -1511,10 +1485,6 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,10,37));
 12
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,10,37, rec(all:=false)));
 3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,10,3));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,10,3, rec(all:=false)));
-1
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7, rec(novelties:=true)));
 8
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7, rec(novelties:=true, all:=false)));
@@ -1529,36 +1499,12 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,19, rec(novelties:=true)));
 6
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,2, rec(novelties:=true)));
 2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,13));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,13, rec(all:=false)));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,19));
-12
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,2));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7));
-16
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7, rec(all:=false)));
-4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7, rec(special:=true, all:=false)));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7, rec(general:=true, all:=false)));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,7, rec(normaliser:=true, all:=false)));
 4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,10,13));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,11,5));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,11,5, rec(all:=false)));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,11,7));
-1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,11,13));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(0,11,13, rec(all:=false)));
-3
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,17, rec(novelties:=true)));
 8
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,17, rec(novelties:=true, all:=false)));
@@ -1571,10 +1517,6 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,13, rec(novelties:=true)));
 4
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,13, rec(novelties:=true, all:=false)));
 1
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,19));
-8
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,19, rec(all:=false)));
-2
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,29));
 24
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(1,12,29, rec(all:=false)));
@@ -1591,22 +1533,8 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,41));
 12
 gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,41, rec(all:=false)));
 6
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,3^2));
-4
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,2^2));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11^3));  # slow
+gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11^3));  # slow due to the use of MTX.OrthogonalSign in CM_ClassicalForms
 6
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11));
-6
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11, rec(all:=false)));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,2));
-3
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,7));
-2
-gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,7, rec(all:=false)));
-1
 
 #
 gap> STOP_TEST("ClassicalMaximals.tst", 0);
