@@ -60,7 +60,7 @@ To report issues please use our
 ClassicalMaximals is free software; you can redistribute and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or (at
-your opinion) any later version. For more information see the `LICENSE` file.
+your option) any later version. For more information see the `LICENSE` file.
 
 ## Funding
 
