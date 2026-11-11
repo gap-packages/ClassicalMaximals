@@ -3569,7 +3569,7 @@ function(epsilon, n, q, opts...)
                         Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, i));
                     fi;
                     if i < m and (n <> 6 or q <> 2) then
-                        Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, i));
+                        Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, i));
                     fi;
                 fi;
             else

@@ -1129,6 +1129,19 @@ gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, rec( classes := [4], all := fa
 11
 
 #
+# Classes of maximal subgroups of Omega+-(n, q), with orders as in GAP's
+# stored data
+gap> TestOmegaClasses := function(type, n, q)
+>   local L;
+>   L := ClassicalMaximalsGeneric(type, n, q);
+>   CheckPairwiseNonConjugateOmega(type, n, q, L);
+>   Assert(0, ForAll(L, G -> Size(Group(GeneratorsOfGroup(G))) = Size(G)));
+>   return SortedList(List(L, Size));
+> end;;
+gap> TestOmegaClasses("O-", 8, 2);
+[ 168, 4320, 8160, 120960, 184320, 258048, 1451520, 1658880 ]
+
+#
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,7^2));
 2
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,11, rec(novelties:=true)));
