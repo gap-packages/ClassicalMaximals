@@ -290,14 +290,19 @@ function(d, q, k)
                 generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
             # now use e_{dHalf} = w_1 + beta ^ q * w_2
             #         f_{dHalf} = alpha ^ q * w_1 - alpha * beta ^ q * w_2
-            generator{[dHalf]}{[1..kHalf]} :=
-                generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]}; 
-            generator{[dHalf + 1]}{[1..kHalf]} :=
-                alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
-            generator{[dHalf]}{[d - kHalf + 1..d]} :=
-                generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
-            generator{[dHalf + 1]}{[d - kHalf + 1..d]} :=
-                alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+            # These blocks are empty for kHalf = 0, and GAP raises an error
+            # when multiplying an empty GF(2) vector by a scalar outside
+            # GF(2), as for q = 128.
+            if kHalf > 0 then
+                generator{[dHalf]}{[1..kHalf]} :=
+                    generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]}; 
+                generator{[dHalf + 1]}{[1..kHalf]} :=
+                    alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[1..kHalf]};
+                generator{[dHalf]}{[d - kHalf + 1..d]} :=
+                    generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+                generator{[dHalf + 1]}{[d - kHalf + 1..d]} :=
+                    alpha ^ q * generatorOfSUSubspace{[kHalf + 1]}{[kHalf + 2..k]};
+            fi;
             # finally, for the central 2x2-submatrix, we have to use all four
             # relations above together
             generator[dHalf, dHalf] := 
