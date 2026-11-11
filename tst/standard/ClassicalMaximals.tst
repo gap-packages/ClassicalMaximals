@@ -976,6 +976,12 @@ gap> Length(ClassicalMaximalsGeneric("O+", 64, 3, [7]));  # Magma also returns O
 gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, [4]));
 31
 
+# C6 is maximal for n >= 16 also when q = +-3 mod 8, cf. [KL90] Tables 3.5.E, 3.5.H, 3.5.I
+gap> Length(ClassicalMaximalsGeneric("O+", 16, 3, [6]));
+4
+gap> Length(ClassicalMaximalsGeneric("O+", 16, 7, [6]));
+8
+
 # Test all option
 gap> Length(ClassicalMaximalsGeneric("L", 2, 11, rec( all := false )));
 3
