@@ -23,6 +23,17 @@ gap> TestGammaLMeetSU(3, 5, 3);
 gap> TestGammaLMeetSU(6, 3, 3);
 gap> TestGammaLMeetSU(3, 7, 3);
 
+# Without a cheap Conway polynomial for GF(q ^ s), recog cannot find the
+# order either; these groups are cyclic extended by a Frobenius of order s.
+gap> G := GammaLMeetSL(11, 169, 11);;
+gap> CheckIsSubsetSL(11, 169, G);
+gap> Size(G) = 11 * Maximum(List(GeneratorsOfGroup(G), Order));
+true
+gap> G := GammaLMeetSU(7, 121, 7);;
+gap> CheckIsSubsetSU(7, 121, G);
+gap> Size(G) = 7 * Maximum(List(GeneratorsOfGroup(G), Order));
+true
+
 #
 gap> TestSymplecticSemilinearSp := function(n, q, s)
 >   local G;
@@ -56,6 +67,7 @@ gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ(3, 2);
 gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ(2, 2);
 gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ(5, 3);
 gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ(4, 3);
+gap> TestMatricesInducingGaloisGroupOfGFQToSOverGFQ(169, 11);
 
 #
 gap> TestGammaLMeetOmega := function(epsilon, d, q, s)

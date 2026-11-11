@@ -1,3 +1,30 @@
+# Return a primitive polynomial of degree <s> over the finite field <F>, the
+# first in a fixed order that prefers coefficients early in AsSSortedList(F).
+BindGlobal("CM_PrimitivePolynomial",
+function(F, s)
+    local z, count, small, j, k, digits, polynomial;
+    # The constant term is (-1) ^ s times the norm of a root, so it is (-1) ^ s
+    # times a primitive element z ^ j of F.
+    z := PrimitiveRoot(F);
+    for count in Set([Minimum(Size(F), 16), Size(F)]) do
+        small := AsSSortedList(F){[1..count]};
+        for j in Filtered([1..Size(F) - 1], j -> Gcd(j, Size(F) - 1) = 1) do
+            k := -1;
+            while k < count ^ (s - 1) - 1 do
+                k := k + 1;
+                # the digits of k encode the coefficients of x, ..., x ^ (s - 1)
+                digits := CoefficientsQadic(k, count);
+                Append(digits, ListWithIdenticalEntries(s - 1 - Length(digits), 0));
+                polynomial := UnivariatePolynomial(F,
+                    Concatenation([(-1) ^ s * z ^ j], small{digits + 1}, [One(F)]));
+                if IsPrimitivePolynomial(F, polynomial) then
+                    return polynomial;
+                fi;
+            od;
+        od;
+    od;
+end);
+
 # Return a subgroup of <M>GL(s, q)</M> isomorphic to the subgroup of
 # <M>\Gamma L(1, q ^ s)</M> consisting of all <C>GF(q)</C>-linear and 
 # <C>GF(q ^ s)</C>-semilinear transformations of the vector space 
@@ -16,7 +43,12 @@ function(s, q)
     # A acts on the standard basis in the same way as w acts by multiplication
     # on the GF(q)-basis {1, w, w ^ 2, ...} of GF(q ^ s). (Note that A is a
     # Singer cycle, i.e. has order q ^ s - 1.)
-    primitivePolynomial := MinimalPolynomial(F, Z(q ^ s));
+    if IsCheapConwayPolynomial(Characteristic(F), DegreeOverPrimeField(F) * s) then
+        primitivePolynomial := MinimalPolynomial(F, Z(q ^ s));
+    else
+        # Z(q ^ s) would need a Conway polynomial that GAP refuses to compute
+        primitivePolynomial := CM_PrimitivePolynomial(F, s);
+    fi;
     A := TransposedMat(CompanionMat(primitivePolynomial));
     # B acts on the standard basis in the same way as the Frobenius acts on the
     # basis {1, w, w ^ 2, ...} of GF(q ^ s) over GF(q), where w is as above.
@@ -460,11 +492,16 @@ function(d, q, s)
         generators := Concatenation(AandB, [C, D]);
     fi;
 
-    # Calculate the form preserved by the constructed group
-    standardForm := InvariantSesquilinearForm(SU(m, q ^ s)).matrix;
-    formMatrix := TakeTraceOfSesquilinearForm(standardForm, q ^ 2, s, "U-U");
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantSesquilinearForm(result, rec(matrix := formMatrix, baseDomain := F));
+
+    # Calculate the form preserved by the constructed group. That needs
+    # GF(q ^ (2 * s)); if GAP cannot set up this field cheaply, leave the
+    # form to the MeatAxe, which works as the group is absolutely irreducible.
+    if IsCheapConwayPolynomial(Characteristic(F), DegreeOverPrimeField(F) * s) then
+        standardForm := InvariantSesquilinearForm(SU(m, q ^ s)).matrix;
+        formMatrix := TakeTraceOfSesquilinearForm(standardForm, q ^ 2, s, "U-U");
+        SetInvariantSesquilinearForm(result, rec(matrix := formMatrix, baseDomain := F));
+    fi;
 
     # Conjugate the result so that it preserves the standard unitary form 
     return ConjugateToStandardForm(result, "U", F);
