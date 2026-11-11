@@ -3201,8 +3201,10 @@ function(n, q, opts...)
         fi;
     elif n = 12 then
         if novelties then return result; fi;
+        # For p = 2, L2_11 and L2_13 fix a quadratic form, so they lie in
+        # O-(12, q) and are not maximal.
         if (e = 1 and p mod 5 in [1, 4] and p <> 11) or
-           (e = 2 and p mod 5 in [2, 3] and p <> 4) then
+           (e = 2 and p mod 5 in [2, 3] and p <> 2) then
             # 2.L2_11.2 (q mod 20 in [1, 19]), 2.L2_11 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl211d12.g"))();
             S := ModularReductionOfIntegralLattice(LR, q, opts);
@@ -3224,7 +3226,7 @@ function(n, q, opts...)
             fi;
         fi;
         if (e = 1 and p mod 7 in [1, 6] and p <> 13) or
-           (e = 3 and p mod 7 in [2, 3, 4, 5]) then
+           (e = 3 and p mod 7 in [2, 3, 4, 5] and p <> 2) then
             # 2.L2_13.2 (q mod 28 in [1, 27]), 2.L2_13 otherwise
             LR := ReadAsFunction(Filename(CM_c9lib, "sl213d12.g"))();
             S := ModularReductionOfIntegralLattice(LR, q, opts);

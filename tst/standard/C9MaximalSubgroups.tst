@@ -192,6 +192,13 @@ gap> TestC9SubgroupsSymplecticGroupGeneric(12,3^3, rec(all:=false));
 gap> TestC9SubgroupsSymplecticGroupGeneric(12,7, rec(all:=false));
 gap> TestC9SubgroupsSymplecticGroupGeneric(12,3, rec(all:=false));
 gap> TestC9SubgroupsSymplecticGroupGeneric(12,2, rec(all:=false));
+
+# In characteristic 2, L2(11) and L2(13) fix a quadratic form, so they lie
+# in O-(12, q) and are not maximal in Sp(12, q).
+gap> List(C9SubgroupsSymplecticGroupGeneric(12, 2^2), Size);
+[ 4680000 ]
+gap> C9SubgroupsSymplecticGroupGeneric(12, 2^3);
+[  ]
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,3,11, rec(novelties:=true, all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,3,11, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,3,7^2, rec(all:=false));
