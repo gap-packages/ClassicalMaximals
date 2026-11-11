@@ -1154,8 +1154,25 @@ gap> TestOmegaClasses := function(type, n, q)
 >   Assert(0, ForAll(L, G -> Size(Group(GeneratorsOfGroup(G))) = Size(G)));
 >   return SortedList(List(L, Size));
 > end;;
+gap> TestOmegaClasses("O+", 6, 3);
+[ 576, 720, 2880, 46656, 51840, 51840, 151632, 151632 ]
+gap> TestOmegaClasses("O+", 6, 5);
+[ 11520, 11520, 28800, 28800, 31200, 31200, 57600, 93600, 9360000, 9360000, 
+  18000000, 93000000, 93000000 ]
+gap> TestOmegaClasses("O-", 6, 3);
+[ 1440, 1440, 2304, 5040, 5040, 5040, 5040, 11520, 11520, 12096, 23328, 
+  40320, 40320, 51840, 51840, 58320 ]
+gap> TestOmegaClasses("O-", 6, 5);
+[ 2520, 2520, 2592, 14400, 15600, 25920, 25920, 62400, 86400, 1134000, 
+  4500000, 9360000, 9360000, 19500000 ]
 gap> TestOmegaClasses("O-", 8, 2);
 [ 168, 4320, 8160, 120960, 184320, 258048, 1451520, 1658880 ]
+
+# More types with several Omega-classes, too slow for the quick tests
+#@if not IsBound(QUICK_CLASSICAL_MAXIMALS_TESTS)
+gap> CheckPairwiseNonConjugateOmega("O-", 6, 7, ClassicalMaximalsGeneric("O-", 6, 7, [2]));
+gap> CheckPairwiseNonConjugateOmega("O+", 8, 3, ClassicalMaximalsGeneric("O+", 8, 3, [3]));
+#@fi
 
 #
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,7^2));

@@ -3468,6 +3468,29 @@ function(epsilon, n, q)
     return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D;
 end);
 
+# Given a subgroup G of Omega(epsilon, n, q), conjugate it with all products of
+# combinations of the elements in the list <elementsToConjugate>, each of which
+# must normalise Omega(epsilon, n, q). The elements must be chosen so that the
+# conjugates lie in different Omega-classes; which elements do depends on G.
+BindGlobal("ConjugatesOfSubgroupOmega",
+function(G, elementsToConjugate)
+    local result, invariantFormRec, subset, conjugatedGroup;
+
+    result := [];
+    invariantFormRec := InvariantQuadraticForm(G);
+    for subset in Combinations(elementsToConjugate) do
+        if subset = [] then
+            Add(result, G);
+        else
+            conjugatedGroup := G ^ Product(subset);
+            SetInvariantQuadraticForm(conjugatedGroup, invariantFormRec);
+            Add(result, conjugatedGroup);
+        fi;
+    od;
+
+    return result;
+end);
+
 # Given a subgroup G of Omega(epsilon, n, q) conjugate it with all products of
 # combinations of elements from the set ...
 # * ... [SOMinusOmega(epsilon, n, q)] if numberOfConjugates = 2
@@ -3477,8 +3500,7 @@ end);
 #       if numberOfConjugates = 8.
 BindGlobal("ConjugateSubgroupOmega",
 function(epsilon, n, q, G, numberOfConjugates)
-    local elementsToConjugate, result, invariantFormRec,
-    powerSet, subset, exponent, conjugatedGroup;
+    local elementsToConjugate;
 
     if not numberOfConjugates in [1, 2, 4, 8] then
         ErrorNoReturn("<numberOfConjugates> must be one of 1, 2, 4, 8");
@@ -3496,21 +3518,7 @@ function(epsilon, n, q, G, numberOfConjugates)
         fi;
     fi;
 
-    result := [];
-    invariantFormRec := InvariantQuadraticForm(G);
-    powerSet := Combinations(elementsToConjugate);
-    for subset in powerSet do
-        if subset = [] then
-            Add(result, G);
-        else
-            exponent := Product(subset);
-            conjugatedGroup := G ^ exponent;
-            SetInvariantQuadraticForm(conjugatedGroup, invariantFormRec);
-            Add(result, conjugatedGroup);
-        fi;
-    od;
-
-    return result;
+    return ConjugatesOfSubgroupOmega(G, elementsToConjugate);
 end);
     
 BindGlobal("C1SubgroupsOrthogonalGroupGeneric",
@@ -3532,7 +3540,14 @@ function(epsilon, n, q, opts...)
         fi;
         G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k);
         if epsilon = 1 and k = m and all then
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+            # The two Omega-classes stabilise spaces in the two families of
+            # totally singular m-spaces. Only elements of GO \ SO swap these;
+            # for q even, SOMinusOmega is such a reflection.
+            if IsOddInt(q) then
+                Append(result, ConjugatesOfSubgroupOmega(G, [GOMinusSO(epsilon, n, q)]));
+            else
+                Append(result, ConjugatesOfSubgroupOmega(G, [SOMinusOmega(epsilon, n, q)]));
+            fi;
         else
             Add(result, G);
         fi;
@@ -3576,9 +3591,11 @@ function(epsilon, n, q, opts...)
                 fi;
             else
                 if i < m and IsOddInt(q) then
+                    # The two Omega-classes stabilise subspaces of square and
+                    # non-square discriminant, which only similarities swap.
                     G := OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, i);
                     if all then
-                        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                        Append(result, ConjugatesOfSubgroupOmega(G, [NormGOMinusGO(epsilon, n, q)]));
                     else
                         Add(result, G);
                     fi;
@@ -3641,16 +3658,20 @@ function(epsilon, n, q, opts...)
                     # Number of conjugates according to Proposition 4.2.14 (I) in [KL90]
                     # Non-degenerate type with m = 1 needs special treatment
                     # according to Proposition 4.2.15 in [KL90]
+                    # Similarities swap the Omega-classes of decompositions
+                    # into m-spaces of square and non-square discriminant;
+                    # for m = 1 and q = +-1 mod 8, so does SO \ Omega.
                     if not all then
                         Add(result, G);
                     elif m = 1 then
                         if q mod 8 in [1, 7] then
-                            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
+                            Append(result, ConjugatesOfSubgroupOmega(G, [SOMinusOmega(epsilon, n, q),
+                                                                         NormGOMinusGO(epsilon, n, q)]));
                         elif n <> 8 then  # in O_8(2) if n = 8
-                            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                            Append(result, ConjugatesOfSubgroupOmega(G, [NormGOMinusGO(epsilon, n, q)]));
                         fi;
                     else
-                        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                        Append(result, ConjugatesOfSubgroupOmega(G, [NormGOMinusGO(epsilon, n, q)]));
                     fi;
                 fi;
             else  # m*t odd
@@ -3671,10 +3692,14 @@ function(epsilon, n, q, opts...)
         # Cf. Table 3.5.E in [KL90] and Table 8.50 in [BHR13] (novelty for (n, q) = (8, 3))
         if epsilon = 1 and n mod 4 = 0 and (n <> 8 or q > 3) then
             G := OmegaIsotropicImprimitives(n, q);
-            if all then
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
-            else
+            # The two totally singular n/2-spaces lie in the same family; as
+            # in class C1, only elements of GO \ SO swap the families.
+            if not all then
                 Add(result, G);
+            elif IsOddInt(q) then
+                Append(result, ConjugatesOfSubgroupOmega(G, [GOMinusSO(epsilon, n, q)]));
+            else
+                Append(result, ConjugatesOfSubgroupOmega(G, [SOMinusOmega(epsilon, n, q)]));
             fi;
         fi;
 
@@ -3691,7 +3716,7 @@ end);
 # Cf. Tables 3.5.D, 3.5.E, 3.5.F and 3.5.G in [KL90]
 BindGlobal("C3SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q, opts...)
-    local result, primeDivisorsOfn, s, orthogonalTypeSubgroup, numberOfConjugates,
+    local result, primeDivisorsOfn, s, orthogonalTypeSubgroup, reflection,
     unitaryTypeSubgroup, all;
 
     if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
@@ -3699,6 +3724,16 @@ function(epsilon, n, q, opts...)
 
     result := [];
     primeDivisorsOfn := PrimeDivisors(n);
+
+    # Where a type below has two Omega-classes, its normaliser in the
+    # conformal group contains SO \ Omega and similarities but no element of
+    # GO \ SO, so a reflection swaps the classes. For q even, SOMinusOmega is
+    # a reflection.
+    if IsOddInt(q) then
+        reflection := GOMinusSO(epsilon, n, q);
+    else
+        reflection := SOMinusOmega(epsilon, n, q);
+    fi;
 
     # type GO(epsilon, n / s, q ^ s)
     for s in primeDivisorsOfn do
@@ -3715,13 +3750,11 @@ function(epsilon, n, q, opts...)
             else
                 orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, epsilon, n, q);
                 if all and epsilon = 1 then
-                    numberOfConjugates := 2;
+                    Append(result, ConjugatesOfSubgroupOmega(orthogonalTypeSubgroup,
+                                                             [reflection]));
                 else
-                    numberOfConjugates := 1;
+                    Add(result, orthogonalTypeSubgroup);
                 fi;
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q,
-                                                      orthogonalTypeSubgroup,
-                                                      numberOfConjugates));
             fi;
         else
             orthogonalTypeSubgroup := GammaLMeetOmega(epsilon, n, q, s);
@@ -3733,13 +3766,11 @@ function(epsilon, n, q, opts...)
     if n mod 4 = 2 and IsOddInt(q) then
         orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, 0, n, q);
         if q mod 4 = 2 + epsilon or not all then
-            numberOfConjugates := 1;
+            Add(result, orthogonalTypeSubgroup);
         else
-            numberOfConjugates := 2;
+            Append(result, ConjugatesOfSubgroupOmega(orthogonalTypeSubgroup,
+                                                     [reflection]));
         fi;
-        Append(result, ConjugateSubgroupOmega(epsilon, n, q,
-                                              orthogonalTypeSubgroup,
-                                              numberOfConjugates));
     fi;
 
     # type GU(n / 2, q ^ 2)
@@ -3748,13 +3779,11 @@ function(epsilon, n, q, opts...)
     if (n mod 4 = 2 and epsilon = -1) or (n mod 4 = 0 and epsilon = 1 and (all or n <> 8)) then
         unitaryTypeSubgroup := UnitarySemilinearOmega(n, q);
         if all and epsilon = 1 then
-            numberOfConjugates := 2;
+            Append(result, ConjugatesOfSubgroupOmega(unitaryTypeSubgroup,
+                                                     [reflection]));
         else
-            numberOfConjugates := 1;
+            Add(result, unitaryTypeSubgroup);
         fi;
-        Append(result, ConjugateSubgroupOmega(epsilon, n, q,
-                                              unitaryTypeSubgroup,
-                                              numberOfConjugates));
     fi;
 
     return result;
@@ -3784,12 +3813,17 @@ function(epsilon, n, q, opts...)
             if n1 = 2 and n2 = 4 and (not all or IsEvenInt(q)) then continue; fi;
             G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
             # number of conjugates according to [KL90] Proposition 4.4.12 (I)
+            # The normaliser of G in the conformal group contains no element
+            # of GO \ SO, so reflections swap Omega-classes; for q even,
+            # SOMinusOmega is a reflection.
             if not all then
                 Add(result, G);
             elif IsOddInt(q) and n mod 8 = 0 then
                 Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
+            elif IsOddInt(q) then
+                Append(result, ConjugatesOfSubgroupOmega(G, [GOMinusSO(epsilon, n, q)]));
             else
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                Append(result, ConjugatesOfSubgroupOmega(G, [SOMinusOmega(epsilon, n, q)]));
             fi;
         fi;
         if IsEvenInt(q) or n1 <= 2 then continue; fi;
@@ -3883,7 +3917,7 @@ end);
 BindGlobal("C5SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q, opts...)
     local factorisationOfq, p, e, listOfrs, result, G,
-    numberOfConjugatesPlus, numberOfConjugatesMinus, r, all;
+    numberOfConjugatesPlus, numberOfConjugatesMinus, r, C5Conjugators, all;
 
     if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
     all := not IsBound(opts.all) or opts.all;  # default to true
@@ -3894,6 +3928,15 @@ function(epsilon, n, q, opts...)
 
     listOfrs := PrimeDivisors(e);
     result := [];
+
+    C5Conjugators := function(numberOfConjugates)
+        if numberOfConjugates = 1 then
+            return [];
+        elif numberOfConjugates = 2 then
+            return [NormGOMinusGO(epsilon, n, q)];
+        fi;
+        return [SOMinusOmega(epsilon, n, q), NormGOMinusGO(epsilon, n, q)];
+    end;
 
     if epsilon = 0 then
 
@@ -3924,10 +3967,13 @@ function(epsilon, n, q, opts...)
                     numberOfConjugatesPlus := 4;
                     numberOfConjugatesMinus := 2;
                 fi;
+                # The normaliser of Omega(epsilon_0, n, q0) contains
+                # reflections of square spinor norm over GF(q), and if there
+                # are two classes, SO \ Omega; similarities swap the classes.
                 G := SubfieldOmega(1, n, p, e, QuoInt(e, 2), 1);
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugatesPlus));
+                Append(result, ConjugatesOfSubgroupOmega(G, C5Conjugators(numberOfConjugatesPlus)));
                 G := SubfieldOmega(1, n, p, e, QuoInt(e, 2), -1);
-                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, numberOfConjugatesMinus));
+                Append(result, ConjugatesOfSubgroupOmega(G, C5Conjugators(numberOfConjugatesMinus)));
             fi;
             listOfrs := Difference(listOfrs, [2]);
 
