@@ -1547,4 +1547,9 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11^3));  # slow due to the u
 6
 
 #
+# Conjugates by NormGOMinusGO lie in GAP's standard groups
+gap> CheckMaximalsInStandardGroup("O-", 6, 11);
+gap> CheckMaximalsInStandardGroup("O-", 8, 25);
+
+#
 gap> STOP_TEST("ClassicalMaximals.tst", 0);

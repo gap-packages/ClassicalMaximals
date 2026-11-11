@@ -3463,7 +3463,13 @@ end);
 # Return an element of Normaliser(GL(n, q), GO(epsilon, n, q)) \ GO(epsilon, n, q)
 InstallGlobalFunction("NormGOMinusGO",
 function(epsilon, n, q)
-    return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D;
+    local G;
+    # D is a similarity of StandardOrthogonalForm, which for epsilon = -1
+    # differs from the form of GO(epsilon, n, q)
+    G := Group(StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D);
+    CM_SetInvariantQuadraticFormFromMatrix(G, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
+    G := ConjugateToStandardForm(G, ["O-", "O", "O+"][epsilon + 2], GF(q));
+    return GeneratorsOfGroup(G)[1];
 end);
 
 # Given a subgroup G of Omega(epsilon, n, q) conjugate it with all products of
