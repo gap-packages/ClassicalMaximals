@@ -543,6 +543,18 @@ gap> Length(ClassicalMaximalsGeneric("U", 12, 19));
 31
 
 #
+# C5 subgroups of SU(n, q) of type GU(n, q0)
+gap> L := ClassicalMaximalsGeneric("U", 3, 8, [5]);;
+gap> List(L, Size);
+[ 648, 648, 648 ]
+gap> ForAll(L, G -> IsSubset(SU(3, 8), GeneratorsOfGroup(G))
+>                   and Size(Group(GeneratorsOfGroup(G))) = Size(G));
+true
+gap> L := ClassicalMaximalsGeneric("U", 4, 27, [5]);;
+gap> ForAll(L, G -> IsSubset(SU(4, 27), GeneratorsOfGroup(G)));
+true
+
+#
 gap> Length(ClassicalMaximalsGeneric("S", 4, 3));
 5
 gap> Length(ClassicalMaximalsGeneric("S", 4, 4));
