@@ -4113,16 +4113,26 @@ function(epsilon, n, q, opts...)
     general := IsBound(opts.general) and opts.general;  # default to false
     normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
 
+    # The elements of gens are isometries or similarities of the forms of G,
+    # so each conjugate preserves the same forms. G ^ x carries them over
+    # only from GAP 4.16 on.
     ConjugatesBySubsetsOfGenerators := function(G, gens)
-        local result, powerSet, subset;
+        local result, powerSet, subset, H;
         result := [];
         powerSet := Combinations(gens);
         for subset in powerSet do
             if subset = [] then
                 Add(result, G);
-            else
-                Add(result, G ^ Product(subset));
+                continue;
             fi;
+            H := G ^ Product(subset);
+            if HasInvariantQuadraticForm(G) then
+                SetInvariantQuadraticForm(H, InvariantQuadraticForm(G));
+            fi;
+            if HasInvariantBilinearForm(G) then
+                SetInvariantBilinearForm(H, InvariantBilinearForm(G));
+            fi;
+            Add(result, H);
         od;
         return result;
     end;
