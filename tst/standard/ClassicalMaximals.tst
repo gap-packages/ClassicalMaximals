@@ -642,13 +642,13 @@ gap> Length(ClassicalMaximalsGeneric("S", 12, 2));
 gap> Length(ClassicalMaximalsGeneric("S", 12, 3));
 18
 gap> Length(ClassicalMaximalsGeneric("S", 12, 4));
-19
+17
 gap> Length(ClassicalMaximalsGeneric("S", 12, 5));
 20
 gap> Length(ClassicalMaximalsGeneric("S", 12, 7));
 21
 gap> Length(ClassicalMaximalsGeneric("S", 12, 8));
-19
+16
 gap> Length(ClassicalMaximalsGeneric("S", 12, 9));
 24
 gap> Length(ClassicalMaximalsGeneric("S", 12, 11));
