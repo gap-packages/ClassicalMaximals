@@ -310,7 +310,8 @@ gap> Length(ClassicalMaximalsGeneric("L", 12, 19));
 
 #
 # The maximal subgroups lie in GAP's standard groups
-gap> CheckMaximalsInStandardGroup("U", 5, 16);
+gap> NrCheckedMaximals("U", 5, 16);
+6
 
 #
 # Conjugates keep the invariant forms
@@ -987,9 +988,12 @@ gap> Length(ClassicalMaximalsGeneric("O-", 12, 19));
 
 #
 # C5 subgroups of minus type lie in GAP's standard groups
-gap> CheckMaximalsInStandardGroup("O+", 6, 4);
-gap> CheckMaximalsInStandardGroup("O+", 8, 9);
-gap> CheckMaximalsInStandardGroup("O-", 4, 8);
+gap> NrCheckedMaximals("O+", 6, 4);
+8
+gap> NrCheckedMaximals("O+", 8, 9);
+38
+gap> NrCheckedMaximals("O-", 4, 8);
+5
 
 # Test selected higher-dimensional cases
 gap> Length(ClassicalMaximalsGeneric("L", 36, 3, [1..8]));
@@ -1644,8 +1648,10 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11^3));  # slow due to the u
 
 #
 # Conjugates by NormGOMinusGO lie in GAP's standard groups
-gap> CheckMaximalsInStandardGroup("O-", 6, 11);
-gap> CheckMaximalsInStandardGroup("O-", 8, 25);
+gap> NrCheckedMaximals("O-", 6, 11);
+18
+gap> NrCheckedMaximals("O-", 8, 25);
+13
 
 #
 gap> STOP_TEST("ClassicalMaximals.tst", 0);

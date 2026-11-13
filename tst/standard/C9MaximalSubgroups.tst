@@ -58,9 +58,6 @@ gap> TestC9SubgroupsOrthogonalGroupGeneric := function(epsilon, n, q, opts...)
 >     for G in result do
 >         if not normaliser then
 >             CheckIsSubsetOmega(epsilon, n, q, G);
->             if not special and not general then
->                 CheckIsSubsetStandardGroup(["O-", "O", "O+"][epsilon + 2], n, q, G);
->             fi;
 >         else
 >             CheckIsSubsetSL(n, q ,G);
 >         fi;

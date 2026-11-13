@@ -166,38 +166,96 @@ CheckSesquilinearForm := function(G, q)
 end;
 
 CheckIsSubsetSL := function(n, q, G)
-  local m, F;
+  local m;
   m := DimensionOfMatrixGroup(G);
   if m <> n then
     Error("matrix group: expected degree ", n, " actual degree ", m);
   fi;
-  F := DefaultFieldOfMatrixGroup(G);
-  if Characteristic(F) <> PrimePowersInt(q)[1] then
-      Error("matrix group: wrong characteristic of underlying field");
+  if not IsSubset(GF(q), FieldOfMatrixGroup(G)) then
+    Error("matrix group: entries not in GF(", q, ")");
   fi;
   CheckGeneratorsSpecial(G);
+end;
+
+# the matrix of the quadratic form with matrix Q that is upper triangular,
+# hence unique
+UpperTriangularQuadraticForm := function(Q)
+  local n, N, i, j;
+  n := NrRows(Q);
+  N := List(Q, List);
+  for i in [1..n] do
+    for j in [1..i - 1] do
+      N[j][i] := N[j][i] + N[i][j];
+      N[i][j] := Zero(N[i][j]);
+    od;
+  od;
+  return N;
+end;
+
+# The form of GAP's SU, Sp or Omega that the checks below compare with:
+# sesquilinear, bilinear, or for Omega in even characteristic quadratic. The
+# forms of Omega and SO differ; the standard one is that of Omega.
+STANDARD_FORMS := rec();
+StandardForm := function(type, n, q)
+  local key, S;
+  key := Concatenation(type, String(n), "_", String(q));
+  if IsBound(STANDARD_FORMS.(key)) then
+    return STANDARD_FORMS.(key);
+  fi;
+  if type = "U" then
+    STANDARD_FORMS.(key) := InvariantSesquilinearForm(SU(n, q)).matrix;
+  elif type = "S" then
+    STANDARD_FORMS.(key) := InvariantBilinearForm(Sp(n, q)).matrix;
+  else
+    S := Omega(Position(["O-", "O", "O+"], type) - 2, n, q);
+    if IsEvenInt(q) then
+      STANDARD_FORMS.(key) := UpperTriangularQuadraticForm(InvariantQuadraticForm(S).matrix);
+    else
+      STANDARD_FORMS.(key) := InvariantBilinearForm(S).matrix;
+    fi;
+  fi;
+  return STANDARD_FORMS.(key);
+end;
+
+# Verify that the stored form A is the standard form B up to a scalar. Compare
+# plain lists: = is false for equal compressed matrices over GF(2) and GF(4).
+CheckStandardForm := function(A, B)
+  local pos, lambda;
+  A := List(A, List);
+  B := List(B, List);
+  pos := PositionNonZero(Flat(B));
+  lambda := Flat(A)[pos] / Flat(B)[pos];
+  if IsZero(lambda) or A <> lambda * B then
+    Error("stored form is not GAP's standard form up to a scalar");
+  fi;
 end;
 
 CheckIsSubsetSp := function(n, q, G)
   CheckIsSubsetSL(n, q, G);
   CheckBilinearForm(G);
+  CheckStandardForm(InvariantBilinearForm(G).matrix, StandardForm("S", n, q));
 end;
 
 CheckIsSubsetSU := function(n, q, G)
   CheckIsSubsetSL(n, q ^ 2, G);
   CheckSesquilinearForm(G, q);
+  CheckStandardForm(InvariantSesquilinearForm(G).matrix, StandardForm("U", n, q));
 end;
 
 CheckIsSubsetOmega := function(epsilon, n, q, G)
-  local field, invariantForm;
+  local field, invariantForm, type;
   CheckIsSubsetSL(n, q, G);
   field := GF(q);
+  type := ["O-", "O", "O+"][epsilon + 2];
   if IsEvenInt(q) then
     CheckQuadraticForm(G);
     invariantForm := QuadraticFormByMatrix(InvariantQuadraticForm(G).matrix, field);
+    CheckStandardForm(UpperTriangularQuadraticForm(InvariantQuadraticForm(G).matrix),
+                      StandardForm(type, n, q));
   else
     CheckBilinearForm(G);
     invariantForm := BilinearFormByMatrix(InvariantBilinearForm(G).matrix, field);
+    CheckStandardForm(InvariantBilinearForm(G).matrix, StandardForm(type, n, q));
   fi;
   if 2 * WittIndex(invariantForm) <> n + epsilon - 1 then
     Error("wrong Witt index");
@@ -207,33 +265,26 @@ CheckIsSubsetOmega := function(epsilon, n, q, G)
   fi;
 end;
 
-# verify that G lies in GAP's standard SL, SU, Sp or Omega, not merely in the
-# group of some form stored in G
-CheckIsSubsetStandardGroup := function(type, n, q, G)
-  local gens, S, field, Q, F;
-  gens := GeneratorsOfGroup(G);
-  S := StandardClassicalGroup(type, n, q);
-  if type in ["L", "U", "S"] then
-    if not IsSubset(S, gens) then
-      Error("not all generators lie in the standard group");
-    fi;
-    return;
-  fi;
-  # Omega(0, n, q) and SO(0, n, q) preserve different forms, so test against
-  # the form of Omega directly
-  field := GF(q);
-  Q := InvariantQuadraticForm(S).matrix;
-  F := InvariantBilinearForm(S).matrix;
-  if not ForAll(gens, g -> IsSubset(field, Flat(g)) and IsOne(DeterminantMat(g))
-                           and RespectsQuadraticForm(Q, g)
-                           and FancySpinorNorm(F, field, g) = 1) then
-    Error("not all generators lie in the standard group");
+# type as for ClassicalMaximalsGeneric
+CheckIsSubsetClassicalGroup := function(type, n, q, G)
+  if type = "L" then
+    CheckIsSubsetSL(n, q, G);
+  elif type = "U" then
+    CheckIsSubsetSU(n, q, G);
+  elif type = "S" then
+    CheckIsSubsetSp(n, q, G);
+  else
+    CheckIsSubsetOmega(Position(["O-", "O", "O+"], type) - 2, n, q, G);
   fi;
 end;
 
-CheckMaximalsInStandardGroup := function(type, n, q)
-  local G;
-  for G in ClassicalMaximalsGeneric(type, n, q) do
-    CheckIsSubsetStandardGroup(type, n, q, G);
+# ClassicalMaximalsGeneric with every result checked; returns the number of
+# results
+NrCheckedMaximals := function(type, n, q, opts...)
+  local L, G;
+  L := CallFuncList(ClassicalMaximalsGeneric, Concatenation([type, n, q], opts));
+  for G in L do
+    CheckIsSubsetClassicalGroup(type, n, q, G);
   od;
+  return Length(L);
 end;
