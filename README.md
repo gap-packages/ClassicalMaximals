@@ -11,15 +11,13 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 ### Implementation status
 
 #### Geometric maximal subgroups (Aschbacher Classes C1-C8)
-- **Type L**: Complete for dimensions 2-12
-- **Type U**: Complete for dimensions 3-12
-- **Type S**: Complete for dimensions 4-12
-- **Type O**: Complete for dimensions 3-12
-    - **C2 & C4**: Complete for all dimensions
+- Complete for types L, U, S, O in all dimensions
+- Supported options (via option records, undocumented):
+    - `all` (see below)
 
 #### Almost simple groups (Class S)
 - Complete for types L, U, S, O in dimensions up to 12
-- **Supported options** (via option records, undocumented):
+- Supported options (via option records, undocumented):
     - `all`: Conjugacy classes under the full automorphism group of the simple classical group
     - `novelties`: Intersections of novelty maximal subgroups with the quasisimple group
     - `special`: Normalisers in SO(n,q)
@@ -32,14 +30,13 @@ Translation of magma `ClassicalMaximals` to GAP. For resources see
 #### Testing & verification
 - Verification of stored bilinear/sesquilinear/quadratic forms
 - Group size checks via the `recog` package
-- Cross-checks against tables in [BHR13] for the number of maximal subgroups
-    - Class S & orthogonal geometric subgroups: Tests also against Magma's `ClassicalMaximals`
+- Cross-checks against tables in [BHR13] and against Magma's `ClassicalMaximals`
+  for the number of maximal subgroups
 
 ### Roadmap / TODO
 
 #### Geometric maximal subgroups (Aschbacher Classes C1-C8)
-- Generalize other Aschbacher classes to work for all dimensions
-- Implement `all`, `novelties`, `special`, `general`, `normaliser` for all geometric classes
+- Implement `novelties`, `special`, `general`, `normaliser` for all geometric classes
 
 #### Almost simple groups (Class S)
 - Extend implementation beyond dimension 12 (for comparison: Magma covers dimensions up to 17)

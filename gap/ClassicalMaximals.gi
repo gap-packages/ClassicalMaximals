@@ -20,28 +20,35 @@ function(S, C, r)
 end);
 
 InstallGlobalFunction(ClassicalMaximalsGeneric,
-function(type, n, q, classes...)
-    if Length(classes) = 0 then
-        classes := [1..9];
-    elif Length(classes) = 1 and IsList(classes[1]) then
-        classes := classes[1];
+function(type, n, q, opts...)
+
+    if Length(opts) = 0 then
+        opts := rec(classes := [1..9]);
+    elif Length(opts) = 1 and IsList(opts[1]) then
+        opts := rec(classes := ShallowCopy(opts[1]));
+    elif Length(opts) = 1 and IsRecord(opts[1]) then
+        opts := ShallowCopy(opts[1]);
+        if not IsBound(opts.classes) then opts.classes := [1..9]; fi;
+    else
+        ErrorNoReturn("only one optional argument allowed: ",
+                      "must be a list or record");
     fi;
-    if not IsSubset([1..9], classes) then
+    if not IsSubset([1..9], opts.classes) then
         ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
     if type = "L" then
-        return MaximalSubgroupClassRepsSpecialLinearGroup(n, q, classes);
+        return MaximalSubgroupClassRepsSpecialLinearGroup(n, q, opts);
     elif type = "U" then
-        return MaximalSubgroupClassRepsSpecialUnitaryGroup(n, q, classes);
+        return MaximalSubgroupClassRepsSpecialUnitaryGroup(n, q, opts);
     elif type = "S" then
-        return MaximalSubgroupClassRepsSymplecticGroup(n, q, classes);
+        return MaximalSubgroupClassRepsSymplecticGroup(n, q, opts);
     elif type = "O-" then
-        return MaximalSubgroupClassRepsOrthogonalGroup(-1, n, q, classes);
+        return MaximalSubgroupClassRepsOrthogonalGroup(-1, n, q, opts);
     elif type = "O" then
-        return MaximalSubgroupClassRepsOrthogonalGroup(0, n, q, classes);
+        return MaximalSubgroupClassRepsOrthogonalGroup(0, n, q, opts);
     elif type = "O+" then
-        return MaximalSubgroupClassRepsOrthogonalGroup(1, n, q, classes);
+        return MaximalSubgroupClassRepsOrthogonalGroup(1, n, q, opts);
     fi;
     ErrorNoReturn("Type must be in ['L', 'U', 'S', 'O-', 'O', 'O+']");
 end);
@@ -57,16 +64,24 @@ function(n, q)
 end);
 
 BindGlobal("C1SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
-    return List([1..n-1], k -> SLStabilizerOfSubspace(n, q, k));
+function(n, q, opts...)
+    local all;
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+    if all then
+        return List([1..n-1], k -> SLStabilizerOfSubspace(n, q, k));
+    else
+        return List([1..QuoInt(n, 2)], k -> SLStabilizerOfSubspace(n, q, k));
+    fi;
 end);
 
 BindGlobal("C2SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local t, divisors, result;
-    divisors := DivisorsInt(n);
+    divisors := List(DivisorsInt(n));
+    RemoveSet(divisors, 1);
     result := [];
-    for t in divisors{[2..Length(divisors)]} do
+    for t in divisors do
         # not maximal or considered in class C_1 or C_8 by Proposition
         # 2.3.6 of [BHR13]
         if (n > 2 and t = n and q <= 4) or (t = n / 2 and q = 2) then
@@ -78,15 +93,18 @@ function(n, q)
 end);
 
 BindGlobal("C3SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     return List(PrimeDivisors(n), s -> GammaLMeetSL(n, q, s));
 end);
 
 BindGlobal("C4SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local divisorListOfn, result, n1, numberOfConjugates, generatorGLMinusSL,
-    tensorProductSubgroup;
-    
+    tensorProductSubgroup, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true 
+
     divisorListOfn := List(DivisorsInt(n));
     Remove(divisorListOfn, 1);
     divisorListOfn := Filtered(divisorListOfn, x -> x < n / x);
@@ -100,7 +118,11 @@ function(n, q)
     for n1 in divisorListOfn do
         tensorProductSubgroup := TensorProductStabilizerInSL(n1, QuoInt(n, n1), q);
         # Cf. Tables 3.5.A and 3.5.G in [KL90]
-        numberOfConjugates := Gcd([q - 1, n1, QuoInt(n, n1)]);
+        if all then
+            numberOfConjugates := Gcd([q - 1, n1, QuoInt(n, n1)]);
+        else
+            numberOfConjugates := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(tensorProductSubgroup, 
                                                generatorGLMinusSL,
                                                numberOfConjugates));
@@ -110,10 +132,13 @@ function(n, q)
 end);
 
 BindGlobal("C5SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local factorisation, p, e, generatorGLMinusSL, primeDivisorsOfe,
-    degreeOfExtension, f, subfieldGroup, numberOfConjugates, result;
-    
+    degreeOfExtension, f, subfieldGroup, numberOfConjugates, result, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
     e := factorisation[2];
@@ -125,7 +150,11 @@ function(n, q)
         f := QuoInt(e, degreeOfExtension);
         subfieldGroup := SubfieldSL(n, p, e, f);
         # Cf. Tables 3.5.A and 3.5.G in [KL90]
-        numberOfConjugates := Gcd(n, QuoInt(q - 1, p ^ f - 1));
+        if all then
+            numberOfConjugates := Gcd(n, QuoInt(q - 1, p ^ f - 1));
+        else
+            numberOfConjugates := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(subfieldGroup, 
                                                 generatorGLMinusSL, 
                                                 numberOfConjugates));
@@ -135,9 +164,13 @@ function(n, q)
 end);
 
 BindGlobal("C6SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
-    generatorGLMinusSL, numberOfConjugates, extraspecialNormalizerSubgroup;
+    generatorGLMinusSL, numberOfConjugates, extraspecialNormalizerSubgroup,
+    all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
     if not IsPrimePowerInt(n) then
@@ -157,8 +190,12 @@ function(n, q)
         if IsOddInt(e) and e = OrderMod(p, r) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSL(r, m, q);
             # Cf. Tables 3.5.A and 3.5.G in [KL90]
-            numberOfConjugates := Gcd(n, q - 1);
-            if n = 3 and ((q - 4) mod 9 = 0 or (q - 7) mod 9 = 0) then
+            if all then
+                numberOfConjugates := Gcd(n, q - 1);
+                if n = 3 and ((q - 4) mod 9 = 0 or (q - 7) mod 9 = 0) then
+                    numberOfConjugates := 1;
+                fi;
+            else
                 numberOfConjugates := 1;
             fi;
             Append(result, ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
@@ -170,9 +207,13 @@ function(n, q)
         if e = 1 and (q - 1) mod 4 = 0 then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSL(2, m, q);
             # Cf. Tables 3.5.A and 3.5.G in [KL90]
-            numberOfConjugates := Gcd(n, q - 1);
-            if n = 4 and (q - 5) mod 8 = 0 then
-                numberOfConjugates := 2;
+            if all then
+                numberOfConjugates := Gcd(n, q - 1);
+                if n = 4 and (q - 5) mod 8 = 0 then
+                    numberOfConjugates := 2;
+                fi;
+            else
+                numberOfConjugates := 1;
             fi;
             Append(result, ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
                                                     generatorGLMinusSL, 
@@ -182,7 +223,7 @@ function(n, q)
         # n = 2
         if e = 1 and (q - 1) mod 2 = 0 then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSL(2, 1, q);
-            if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
+            if all and ((q - 1) mod 8 = 0 or (q - 7) mod 8 = 0) then
                 # Cf. Tables 3.5.A and 3.5.G in [KL90]
                 numberOfConjugates := Gcd(n, q - 1);
                 Append(result, ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
@@ -198,10 +239,13 @@ function(n, q)
 end);
 
 BindGlobal("C7SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local m, t, factorisationOfn, factorisationOfnExponents, highestPowern,
     result, divisorsHighestPowern, numberOfConjugates, tensorInducedSubgroup, 
-    generatorGLMinusSL;
+    generatorGLMinusSL, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
     generatorGLMinusSL := GLMinusSL(n, q);
@@ -222,9 +266,13 @@ function(n, q)
         fi;
         tensorInducedSubgroup := TensorInducedDecompositionStabilizerInSL(m, t, q);
         # Cf. Tables 3.5.A and 3.5.G in [KL90]
-        numberOfConjugates := Gcd(q - 1, m ^ (t - 1));
-        if m mod 4 = 2 and t = 2 and q mod 4 = 3 then
-            numberOfConjugates := Gcd(q - 1, m) / 2;
+        if all then
+            numberOfConjugates := Gcd(q - 1, m ^ (t - 1));
+            if m mod 4 = 2 and t = 2 and q mod 4 = 3 then
+                numberOfConjugates := Gcd(q - 1, m) / 2;
+            fi;
+        else
+            numberOfConjugates := 1;
         fi;
         Append(result, ConjugatesInGeneralGroup(tensorInducedSubgroup,
                                                 generatorGLMinusSL, 
@@ -235,11 +283,14 @@ function(n, q)
 end);
 
 BindGlobal("C8SubgroupsSpecialLinearGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local factorisation, p, e, result, generatorGLMinusSL, symplecticSubgroup,
     numberOfConjugatesSymplectic, unitarySubgroup, numberOfConjugatesUnitary,
-    orthogonalSubgroup, numberOfConjugatesOrthogonal, epsilon;
-    
+    orthogonalSubgroup, numberOfConjugatesOrthogonal, epsilon, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
     result := [];
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
@@ -249,7 +300,11 @@ function(n, q)
     if IsEvenInt(n) then
         symplecticSubgroup := SymplecticNormalizerInSL(n, q);
         # Cf. Tables 3.5.A and 3.5.G in [KL90]
-        numberOfConjugatesSymplectic := Gcd(q - 1, QuoInt(n, 2));
+        if all then
+            numberOfConjugatesSymplectic := Gcd(q - 1, QuoInt(n, 2));
+        else
+            numberOfConjugatesSymplectic := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(symplecticSubgroup, 
                                                 generatorGLMinusSL,
                                                 numberOfConjugatesSymplectic));
@@ -258,7 +313,11 @@ function(n, q)
     if IsEvenInt(e) then
         unitarySubgroup := UnitaryNormalizerInSL(n, q);
         # Cf. Tables 3.5.A and 3.5.G in [KL90]
-        numberOfConjugatesUnitary := Gcd(p ^ QuoInt(e, 2) - 1, n);
+        if all then
+            numberOfConjugatesUnitary := Gcd(p ^ QuoInt(e, 2) - 1, n);
+        else
+            numberOfConjugatesUnitary := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(unitarySubgroup,
                                                 generatorGLMinusSL,
                                                 numberOfConjugatesUnitary));
@@ -268,15 +327,23 @@ function(n, q)
         if IsOddInt(n) then
             orthogonalSubgroup := OrthogonalNormalizerInSL(0, n, q);
             # Cf. Tables 3.5.A and 3.5.G in [KL90]
-            numberOfConjugatesOrthogonal := Gcd(q - 1, n);
+            if all then
+                numberOfConjugatesOrthogonal := Gcd(q - 1, n);
+            else
+                numberOfConjugatesOrthogonal := 1;
+            fi;
             Append(result, ConjugatesInGeneralGroup(orthogonalSubgroup,
                                                     generatorGLMinusSL,
                                                     numberOfConjugatesOrthogonal));
         else
+            # Cf. Tables 3.5.A. and 3.5.G in [KL90]
+            if all then
+                numberOfConjugatesOrthogonal := QuoInt(Gcd(q - 1, n), 2);
+            else
+                numberOfConjugatesOrthogonal := 1;
+            fi;
             for epsilon in [1, -1] do
                 orthogonalSubgroup := OrthogonalNormalizerInSL(epsilon, n, q);
-                # Cf. Tables 3.5.A. and 3.5.G in [KL90]
-                numberOfConjugatesOrthogonal := QuoInt(Gcd(q - 1, n), 2);
                 Append(result, ConjugatesInGeneralGroup(orthogonalSubgroup,
                                                         generatorGLMinusSL,
                                                         numberOfConjugatesOrthogonal));
@@ -1105,15 +1172,21 @@ function(n, q, opts...)
 end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialLinearGroup,
-function(n, q, classes...)
+function(n, q, opts...)
     local maximalSubgroups, factorisation, p, e;
 
-    if Length(classes) = 0 then
-        classes := [1..9];
-    elif Length(classes) = 1 and IsList(classes[1]) then
-        classes := classes[1];
+    if Length(opts) = 0 then
+        opts := rec(classes := [1..9]);
+    elif Length(opts) = 1 and IsList(opts[1]) then
+        opts := rec(classes := ShallowCopy(opts[1]));
+    elif Length(opts) = 1 and IsRecord(opts[1]) then
+        opts := ShallowCopy(opts[1]);
+        if not IsBound(opts.classes) then opts.classes := [1..9]; fi;
+    else
+        ErrorNoReturn("only one optional argument allowed: ",
+                      "must be a list or record");
     fi;
-    if not IsSubset([1..9], classes) then
+    if not IsSubset([1..9], opts.classes) then
         ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
@@ -1126,17 +1199,17 @@ function(n, q, classes...)
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
     e := factorisation[2];
-    
-    if 1 in classes then
+ 
+    if 1 in opts.classes then
         # Class C1 subgroups ######################################################
         # Cf. Propositions 3.1.2 (n = 2), 3.2.1 (n = 3), 3.3.1 (n = 4), 
         #                  3.4.1 (n = 5), 3.5.1 (n = 6), 3.6.1 (n = 7), 
         #                  3.7.1 (n = 8), 3.8.1 (n = 9), 3.9.1 (n = 10), 
         #                  3.10.1 (n = 11), 3.11.1 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C1SubgroupsSpecialLinearGroupGeneric(n, q));
+        Append(maximalSubgroups, C1SubgroupsSpecialLinearGroupGeneric(n, q, opts));
     fi;
 
-    if 2 in classes then
+    if 2 in opts.classes then
         # Class C2 subgroups ######################################################
         if not n in [2, 4] then
             # Cf. Propositions 3.2.2. (n = 3), 3.4.2 (n = 5), 
@@ -1147,7 +1220,7 @@ function(n, q, classes...)
             # The exceptions mentioned in these propositions are all general
             # exceptions and are dealt with directly in the function
             # C2SubgroupsSpecialLinearGeneric
-            Append(maximalSubgroups, C2SubgroupsSpecialLinearGroupGeneric(n, q));
+            Append(maximalSubgroups, C2SubgroupsSpecialLinearGroupGeneric(n, q, opts));
         elif n = 2 then
             # Cf. Lemma 3.1.3 and Theorem 6.3.10 in [BHR13]
             if not q in [5, 7, 9, 11] then
@@ -1167,55 +1240,55 @@ function(n, q, classes...)
         fi;
     fi;
 
-    if 3 in classes then
+    if 3 in opts.classes then
         # Class C3 subgroups ######################################################
         # Cf. Propositions 3.3.4 (n = 4), 3.4.3 (n = 5), 3.5.5 (n = 6), 
         #                  3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9),
         #                  3.9.5 (n = 10), 3.10.3 (n = 11), 3.11.7 (n = 12) in [BHR13]
         if not n in [2, 3] then
-            Append(maximalSubgroups, C3SubgroupsSpecialLinearGroupGeneric(n, q));
+            Append(maximalSubgroups, C3SubgroupsSpecialLinearGroupGeneric(n, q, opts));
         elif n = 2 then
             # Cf. Lemma 3.1.4 and Theorem 6.3.10 in [BHR13]
             if not q in [7, 9] then
-                Append(maximalSubgroups, C3SubgroupsSpecialLinearGroupGeneric(2, q));
+                Append(maximalSubgroups, C3SubgroupsSpecialLinearGroupGeneric(2, q, opts));
             fi;
         else 
             # n = 3
 
             # Cf. Proposition 3.2.3 in [BHR13]
             if q <> 4 then
-                Append(maximalSubgroups, C3SubgroupsSpecialLinearGroupGeneric(3, q));
+                Append(maximalSubgroups, C3SubgroupsSpecialLinearGroupGeneric(3, q, opts));
             fi;
         fi;
     fi;
 
-    if 4 in classes then
+    if 4 in opts.classes then
         # Class C4 subgroups ######################################################
         # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10), 
         #                  3.11.8 (n = 12) in [BHR13]
         # For all other n, class C4 is empty.
-        Append(maximalSubgroups, C4SubgroupsSpecialLinearGroupGeneric(n, q));
+        Append(maximalSubgroups, C4SubgroupsSpecialLinearGroupGeneric(n, q, opts));
     fi;
 
-    if 5 in classes then
+    if 5 in opts.classes then
         # Class C5 subgroups ######################################################
         # Cf. Propositions 3.2.4 (n = 3), 3.3.5 (n = 4), 3.4.3 (n = 5), 
         #                  3.5.7 (n = 6), 3.6.3 (n = 7), 3.7.8 (n = 8),
         #                  3.8.4 (n = 9), 3.9.7 (n = 10), 3.10.3 (n = 11),
         #                  3.11.9 (n = 12) in [BHR13]
         if n <> 2 then
-            Append(maximalSubgroups, C5SubgroupsSpecialLinearGroupGeneric(n, q));
+            Append(maximalSubgroups, C5SubgroupsSpecialLinearGroupGeneric(n, q, opts));
         else
             # n = 2
 
             # Cf. Lemma 3.1.5 in [BHR13]
-            if  p <> 2 or not IsPrimeInt(e) then
-                Append(maximalSubgroups, C5SubgroupsSpecialLinearGroupGeneric(2, q));
+            if p <> 2 or not IsPrimeInt(e) then
+                Append(maximalSubgroups, C5SubgroupsSpecialLinearGroupGeneric(2, q, opts));
             fi;
         fi;
     fi;
 
-    if 6 in classes then
+    if 6 in opts.classes then
         # Class C6 subgroups ######################################################
         # Cf. Lemma 3.1.6 (n = 2) and Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
         #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
@@ -1225,18 +1298,18 @@ function(n, q, classes...)
 
         # Cf. Theorem 6.3.10 in [BHR13]
         if n <> 2 or not q mod 40 in [11, 19, 21, 29] then 
-            Append(maximalSubgroups, C6SubgroupsSpecialLinearGroupGeneric(n, q));
+            Append(maximalSubgroups, C6SubgroupsSpecialLinearGroupGeneric(n, q, opts));
         fi;
     fi;
 
-    if 7 in classes then
+    if 7 in opts.classes then
         # Class C7 subgroups ######################################################
         # Cf. Proposition 3.8.6 (n = 9) in [BHR13]
         # For all other n, class C7 is empty.
-        Append(maximalSubgroups, C7SubgroupsSpecialLinearGroupGeneric(n, q));
+        Append(maximalSubgroups, C7SubgroupsSpecialLinearGroupGeneric(n, q, opts));
     fi;
 
-    if 8 in classes then
+    if 8 in opts.classes then
         # Class C8 subgroups ######################################################
         # Cf. Lemma 3.1.1 (n = 2) and Propositions 3.2.6 (n = 3), 3.3.7 (n = 4),
         #                                          3.4.3 (n = 5), 3.5.8 (n = 6),
@@ -1244,11 +1317,11 @@ function(n, q, classes...)
         #                                          3.8.7 (n = 9), 3.9.8 (n = 10),
         #                                          3.10.3 (n = 11), 3.11.10 (n = 12) in [BHR13]
         if n <> 2 then
-            Append(maximalSubgroups, C8SubgroupsSpecialLinearGroupGeneric(n, q));
+            Append(maximalSubgroups, C8SubgroupsSpecialLinearGroupGeneric(n, q, opts));
         fi;
     fi;
 
-    if 9 in classes then
+    if 9 in opts.classes then
         # Class C9 subgroups ######################################################
         # Cf. Theorems 4.10.12 (n = 2), 4.10.2 (n = 3), 4.10.3 (n = 4),
         #              4.10.4 (n = 5), 4.10.5 (n = 6), 4.10.6 (n = 7),
@@ -1260,7 +1333,7 @@ function(n, q, classes...)
         # Cf. Tables 8.2 (n = 2), 8.4 (n = 3), 8.9 (n = 4), 8.19 (n = 5),
         #            8.25 (n = 6), 8.36 (n = 7), 8.45 (n = 8), 8.55 (n = 9),
         #            8.61 (n = 10), 8.71 (n = 11), 8.77 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C9SubgroupsSpecialLinearGroupGeneric(n, q));
+        Append(maximalSubgroups, C9SubgroupsSpecialLinearGroupGeneric(n, q, opts));
     fi;
 
     return maximalSubgroups;
@@ -1279,7 +1352,7 @@ function(n, q)
 end);
 
 BindGlobal("C1SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local result;
     # type P_k subgroups
     result := List([1..QuoInt(n, 2)], k -> SUStabilizerOfIsotropicSubspace(n, q, k));
@@ -1289,9 +1362,9 @@ function(n, q)
 end);
 
 BindGlobal("C2SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local divisorListOfn, result;
-    
+ 
     divisorListOfn := List(DivisorsInt(n));
     Remove(divisorListOfn, 1);
     # Cf. Proposition 2.3.6 in [BHR13]
@@ -1310,16 +1383,19 @@ function(n, q)
 end);
 
 BindGlobal("C3SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     return List(Filtered(PrimeDivisors(n), IsOddInt), 
                 s -> GammaLMeetSU(n, q, s));
 end);
 
 BindGlobal("C4SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local divisorListOfn, result, n1, numberOfConjugates, generatorGUMinusSU,
-    tensorProductSubgroup;
-    
+    tensorProductSubgroup, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
     divisorListOfn := List(DivisorsInt(n));
     Remove(divisorListOfn, 1);
     divisorListOfn := Filtered(divisorListOfn, x -> x < n / x);
@@ -1333,7 +1409,11 @@ function(n, q)
     for n1 in divisorListOfn do
         tensorProductSubgroup := TensorProductStabilizerInSU(n1, QuoInt(n, n1), q);
         # Cf. Tables 3.5.B and 3.5.G in [KL90]
-        numberOfConjugates := Gcd([q + 1, n1, QuoInt(n, n1)]);
+        if all then
+            numberOfConjugates := Gcd([q + 1, n1, QuoInt(n, n1)]);
+        else
+            numberOfConjugates := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(tensorProductSubgroup, 
                                                 generatorGUMinusSU,
                                                 numberOfConjugates));
@@ -1343,10 +1423,13 @@ function(n, q)
 end);
 
 BindGlobal("C5SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local factorisation, p, e, generatorGUMinusSU, primeDivisorsOfe,
-    degreeOfExtension, f, subfieldGroup, numberOfConjugates, result, epsilon;
-    
+    degreeOfExtension, f, subfieldGroup, numberOfConjugates, result, epsilon, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
     e := factorisation[2];
@@ -1362,7 +1445,11 @@ function(n, q)
         f := QuoInt(e, degreeOfExtension);
         subfieldGroup := SubfieldSL(n, p, e, f);
         # Cf. Tables 3.5.B and 3.5.G in [KL90]
-        numberOfConjugates := Gcd(n, QuoInt(q + 1, p ^ f + 1));
+        if all then
+            numberOfConjugates := Gcd(n, QuoInt(q + 1, p ^ f + 1));
+        else
+            numberOfConjugates := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(subfieldGroup, 
                                                 generatorGUMinusSU, 
                                                 numberOfConjugates));
@@ -1373,15 +1460,24 @@ function(n, q)
         if IsOddInt(n) then 
             subfieldGroup := OrthogonalSubfieldSU(0, n, q);
             # Cf. Tables 3.5.B and 3.5.G in [KL90]
-            numberOfConjugates := Gcd(n, q + 1);
+            if all then
+                numberOfConjugates := Gcd(n, q + 1);
+            else
+                numberOfConjugates := 1;
+            fi;
             Append(result, ConjugatesInGeneralGroup(subfieldGroup,
                                                     generatorGUMinusSU,
                                                     numberOfConjugates));
-        else 
-            for epsilon in [-1, 1] do
-                subfieldGroup := OrthogonalSubfieldSU(epsilon, n, q);
-                # Cf. Tables 3.5.B and 3.5.G in [KL90]
+        else
+            # Cf. Tables 3.5.B and 3.5.G in [KL90]
+            if all then
                 numberOfConjugates := QuoInt(Gcd(q + 1, n), 2);
+            else
+                numberOfConjugates := 1;
+            fi;
+            for epsilon in [-1, 1] do
+                if n = 4 and q = 3 and epsilon = 1 then continue; fi;  # only type GO-
+                subfieldGroup := OrthogonalSubfieldSU(epsilon, n, q);
                 Append(result, ConjugatesInGeneralGroup(subfieldGroup,
                                                         generatorGUMinusSU,
                                                         numberOfConjugates));
@@ -1393,7 +1489,11 @@ function(n, q)
     if IsEvenInt(n) then
         subfieldGroup := SymplecticSubfieldSU(n, q);
         # Cf. Tables 3.5.B and 3.5.G in [KL90]
-        numberOfConjugates := Gcd(QuoInt(n, 2), q + 1);
+        if all then
+            numberOfConjugates := Gcd(QuoInt(n, 2), q + 1);
+        else
+            numberOfConjugates := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(subfieldGroup,
                                                 generatorGUMinusSU,
                                                 numberOfConjugates));
@@ -1403,9 +1503,12 @@ function(n, q)
 end);
 
 BindGlobal("C6SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
-    generatorGUMinusSU, numberOfConjugates, extraspecialNormalizerSubgroup;
+    generatorGUMinusSU, numberOfConjugates, extraspecialNormalizerSubgroup, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
     if not IsPrimePowerInt(n) then
@@ -1425,8 +1528,12 @@ function(n, q)
         if 2 * e = OrderMod(p, r) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(r, m, q);
             # Cf. Tables 3.5.B and 3.5.G in [KL90]
-            numberOfConjugates := Gcd(n, q + 1);
-            if n = 3 and ((q - 2) mod 9 = 0 or (q - 5) mod 9 = 0) then
+            if all then
+                numberOfConjugates := Gcd(n, q + 1);
+                if n = 3 and ((q - 2) mod 9 = 0 or (q - 5) mod 9 = 0) then
+                    numberOfConjugates := 1;
+                fi;
+            else
                 numberOfConjugates := 1;
             fi;
             Append(result, ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
@@ -1438,9 +1545,13 @@ function(n, q)
         if e = 1 and 2 * e = OrderMod(p, 4) then
             extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSU(2, m, q);
             # Cf. Tables 3.5.B and 3.5.G in [KL90]
-            numberOfConjugates := Gcd(n, q + 1);
-            if n = 4 and (q - 3) mod 8 = 0 then
-                numberOfConjugates := 2;
+            if all then
+                numberOfConjugates := Gcd(n, q + 1);
+                if n = 4 and (q - 3) mod 8 = 0 then
+                    numberOfConjugates := 2;
+                fi;
+            else
+                numberOfConjugates := 1;
             fi;
             Append(result, ConjugatesInGeneralGroup(extraspecialNormalizerSubgroup,
                                                     generatorGUMinusSU, 
@@ -1452,10 +1563,13 @@ function(n, q)
 end);
 
 BindGlobal("C7SubgroupsSpecialUnitaryGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local m, t, factorisationOfn, factorisationOfnExponents, highestPowern,
     result, divisorsHighestPowern, numberOfConjugates, tensorInducedSubgroup, 
-    generatorGUMinusSU;
+    generatorGUMinusSU, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
     generatorGUMinusSU := GUMinusSU(n, q);
@@ -1475,9 +1589,13 @@ function(n, q)
         fi;
         tensorInducedSubgroup := TensorInducedDecompositionStabilizerInSU(m, t, q);
         # Cf. Tables 3.5.B and 3.5.G in [KL90]
-        numberOfConjugates := Gcd(q + 1, m ^ (t - 1));
-        if m mod 4 = 2 and t = 2 and q mod 4 = 1 then
-            numberOfConjugates := Gcd(q + 1, m) / 2;
+        if all then
+            numberOfConjugates := Gcd(q + 1, m ^ (t - 1));
+            if m mod 4 = 2 and t = 2 and q mod 4 = 1 then
+                numberOfConjugates := Gcd(q + 1, m) / 2;
+            fi;
+        else
+            numberOfConjugates := 1;
         fi;
         Append(result, ConjugatesInGeneralGroup(tensorInducedSubgroup,
                                                 generatorGUMinusSU, 
@@ -2294,19 +2412,23 @@ function(n, q, opts...)
 end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSpecialUnitaryGroup,
-function(n, q, classes...)
-    local maximalSubgroups, subfieldGroup, numberOfConjugates,
-    generatorGUMinusSU;
+function(n, q, opts...)
+    local maximalSubgroups;
 
-    if Length(classes) = 0 then
-        classes := [1..9];
-    elif Length(classes) = 1 and IsList(classes[1]) then
-        classes := classes[1];
+    if Length(opts) = 0 then
+        opts := rec(classes := [1..9]);
+    elif Length(opts) = 1 and IsList(opts[1]) then
+        opts := rec(classes := ShallowCopy(opts[1]));
+    elif Length(opts) = 1 and IsRecord(opts[1]) then
+        opts := ShallowCopy(opts[1]);
+        if not IsBound(opts.classes) then opts.classes := [1..9]; fi;
+    else
+        ErrorNoReturn("only one optional argument allowed: ",
+                      "must be a list or record");
     fi;
-    if not IsSubset([1..9], classes) then
+    if not IsSubset([1..9], opts.classes) then
         ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
-
 
     if n < 3 then
         Error("<n> must be at least 3 in case 'U' since",
@@ -2316,20 +2438,18 @@ function(n, q, classes...)
         Error("PSU(3, 2) is soluble");
     fi;
 
-    generatorGUMinusSU := GUMinusSU(n, q);
-
     maximalSubgroups := [];
 
-    if 1 in classes then
+    if 1 in opts.classes then
         # Class C1 subgroups ######################################################
         # Cf. Propositions 3.2.1 (n = 3), 3.3.1 (n = 4), 3.4.1 (n = 5), 
         #                  3.5.1 (n = 6), 3.6.1 (n = 7), 3.7.1 (n = 8), 
         #                  3.8.1 (n = 9), 3.9.1 (n = 10), 3.10.1 (n = 11), 
         #                  3.11.1 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C1SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        Append(maximalSubgroups, C1SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
     fi;
 
-    if 2 in classes then
+    if 2 in opts.classes then
         # Class C2 subgroups ######################################################
         # Cf. Propositions 3.2.2 (n = 3), 3.3.2, 3.3.3 (all n = 4), 
         #                  3.4.2 (n = 5), 3.5.2, 3.5.3, 3.5.4 (all n = 6),
@@ -2338,7 +2458,7 @@ function(n, q, classes...)
         #                  3.10.2 (n = 11), 3.11.2, 3.11.3, 3.11.4, 3.11.5,
         #                  3.11.6 (all n = 12) in [BHR13]
         if not (n = 3 and q = 5) and not (n = 4 and q <= 3) and not (n = 6 and q = 2) then
-            Append(maximalSubgroups, C2SubgroupsSpecialUnitaryGroupGeneric(n, q));
+            Append(maximalSubgroups, C2SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
         # There are no maximal C2 subgroups for n = 3 and q = 5, cf. Theorem
         # 6.3.10 in [BHR13].
         elif n = 4 and q <= 3 then
@@ -2355,7 +2475,7 @@ function(n, q, classes...)
         fi;
     fi;
 
-    if 3 in classes then
+    if 3 in opts.classes then
         # Class C3 subgroups ######################################################
         # Cf. Propositions 3.2.3 (n = 3), 3.3.4 (n = 4), 3.4.3 (n = 5), 
         #                  3.5.5 (n = 6), 3.6.3 (n = 7), 3.7.5 (n = 8), 
@@ -2364,48 +2484,33 @@ function(n, q, classes...)
         if not (n = 6 and q = 2) and not (n = 3 and q = 5)
                                  and not (n = 3 and q = 3)
                                  and not (n = 5 and q = 2) then
-            Append(maximalSubgroups, C3SubgroupsSpecialUnitaryGroupGeneric(n, q));
+            Append(maximalSubgroups, C3SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
         fi;
         # There are no maximal C3 subgroups in the cases excluded above, cf.
         # Proposition 3.5.5 and Theorem 6.3.10 in [BHR13]
     fi;
 
-    if 4 in classes then
+    if 4 in opts.classes then
         # Class C4 subgroups ######################################################
         # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10), 
         #                  3.11.8 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C4SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        Append(maximalSubgroups, C4SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
     fi;
 
-    if 5 in classes then
+    if 5 in opts.classes then
         # Class C5 subgroups ######################################################
         # Cf. Propositions 3.2.4 (n = 3), 3.3.5 (n = 4), 3.4.3 (n = 5), 
         #                  3.5.7 (n = 6), 3.6.3 (n = 7), 3.7.8 (n = 8),
         #                  3.8.4 (n = 9), 3.9.7 (n = 10), 3.10.3 (n = 11),
         #                  3.11.9 (n = 12) in [BHR13]
-        if not (n = 3 and q = 3) and not (n = 3 and q = 5) and not (n = 4 and q = 3) then
-            Append(maximalSubgroups, C5SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        if not (n = 3 and q = 3) and not (n = 3 and q = 5) then
+            Append(maximalSubgroups, C5SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
+        fi;
         # There are no maximal C5 subgroups for n = 3 and q = 3 or n = 3 and q = 5, 
         # cf. Proposition 3.2.4 and Theorem 6.3.10 in [BHR13]
-        elif n = 4 and q = 3 then
-            # type Sp
-            subfieldGroup := SymplecticSubfieldSU(n, q);
-            # Cf. Tables 3.5.B and 3.5.G in [KL90]
-            numberOfConjugates := 2;
-            Append(maximalSubgroups, ConjugatesInGeneralGroup(subfieldGroup,
-                                                              generatorGUMinusSU,
-                                                              numberOfConjugates));
-            # type GO-
-            subfieldGroup := OrthogonalSubfieldSU(-1, n, q);
-            # Cf. Tables 3.5.B and 3.5.G in [KL90]
-            numberOfConjugates := 2;
-            Append(maximalSubgroups, ConjugatesInGeneralGroup(subfieldGroup,
-                                                              generatorGUMinusSU,
-                                                              numberOfConjugates));
-        fi;
     fi;
 
-    if 6 in classes then
+    if 6 in opts.classes then
         # Class C6 subgroups ######################################################
         # Cf. Lemma 3.1.6 (n = 2) and Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
         #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
@@ -2415,18 +2520,18 @@ function(n, q, classes...)
 
         # Cf. Theorem 6.3.10 in [BHR13]
         if not (n = 3 and q = 5) then
-            Append(maximalSubgroups, C6SubgroupsSpecialUnitaryGroupGeneric(n, q));
+            Append(maximalSubgroups, C6SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
         fi;
     fi;
 
-    if 7 in classes then
+    if 7 in opts.classes then
         # Class C7 subgroups ######################################################
         # Cf. Proposition 3.8.6 (n = 9) in [BHR13]
         # For all other n, class C7 is empty.
-        Append(maximalSubgroups, C7SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        Append(maximalSubgroups, C7SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
     fi;
 
-    if 9 in classes then
+    if 9 in opts.classes then
         # Class C9 subgroups ######################################################
         # Cf. Theorems 4.10.2 (n = 3), 4.10.3 (n = 4), 4.10.4 (n = 5),
         #              4.10.5 (n = 6), 4.10.6 (n = 7), 4.10.7 (n = 8),
@@ -2438,7 +2543,7 @@ function(n, q, classes...)
         # Cf. Tables 8.6 (n = 3), 8.11 (n = 4), 8.21 (n = 5), 8.27 (n = 6),
         #            8.38 (n = 7), 8.47 (n = 8), 8.57 (n = 9), 8.63 (n = 10),
         #            8.73 (n = 11), 8.79 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C9SubgroupsSpecialUnitaryGroupGeneric(n, q));
+        Append(maximalSubgroups, C9SubgroupsSpecialUnitaryGroupGeneric(n, q, opts));
     fi;
 
     return maximalSubgroups;
@@ -2464,17 +2569,25 @@ function(n, q)
 end);
 
 BindGlobal("C1SubgroupsSymplecticGroupGeneric",
-function(n, q)
-    local result;
+function(n, q, opts...)
+    local result, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
     # type P_k subgroups
+    if n = 4 and IsEvenInt(q) and not all then
+        return [SpStabilizerOfIsotropicSubspace(n, q, 1)];
+    fi;
     result := List([1..QuoInt(n, 2)], k -> SpStabilizerOfIsotropicSubspace(n, q, k));
+
     # type Sp(2 * k, q) _|_ Sp(n - 2 * k, q) subgroups
     Append(result, List([1..QuoInt(n - 2, 4)], k -> SpStabilizerOfNonDegenerateSubspace(n, q, k)));
     return result;
 end);
 
 BindGlobal("C2SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local result, divisorListOfn, t;
     
     result := [];
@@ -2503,7 +2616,7 @@ function(n, q)
 end);
 
 BindGlobal("C3SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local primeDivisorsOfn, s, result;
 
     primeDivisorsOfn := PrimeDivisors(n);
@@ -2517,7 +2630,7 @@ function(n, q)
     od;
 
     # unitary type subgroups
-    if IsEvenInt(n)  and IsOddInt(q) then
+    if IsOddInt(q) then
         Add(result, UnitarySemilinearSp(n, q));
     fi;
 
@@ -2525,7 +2638,7 @@ function(n, q)
 end);
 
 BindGlobal("C4SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local result, l, halfOfEvenFactorsOfn, n_1, n_2;
 
     if IsEvenInt(q) then
@@ -2547,7 +2660,10 @@ function(n, q)
     for n_1 in 2 * halfOfEvenFactorsOfn do
         n_2 := QuoInt(n, n_1);
         if IsOddInt(n_2) then
+            if q = 3 and n_2 = 3 then continue; fi;
             Add(result, TensorProductStabilizerInSp(0, n_1, n_2, q));
+        elif n = 8 then
+            Add(result, TensorProductStabilizerInSp(-1, n_1, n_2, q));
         else
             Add(result, TensorProductStabilizerInSp(1, n_1, n_2, q));
             Add(result, TensorProductStabilizerInSp(-1, n_1, n_2, q));
@@ -2558,9 +2674,12 @@ function(n, q)
 end);
 
 BindGlobal("C5SubgroupsSymplecticGroupGeneric",
-function(n, q)
-    local factorisation, p, e, result, generatorNormSpMinusSp, r, G, numberOfConjugates;
-    
+function(n, q, opts...)
+    local factorisation, p, e, result, generatorNormSpMinusSp, r, G, numberOfConjugates, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
     factorisation := PrimePowersInt(q);
     p := factorisation[1];
     e := factorisation[2];
@@ -2574,7 +2693,11 @@ function(n, q)
         G := SubfieldSp(n, p, e, QuoInt(e, r));
 
         # Cf. Proposition 4.5.4 (i) in [KL90] for the number of conjugates
-        numberOfConjugates := Gcd(2, q - 1, r);
+        if all then
+            numberOfConjugates := Gcd(2, q - 1, r);
+        else
+            numberOfConjugates := 1;
+        fi;
         Append(result, ConjugatesInGeneralGroup(G, generatorNormSpMinusSp, numberOfConjugates));
     od;
 
@@ -2582,9 +2705,12 @@ function(n, q)
 end);
 
 BindGlobal("C6SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
-    generatorNormSpMinusSp, numberOfConjugates, extraspecialNormalizerSubgroup;
+    generatorNormSpMinusSp, numberOfConjugates, extraspecialNormalizerSubgroup, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     if IsEvenInt(q) then
         return [];
@@ -2608,7 +2734,7 @@ function(n, q)
     if r = 2 and e = 1 then
         extraspecialNormalizerSubgroup := ExtraspecialNormalizerInSp(m, q);
         # Cf. Tables 3.5.C and 3.5.G in [KL90]
-        if (q - 1) mod 8 = 0  or (q - 7) mod 8 = 0 then
+        if all and ((q - 1) mod 8 = 0 or (q - 7) mod 8 = 0) then
             numberOfConjugates := 2;
         else
             numberOfConjugates := 1;
@@ -2622,7 +2748,7 @@ function(n, q)
 end);
 
 BindGlobal("C7SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
     local primeDivs, listOfts;
 
     if IsEvenInt(q) then
@@ -2646,7 +2772,13 @@ function(n, q)
 end);
 
 BindGlobal("C8SubgroupsSymplecticGroupGeneric",
-function(n, q)
+function(n, q, opts...)
+    local all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
+
+    if n = 4 and not all then return []; fi;
     return [OrthogonalInSp(1, n, q), OrthogonalInSp(-1, n, q)];
 end);
 
@@ -3201,18 +3333,23 @@ function(n, q, opts...)
 end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsSymplecticGroup,
-function(n, q, classes...)
+function(n, q, opts...)
     local maximalSubgroups;
 
-    if Length(classes) = 0 then
-        classes := [1..9];
-    elif Length(classes) = 1 and IsList(classes[1]) then
-        classes := classes[1];
+    if Length(opts) = 0 then
+        opts := rec(classes := [1..9]);
+    elif Length(opts) = 1 and IsList(opts[1]) then
+        opts := rec(classes := ShallowCopy(opts[1]));
+    elif Length(opts) = 1 and IsRecord(opts[1]) then
+        opts := ShallowCopy(opts[1]);
+        if not IsBound(opts.classes) then opts.classes := [1..9]; fi;
+    else
+        ErrorNoReturn("only one optional argument allowed: ",
+                      "must be a list or record");
     fi;
-    if not IsSubset([1..9], classes) then
+    if not IsSubset([1..9], opts.classes) then
         ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
-
 
     if n < 4 then
         Error("<n> must be at least 4 in case 'S' since",
@@ -3225,83 +3362,75 @@ function(n, q, classes...)
 
     maximalSubgroups := [];
 
-    if 1 in classes then
+    if 1 in opts.classes then
         # Class C1 subgroups ######################################################
         # Cf. Propositions 3.3.1 (n = 4), 3.5.1 (n = 6), 3.7.1 (n = 8),
         #                  3.9.1 (n = 10), 3.11.1 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C1SubgroupsSymplecticGroupGeneric(n, q));
+        Append(maximalSubgroups, C1SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
-    if 2 in classes then
+    if 2 in opts.classes then
         # Class C2 subgroups ######################################################
         # Cf. Propositions 3.3.3 (n = 4), 3.5.3, 3.5.4 (all n = 6),
         #                  3.7.3, 3.7.4 (all n = 8), 3.9.3, 3.9.4 (all n = 10),
         #                  3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12) in [BHR13]
         if not (n = 4 and q = 3) then
-            Append(maximalSubgroups, C2SubgroupsSymplecticGroupGeneric(n, q));
+            Append(maximalSubgroups, C2SubgroupsSymplecticGroupGeneric(n, q, opts));
         else
             Add(maximalSubgroups, SpNonDegenerateImprimitives(n, q, 2));
         fi;
     fi;
 
-    if 3 in classes then
+    if 3 in opts.classes then
         # Class C3 subgroups ######################################################
         # Cf. Propositions 3.3.4 (n = 4), 3.5.5 (n = 6), 3.7.5 (n = 8),
         #                  3.9.5 (n = 10), 3.11.7 (n = 12) in [BHR13]
         if not (n = 4 and q = 3) then
-            Append(maximalSubgroups, C3SubgroupsSymplecticGroupGeneric(n, q));
+            Append(maximalSubgroups, C3SubgroupsSymplecticGroupGeneric(n, q, opts));
         else
             Add(maximalSubgroups, SymplecticSemilinearSp(n, q, 2));
         fi;
     fi;
 
-    if 4 in classes then
+    if 4 in opts.classes then
         # Class C4 subgroups ######################################################
         # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10)
         #                  3.11.8 (n = 12) in [BHR13]
         # For n = 4, class C4 is empty.
-        if n = 8 and IsOddInt(q) then
-            # Cf. Lemma 3.7.6 in [BHR13]
-            Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 4, q));
-        elif n = 12 and q = 3 then
-            Add(maximalSubgroups, TensorProductStabilizerInSp(1, 2, 6, q));
-            Add(maximalSubgroups, TensorProductStabilizerInSp(-1, 2, 6, q));
-        elif not (n = 6 and q <= 3) and not (n = 10 and q = 2) then
-            Append(maximalSubgroups, C4SubgroupsSymplecticGroupGeneric(n, q));
-        fi;
+        Append(maximalSubgroups, C4SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
-    if 5 in classes then
+    if 5 in opts.classes then
         # Class C5 subgroups ######################################################
         # Cf. Propositions 3.3.5 (n = 4), 3.5.7 (n = 6), 3.7.8 (n = 8),
         #                  3.9.7 (n = 10), 3.11.9 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C5SubgroupsSymplecticGroupGeneric(n, q));
+        Append(maximalSubgroups, C5SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
-    if 6 in classes then
+    if 6 in opts.classes then
         # Class C6 subgroups ######################################################
         # Cf. Propositions 3.3.6 (n = 4), 3.7.9 (n = 8) in [BHR13]
         # For all other n, class C6 is empty.
-        Append(maximalSubgroups, C6SubgroupsSymplecticGroupGeneric(n, q));
+        Append(maximalSubgroups, C6SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
-    if 7 in classes then
+    if 7 in opts.classes then
         # Class C7 subgroups ######################################################
         # Cf. Proposition 3.7.10 (n = 8) in [BHR13]
         # For all other n, class C7 is empty.
-        Append(maximalSubgroups, C7SubgroupsSymplecticGroupGeneric(n, q));
+        Append(maximalSubgroups, C7SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
-    if 8 in classes then
+    if 8 in opts.classes then
         # Class C8 subgroups ######################################################
         # Cf. Propositions 3.3.7 (n = 4), 3.5.8 (n = 6), 3.7.11 (n = 8),
         #                  3.9.8 (n = 10), 3.11.10 (n = 12) in [BHR13]
         if IsEvenInt(q) then
-            Append(maximalSubgroups, C8SubgroupsSymplecticGroupGeneric(n, q));
+            Append(maximalSubgroups, C8SubgroupsSymplecticGroupGeneric(n, q, opts));
         fi;
     fi;
 
-    if 9 in classes then
+    if 9 in opts.classes then
         # Class C9 subgroups ######################################################
         # Cf. Theorems 4.10.13 (n = 4), 4.10.14 (n = 6), 4.10.15 (n = 8),
         #              4.10.16 (n = 10), 4.10.17 (n = 12) in [BHR13]
@@ -3309,7 +3438,7 @@ function(n, q, classes...)
         #              5.11.10 (n = 10), 5.11.10 (n = 12) in [BHR13]
         # Cf. Tables 8.13, 8.14, 8.15 (all n = 4), 8.29 (n = 6),
         #            8.48 (n = 8), 8.65 (n = 10), 8.81 (n = 12) in [BHR13]
-        Append(maximalSubgroups, C9SubgroupsSymplecticGroupGeneric(n, q));
+        Append(maximalSubgroups, C9SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
     return maximalSubgroups;
@@ -3383,8 +3512,11 @@ function(epsilon, n, q, G, numberOfConjugates)
 end);
     
 BindGlobal("C1SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
-    local result, m, G, k, i;
+function(epsilon, n, q, opts...)
+    local result, m, G, k, i, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
 
@@ -3397,7 +3529,7 @@ function(epsilon, n, q)
             continue;
         fi;
         G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k);
-        if epsilon = 1 and k = m then
+        if epsilon = 1 and k = m and all then
             Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
         else
             Add(result, G);
@@ -3426,9 +3558,11 @@ function(epsilon, n, q)
                         if i > 2 or q > 3 then
                             Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 1, i));
                         fi;
-                        # conjugate to OmegaStabilizerOfIsotropicSubspace(1, 8, q, 1)
-                        # under graph automorphism in case (n, i) = (8, 2)
-                        Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, i));
+                        if n <> 8 or i > 2 or all then
+                            # conjugate to OmegaStabilizerOfIsotropicSubspace(1, 8, q, 1)
+                            # under graph automorphism in case (n, i) = (8, 2)
+                            Add(result, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, -1, i));
+                        fi;
                     fi;
                 else  # epsilon = -1
                     if (i > 2 or q > 3) and not (n = 4 and q = 2) then
@@ -3440,7 +3574,12 @@ function(epsilon, n, q)
                 fi;
             else
                 if i < m and IsOddInt(q) then
-                    Append(result, ConjugateSubgroupOmega(epsilon, n, q, OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, i), 2));
+                    G := OmegaStabilizerOfNonDegenerateSubspace(epsilon, n, q, 0, i);
+                    if all then
+                        Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+                    else
+                        Add(result, G);
+                    fi;
                 fi;
             fi;
         od;
@@ -3456,8 +3595,11 @@ function(epsilon, n, q)
 end);
 
 BindGlobal("C2SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
-    local result, factorisation, p, e, squareDiscriminant, listOfms, t, G, m;
+function(epsilon, n, q, opts...)
+    local result, factorisation, p, e, squareDiscriminant, listOfms, t, G, m, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
     factorisation := PrimePowersInt(q);
@@ -3497,7 +3639,9 @@ function(epsilon, n, q)
                     # Number of conjugates according to Proposition 4.2.14 (I) in [KL90]
                     # Non-degenerate type with m = 1 needs special treatment
                     # according to Proposition 4.2.15 in [KL90]
-                    if m = 1 then
+                    if not all then
+                        Add(result, G);
+                    elif m = 1 then
                         if q mod 8 in [1, 7] then
                             Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
                         elif n <> 8 then  # in O_8(2) if n = 8
@@ -3509,7 +3653,7 @@ function(epsilon, n, q)
                 fi;
             else  # m*t odd
                 G := OmegaNonDegenerateImprimitives(epsilon, n, q, 0, t);
-                if m = 1 and q mod 8 in [1, 7] then
+                if all and m = 1 and q mod 8 in [1, 7] then
                     Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
                 else
                     Add(result, G);
@@ -3525,7 +3669,11 @@ function(epsilon, n, q)
         # Cf. Table 3.5.E in [KL90] and Table 8.50 in [BHR13] (novelty for (n, q) = (8, 3))
         if epsilon = 1 and n mod 4 = 0 and (n <> 8 or q > 3) then
             G := OmegaIsotropicImprimitives(n, q);
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+            if all then
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+            else
+                Add(result, G);
+            fi;
         fi;
 
         # Non-degenerate non-isometric type, number of conjugates is 1 according to Proposition 4.2.16 (I) in [KL90]
@@ -3540,9 +3688,12 @@ end);
 
 # Cf. Tables 3.5.D, 3.5.E, 3.5.F and 3.5.G in [KL90]
 BindGlobal("C3SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
+function(epsilon, n, q, opts...)
     local result, primeDivisorsOfn, s, orthogonalTypeSubgroup, numberOfConjugates,
-    unitaryTypeSubgroup;
+    unitaryTypeSubgroup, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
     primeDivisorsOfn := PrimeDivisors(n);
@@ -3555,11 +3706,13 @@ function(epsilon, n, q)
         fi;
 
         if s = 2 then
-            if not n mod 4 = 0 then
+            # if (n, epsilon) = (8, 1), then OrthogonalSemilinear(epsilon, epsilon, n, q)
+            # is conjugate to O-(4,q)wr2 under graph automorphism
+            if not n mod 4 = 0 or not all and n = 8 and epsilon = 1 then
                 continue;
             else
                 orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, epsilon, n, q);
-                if epsilon = 1 then
+                if all and epsilon = 1 then
                     numberOfConjugates := 2;
                 else
                     numberOfConjugates := 1;
@@ -3577,7 +3730,7 @@ function(epsilon, n, q)
     # type GO(0, n / 2, q ^ 2)
     if n mod 4 = 2 and IsOddInt(q) then
         orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, 0, n, q);
-        if q mod 4 = 2 + epsilon then
+        if q mod 4 = 2 + epsilon or not all then
             numberOfConjugates := 1;
         else
             numberOfConjugates := 2;
@@ -3588,9 +3741,11 @@ function(epsilon, n, q)
     fi;
 
     # type GU(n / 2, q ^ 2)
-    if (n mod 4 = 2 and epsilon = -1) or (n mod 4 = 0 and epsilon = 1) then
+    # if (n, epsilon) = (8, 1), then UnitarySemilinearOmega(n, q)
+    # is conjugate to O-(2,q) x O-(6,q) under graph automorphism
+    if (n mod 4 = 2 and epsilon = -1) or (n mod 4 = 0 and epsilon = 1 and (all or n <> 8)) then
         unitaryTypeSubgroup := UnitarySemilinearOmega(n, q);
-        if epsilon = 1 then
+        if all and epsilon = 1 then
             numberOfConjugates := 2;
         else
             numberOfConjugates := 1;
@@ -3604,8 +3759,11 @@ function(epsilon, n, q)
 end);
 
 BindGlobal("C4SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
-    local result, listOfn1s, n2, G, n1;
+function(epsilon, n, q, opts...)
+    local result, listOfn1s, n2, G, n1, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     result := [];
 
@@ -3621,10 +3779,12 @@ function(epsilon, n, q)
             if q = 2 and n1 = 2 then continue; fi;
             # if d=8, OrthSpTensor(2,4,q) conjugate to O(3,q)xO(5,q) under graph auto
             # if q even OrthSpTensor(2,4,q) <= irreducible Sp(6,q)
-            if n1 = 2 and n2 = 4 and IsEvenInt(q) then continue; fi;
+            if n1 = 2 and n2 = 4 and (not all or IsEvenInt(q)) then continue; fi;
             G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
             # number of conjugates according to [KL90] Proposition 4.4.12 (I)
-            if IsOddInt(q) and n mod 8 = 0 then
+            if not all then
+                Add(result, G);
+            elif IsOddInt(q) and n mod 8 = 0 then
                 Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
             else
                 Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
@@ -3658,16 +3818,28 @@ function(epsilon, n, q)
             if n1 < n2 then
                 G := OrthogonalTensorProductStabilizerInOmega(1, -1, -1, n1, n2, q);
                 # number of conjugates according to [KL90] Proposition 4.4.16 (I)
-                Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                if all then
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                else
+                    Add(result, G);
+                fi;
                 G := OrthogonalTensorProductStabilizerInOmega(1, 1, 1, n1, n2, q);
                 # number of conjugates according to [KL90] Proposition 4.4.14 (I)
                 if q mod 4 = 3 and (n1 mod 4 = 2 or n2 mod 4 = 2) or n mod 8 = 4 then
                     # The case n1 = 4 is not maximal, see Table 3.5.E in [KL90]
                     if n1 > 4 then
-                        Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                        if all then
+                            Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                        else
+                            Add(result, G);
+                        fi;
                     fi;
                 else
-                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+                    if all then
+                        Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+                    else
+                        Add(result, G);
+                    fi;
                 fi;
             fi;
 
@@ -3675,16 +3847,26 @@ function(epsilon, n, q)
             # number of conjugates according to [KL90] Proposition 4.4.15 (I)
             G := OrthogonalTensorProductStabilizerInOmega(epsilon, 1, -1, n1, n2, q);
             if q mod 4 = 3 and n1 mod 4 = 0 and n2 mod 4 = 2 then
-                Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+                if all then
+                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
+                else
+                    Add(result, G);
+                fi;
             else
                 if n1 > 4 then
-                    Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                    if all then
+                        Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
+                    else
+                        Add(result, G);
+                    fi;
                 fi;
             fi;
             if n1 < n2 then  # error in magma
                 # number of conjugates according to [KL90] Proposition 4.4.15 (I)
                 G := OrthogonalTensorProductStabilizerInOmega(epsilon, 1, -1, n2, n1, q);
-                if q mod 4 = 3 and n2 mod 4 = 0 and n1 mod 4 = 2 then
+                if not all then
+                    Add(result, G);
+                elif q mod 4 = 3 and n2 mod 4 = 0 and n1 mod 4 = 2 then
                     Append(result, ConjugateSubgroupOmega(1, n, q, G, 4));
                 else
                     Append(result, ConjugateSubgroupOmega(1, n, q, G, 2));
@@ -3697,9 +3879,12 @@ function(epsilon, n, q)
 end);
 
 BindGlobal("C5SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
+function(epsilon, n, q, opts...)
     local factorisationOfq, p, e, listOfrs, result, G,
-    numberOfConjugatesPlus, numberOfConjugatesMinus, r;
+    numberOfConjugatesPlus, numberOfConjugatesMinus, r, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     factorisationOfq := PrimePowersInt(q);
     p := factorisationOfq[1];
@@ -3713,7 +3898,11 @@ function(epsilon, n, q)
         # number of conjugates according to [KL90] Proposition 4.5.8 (I)
         if 2 in listOfrs then
             G := SubfieldOmega(0, n, p, e, QuoInt(e, 2), 0);
-            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+            if all then
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
+            else
+                Add(result, G);
+            fi;
             listOfrs := Difference(listOfrs, [2]);
         fi;
 
@@ -3723,7 +3912,7 @@ function(epsilon, n, q)
 
             # number of conjugates according to [KL90] Proposition 4.5.10 (I)
             if epsilon = 1 then
-                if IsEvenInt(q) then
+                if not all or IsEvenInt(q) then
                     numberOfConjugatesPlus := 1;
                     numberOfConjugatesMinus := 1;
                 elif n mod 4 = 2 and p ^ QuoInt(e, 2) mod 4 = 1 then
@@ -3754,9 +3943,12 @@ function(epsilon, n, q)
 end);
 
 BindGlobal("C6SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
+function(epsilon, n, q, opts...)
     local factorisationOfq, p, e, factorisationOfn, r, m, result,
-    numberOfConjugates, extraspecialNormalizerSubgroup;
+    numberOfConjugates, extraspecialNormalizerSubgroup, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     if IsEvenInt(q) then
         return [];
@@ -3777,9 +3969,12 @@ function(epsilon, n, q)
 
     # Cf. Table 4.6.B and the corresponding definition in [KL90]
     if epsilon = 1 and r = 2 and e = 1 then
+        if n = 8 and q mod 8 in [3, 5] then return result; fi;
         extraspecialNormalizerSubgroup := ExtraspecialNormalizerInOmega(m, q);
         # Cf. Tables 3.5.E and 3.5.G in [KL90]
-        if (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
+        if not all then
+            numberOfConjugates := 1;
+        elif (q - 1) mod 8 = 0 or (q - 7) mod 8 = 0 then
             numberOfConjugates := 8;
         else
             numberOfConjugates := 4;
@@ -3793,8 +3988,11 @@ function(epsilon, n, q)
 end);
 
 BindGlobal("C7SubgroupsOrthogonalGroupGeneric",
-function(epsilon, n, q)
-    local primeDivs, result, listOfts, t, m, numberOfConjugates, G, gcd;
+function(epsilon, n, q, opts...)
+    local primeDivs, result, listOfts, t, m, numberOfConjugates, G, gcd, all;
+
+    if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
+    all := not IsBound(opts.all) or opts.all;  # default to true
 
     primeDivs := PrimePowersInt(n);
     if Length(primeDivs) <> 2 then
@@ -3823,12 +4021,16 @@ function(epsilon, n, q)
 
         for t in listOfts do
 
+            # Cf. Table 3.5.E in [KL90]
+            if IsEvenInt(q) then break; fi;
+
             m := primeDivs[1] ^ QuoInt(primeDivs[2], t);
 
+            # Magma also returns O^+(m,q) wr S_t for m = 4 and t > 2, contrary to [KL90] Table 3.5.E
             if m >= 6 then
 
                 # number of conjugates according to [KL90] Proposition 4.7.6 (I)
-                if t = 2 and m mod 4 = 2 then
+                if t = 2 and m mod 4 = 2 or not all then
                     numberOfConjugates := 1;
                 elif t = 3 and m mod 4 = 2 and q mod 4 = 3 then
                     numberOfConjugates := 2;
@@ -3844,11 +4046,11 @@ function(epsilon, n, q)
             if m >= 4 then
 
                 # number of conjugates according to [KL90] Proposition 4.7.7 (I)
-                if t = 2 and m mod 4 = 2 then
+                if t = 2 and m mod 4 = 2 or not all then
                     numberOfConjugates := 1;
-                elif t = 2 and m mod 4 = 4 then
+                elif t = 2 and m mod 4 = 0 then
                     numberOfConjugates := 2;
-                elif t = 3 and m mod 4 = 2 and q mod 4 = 3 then
+                elif t = 3 and m mod 4 = 2 and q mod 4 = 1 then
                     numberOfConjugates := 2;
                 else
                     numberOfConjugates := 4;
@@ -3862,7 +4064,7 @@ function(epsilon, n, q)
         od;
 
         # Cf. [KL90] Proposition 4.7.5 (I)
-        if q in [2, 3] and primeDivs[1] = 3 then
+        if q in [2, 3] and primeDivs[1] = 2 then
             RemoveSet(listOfts, primeDivs[2]);
         fi;
 
@@ -3871,13 +4073,13 @@ function(epsilon, n, q)
 
             m := primeDivs[1] ^ QuoInt(primeDivs[2], t);
 
-            if IsEvenInt(q * t) then
+            if IsEvenInt(q * t) and IsEvenInt(m) and (IsOddInt(q) or m > 4) then
 
                 # number of conjugates according to [KL90] Proposition 4.7.5 (I)
-                if t = 2 and m mod 4 = 2 then
+                if t = 2 and m mod 4 = 2 or not all then
                     numberOfConjugates := 1;
                 else
-                    numberOfConjugates := gcd;
+                    numberOfConjugates := 2 * gcd;
                 fi;
 
                 G := SymplecticTensorInducedDecompositionStabilizerInOmega(m, t, q);
@@ -5046,15 +5248,21 @@ function(epsilon, n, q, opts...)
 end);
 
 InstallGlobalFunction(MaximalSubgroupClassRepsOrthogonalGroup,
-function(epsilon, n, q, classes...)
+function(epsilon, n, q, opts...)
     local maximalSubgroups;
 
-    if Length(classes) = 0 then
-        classes := [1..9];
-    elif Length(classes) = 1 and IsList(classes[1]) then
-        classes := classes[1];
+    if Length(opts) = 0 then
+        opts := rec(classes := [1..9]);
+    elif Length(opts) = 1 and IsList(opts[1]) then
+        opts := rec(classes := ShallowCopy(opts[1]));
+    elif Length(opts) = 1 and IsRecord(opts[1]) then
+        opts := ShallowCopy(opts[1]);
+        if not IsBound(opts.classes) then opts.classes := [1..9]; fi;
+    else
+        ErrorNoReturn("only one optional argument allowed: ",
+                      "must be a list or record");
     fi;
-    if not IsSubset([1..9], classes) then
+    if not IsSubset([1..9], opts.classes) then
         ErrorNoReturn("<classes> must be a subset of [1..9]");
     fi;
 
@@ -5078,7 +5286,7 @@ function(epsilon, n, q, classes...)
 
     maximalSubgroups := [];
 
-    if 1 in classes then
+    if 1 in opts.classes then
         # Class C1 subgroups ######################################################
         # Cf. Propositions 3.6.1 (n = 7), 3.7.1 (n = 8), 3.8.1 (n = 9),
         # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12) in [BHR13]
@@ -5086,10 +5294,10 @@ function(epsilon, n, q, classes...)
         # 8.31, 8.33 (all n = 6), 8.39 (n = 7), 8.50, 8.52 (all n = 8),
         # 8.58 (n = 9), 8.66, 8.86 (all n = 10), 8.74 (n = 11),
         # 8.82, 8.84 (all n = 12) in [BHR13]
-        Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 2 in classes then
+    if 2 in opts.classes then
         # Class C2 subgroups ######################################################
         # Cf. Propositions 3.6.2 (n = 7), 3.7.2, 3.7.3, 3.7.4 (all n = 8),
         # 3.8.2 (n = 9), 3.9.2, 3.9.3, 3.9.4 (all n = 10), 3.10.2 (n = 11),
@@ -5097,28 +5305,28 @@ function(epsilon, n, q, classes...)
         # Cf. Tables 8.2 (n = 3), 8.22 (n = 5), 8.31, 8.33 (all n = 6)
         # 8.39 (n = 7), 8.50 (n = 8), 8.58 (n = 9), 8.66, 8.68 (all n = 10)
         # 8.74 (n = 11), 8.82, 8.84 (all n = 12) in [BHR13]
-        Append(maximalSubgroups, C2SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        Append(maximalSubgroups, C2SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 3 in classes then
+    if 3 in opts.classes then
         # Class C3 subgroups ######################################################
         # Cf. Propositions 3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9),
         # 3.9.5 (n = 10), 3.10.3 (n = 11) and 3.11.7 (n = 12) in [BHR13]
         # Cf. Tables 8.17 (n = 4), 8.31, 8.33 (all n = 6), 8.50, 8.52 (all n = 8)
         # 8.58 (n = 9), 8.66, 8.68 (all n = 10), 8.82, 8.84 (all n = 12)
         # in [BHR13]
-        Append(maximalSubgroups, C3SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        Append(maximalSubgroups, C3SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 4 in classes then
+    if 4 in opts.classes then
         # Class C4 subgroups ######################################################
         # Cf. Propositions 3.7.7 (n = 8), 3.9.6 (n = 10), 3.11.8 (n = 12) in [BHR13]
         # Cf. Tables 8.50 (n = 8), 8.82, 8.84 (all n = 12) in [BHR13]
         # For all other n, class C4 is empty.
-        Append(maximalSubgroups, C4SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        Append(maximalSubgroups, C4SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 5 in classes then
+    if 5 in opts.classes then
         # Class C5 subgroups ######################################################
         # Cf. Propositions 3.6.3 (n = 7), 3.7.8 (n = 8), 3.8.4 (n = 9),
         # 3.9.7 (n = 10), 3.10.3 (n = 11), 3.11.9 (n = 12) in [BHR13]
@@ -5126,30 +5334,26 @@ function(epsilon, n, q, classes...)
         # 8.31, 8.33 (all n = 6), 8.39 (n = 7), 8.50, 8.52 (all n = 8), 8.58 (n = 9),
         # 8.66, 8.68 (all n = 10), 8.74 (n = 11), 8.82, 8.84 (all n = 12)
         # in [BHR13]
-        Append(maximalSubgroups, C5SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        Append(maximalSubgroups, C5SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 6 in classes then
+    if 6 in opts.classes then
         # Class C6 subgroups ######################################################
         # Cf. Proposition 3.7.9 (n = 8) in [BHR13]
         # Cf. Table 8.50 (n = 8) in [BHR13]
         # For all other n, class C6 is empty.
-        if not (q - 3) mod 8 = 0 and not (q - 5) mod 8 = 0 then
-            Append(maximalSubgroups, C6SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
-        fi;
+        Append(maximalSubgroups, C6SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 7 in classes then
+    if 7 in opts.classes then
         # Class C7 subgroups ######################################################
         # Cf. Proposition 3.8.3 (n = 9) in [BHR13]
         # Cf. Table 8.58 (n = 9) in [BHR13]
         # For all other n, class C7 is empty.
-        if n <> 8 then
-            Append(maximalSubgroups, C7SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
-        fi;
+        Append(maximalSubgroups, C7SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
-    if 9 in classes then
+    if 9 in opts.classes then
         # Class C9 subgroups ######################################################
         # Cf. Theorems 4.10.18 (n = 7), 4.10.19 (n = 8), 4.10.20 (n = 9),
         #              4.10.21 (n = 10), 4.10.22 (n = 11),
@@ -5162,7 +5366,7 @@ function(epsilon, n, q, classes...)
         #            8.50, 8.53 (all n = 8), 8.59 (n = 9),
         #            8.67, 8.69 (all n = 10), 8.75 (n = 11),
         #            8.83, 8.85 (all n = 12) in [BHR13]
-        Append(maximalSubgroups, C9SubgroupsOrthogonalGroupGeneric(epsilon, n, q));
+        Append(maximalSubgroups, C9SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
 
     return maximalSubgroups;

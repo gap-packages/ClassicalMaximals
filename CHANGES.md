@@ -1,5 +1,11 @@
 This file describes changes in the ClassicalMaximals package.
 
+## Unreleased
+
+  - Classes C1-C8 now work in all dimensions, following the tables
+    in [KL90]; previously, some cases were only handled up to
+    dimension 12
+
 ## 1.1 (2026-05-26)
 
   - Add `recog` as a dependency

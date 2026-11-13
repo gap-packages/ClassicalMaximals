@@ -25,7 +25,7 @@ in principle, sufficient information to determine these subgroups up to dimensio
 However, explicit computations have so far only been carried out up to dimension 17,
 <Cite Key="BHR13" /> does so up to dimension 12 and for these dimensions our returned
 lists should therefore be complete.
-For higher dimensions we give no completeness guarantee; in particular,
+For higher dimensions, the lists of maximal subgroups of geometric type should be complete;
 all subgroups in class ${\cal S}$ are missing in these cases.
 
 For the maximal subgroups in class ${\cal S}$, our code is in several parts
