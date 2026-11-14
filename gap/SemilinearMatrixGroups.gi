@@ -3,13 +3,19 @@
 # the primitive root z of F.
 BindGlobal("CM_PrimitivePolynomial",
 function(F, s)
-    local q, z, count, small, j, k, digits, polynomial;
+    local q, z, coefficient, count, j, k, digits, polynomial;
     # The constant term is (-1) ^ s times the norm of a root, so it is (-1) ^ s
     # times a primitive element z ^ j of F.
     q := Size(F);
     z := PrimitiveRoot(F);
+    # the i-th element of 0, 1, z, z ^ 2, ..., counting from 0
+    coefficient := function(i)
+        if i = 0 then
+            return Zero(F);
+        fi;
+        return z ^ (i - 1);
+    end;
     for count in Set([Minimum(q, 16), q]) do
-        small := Concatenation([Zero(F)], List([0..count - 2], i -> z ^ i));
         for j in [1..q - 1] do
             if Gcd(j, q - 1) <> 1 then
                 continue;
@@ -21,7 +27,7 @@ function(F, s)
                 digits := CoefficientsQadic(k, count);
                 Append(digits, ListWithIdenticalEntries(s - 1 - Length(digits), 0));
                 polynomial := UnivariatePolynomial(F,
-                    Concatenation([(-1) ^ s * z ^ j], small{digits + 1}, [One(F)]));
+                    Concatenation([(-1) ^ s * z ^ j], List(digits, coefficient), [One(F)]));
                 if IsPrimitivePolynomial(F, polynomial) then
                     return polynomial;
                 fi;
