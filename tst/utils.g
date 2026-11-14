@@ -31,6 +31,25 @@ CheckGeneratorsSpecial := function(G)
   fi;
 end;
 
+# verify that the subgroups in L of Omega(epsilon, n, q), for type "O", "O+" or
+# "O-", are pairwise non-conjugate, using the action on singular points
+CheckPairwiseNonConjugateOmega := function(type, n, q, L)
+  local Om, Q, v, hom, P, images, i, j;
+  Om := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
+  Q := InvariantQuadraticForm(Om).matrix;
+  v := First(GF(q) ^ n, w -> not IsZero(w) and IsZero(w * Q * w));
+  hom := ActionHomomorphism(Om, Orbit(Om, NormedRowVector(v), OnLines), OnLines);
+  P := Image(hom);
+  images := List(L, G -> Group(List(GeneratorsOfGroup(G), g -> ImageElm(hom, g))));
+  for i in [1..Length(L)] do
+    for j in [i + 1..Length(L)] do
+      if Size(images[i]) = Size(images[j]) and IsConjugate(P, images[i], images[j]) then
+        Error("groups ", i, " and ", j, " are conjugate");
+      fi;
+    od;
+  od;
+end;
+
 # verify that forms are given and preserved
 CheckBilinearForm := function(G)
   local M;
