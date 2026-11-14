@@ -288,7 +288,7 @@ function(d, q, k)
                 generatorOfSUSubspace{[1..kHalf]}{[kHalf + 1]};
             generator{[d - kHalf + 1..d]}{[dHalf]} :=
                 alpha * generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
-            generator{[d - kHalf + 1..d]}{[dHalf]} :=
+            generator{[d - kHalf + 1..d]}{[dHalf + 1]} :=
                 generatorOfSUSubspace{[kHalf + 2..k]}{[kHalf + 1]};
             # now use e_{dHalf} = w_1 + beta ^ q * w_2
             #         f_{dHalf} = alpha ^ q * w_1 - alpha * beta ^ q * w_2

@@ -660,7 +660,7 @@ function(epsilon, d, q, s)
 
     # The constructed group preserves the quadratic form given by <formMatrix>
     formMatrix := TakeTraceOfQuadraticForm(Q, q, s);
-    CM_SetInvariantQuadraticFormFromMatrix(result, formMatrix, field);
+    CM_SetInvariantQuadraticFormFromMatrix(result, formMatrix, F);
     
     if epsilon = 0 then
         return ConjugateToStandardForm(result, "O", F);
