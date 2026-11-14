@@ -1443,7 +1443,7 @@ function(n, q, opts...)
             continue;
         fi;
         f := QuoInt(e, degreeOfExtension);
-        subfieldGroup := SubfieldSL(n, p, e, f);
+        subfieldGroup := UnitarySubfieldSU(n, p, e, f);
         # Cf. Tables 3.5.B and 3.5.G in [KL90]
         if all then
             numberOfConjugates := Gcd(n, QuoInt(q + 1, p ^ f + 1));
