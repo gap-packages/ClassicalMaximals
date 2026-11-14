@@ -58,6 +58,9 @@ gap> TestC9SubgroupsOrthogonalGroupGeneric := function(epsilon, n, q, opts...)
 >     for G in result do
 >         if not normaliser then
 >             CheckIsSubsetOmega(epsilon, n, q, G);
+>             if not special and not general then
+>                 CheckIsSubsetStandardGroup(["O-", "O", "O+"][epsilon + 2], n, q, G);
+>             fi;
 >         else
 >             CheckIsSubsetSL(n, q ,G);
 >         fi;
@@ -220,6 +223,8 @@ gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,6,11, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,6,17, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,6,29, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,6,3, rec(all:=false));
+gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,6,11);
+gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,6,29);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,7,3, rec(novelties:=true, all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,7,3, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,5, rec(novelties:=true, all:=false));
@@ -228,6 +233,7 @@ gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,2, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,3, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(1,8,2^2, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,8,13, rec(novelties:=true, all:=false));
+gap> TestC9SubgroupsOrthogonalGroupGeneric(-1,8,11);
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,9,13, rec(novelties:=true, all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,9,13, rec(all:=false));
 gap> TestC9SubgroupsOrthogonalGroupGeneric(0,9,3^2, rec(all:=false));
