@@ -40,7 +40,7 @@ CheckPairwiseNonConjugateOmega := function(type, n, q, L)
   v := First(GF(q) ^ n, w -> not IsZero(w) and IsZero(w * Q * w));
   hom := ActionHomomorphism(Om, Orbit(Om, NormedRowVector(v), OnLines), OnLines);
   P := Image(hom);
-  images := List(L, G -> Group(List(GeneratorsOfGroup(G), g -> ImageElm(hom, g))));
+  images := List(L, G -> ImagesSet(hom, G));
   for i in [1..Length(L)] do
     for j in [i + 1..Length(L)] do
       if Size(images[i]) = Size(images[j]) and IsConjugate(P, images[i], images[j]) then
