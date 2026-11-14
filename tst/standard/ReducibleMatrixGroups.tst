@@ -38,6 +38,9 @@ gap> TestSUStabilizerOfNonDegenerateSubspace(6, 3, 2);
 gap> TestSUStabilizerOfNonDegenerateSubspace(4, 5, 1);
 gap> TestSUStabilizerOfNonDegenerateSubspace(5, 4, 1);
 
+# recog would take minutes over GF(128 ^ 2), so only check membership
+gap> CheckIsSubsetSU(4, 128, SUStabilizerOfNonDegenerateSubspace(4, 128, 1));
+
 #
 gap> TestSpStabilizerOfIsotropicSubspace := function(n, q, k)
 >   local G;
