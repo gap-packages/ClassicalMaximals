@@ -1,14 +1,19 @@
 # Return a primitive polynomial of degree <s> over the finite field <F>, the
-# first in a fixed order that prefers coefficients early in AsSSortedList(F).
+# first in a fixed order that prefers the coefficients 0, 1, z, z ^ 2, ... for
+# the primitive root z of F.
 BindGlobal("CM_PrimitivePolynomial",
 function(F, s)
-    local z, count, small, j, k, digits, polynomial;
+    local q, z, count, small, j, k, digits, polynomial;
     # The constant term is (-1) ^ s times the norm of a root, so it is (-1) ^ s
     # times a primitive element z ^ j of F.
+    q := Size(F);
     z := PrimitiveRoot(F);
-    for count in Set([Minimum(Size(F), 16), Size(F)]) do
-        small := AsSSortedList(F){[1..count]};
-        for j in Filtered([1..Size(F) - 1], j -> Gcd(j, Size(F) - 1) = 1) do
+    for count in Set([Minimum(q, 16), q]) do
+        small := Concatenation([Zero(F)], List([0..count - 2], i -> z ^ i));
+        for j in [1..q - 1] do
+            if Gcd(j, q - 1) <> 1 then
+                continue;
+            fi;
             k := -1;
             while k < count ^ (s - 1) - 1 do
                 k := k + 1;
