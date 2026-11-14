@@ -72,7 +72,9 @@ function(d, q, k)
                                         - SquareSingleEntryMatrix(F, d, k + 1, 1);
     elif d - 2 * k = 1 then
         if IsEvenInt(q) then
-            T2 := IdentityMat(d, F) + zeta * SquareSingleEntryMatrix(F, d, d, 1)
+            # T2 lies in SU(d, q) iff mu + mu ^ q = 1
+            mu := SolveFrobeniusEquation("S", Z(q) ^ 0, q);
+            T2 := IdentityMat(d, F) + mu * SquareSingleEntryMatrix(F, d, d, 1)
                                             + SquareSingleEntryMatrix(F, d, d, QuoCeil(d, 2))
                                             + SquareSingleEntryMatrix(F, d, QuoCeil(d, 2), 1);
         else

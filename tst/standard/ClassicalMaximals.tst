@@ -309,6 +309,10 @@ gap> Length(ClassicalMaximalsGeneric("L", 12, 19));
 39
 
 #
+# The maximal subgroups lie in GAP's standard groups
+gap> CheckMaximalsInStandardGroup("U", 5, 16);
+
+#
 gap> Length(ClassicalMaximalsGeneric("U", 3, 3));
 4
 gap> Length(ClassicalMaximalsGeneric("U", 3, 4));

@@ -102,3 +102,35 @@ CheckIsSubsetOmega := function(epsilon, n, q, G)
     Error("wrong spinor norm");
   fi;
 end;
+
+# verify that G lies in GAP's standard SL, SU, Sp or Omega, not merely in the
+# group of some form stored in G
+CheckIsSubsetStandardGroup := function(type, n, q, G)
+  local gens, S, field, Q, F;
+  gens := GeneratorsOfGroup(G);
+  if type in ["L", "U", "S"] then
+    S := rec(L := SL, U := SU, S := Sp).(type)(n, q);
+    if not IsSubset(S, gens) then
+      Error("not all generators lie in the standard group");
+    fi;
+    return;
+  fi;
+  # Omega(0, n, q) and SO(0, n, q) preserve different forms, so test against
+  # the form of Omega directly
+  S := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
+  field := GF(q);
+  Q := InvariantQuadraticForm(S).matrix;
+  F := InvariantBilinearForm(S).matrix;
+  if not ForAll(gens, g -> IsSubset(field, Flat(g)) and IsOne(DeterminantMat(g))
+                           and RespectsQuadraticForm(Q, g)
+                           and FancySpinorNorm(F, field, g) = 1) then
+    Error("not all generators lie in the standard group");
+  fi;
+end;
+
+CheckMaximalsInStandardGroup := function(type, n, q)
+  local G;
+  for G in ClassicalMaximalsGeneric(type, n, q) do
+    CheckIsSubsetStandardGroup(type, n, q, G);
+  od;
+end;

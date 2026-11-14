@@ -19,12 +19,18 @@ gap> TestSUStabilizerOfIsotropicSubspace := function(n, q, k)
 >   local G;
 >   G := SUStabilizerOfIsotropicSubspace(n, q, k);
 >   CheckIsSubsetSU(n, q, G);
+>   CheckIsSubsetStandardGroup("U", n, q, G);
 >   CheckSize(G);
 > end;;
 gap> TestSUStabilizerOfIsotropicSubspace(4, 3, 2);
 gap> TestSUStabilizerOfIsotropicSubspace(3, 5, 1);
 gap> TestSUStabilizerOfIsotropicSubspace(3, 4, 1);
 gap> TestSUStabilizerOfIsotropicSubspace(4, 3, 1);
+gap> TestSUStabilizerOfIsotropicSubspace(3, 8, 1);
+gap> TestSUStabilizerOfIsotropicSubspace(5, 16, 2);
+gap> G := SUStabilizerOfIsotropicSubspace(3, 8, 1);;
+gap> Size(Group(GeneratorsOfGroup(G))) = Size(G);
+true
 
 #
 gap> TestSUStabilizerOfNonDegenerateSubspace := function(n, q, k)
