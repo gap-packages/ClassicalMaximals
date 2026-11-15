@@ -233,7 +233,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
         ErrorNoReturn("<epsilon> must be in [-1, 0, 1]");
     fi;
 
-    # This condition is implicitely assumed in [HR10] and [KL90]
+    # This condition is implicitly assumed in [HR10] and [KL90]
     if epsilon_1 = 0 and epsilon_2 <> 0 then
         ErrorNoReturn("<epsilon2> must be 0 if <epsilon_1> is 0]");
     fi;

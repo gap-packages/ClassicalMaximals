@@ -201,7 +201,7 @@ function(epsilon, d, q)
                 # since d / Gcd(q + 1, d) is an odd integer by assumption.
                 #
                 # Multiplying D by zeta ^ i will not affect the result
-                # preserving our unitary form since i is divisble by q - 1.
+                # preserving our unitary form since i is divisible by q - 1.
                 W := zeta ^ i * D;
             elif IsEvenInt(d / k) then
                 i := (q - 1) * ((q + 1) / k + 1) / 2;

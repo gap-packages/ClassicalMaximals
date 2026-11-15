@@ -29,7 +29,7 @@ DeclareGlobalFunction("AntidiagonalMat");
 #! @Description
 #! Return an antidiagonal <A>d</A> by <A>d</A> matrix over the given field,
 #! with the first half of the entries on the antidiagonal equal to one,
-#! the reaming half equal to minus one. Note that <A>d</A> must be even.
+#! the remaining half equal to minus one. Note that <A>d</A> must be even.
 DeclareGlobalFunction("AntidiagonalHalfOneMat");
 
 #! @Arguments A

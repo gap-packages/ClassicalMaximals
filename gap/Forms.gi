@@ -108,7 +108,7 @@ function(group, type, gramMatrix, field)
 end);
 
 # If <group> preserves a sesquilinear form of type <type> (one of "S", "U", "O"
-# (in odd dimension), "O+" or "O-" (both in even dimension), return a group
+# (in odd dimension), "O+" or "O-" (both in even dimension)), return a group
 # conjugate to <group> preserving the standard form of that type.
 InstallGlobalFunction("ConjugateToStandardForm",
 function(group, type, field)
@@ -209,7 +209,7 @@ function(epsilon, d, q)
         ErrorNoReturn("<epsilon> must be one of -1, 0, 1");
     fi;
     if epsilon = 0 and IsEvenInt(d) then
-        ErrorNoReturn("<epsilon> must be one of -1 or 1 if <d> is even");
+        ErrorNoReturn("<epsilon> must be -1 or 1 if <d> is even");
     fi;
     if epsilon <> 0 and IsOddInt(d) then
         ErrorNoReturn("<epsilon> must be 0 if <d> is odd");
@@ -283,7 +283,7 @@ end);
 # Assuming that the group G acts absolutely irreducibly, try to find a
 # bilinear form which is G-invariant or prove that no such form exists.
 #
-# We use this function instead of PreservedBilinearForms form the Forms package
+# We use this function instead of PreservedBilinearForms from the Forms package
 # since PreservedBilinearForms seems to be buggy and unreliable (see also
 # comment above CM_UnitaryForm).
 InstallGlobalFunction("CM_BilinearForm",

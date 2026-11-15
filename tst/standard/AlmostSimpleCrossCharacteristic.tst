@@ -92,7 +92,7 @@ gap> TestModularReductionOfIntegralLattice(LR, 43, 3);;
 # Test error handling
 gap> LR := ReadAsFunction(Filename(CM_c9lib, "sl25d2.g"))();;
 gap> ModularReductionOfIntegralLattice(LR, 3);
-Error, Constituents are not absolutely irreducible over finite field.
+Error, Constituents are not absolutely irreducible over the finite field.
 
 #
 gap> STOP_TEST("AlmostSimpleCrossCharacteristic.tst", 0);

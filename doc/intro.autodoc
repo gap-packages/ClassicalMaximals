@@ -22,8 +22,8 @@ In contrast, subgroups in the ninth class ${\cal S}$ do not admit such a
 uniform description and must be determined separately for each dimension.
 The lists given in <Cite Key="HM01" /> and <Cite Key="L01" /> contain,
 in principle, sufficient information to determine these subgroups up to dimension 250.
-However, explicit computations have so far only been carried out up to dimension 17,
-<Cite Key="BHR13" /> does so up to dimension 12 and for these dimensions our returned
+However, explicit computations have so far only been carried out up to dimension 17;
+<Cite Key="BHR13" /> does so up to dimension 12, and for these dimensions our returned
 lists should therefore be complete.
 For higher dimensions, the lists of maximal subgroups of geometric type should be complete;
 all subgroups in class ${\cal S}$ are missing in these cases.
@@ -39,7 +39,7 @@ The central entry point of &ClassicalMaximals; is the function
 This function takes parameters that define a classical group, together with options
 controlling the type of subgroups to compute, and returns representatives of
 maximal subgroups organised according to the classification arising from Aschbacher's theorem.
-An illustrive call looks as follows:
+An illustrative call looks as follows:
 @BeginLogSession
 gap> ClassicalMaximalsGeneric("L", 3, 4, [1..8]);
 [ <matrix group of size 2880 with 5 generators>,
@@ -50,7 +50,7 @@ gap> ClassicalMaximalsGeneric("L", 3, 4, [1..8]);
   <matrix group of size 216 with 3 generators> ]
 @EndLogSession
 
-@Section Overview over this manual
+@Section Overview of this manual
 Chapter <Ref Chap="Chapter_Theory"/> provides a brief theoretical introduction
 to classical groups and Aschbacher's theorem, focusing on the concepts essential
 for this package.

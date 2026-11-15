@@ -246,7 +246,7 @@ end);
 # Return generating matrices for GU(n,q) but with a twist: the argument `z`
 # can be set either to a primitive root of GF(q^2); or to an indeterminate. In
 # the former case, regular generators are returned. In the latter case, the
-# result are matrices whose entries are rational functions. This is useful in
+# result consists of matrices whose entries are rational functions. This is useful in
 # combination with "MapGammaLToGLRatFun".
 #
 # This function is adapted from the code of the GAP library function
@@ -322,7 +322,7 @@ end );
 # Return generating matrices for SU(n,q) but with a twist: the argument `z`
 # can be set either to a primitive root of GF(q^2); or to an indeterminate. In
 # the former case, regular generators are returned. In the latter case, the
-# result are matrices whose entries are rational functions. This is useful in
+# result consists of matrices whose entries are rational functions. This is useful in
 # combination with "MapGammaLToGLRatFun".
 #
 # This function is adapted from the code of the GAP library function

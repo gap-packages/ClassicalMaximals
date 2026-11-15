@@ -254,7 +254,7 @@ function(n, q, opts...)
     factorisationOfnExponents := factorisationOfn{Filtered([1..Length(factorisationOfn)], 
                                                   IsEvenInt)};
     # n can be written as k ^ highestPowern with k an integer and highestPowern
-    # is maximal with this property
+    # maximal with this property
     highestPowern := Gcd(factorisationOfnExponents);
     
     divisorsHighestPowern := DivisorsInt(highestPowern);
@@ -336,7 +336,7 @@ function(n, q, opts...)
                                                     generatorGLMinusSL,
                                                     numberOfConjugatesOrthogonal));
         else
-            # Cf. Tables 3.5.A. and 3.5.G in [KL90]
+            # Cf. Tables 3.5.A and 3.5.G in [KL90]
             if all then
                 numberOfConjugatesOrthogonal := QuoInt(Gcd(q - 1, n), 2);
             else
@@ -752,7 +752,7 @@ function(n, q, opts...)
         if novelties then return result; fi;
         if (e = 1 and p mod 20 in [1, 9]) or
            (e = 2 and p mod 20 in [3, 7, 13, 17]) then
-            # 4_1.L3_4 if q mod 16 <> 1 or 4_1.L34.2_3 if q mod 16 = 1
+            # 4_1.L3_4 if q mod 16 <> 1 or 4_1.L3_4.2_3 if q mod 16 = 1
             LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
             S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
@@ -885,7 +885,7 @@ function(n, q, opts...)
     elif n = 10 then
         if novelties then
             if (e = 1 and p <> 2 and p mod 28 in [1, 2, 9, 11, 15, 23, 25]) then
-                # 2.l34 (p = 11, 15, 23 mod 28) or 2.l34.2 otherwise
+                # 2.L34 (p = 11, 15, 23 mod 28) or 2.L34.2 otherwise
                 LR := ReadAsFunction(Filename(CM_c9lib, "2l34d10.g"))();
                 S := ModularReductionOfIntegralLattice(LR, q, opts);
                 if not general then
@@ -1212,11 +1212,11 @@ function(n, q, opts...)
     if 2 in opts.classes then
         # Class C2 subgroups ######################################################
         if not n in [2, 4] then
-            # Cf. Propositions 3.2.2. (n = 3), 3.4.2 (n = 5), 
-            #                  3.5.2, 3.5.3, 3.5.4 all (n = 6), 3.6.2 (n = 7),
+            # Cf. Propositions 3.2.2 (n = 3), 3.4.2 (n = 5), 
+            #                  3.5.2, 3.5.3, 3.5.4 (all n = 6), 3.6.2 (n = 7),
             #                  3.7.2, 3.7.3, 3.7.4 (all n = 8), 3.8.2 (n = 9),
             #                  3.9.2, 3.9.3, 3.9.4 (all n = 10), 3.10.2 (n = 11),
-            #                  3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (n = 12) in [BHR13]
+            #                  3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12) in [BHR13]
             # The exceptions mentioned in these propositions are all general
             # exceptions and are dealt with directly in the function
             # C2SubgroupsSpecialLinearGeneric
@@ -1578,7 +1578,7 @@ function(n, q, opts...)
     factorisationOfnExponents := factorisationOfn{Filtered([1..Length(factorisationOfn)], 
                                                   IsEvenInt)};
     # n can be written as k ^ highestPowern with k an integer and highestPowern
-    # is maximal with this property
+    # maximal with this property
     highestPowern := Gcd(factorisationOfnExponents);
     
     divisorsHighestPowern := DivisorsInt(highestPowern);
@@ -2999,7 +2999,7 @@ function(n, q, opts...)
             if all then
                 Append(result, [S, S ^ generatorNormSpMinusSp]);
             else
-                Add(result, S);  # error in magma: there always c=2
+                Add(result, S);  # error in Magma: there always c=2
             fi;
         fi;
         if p >= 7 then
@@ -3396,7 +3396,7 @@ function(n, q, opts...)
 
     if 4 in opts.classes then
         # Class C4 subgroups ######################################################
-        # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10)
+        # Cf. Propositions 3.5.6 (n = 6), 3.7.7 (n = 8), 3.9.6 (n = 10),
         #                  3.11.8 (n = 12) in [BHR13]
         # For n = 4, class C4 is empty.
         Append(maximalSubgroups, C4SubgroupsSymplecticGroupGeneric(n, q, opts));
@@ -3468,7 +3468,7 @@ function(epsilon, n, q)
     return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D;
 end);
 
-# Given a subgroup G of Omega(epsilon, n, q) conjugate it with all products of
+# Given a subgroup G of Omega(epsilon, n, q), conjugate it with all products of
 # combinations of elements from the set ...
 # * ... [SOMinusOmega(epsilon, n, q)] if numberOfConjugates = 2
 # * ... [SOMinusOmega(epsilon, n, q), GOMinusSO(epsilon, n, q)] 
@@ -3618,7 +3618,7 @@ function(epsilon, n, q, opts...)
 
         if IsEvenInt(m) then
             # Number of conjugates according to Proposition 4.2.11 (I) in [KL90]
-            # These cases are nonmaximal if epsilon = epsilon _0 = 1 according
+            # These cases are nonmaximal if epsilon = epsilon_0 = 1 according
             # to Proposition 2.3.6 (vii), (viii), (ix), (xi) in [BHR13]
             if epsilon = 1 and (m <> 2 or q > 5) and (m <> 4 or q <> 2) then
                 Add(result, OmegaNonDegenerateImprimitives(epsilon, n, q, 1, t));
@@ -3627,7 +3627,7 @@ function(epsilon, n, q, opts...)
                 Add(result, OmegaNonDegenerateImprimitives(epsilon, n, q, -1, t));
             fi;
         else
-            # This case is nonmaxial according to Table 3.5.E in [KL90]
+            # This case is nonmaximal according to Table 3.5.E in [KL90]
             if IsEvenInt(q) then continue; fi;
             # This case is a novelty
             if m = 1 and (e <> 1 or n = 3 and p mod 5 in [1, 4] and p mod 8 in [3, 5]) then
@@ -3863,7 +3863,7 @@ function(epsilon, n, q, opts...)
                     fi;
                 fi;
             fi;
-            if n1 < n2 then  # error in magma
+            if n1 < n2 then  # error in Magma
                 # number of conjugates according to [KL90] Proposition 4.4.15 (I)
                 G := OrthogonalTensorProductStabilizerInOmega(epsilon, 1, -1, n2, n1, q);
                 if not all then
@@ -5314,7 +5314,7 @@ function(epsilon, n, q, opts...)
         # Class C3 subgroups ######################################################
         # Cf. Propositions 3.6.3 (n = 7), 3.7.5 (n = 8), 3.8.3 (n = 9),
         # 3.9.5 (n = 10), 3.10.3 (n = 11) and 3.11.7 (n = 12) in [BHR13]
-        # Cf. Tables 8.17 (n = 4), 8.31, 8.33 (all n = 6), 8.50, 8.52 (all n = 8)
+        # Cf. Tables 8.17 (n = 4), 8.31, 8.33 (all n = 6), 8.50, 8.52 (all n = 8),
         # 8.58 (n = 9), 8.66, 8.68 (all n = 10), 8.82, 8.84 (all n = 12)
         # in [BHR13]
         Append(maximalSubgroups, C3SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
