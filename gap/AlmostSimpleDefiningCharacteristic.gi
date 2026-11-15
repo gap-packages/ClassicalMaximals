@@ -943,7 +943,7 @@ function(q)
         Assert(0, x <> fail);
         # x should fix form mod scalars
         formx := x * form * TransposedMat(x);
-        mum := formx * formi^(-1);
+        mum := formx * formi;
         mu := mum[1,1];
         Assert(0, mum = mu * IdentityMat(8, GF(q^2)));
         x := RootFFE(GF(q^2), mu^-1, 2) * x;
