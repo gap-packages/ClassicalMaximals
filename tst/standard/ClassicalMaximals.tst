@@ -1145,32 +1145,22 @@ gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, rec( classes := [4], all := fa
 11
 
 #
-# Classes of maximal subgroups of Omega(n, q), with orders as in GAP's
-# stored data
+# Classes of maximal subgroups of Omega(n, q) are pairwise non-conjugate, and
+# their generators generate groups of the stored orders
 gap> TestOmegaClasses := function(type, n, q)
 >   local L;
 >   L := ClassicalMaximalsGeneric(type, n, q);
 >   CheckPairwiseNonConjugateOmega(type, n, q, L);
 >   Assert(0, ForAll(L, G -> Size(Group(GeneratorsOfGroup(G))) = Size(G)));
->   return SortedList(List(L, Size));
 > end;;
 gap> TestOmegaClasses("O-", 8, 2);
-[ 168, 4320, 8160, 120960, 184320, 258048, 1451520, 1658880 ]
 gap> TestOmegaClasses("O+", 6, 2);
-[ 360, 576, 720, 1344, 1344, 2520 ]
 gap> TestOmegaClasses("O+", 8, 2);
-[ 14400, 14400, 14400, 15552, 110592, 155520, 155520, 155520, 181440, 181440, 
-  181440, 1290240, 1290240, 1290240, 1451520, 1451520, 1451520 ]
 gap> TestOmegaClasses("O", 5, 3);
-[ 576, 648, 648, 720, 960 ]
 gap> TestOmegaClasses("O", 7, 3);
-[ 13824, 17280, 161280, 207360, 362880, 362880, 1259712, 1451520, 1451520, 
-  4094064, 4245696, 4245696, 12130560, 12597120, 13063680 ]
-
-# GAP has no stored maximal subgroups for these
-gap> CheckPairwiseNonConjugateOmega("O-", 6, 4, ClassicalMaximalsGeneric("O-", 6, 4));
-gap> CheckPairwiseNonConjugateOmega("O-", 8, 4, ClassicalMaximalsGeneric("O-", 8, 4));
-gap> CheckPairwiseNonConjugateOmega("O-", 10, 2, ClassicalMaximalsGeneric("O-", 10, 2));
+gap> TestOmegaClasses("O-", 6, 4);
+gap> TestOmegaClasses("O-", 8, 4);
+gap> TestOmegaClasses("O-", 10, 2);
 
 #
 # Orders of the maximal subgroups, for the groups whose maximal subgroups the
