@@ -19,30 +19,14 @@
 #     psi((1, 2)) is a product of m * (m - 1) / 2 * m ^ (t - 2) cycles of length 2 
 #     (for any two different a1, a2 in [1..m] and any a3, ..., at in [1..m] the 
 #     tuples [a1, a2, ..., at] and [a2, a1, ..., at] are swapped). Therefore 
-#     det(PermutationMat(phi((1, 2)))) = sign(psi((1, 2))) 
+#     det(PermutationMat(psi((1, 2)))) = sign(psi((1, 2))) 
 #                                      = (-1) ^ ((m * (m - 1)) / 2 * m ^ (t - 2)) 
 #     For m even, this is -1 if and only if m = 2 mod 4 and t = 2.
 #
-#     Let A_d be the number of t-tuples from [1..m] that can be divided into d
-#     equal blocks. Then A_d = m ^ (t / d) if d | t and 0 otherwise. Now let B_e 
-#     be the number of t-tuples from [1..m] that can be divided into e and not 
-#     more equal blocks. We have A_d = sum_{d | e} B_e for d | t. Hence
-#
-#               m ^ (t / d) = sum_{d | e} B_e.
-#
-#     Swap d and t / d as well as e and t / e, obtain
-#
-#               m ^ d = sum_{t / d | t / e} B_{t / e} = sum_{e | d} B_{t / e}.
-#
-#     Applying the Mobius inversion formula
-#
-#               B_{t / d} = sum_{e | d} mu(d / e) * m ^ e = 0 mod 2
-#
-#     since m is even for all d (this can also be seen without the Mobius
-#     inversion formula by induction). But decomposing psi((1, 2, ..., t)) into
-#     a product of cycles gives exactly B_{t / d} cycles of length d. Therefore
-#     det(PermutationMat(phi((1, 2, ..., t)))) = sign(psi((1, 2, ..., t)))
-#                                              = 1.
+#     sign o psi is a homomorphism and (1, 2, ..., t) is a product of t - 1
+#     transpositions, each conjugate to (1, 2) in Sym(t). Therefore
+#     det(PermutationMat(psi((1, 2, ..., t)))) = sign(psi((1, 2))) ^ (t - 1),
+#     which is 1 for t > 2 by the above.
 #
 #     Conclusion: If m is even and we have a generator of determinant -1, then
 #     t = 2 and m = 2 mod 4. It then follows that in the else branch below, we
