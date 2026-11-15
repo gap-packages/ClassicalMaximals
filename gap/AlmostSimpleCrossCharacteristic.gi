@@ -20,7 +20,7 @@ function(L, q, opts...)
     CC := [];
     for c in C do
         if not MTX.IsAbsolutelyIrreducible(c) then
-            Error("Constituents are not absolutely irreducible over finite field.");
+            Error("Constituents are not absolutely irreducible over the finite field.");
         fi;
         if c.dimension <> 1 then
             Add(CC, c);
@@ -127,7 +127,7 @@ function(L, q, opts...)
                 fi;
                 Add(gens, iso);
             od;
-            # Finally adoin scalars
+            # Finally adjoin scalars
             if (not general and  Gcd(q-1,d) <> 1) or (general and q > 2) then
                 Add(gens, ww * IdentityMat(d, GF(q)));
             fi;

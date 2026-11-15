@@ -244,14 +244,14 @@ function(d, q, t)
         # f_i -> f_{((i + k -1) mod l) + 1} 
         # which corresponds to a t-cycle in Sym(t).
         # We have det(D) = 1 because we are effectively
-        # swapping an even number of rows/colums.
+        # swapping an even number of rows/columns.
         # One can easily check that this preserves the form.
         D := NullMat(d, d, field);
 
         # This block matrix magic is again just a
         # fancy way of swapping the correct entries.
         # Effectively, we are shifting t k x k - blocks
-        # by k row/colums each.
+        # by k rows/columns each.
         D{[1..l - k]}{[k + 1..l]} := IdentityMat(l - k, field);
         D{[l - k + 1..l]}{[1..k]} := IdentityMat(k, field);
         D{[l + 1..l + k]}{[d - k + 1..d]} := IdentityMat(k, field);
@@ -492,7 +492,7 @@ function(epsilon, d, q, epsilon_0, t)
     fi;
 end);
 
-# Construction as in Lemma 5.4 [HR10]
+# Construction as in Lemma 5.4 of [HR10]
 BindGlobal("OmegaIsotropicImprimitives",
 function(d, q)
     local m, field, gcd, gens, linearGens, L, AorB, size, result;
@@ -518,7 +518,7 @@ function(d, q)
     if IsEvenInt(m) then
         size := 2 * size;
 
-        # In this case, the andidiagonal matrix is a product
+        # In this case, the antidiagonal matrix is a product
         # of an even number of reflections and so has
         # determinant and spinor norm 1.
         Add(gens, AntidiagonalMat(d, field));

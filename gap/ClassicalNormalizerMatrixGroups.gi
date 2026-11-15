@@ -133,12 +133,12 @@ function(epsilon, d, q)
                 # the 2-adic valuation of q - 1, hence det(X ^ i2) = zeta ^ (- d / 2).
                 # Otherwise, the two valuations are the same (since (q - 1) / k
                 # is odd) and we have det(X ^ i2) = - zeta ^ (- d / 2). Since
-                # we have det(EEpsilon) = zeta ^ (d / 2) in the former case an
+                # we have det(EEpsilon) = zeta ^ (d / 2) in the former case and
                 # det(EEpsilon) = - zeta ^ (d / 2) in the latter, we have in
                 # each case det(W) = 1. W ^ 2 is in Z(SL(d, q)).SO(d, q) since
                 # W ^ 2 = X ^ (2 * i2) * EEpsilon ^ 2 
                 #       = (zeta * X ^ (2 * i2)) * (1 / zeta * EEpsilon ^ 2)
-                # and the first factor is in Z(SL(d, q)) while the second in in
+                # and the first factor is in Z(SL(d, q)) while the second is in
                 # SO(d, q). Suppose W were already in Z(SL(d, q)).SO(d, q); then 
                 # there is a scalar S with S * W in SO(d, q) implying
                 # S * X ^ i2 * EEpsilon * gramMatrix * EEpsilon ^ T * X ^ i2 * S

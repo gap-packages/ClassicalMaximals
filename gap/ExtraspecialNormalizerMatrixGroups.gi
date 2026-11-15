@@ -414,7 +414,7 @@ function(m, q, type)
     if m >= 3 then
         # If m >= 3, we have det(Wi) = det(Ui) = 1 and we do not have to
         # rescale these matrices to determinant 1. Furthermore, we can always
-        # find a d-th root of det(Vi) in the case m >= 3; note that, again
+        # find a d-th root of det(Vi) in the case m >= 3; note that, again,
         # det(Vi) is independent of i.
 
         if type = "L" then
@@ -426,7 +426,7 @@ function(m, q, type)
             # matrix.
             if (p ^ QuoInt(e, 2) - 7) mod 8 = 0 then 
                 # This will give the expression Vi * I_d * HermitianConjugate(Vi)
-                # and additional factor of 2 ^ (-1), which is what we need; see
+                # an additional factor of 2 ^ (-1), which is what we need; see
                 # the elif-case below, which is analogous, for more details.
                 scalarMultiplierVi := RootFFE(F, 4 * zeta ^ 0, 4) ^ (-1);
             else

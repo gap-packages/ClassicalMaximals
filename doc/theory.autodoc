@@ -122,7 +122,7 @@ which also correspond to two different similarity classes.
 Let $\beta$ denote the polar form associated with a quadratic form $Q$.
 Over a field of odd characteristic, $\beta$ and $Q$ uniquely determine each other.
 
-Assume that $q$ is odd, let $\beta$ be a non-degenerate symmetric bilinear form on
+Assume that $q$ is odd and let $\beta$ be a non-degenerate symmetric bilinear form on
 $\mathbb{F}_q^n$ with $n$ even.
 Then $\beta$ is of **plus-type** if it is isometric to our standard form matrix
 ${\rm antidiag}(1,\dots,1)$, and otherwise of **minus-type**.

@@ -3,7 +3,7 @@
 
 # The GAP package ClassicalMaximals
 
-Translation of magma `ClassicalMaximals` to GAP. For resources see
+Translation of Magma's `ClassicalMaximals` to GAP. For resources see
 [this hack.md](https://hackmd.io/aOvJbbctTAKlFQl4kwf4Jg).
 
 ## Status

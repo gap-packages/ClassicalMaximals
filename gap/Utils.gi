@@ -140,7 +140,7 @@ function(type, alpha, q)
     # A similar argument to the one used for type "S" works here as well. Note,
     # however, that the argument for q odd via the quadratic formula now
     # additionally needs that the squares in GF(q) do not form an arithmetic
-    # progression (which is "closed", i.e. not only a_i+1 = a_i + d, but also
+    # progression (which is "closed", i.e. not only a_{i+1} = a_i + d, but also
     # a_n + d = a_1), which can be proved in the following way: If they did,
     # then they would be given by -kd, ..., -d, 0, d, 2d, ..., ((q - 1) / 2 - k) * d
     # for some 0 <= k <= (q - 1) / 2; since they form a multiplicative
@@ -479,7 +479,7 @@ function(epsilon, d, q)
         ErrorNoReturn("<epsilon> must be one of -1, 0, 1");
     fi;
     if epsilon = 0 and IsEvenInt(d) then
-        ErrorNoReturn("<epsilon> must be one of -1 or 1 if <d> is even");
+        ErrorNoReturn("<epsilon> must be -1 or 1 if <d> is even");
     fi;
     if epsilon <> 0 and IsOddInt(d) then
         ErrorNoReturn("<epsilon> must be 0 if <d> is odd");
@@ -665,7 +665,7 @@ function(d, q)
         # This idea does not work for d = 2, q = 3 because
         # then, L3 does not seem to have a square root with
         # determinant -1, which is why we handle that case
-        # seperately above.
+        # separately above.
         L2 := IdentityMat(d, field);
         L2[1, 2] := -one;
         L2[d, d] := -one;
