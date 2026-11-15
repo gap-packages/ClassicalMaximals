@@ -50,6 +50,38 @@ CheckPairwiseNonConjugateOmega := function(type, n, q, L)
   od;
 end;
 
+# compare the orders of the results of ClassicalMaximalsGeneric with those of
+# the maximal subgroups in the character table library; a maximal subgroup of
+# a perfect group contains the centre, so the orders differ by its order. The
+# optional argument names the simple group where the library has no alias.
+CheckMaximalOrders := function(type, n, q, opt...)
+  local name, tbl, G, z, orders, expected;
+  if Length(opt) = 1 then
+    name := opt[1];
+  elif type in ["O+", "O-"] then
+    name := Concatenation("O", String(n), type{[2]}, "(", String(q), ")");
+  else
+    name := Concatenation(type, String(n), "(", String(q), ")");
+  fi;
+  tbl := CharacterTable(name);
+  if tbl = fail or not HasMaxes(tbl) then
+    Error("no stored maximal subgroups of ", name);
+  fi;
+
+  if type in ["L", "U", "S"] then
+    G := rec(L := SL, U := SU, S := Sp).(type)(n, q);
+  else
+    G := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
+  fi;
+  z := Size(G) / Size(tbl);
+  orders := SortedList(List(ClassicalMaximalsGeneric(type, n, q), H -> Size(H) / z));
+  expected := SortedList(List(Maxes(tbl), m -> Size(CharacterTable(m))));
+  if orders <> expected then
+    Error("maximal subgroups of ", name, " have orders ", orders,
+          ", expected ", expected);
+  fi;
+end;
+
 # verify that forms are given and preserved
 CheckBilinearForm := function(G)
   local M;

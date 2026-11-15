@@ -108,7 +108,7 @@ Dependencies := rec(
       ["recog", "1.5.0"],
     ],
   SuggestedOtherPackages := [ ],
-  TestPackages := [ ],
+  TestPackages := [ ["ctbllib", "1.3.11"] ],
   ExternalConditions := [ ],
 ),
 
