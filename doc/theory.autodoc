@@ -34,10 +34,10 @@ are realized as (Gram) matrices.
 
 For a $\sigma$-sesquilinear form $\beta$, the Gram matrix $B$ satisfies
 $$\beta(u, v) = u B v^{\sigma {\rm T}}$$
-for all column vectors $u, v \in V$.
+for all row vectors $u, v \in V$.
 For a quadratic form $Q$, the Gram matrix $A$ satisfies
 $$Q(v) = v A v^{\rm T}$$
-for all column vectors $v \in V$.
+for all row vectors $v \in V$.
 
 For relevant classical forms, the package fixes a standard choice of
 Gram matrices in Subsection
@@ -102,7 +102,7 @@ as our standard unitary form matrix and denote the isometry group by ${\rm GU}_n
 
 @Subsection Orthogonal groups in odd dimension (Case <M>{\bf O}</M>)
 @SubsectionLabel Theory:ClassicalGroups:Oodd
-If $Q$ is a quadratic form on $\mathbb{F}_q^n$ with $q$ even and $n$ odd,
+If $Q$ is a non-degenerate quadratic form on $\mathbb{F}_q^n$ with $q$ even and $n$ odd,
 then the isometry group of $Q$ is isomorphic to a symplectic group of dimension $n-1$.
 
 For this reason, we restrict attention to orthogonal groups of odd dimension over fields
@@ -244,9 +244,9 @@ constructors `SL`, `SU`, `Sp`, and `Omega`.
 Aschbacher's theorem is the organising principle behind the entire package.
 It says that maximal subgroups of finite classical groups fall into nine broad families:
 
-Let $G$ be a quasisimple classical group acting naturally
-on a vector space $V$ of dimension $n \geq 2$ over $\mathbb{F}_q$
-and one of ${\rm SL}_n(q)$, ${\rm SU}_n(q)$, ${\rm Sp}_n(q)$ or $\Omega^\varepsilon_n(q)$.
+Let $G$ be a quasisimple classical group, one of ${\rm SL}_n(q)$, ${\rm SU}_n(q)$,
+${\rm Sp}_n(q)$ or $\Omega^\varepsilon_n(q)$, acting naturally
+on a vector space $V$ of dimension $n \geq 2$ over $\mathbb{F}_q$ (over $\mathbb{F}_{q^2}$ for ${\rm SU}_n(q)$).
 
 Let $H$ be a maximal subgroup of $G$. Then one of the following holds:
 <Enum>

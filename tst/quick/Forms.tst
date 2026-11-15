@@ -174,7 +174,7 @@ gap> TestClassicalForms(SU(4, 2), GF(2^2), "unitary");
 
 # Test error handling
 gap> CM_ClassicalForms(SO(0, 3, 2), GF(2));
-Error, CM_ClassicalForms: <G> must be irreducible
+Error, CM_ClassicalForms: <G> must be absolutely irreducible
 
 #
 gap> STOP_TEST("Forms.tst", 0);

@@ -114,8 +114,8 @@ InstallGlobalFunction("ConjugateToStandardForm",
 function(group, type, field)
     local d, q, gapForm, broadType;
 
-    # determining d (dimension of matrix group), F (base field) and q (order of
-    # F) plus some sanity checks
+    # determining d (dimension of matrix group) and q (<field> is GF(q), or
+    # GF(q ^ 2) for type "U") plus some sanity checks
     if not type in ["S", "O+", "O-", "O", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O+', 'O-', 'O'");
     fi;
@@ -126,7 +126,7 @@ function(group, type, field)
         ErrorNoReturn("<type> cannot be 'O+' or 'O-' if the dimension of",
                       " <group> is odd");
     elif IsEvenInt(Size(field)) and IsOddInt(d) and type in ["O+", "O-", "O"] then
-        ErrorNoReturn("If <type> is 'O+', 'O-' or 'O' and the size of <F> is",
+        ErrorNoReturn("If <type> is 'O+', 'O-' or 'O' and the size of <field> is",
                       " even, <d> must be even");
     fi;
     if type in ["S", "O", "O+", "O-"] then
@@ -266,7 +266,7 @@ function(G, F)
 
     q := Characteristic(F) ^ (DegreeOverPrimeField(F)/2);
 
-    # Return stored sesquilinear form if it exists and is hermitian
+    # Return stored sesquilinear form if it exists
     if HasInvariantSesquilinearForm(G) then
         formMatrix := InvariantSesquilinearForm(G).matrix;
     else
@@ -290,7 +290,7 @@ InstallGlobalFunction("CM_BilinearForm",
 function(G, F)
     local M, formMatrix, x;
 
-    # Return stored bilinear form if it exists and is symplectic / symmetric
+    # Return stored bilinear form if it exists
     if HasInvariantBilinearForm(G) then
         formMatrix := InvariantBilinearForm(G).matrix;
     else
@@ -330,7 +330,7 @@ function(G, field)
     
     M := GModuleByMats(GeneratorsOfGroup(G), field);
     if not MTX.IsAbsolutelyIrreducible(M) then
-        ErrorNoReturn("CM_ClassicalForms: <G> must be irreducible");
+        ErrorNoReturn("CM_ClassicalForms: <G> must be absolutely irreducible");
     fi;
     forms := rec();
     forms.formType := "linear";

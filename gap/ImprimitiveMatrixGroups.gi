@@ -215,9 +215,10 @@ function(d, q, t)
 
     # The matrix C we construct next will swap the vectors e_i with
     # e_{i + k} and f_i with f_{i + k} for 1 <= i <= k respectively,
-    # which corresponds to the product of m transpositions in Sym(t).
-    # Since m is even, this permutation has signum 1 and det(C) = 1.
-    # One can easily check that this preserves the form.
+    # which corresponds to the transposition (1, 2) in Sym(t) and is a
+    # product of m transpositions of basis vectors. Since m is even, this
+    # permutation has signum 1 and det(C) = 1. One can easily check that this
+    # preserves the form.
     C := NullMat(d, d, field);
 
     # The central 2 * (l - m) = (d - 2m) basis vectors should be
@@ -250,7 +251,7 @@ function(d, q, t)
 
         # This block matrix magic is again just a
         # fancy way of swapping the correct entries.
-        # Effectively, we are shifting t k x k - blocks
+        # Effectively, we are shifting 2t blocks of size k x k
         # by k rows/columns each.
         D{[1..l - k]}{[k + 1..l]} := IdentityMat(l - k, field);
         D{[l - k + 1..l]}{[1..k]} := IdentityMat(k, field);
@@ -289,7 +290,7 @@ function(d, q)
     gens := [];
     J := AntidiagonalMat(l, field);
     
-    # For either generator of Sp(d,q), we take an
+    # For either generator of GL(l, q), we take an
     # invertible matrix AorB_1 which acts on
     # the first l basis vectors and put it in
     # a diagonal 2 x 2 block matrix with another
@@ -393,7 +394,7 @@ function(epsilon, d, q, epsilon_0, t)
         # Construction as in Lemma 5.2 of [HR10]
 
         # Size according to Table 2.5 of [BHR13],
-        # we add a factor of 2 in case q is odd.
+        # we add a factor of 2 ^ (t - 1) in case q is odd.
         size := SizeOmega(epsilon_0, m, q) ^ t * 2 ^ (t - 1) * Factorial(t);
 
         if IsEvenInt(q) then
@@ -529,7 +530,7 @@ function(d, q)
     return ConjugateToStandardForm(result, "O+", field);
 end);
 
-# Construction as in Lemma 5.4 [HR10]
+# Construction as in Lemma 5.5 of [HR10]
 BindGlobal("OmegaNonIsometricImprimitives",
 function(epsilon, d, q)
     local m, field, gens, Q, orthogonalGens_1, orthogonalGens_2,

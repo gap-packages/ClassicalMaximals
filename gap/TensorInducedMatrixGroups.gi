@@ -203,7 +203,7 @@ function(m, t, q)
         E := KroneckerProduct(E, IdentityMat(m, F));
     od;
     # det(E) = zeta ^ ((1 - q) * Gcd(q + 1, d) / Gcd(q + 1, m ^ (t - 1)) * m ^ (t - 1))
-    #        = zeta ^ ((1 - q) * Gcd(q + 1, d) / Gcd(q + 1, d / m) * d / m))
+    #        = zeta ^ ((1 - q) * Gcd(q + 1, d) / Gcd(q + 1, d / m) * d / m)
 
     # Write mu = zeta ^ ((q - 1) * k) for some k. We want 
     # det(mu * I_d) = zeta ^ ((q - 1) * Gcd(q + 1, d)), hence
@@ -233,7 +233,7 @@ function(m, t, q)
     return ConjugateToStandardForm(result, "U", F);
 end);
 
-# Construction as in Proposition 10.2 in [HR05]
+# Construction as in Proposition 10.3 of [HR05]
 BindGlobal("TensorInducedDecompositionStabilizerInSp",
 function(m, t, q)
     local field, I, gens, D, result, standardForm, formMatrix;
@@ -332,8 +332,8 @@ function(m, t, q)
     else
 
         if not evilCase then
-            # In the evil case this matrix has determinant 1, so we only
-            # add it here.
+            # Lemma 10.3 of [HR10] adjoins this matrix only outside the
+            # evil case.
             I := IdentityMat(m ^ (t - 2), field);
             D := NormSpMinusSp(m, q);
             Add(gens, KroneckerProduct(KroneckerProduct(D, Inverse(D)), I));

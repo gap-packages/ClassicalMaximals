@@ -5,14 +5,10 @@
 
 #! @Arguments field, nrRows, nrCols, entries
 #! @Description
-#! Return a <A>nrRows</A> by <A>nrCols</A> matrix with entries over the field
-#! <A>field</A> which are given by the list <A>entries</A> in the following
-#! way: If <A>entries</A> is a list of three-element lists <C>[i, j, a]</C>,
-#! then the entry in position <C>(i, j)</C> will be set to <C>a</C> (and to
-#! zero if <A>entries</A> does not contain a list <C>[i, j, a]</C> with some
-#! arbitrary <C>a</C>); if this is not the case and <A>entries</A> is a list of
-#! length <C>nrRows * nrCols</C>, the elements of <A>entries</A> will be
-#! written into the matrix row by row.
+#! Return a <A>nrRows</A> by <A>nrCols</A> matrix over the field <A>field</A>
+#! whose entries are given by <A>entries</A>, a list of three-element lists
+#! <C>[i, j, a]</C>: the entry in position <C>(i, j)</C> is set to <C>a</C>,
+#! and all entries not listed are zero.
 DeclareGlobalFunction("MatrixByEntries");
 
 #! @Arguments entries, field
@@ -71,7 +67,7 @@ DeclareGlobalFunction("MatrixGroupWithSize");
 #! @Description
 #! Constructs generators for the orthogonal groups with the properties listed
 #! in <Cite Key="HR05" Where="Lemma 2.4" />.
-#! Construction as in <Cite Key="R-D13" Where="Lemma 2.4" />.
+#! Construction as in <Cite Key="RD04" Where="Lemma 2.4" />.
 DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
 
 #! @Arguments epsilon, n, q
@@ -81,8 +77,8 @@ DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
 #! `G`, `D` for the orthogonal groups with respect to our standard
 #! form as used in <Cite Key="HR10" />, with the following properties:
 #! * `generatorsOfOmega` generate $\Omega^\varepsilon_n(q)$
-#! * `generatorsOfOmega` and `S` generate ${\rm SO}_n(q)$
-#! * `generatorsOfOmega` and `G` generate ${\rm GO}_n(q)$
+#! * `generatorsOfOmega` and `S` generate ${\rm SO}^\varepsilon_n(q)$
+#! * `generatorsOfOmega` and `G` generate ${\rm GO}^\varepsilon_n(q)$
 #! * the spinor norm of `G` is $1$
 #! * `D` generates ${\rm CO}^\varepsilon_n(q)$ modulo ${\rm GO}^\varepsilon_n(q)$.
 #!

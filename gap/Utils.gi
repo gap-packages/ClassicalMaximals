@@ -56,7 +56,7 @@ end);
 # A solution always exists by a simple counting argument using the pigeonhole
 # principle and the fact that there are (q + 1) / 2 > q / 2 squares in F_q (for
 # q odd; the case q even is trivial). The trial and error approach taken here 
-# should in principle almost always terminate quickly: Assuming that - 1 - a ^ 2 
+# should in principle almost always terminate quickly: Assuming that c - a ^ 2 
 # is evenly distributed in GF(q), the chance to hit a quadratic residue is about 
 # 1 / 2 in each trial.
 BindGlobal("SolveQuadraticCongruence",
@@ -100,7 +100,7 @@ function(M, q)
 end);
 
 # If type = "S" then find a beta in GF(q ^ 2) with beta + beta ^ q = alpha.
-# If type = "P" then find a beta in GF(q ^ 2) with gamma * gamma ^ q = alpha.
+# If type = "P" then find a beta in GF(q ^ 2) with beta * beta ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
 # Construction as in Lemma 2.2 of [HR05]
 BindGlobal("SolveFrobeniusEquation",
@@ -127,7 +127,7 @@ function(type, alpha, q)
 
     # A quick argument using the quadratic formula for q odd or some
     # algebraic manipulations and the non-surjectivity of the Artin-Schreier
-    # map x -> x ^ 2 + x for q odd and alpha <> 0 shows that the construction
+    # map x -> x ^ 2 + x for q even and alpha <> 0 shows that the construction
     # below always works.
     if type = "S" then
         for delta in F do
@@ -656,7 +656,7 @@ function(d, q)
         # makes sense because SL(d, 2) = GL(d, 2).
         # In case q = 3, since L1 and L3 generate SL(d, 3)
         # and [ GL(d, 3): SL(d, 3) ] = 2, adjoining any matrix
-        # of determinant -1 to L1 and L2 will give GL(d, 3).
+        # of determinant -1 to L1 and L3 will give GL(d, 3).
         # Since we only want two generators, this matrix is
         # constructed to be a square root of L3 with determinant -1,
         # so L1 and L2 must already generate GL(d, 3).

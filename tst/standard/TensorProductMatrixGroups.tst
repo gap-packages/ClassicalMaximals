@@ -98,11 +98,11 @@ Error, <d> must be even
 gap> OrthogonalTensorProductStabilizerInOmega(2, 1, 1, 4, 6, 3);
 Error, <epsilon> must be in [-1, 0, 1]
 gap> OrthogonalTensorProductStabilizerInOmega(1, 0, 1, 5, 6, 3);
-Error, <epsilon2> must be 0 if <epsilon_1> is 0]
+Error, <epsilon_2> must be 0 if <epsilon_1> is 0
 gap> OrthogonalTensorProductStabilizerInOmega(1, -1, 1, 4, 6, 3);
 Error, by symmetry, we disallow this case
 gap> OrthogonalTensorProductStabilizerInOmega(1, 1, 1, 6, 4, 3);
-Error, by symmetry, we assume d1 < d2 in this case
+Error, by symmetry, we assume <d1> < <d2> in this case
 gap> OrthogonalTensorProductStabilizerInOmega(1, -1, 0, 4, 5, 3);
 Error, <epsilon> = -1 must be equivalent to <epsilon_1> = -1 and <epsilon_2> =\
  0

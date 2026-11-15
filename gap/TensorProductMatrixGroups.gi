@@ -176,7 +176,7 @@ function(epsilon, d1, d2, q)
     return ConjugateToStandardForm(result, "S", field);
 end);
 
-# Construction as in Proposition 7.3 of [HR10]
+# Construction as in Lemma 7.3 of [HR10]
 BindGlobal("OrthogonalTensorProductStabilizerInOmega",
 function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     local d, field, zeta, gens, size, F1, F2, F, orthogonalGens_1, orthogonalGens_2,
@@ -235,7 +235,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
 
     # This condition is implicitly assumed in [HR10] and [KL90]
     if epsilon_1 = 0 and epsilon_2 <> 0 then
-        ErrorNoReturn("<epsilon2> must be 0 if <epsilon_1> is 0]");
+        ErrorNoReturn("<epsilon_2> must be 0 if <epsilon_1> is 0");
     fi;
 
     # In this case we use symmetry to restrict the epsilons,
@@ -247,7 +247,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     # In this case we use symmetry to restrict the dimensions,
     # the papers also implicitly do this
     if (epsilon = 0 or (epsilon = 1 and epsilon_1 = epsilon_2)) and d1 >= d2 then
-        ErrorNoReturn("by symmetry, we assume d1 < d2 in this case");
+        ErrorNoReturn("by symmetry, we assume <d1> < <d2> in this case");
     fi;
 
     if (epsilon = -1) <> (epsilon_1 = -1 and epsilon_2 = 0) then
@@ -344,8 +344,8 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
             # A short calculation using the mixed product property of the
             # Kronecker product shows that G_1 ^ 2, G_2 ^ 2 and D ^ 2 are all in
             # SO(epsilon_1, d1, q) \otimes SO(epsilon_2, d2, q) already, so if
-            # exactly one of the matrices has spinor norm -1, we do not adjoin its
-            # square and instead just adjoin the other two.
+            # exactly one of the matrices has spinor norm -1, we do not adjoin
+            # it and instead just adjoin the other two.
             if squareDiscriminant_2 then
                 Add(gens, G_1);
                 if squareDiscriminant_1 then
@@ -416,7 +416,7 @@ function(epsilon, epsilon_1, epsilon_2, d1, d2, q)
     fi;
 end);
 
-# Construction as in Proposition 7.4 of [HR10]
+# Construction as in Lemma 7.4 of [HR10]
 BindGlobal("SymplecticTensorProductStabilizerInOmega",
 function(d1, d2, q)
     local d, m, gcd, field, one, gens, SpGen, size, zeta, A, B, Q, result;

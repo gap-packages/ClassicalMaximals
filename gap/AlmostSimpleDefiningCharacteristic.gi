@@ -1,4 +1,4 @@
-# Extension of GL(n,q) by graph isomorphisms - degree is twice as large.
+# Extension of GL(n,q) by the graph automorphism - degree is twice as large.
 InstallGlobalFunction("GLExtensionByGraphAutomorphism",
 function(n, q)
     local G, gens, mat, G2;
@@ -14,7 +14,7 @@ function(n, q)
     return G2;
 end);
 
-# Extension of GU(n,q) by frobenius isomorphism - degree is twice as large.
+# Extension of GU(n,q) by the Frobenius automorphism - degree is twice as large.
 InstallGlobalFunction("GUExtensionByFrobeniusAutomorphism",
 function(n, q)
     local G, gens, mat, G2;
@@ -407,7 +407,7 @@ function(q, opts...)
     general := IsBound(opts.general) and opts.general;  # default to false
     normaliser := IsBound(opts.normaliser) and opts.normaliser;  # default to false
 
-    # (3.)L(3,q^2)(.3).2 <= L(9,q)
+    # (3.)L(3,q^2)(.3).2 <= U(9,q)
     w := Z(q^2);
     z := w^(q - 1);
     G := GroupByGenerators(Concatenation(GeneratorsOfGroup(SL(3,q^2)),
@@ -649,7 +649,7 @@ function(q, opts...)
     return ConjugateToStandardFormAutoType(G, GF(q^2));
 end);
 
-# Construction of S4q < O^+(10,q) and S4q < O^-(4,q), respectively
+# Construction of S4q < O^+(10,q) and S4q < O^-(10,q), respectively
 # Cf. Proposition 5.5.2 in [BHR13]
 InstallGlobalFunction("AlmostSimpleDefiningCharacteristic_sp4qdim10",
 function(q, opts...)
@@ -884,7 +884,7 @@ function(q)
     return ConjugateToStandardForm(G, "O+", GF(q^2));
 end);
 
-# ExtendToBasis(Q, V) - quick and dirty, requires checking
+# CM_ExtendToBasis(Q, V) - quick and dirty, requires checking
 # Given a list Q of linearly independent vectors in the vector space V,
 # return a list of length Dimension(V) whose first entries are Q and which
 # extends Q to a basis of V.
@@ -1076,7 +1076,7 @@ function(q)
     phi := CM_O8qMapToCover(q);
     Hgens := List([1..Length(GeneratorsOfGroup(H))], i -> phi(GeneratorsOfGroup(H)[i]));
     H := GroupByGenerators(Hgens);
-    # G *modulo scalars* has equivalent representation over GF(q)
+    # H *modulo scalars* has equivalent representation over GF(q)
     # TODO Understand whether/why the following scalars are the right ones
     H := GroupByGenerators([H.1, H.2, Z(q^2)^((q+1)/2) * H.3]);
     H := CM_OverSmallerField(GModuleByMats(GeneratorsOfGroup(H), GF(q^2)), H);
