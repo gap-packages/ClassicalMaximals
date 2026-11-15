@@ -31,11 +31,19 @@ CheckGeneratorsSpecial := function(G)
   fi;
 end;
 
+# GAP's SL, SU, Sp or Omega for the type names of ClassicalMaximalsGeneric
+StandardClassicalGroup := function(type, n, q)
+  if type in ["L", "U", "S"] then
+    return rec(L := SL, U := SU, S := Sp).(type)(n, q);
+  fi;
+  return Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
+end;
+
 # verify that the subgroups in L of Omega(epsilon, n, q), for type "O", "O+" or
 # "O-", are pairwise non-conjugate, using the action on singular points
 CheckPairwiseNonConjugateOmega := function(type, n, q, L)
   local Om, Q, v, hom, P, images, i, j;
-  Om := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
+  Om := StandardClassicalGroup(type, n, q);
   Q := InvariantQuadraticForm(Om).matrix;
   v := First(GF(q) ^ n, w -> not IsZero(w) and IsZero(w * Q * w));
   hom := ActionHomomorphism(Om, Orbit(Om, NormedRowVector(v), OnLines), OnLines);
@@ -68,11 +76,7 @@ CheckMaximalOrders := function(type, n, q, opt...)
     Error("no stored maximal subgroups of ", name);
   fi;
 
-  if type in ["L", "U", "S"] then
-    G := rec(L := SL, U := SU, S := Sp).(type)(n, q);
-  else
-    G := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
-  fi;
+  G := StandardClassicalGroup(type, n, q);
   z := Size(G) / Size(tbl);
   orders := SortedList(List(ClassicalMaximalsGeneric(type, n, q), H -> Size(H) / z));
   expected := SortedList(List(Maxes(tbl), m -> Size(CharacterTable(m))));
@@ -159,8 +163,8 @@ end;
 CheckIsSubsetStandardGroup := function(type, n, q, G)
   local gens, S, field, Q, F;
   gens := GeneratorsOfGroup(G);
+  S := StandardClassicalGroup(type, n, q);
   if type in ["L", "U", "S"] then
-    S := rec(L := SL, U := SU, S := Sp).(type)(n, q);
     if not IsSubset(S, gens) then
       Error("not all generators lie in the standard group");
     fi;
@@ -168,7 +172,6 @@ CheckIsSubsetStandardGroup := function(type, n, q, G)
   fi;
   # Omega(0, n, q) and SO(0, n, q) preserve different forms, so test against
   # the form of Omega directly
-  S := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
   field := GF(q);
   Q := InvariantQuadraticForm(S).matrix;
   F := InvariantBilinearForm(S).matrix;
