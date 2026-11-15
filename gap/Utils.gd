@@ -66,7 +66,7 @@ DeclareGlobalFunction("MatrixGroupWithSize");
 #! classical groups, namely orthogonal and linear groups over finite fields,
 #! as used in <Cite Key="HR05" /> and <Cite Key="HR10" />.
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns a record with components `generatorsOfSO`, `D` and `E`.
 #! @Description
 #! Constructs generators for the orthogonal groups with the properties listed
@@ -74,7 +74,7 @@ DeclareGlobalFunction("MatrixGroupWithSize");
 #! Construction as in <Cite Key="R-D13" Where="Lemma 2.4" />.
 DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns a record with components `generatorsOfOmega`, `S`, `G` and `D`.
 #! @Description
 #! Constructs standard generators `generatorsOfOmega`, `S`,
@@ -89,7 +89,7 @@ DeclareGlobalFunction("GeneratorsOfOrthogonalGroup");
 #! Construction as in Theorem 3.9 loc. cit.
 DeclareGlobalFunction("StandardGeneratorsOfOrthogonalGroup");
 
-#! @Arguments n q squareDiscriminant
+#! @Arguments n, q, squareDiscriminant
 #! @Returns a record with components `generatorsOfOmega`, `S`, `G` and `D`.
 #! @Description
 #! Constructs standard generators `generatorsOfOmega`, `S`,
@@ -109,7 +109,7 @@ DeclareGlobalFunction("StandardGeneratorsOfOrthogonalGroup");
 #! <A>q</A> must be odd.
 DeclareGlobalFunction("AlternativeGeneratorsOfOrthogonalGroup");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns a record with components `L1`, `L2` and `L3`.
 #! @Description
 #! Constructs standard generators `L1`, `L2`, `L3` as
@@ -128,42 +128,42 @@ DeclareGlobalFunction("StandardGeneratorsOfLinearGroup");
 #! This section provides functions to compute the orders of various classical groups
 #! over finite fields, using the information collected in <Cite Key="BHR13" />.
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns the size of the group <C>Sp</C>( <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Theorem 1.6.22"/>.
 DeclareGlobalFunction("SizeSp");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns the size of the group <C>PSp</C>( <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizePSp");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns the size of the group <C>SU</C>( <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Theorem 1.6.22"/>.
 DeclareGlobalFunction("SizeSU");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns the size of the group <C>PSU</C>( <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizePSU");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns the size of the group <C>GU</C>( <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizeGU");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns the size of the group <C>GO</C>( <A>epsilon</A>, <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Theorem 1.6.22"/>.
 DeclareGlobalFunction("SizeGO");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns the size of the group <C>SO</C>( <A>epsilon</A>, <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizeSO");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns the size of the group <C>Omega</C>( <A>epsilon</A>, <A>n</A> , <A>q</A> ),
 #! according to <Cite Key="BHR13" Where="Table 1.3"/>.
 DeclareGlobalFunction("SizeOmega");
