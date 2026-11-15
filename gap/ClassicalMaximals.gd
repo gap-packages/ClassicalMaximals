@@ -61,35 +61,35 @@ DeclareGlobalFunction("MaximalSubgroupClassRepsOrthogonalGroup");
 #! The following functions provide explicit elements in the various overgroups
 #! of the classical groups considered in this package.
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns an element of ${\rm GL}_n(q) \setminus {\rm SL}_n(q)$.
 DeclareGlobalFunction("GLMinusSL");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns an element of ${\rm GU}_n(q) \setminus {\rm SU}_n(q)$.
 DeclareGlobalFunction("GUMinusSU");
 
-#! @Arguments n q
+#! @Arguments n, q
 #! @Returns an element of
 #! ${\rm N}_{{\rm GL}_n(q)}({\rm Sp}_n(q)) \setminus {\rm Sp}_n(q)$
 #! which preserves our standard symplectic form modulo a scalar.
 DeclareGlobalFunction("NormSpMinusSp");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns an element of
 #! ${\rm SO}^\varepsilon_n(q) \setminus \Omega^\varepsilon_n(q)$
 #! which preserves our standard orthogonal form
 #! (see <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>).
 DeclareGlobalFunction("SOMinusOmega");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns an element of
 #! ${\rm GO}^\varepsilon_n(q) \setminus {\rm SO}^\varepsilon_n(q)$
 #! which preserves our standard orthogonal form
 #! (see <Ref Sect="Subsection_Theory:ClassicalGroups:StandardForms"/>).
 DeclareGlobalFunction("GOMinusSO");
 
-#! @Arguments epsilon n q
+#! @Arguments epsilon, n, q
 #! @Returns an element of
 #! ${\rm N}_{{\rm GL}_n(q)}({\rm GO}^\varepsilon_n(q)) \setminus {\rm GO}^\varepsilon_n(q)$
 #! which preserves our standard orthogonal form
@@ -139,7 +139,7 @@ DeclareGlobalFunction("NormGOMinusGO");
 #! gap> MG := InvariantBilinearForm(G).matrix;;
 #! gap> MH := InvariantBilinearForm(H).matrix;;
 #! gap> a := GOMinusSO(-1, 8, q);;
-#! gap> b := NormGOMinusGO(-1, 8, q);
+#! gap> b := NormGOMinusGO(-1, 8, q);;
 #! gap> a*MG*TransposedMat(a) = MG;
 #! true
 #! gap> a*MH*TransposedMat(a) = MH;
@@ -191,7 +191,7 @@ DeclareGlobalFunction("NormGOMinusGO");
 #! realised as subgroups of the corresponding standard classical group
 #! and therefore preserve the standard form. This can be verified using
 #! the stored invariant forms. For example, consider a maximal subgroup
-#! of ${\rm \Omega}^-_8(5)$ in class ${\cal C}_9$:
+#! of $\Omega^-_8(5)$ in class ${\cal C}_9$:
 #!
 #! @BeginLogSession
 #! gap> G := ClassicalMaximalsGeneric("O-", 8, 5, [9])[1];

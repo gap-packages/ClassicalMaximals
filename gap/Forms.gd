@@ -6,7 +6,7 @@ DeclareGlobalFunction("CM_BilinearForm");
 DeclareGlobalFunction("CM_QuadraticForm");
 
 ## @BeginChunk CM_ClassicalForms
-## @Arguments G field
+## @Arguments G, field
 ## @Description
 ##  Assuming that the matrix group <A>G</A> is acting absolutely irreducibly on a vector
 ##  space $V$ over the field <A>field</A>, this function attempts to
