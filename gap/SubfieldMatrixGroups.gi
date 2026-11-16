@@ -382,26 +382,27 @@ function (epsilon, d, p, e, f, epsilon_0)
         fi;
     fi;
 
-    if IsEvenInt(p) then
-        return Omega(epsilon_0, d, q0);
-    fi;
+    # The standard forms over GF(q0) and GF(p ^ e) differ for epsilon_0 = -1.
+    field := GF(p ^ e);
 
-    if r <> 2 then
-        return Omega(epsilon_0, d, q0);
+    if IsEvenInt(p) or r <> 2 then
+        if epsilon = 1 then
+            return ConjugateToStandardForm(Omega(epsilon_0, d, q0), "O+", field);
+        fi;
+        return ConjugateToStandardForm(Omega(epsilon_0, d, q0), "O-", field);
     fi;
 
     # from now on we assume r = 2, d even and epsilon = 1
     if epsilon_0 = 1 then
         if d mod 4 = 2 and q0 mod 4 = 1 then
-            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+", GF(q0));
+            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+", field);
         fi;
     else
         if not (d mod 4 = 2 and q0 mod 4 = 1) then
-            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O-", GF(q0));
+            return ConjugateToStandardForm(SO(epsilon_0, d, q0), "O+", field);
         fi;
     fi;
 
-    field := GF(p ^ e);
     one := One(field);
     zeta := PrimitiveRoot(field);
     lambda := zeta ^ QuoInt(q0 + 1, 2);

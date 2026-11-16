@@ -95,8 +95,12 @@ gap> TestSubfieldOmega := function(epsilon, n, p, e, f, epsilon_0)
 >   local G;
 >   G := SubfieldOmega(epsilon, n, p, e, f, epsilon_0);
 >   CheckIsSubsetOmega(epsilon, n, p ^ e, G);
+>   CheckIsSubsetStandardGroup(["O-", "O", "O+"][epsilon + 2], n, p ^ e, G);
 >   CheckSize(G);
 > end;;
+gap> TestSubfieldOmega(1, 6, 2, 2, 1, -1);
+gap> TestSubfieldOmega(-1, 6, 2, 3, 1, -1);
+gap> TestSubfieldOmega(-1, 4, 3, 3, 1, -1);
 gap> TestSubfieldOmega(0, 7, 3, 5, 1, 0);
 gap> TestSubfieldOmega(0, 5, 3, 4, 2, 0);
 gap> TestSubfieldOmega(0, 7, 5, 3, 1, 0);

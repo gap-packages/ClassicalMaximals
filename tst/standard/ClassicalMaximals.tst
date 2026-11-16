@@ -976,6 +976,12 @@ gap> Length(ClassicalMaximalsGeneric("O-", 12, 17));
 gap> Length(ClassicalMaximalsGeneric("O-", 12, 19));
 22
 
+#
+# C5 subgroups of minus type lie in GAP's standard groups
+gap> CheckMaximalsInStandardGroup("O+", 6, 4);
+gap> CheckMaximalsInStandardGroup("O+", 8, 9);
+gap> CheckMaximalsInStandardGroup("O-", 4, 8);
+
 # Test selected higher-dimensional cases
 gap> Length(ClassicalMaximalsGeneric("L", 36, 3, [1..8]));
 53
