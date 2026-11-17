@@ -100,7 +100,7 @@ function(M, q)
 end);
 
 # If type = "S" then find a beta in GF(q ^ 2) with beta + beta ^ q = alpha.
-# If type = "P" then find a beta in GF(q ^ 2) with beta * beta ^ q = alpha.
+# If type = "P" then find a gamma in GF(q ^ 2) with gamma * gamma ^ q = alpha.
 # In both cases, alpha is an element of GF(q).
 # Construction as in Lemma 2.2 of [HR05]
 BindGlobal("SolveFrobeniusEquation",

@@ -36,7 +36,7 @@ end);
 # Return a block matrix where the block in place (i, j) is A ^ k if and only if
 # the entry M[i, j] is omega ^ k (if M[i, j] = 0 then the corresponding block
 # is zero as well).
-# This is the function Theta(...) from [HR05] defined on page 60 before Lemma 6.2.
+# This is the function Theta(...) from [HR05] defined on page 61 before Lemma 6.2.
 BindGlobal("MapGammaLToGL",
 function(M, A, omega)
     local result, i, j, exponent, dimensionOfA, omegainv;

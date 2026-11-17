@@ -2513,9 +2513,9 @@ function(n, q, opts...)
     if 6 in opts.classes then
         # Class C6 subgroups ######################################################
         # Cf. Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
-        #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
-        #                                          3.7.9 (n = 8), 3.8.5 (n = 9), 
-        #                                          3.10.3 (n = 11) in [BHR13]
+        #                  3.4.3 (n = 5), 3.6.3 (n = 7),
+        #                  3.7.9 (n = 8), 3.8.5 (n = 9), 
+        #                  3.10.3 (n = 11) in [BHR13]
         # For all other n, class C6 is empty.
 
         # Cf. Theorem 6.3.10 in [BHR13]

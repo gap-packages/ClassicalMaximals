@@ -29,6 +29,9 @@ gap> ConjugateToSesquilinearForm(SL(3, 4), "U", AntidiagonalMat(3, GF(4)), GF(4)
 Error, No preserved unitary form found for <group>
 gap> ConjugateToSesquilinearForm(SL(3, 5), "O-B", IdentityMat(3, GF(5)), GF(5));
 Error, No preserved symmetric bilinear form found for <group>
+gap> ConjugateToStandardForm(SO(3, 3), "O", GF(2));
+Error, If <type> is 'O+', 'O-' or 'O' and the size of <field> is even, <d> mus\
+t be even
 gap> TestFormChangingFunctions := function(args)
 >   local n, q, type, gramMatrix, standardGroup, conjugatedGroup, broadType,
 >   standardGramMatrix, twiceConjugatedGroup, polarForm, standardPolarForm;
