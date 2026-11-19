@@ -18,7 +18,7 @@ DeclareGlobalName("CM_c9lib");
 #! over the finite field $\mathbb{F}_q$.
 #!
 #! The parameter <A>type</A> must be one of the strings
-#! `"L"`, `"U"`, `"O"`, `"O+"`, `"O-"`, corresponding to the quasisimple groups
+#! `"L"`, `"U"`, `"S"`, `"O"`, `"O+"`, `"O-"`, corresponding to the quasisimple groups
 #! ${\rm SL}_n(q)$, ${\rm SU}_n(q)$, ${\rm Sp}_n(q)$, $\Omega_n(q)$,
 #! $\Omega^+_n(q)$ and $\Omega^-_n(q)$, respectively
 #! (see Chapter <Ref Chap="Chapter_Theory"/>).
@@ -38,7 +38,7 @@ DeclareGlobalName("CM_c9lib");
 #!
 #! The orders of the returned subgroups are precomputed and stored with the groups.
 #!
-#! Section <Ref Chap="Chapter_Examples"/> provides some illustrations
+#! Chapter <Ref Chap="Chapter_Examples"/> provides some illustrations
 #! of this function's usage.
 DeclareGlobalFunction("ClassicalMaximalsGeneric");
 # TODO: gap-system/gap has a ClassicalMaximals function. That one should be

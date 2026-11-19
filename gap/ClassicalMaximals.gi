@@ -108,7 +108,7 @@ function(n, q, opts...)
     divisorListOfn := List(DivisorsInt(n));
     Remove(divisorListOfn, 1);
     divisorListOfn := Filtered(divisorListOfn, x -> x < n / x);
-    # Cf. Proposition 2.3.22
+    # Cf. Proposition 2.3.22 in [BHR13]
     if q = 2 and 2 in divisorListOfn then
         RemoveSet(divisorListOfn, 2);
     fi;
@@ -826,7 +826,7 @@ function(n, q, opts...)
         if (e = 1 and p mod 3 = 1 and p mod 5 in [2, 3]) then
             # 3.A6.2_3
             # TODO is this subgroup really maximal?
-            # see Proposition 6.2.2
+            # see Proposition 6.2.2 in [BHR13]
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
             S := ModularReductionOfIntegralLattice(LR, q, opts);
             if not general then
@@ -1219,7 +1219,7 @@ function(n, q, opts...)
             #                  3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12) in [BHR13]
             # The exceptions mentioned in these propositions are all general
             # exceptions and are dealt with directly in the function
-            # C2SubgroupsSpecialLinearGeneric
+            # C2SubgroupsSpecialLinearGroupGeneric
             Append(maximalSubgroups, C2SubgroupsSpecialLinearGroupGeneric(n, q, opts));
         elif n = 2 then
             # Cf. Lemma 3.1.3 and Theorem 6.3.10 in [BHR13]
@@ -1399,7 +1399,7 @@ function(n, q, opts...)
     divisorListOfn := List(DivisorsInt(n));
     Remove(divisorListOfn, 1);
     divisorListOfn := Filtered(divisorListOfn, x -> x < n / x);
-    # Cf. Proposition 2.3.22
+    # Cf. Proposition 2.3.22 in [BHR13]
     if q = 2 and 2 in divisorListOfn then
         RemoveSet(divisorListOfn, 2);
     fi;
@@ -2015,7 +2015,7 @@ function(n, q, opts...)
     elif n = 8 then
         if novelties then return result; fi;
         if (e = 1 and p mod 20 in [11, 19]) then
-            # 4_1.L3_4 if q mod 16 <> -1 or 4_1.L34.2_3 if q mod 16 = -1
+            # 4_1.L3_4 if q mod 16 <> 15 or 4_1.L3_4.2_3 if q mod 16 = 15
             LR := ReadAsFunction(Filename(CM_c9lib, "4al34d8.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
@@ -2085,7 +2085,7 @@ function(n, q, opts...)
         if (e = 1 and p mod 3 = 2 and p mod 5 in [2, 3] and p > 2) then
             # 3.A6.2_3
             # TODO is this subgroup really maximal?
-            # see Proposition 6.2.2
+            # see Proposition 6.2.2 in [BHR13]
             LR := ReadAsFunction(Filename(CM_c9lib, "3a6d9.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             if not general and not normaliser then
@@ -2390,7 +2390,7 @@ function(n, q, opts...)
         if q = 5 then
             # 6A7
             # TODO is this subgroup really maximal?
-            # see Proposition 6.3.1 (iii)
+            # see Theorem 6.3.1 (iii) in [BHR13]
             LR := ReadAsFunction(Filename(CM_c9lib, "6a7d24.g"))();
             S := ModularReductionOfIntegralLattice(LR, q * q, opts);
             S := Filtered(S, s -> DimensionOfMatrixGroup(s) = 12);
@@ -2454,7 +2454,7 @@ function(n, q, opts...)
         # Cf. Propositions 3.2.2 (n = 3), 3.3.2, 3.3.3 (all n = 4), 
         #                  3.4.2 (n = 5), 3.5.2, 3.5.3, 3.5.4 (all n = 6),
         #                  3.6.2 (n = 7), 3.7.2, 3.7.3, 3.7.4 (all n = 8),
-        #                  3.8.2 (n = 9), 3.9.2, 3.9.3, 3.9.4, 3.9.5 (all n = 10),
+        #                  3.8.2 (n = 9), 3.9.2, 3.9.3, 3.9.4 (all n = 10),
         #                  3.10.2 (n = 11), 3.11.2, 3.11.3, 3.11.4, 3.11.5,
         #                  3.11.6 (all n = 12) in [BHR13]
         if not (n = 3 and q = 5) and not (n = 4 and q <= 3) and not (n = 6 and q = 2) then
@@ -2512,10 +2512,10 @@ function(n, q, opts...)
 
     if 6 in opts.classes then
         # Class C6 subgroups ######################################################
-        # Cf. Lemma 3.1.6 (n = 2) and Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
-        #                                          3.4.3 (n = 5), 3.6.3 (n = 7),
-        #                                          3.7.9 (n = 8), 3.8.5 (n = 9), 
-        #                                          3.10.3 (n = 11) in [BHR13]
+        # Cf. Propositions 3.2.5 (n = 3), 3.3.6 (n = 4),
+        #                  3.4.3 (n = 5), 3.6.3 (n = 7),
+        #                  3.7.9 (n = 8), 3.8.5 (n = 9), 
+        #                  3.10.3 (n = 11) in [BHR13]
         # For all other n, class C6 is empty.
 
         # Cf. Theorem 6.3.10 in [BHR13]
@@ -2692,7 +2692,7 @@ function(n, q, opts...)
     for r in PrimeDivisors(e) do
         G := SubfieldSp(n, p, e, QuoInt(e, r));
 
-        # Cf. Proposition 4.5.4 (i) in [KL90] for the number of conjugates
+        # Cf. Proposition 4.5.4 (I) in [KL90] for the number of conjugates
         if all then
             numberOfConjugates := Gcd(2, q - 1, r);
         else
@@ -3437,9 +3437,9 @@ function(n, q, opts...)
         # Cf. Theorems 4.10.13 (n = 4), 4.10.14 (n = 6), 4.10.15 (n = 8),
         #              4.10.16 (n = 10), 4.10.17 (n = 12) in [BHR13]
         # Cf. Theorems 5.11.6 (n = 4), 5.11.7 (n = 6), 5.11.8 (n = 8),
-        #              5.11.10 (n = 10), 5.11.10 (n = 12) in [BHR13]
+        #              5.11.9 (n = 10), 5.11.10 (n = 12) in [BHR13]
         # Cf. Tables 8.13, 8.14, 8.15 (all n = 4), 8.29 (n = 6),
-        #            8.48 (n = 8), 8.65 (n = 10), 8.81 (n = 12) in [BHR13]
+        #            8.49 (n = 8), 8.65 (n = 10), 8.81 (n = 12) in [BHR13]
         Append(maximalSubgroups, C9SubgroupsSymplecticGroupGeneric(n, q, opts));
     fi;
 
@@ -3708,7 +3708,7 @@ function(epsilon, n, q, opts...)
         fi;
 
         if s = 2 then
-            # if (n, epsilon) = (8, 1), then OrthogonalSemilinear(epsilon, epsilon, n, q)
+            # if (n, epsilon) = (8, 1), then OrthogonalSemilinearOmega(epsilon, epsilon, n, q)
             # is conjugate to O-(4,q)wr2 under graph automorphism
             if not n mod 4 = 0 or not all and n = 8 and epsilon = 1 then
                 continue;
@@ -3779,8 +3779,8 @@ function(epsilon, n, q, opts...)
         if epsilon = 1 and IsEvenInt(n1) and IsEvenInt(n2) and n1 < n2 then
             # This is nonmaximal, see Proposition 2.3.22 (iv) in [BHR13]
             if q = 2 and n1 = 2 then continue; fi;
-            # if d=8, OrthSpTensor(2,4,q) conjugate to O(3,q)xO(5,q) under graph auto
-            # if q even OrthSpTensor(2,4,q) <= irreducible Sp(6,q)
+            # if n = 8, SymplecticTensorProductStabilizerInOmega(2, 4, q) is conjugate to O(3,q)xO(5,q) under graph automorphism
+            # if q is even, SymplecticTensorProductStabilizerInOmega(2, 4, q) <= irreducible Sp(6,q)
             if n1 = 2 and n2 = 4 and (not all or IsEvenInt(q)) then continue; fi;
             G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
             # number of conjugates according to [KL90] Proposition 4.4.12 (I)
@@ -4841,7 +4841,7 @@ function(epsilon, n, q, opts...)
                 if (e = 1 and p mod 11 in [2, 6, 7, 8, 10]) then
                     # L211b
                     # TODO is this subgroup really maximal for p = 2?
-                    # see Proposition 4.9.62
+                    # see Proposition 4.9.62 in [BHR13]
                     LR := ReadAsFunction(Filename(CM_c9lib, "l211d10b.g"))();
                     S := ModularReductionOfIntegralLattice(LR, q, opts);
                     if not special and not general and not normaliser then
@@ -5294,7 +5294,7 @@ function(epsilon, n, q, opts...)
         # 3.9.1 (n = 10), 3.10.1 (n = 11), 3.11.1 (n = 12) in [BHR13]
         # Cf. Tables 8.7 (n = 3), 8.17 (n = 4), 8.22 (n = 5),
         # 8.31, 8.33 (all n = 6), 8.39 (n = 7), 8.50, 8.52 (all n = 8),
-        # 8.58 (n = 9), 8.66, 8.86 (all n = 10), 8.74 (n = 11),
+        # 8.58 (n = 9), 8.66, 8.68 (all n = 10), 8.74 (n = 11),
         # 8.82, 8.84 (all n = 12) in [BHR13]
         Append(maximalSubgroups, C1SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
@@ -5304,8 +5304,8 @@ function(epsilon, n, q, opts...)
         # Cf. Propositions 3.6.2 (n = 7), 3.7.2, 3.7.3, 3.7.4 (all n = 8),
         # 3.8.2 (n = 9), 3.9.2, 3.9.3, 3.9.4 (all n = 10), 3.10.2 (n = 11),
         # 3.11.2, 3.11.3, 3.11.4, 3.11.5, 3.11.6 (all n = 12) in [BHR13]
-        # Cf. Tables 8.2 (n = 3), 8.22 (n = 5), 8.31, 8.33 (all n = 6)
-        # 8.39 (n = 7), 8.50 (n = 8), 8.58 (n = 9), 8.66, 8.68 (all n = 10)
+        # Cf. Tables 8.7 (n = 3), 8.22 (n = 5), 8.31, 8.33 (all n = 6),
+        # 8.39 (n = 7), 8.50 (n = 8), 8.58 (n = 9), 8.66, 8.68 (all n = 10),
         # 8.74 (n = 11), 8.82, 8.84 (all n = 12) in [BHR13]
         Append(maximalSubgroups, C2SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));
     fi;
@@ -5332,7 +5332,7 @@ function(epsilon, n, q, opts...)
         # Class C5 subgroups ######################################################
         # Cf. Propositions 3.6.3 (n = 7), 3.7.8 (n = 8), 3.8.4 (n = 9),
         # 3.9.7 (n = 10), 3.10.3 (n = 11), 3.11.9 (n = 12) in [BHR13]
-        # Cf. Tables 8.2 (n = 3), 8.17 (n = 4), 8.22 (n = 5),
+        # Cf. Tables 8.7 (n = 3), 8.17 (n = 4), 8.22 (n = 5),
         # 8.31, 8.33 (all n = 6), 8.39 (n = 7), 8.50, 8.52 (all n = 8), 8.58 (n = 9),
         # 8.66, 8.68 (all n = 10), 8.74 (n = 11), 8.82, 8.84 (all n = 12)
         # in [BHR13]
@@ -5349,7 +5349,7 @@ function(epsilon, n, q, opts...)
 
     if 7 in opts.classes then
         # Class C7 subgroups ######################################################
-        # Cf. Proposition 3.8.3 (n = 9) in [BHR13]
+        # Cf. Proposition 3.8.6 (n = 9) in [BHR13]
         # Cf. Table 8.58 (n = 9) in [BHR13]
         # For all other n, class C7 is empty.
         Append(maximalSubgroups, C7SubgroupsOrthogonalGroupGeneric(epsilon, n, q, opts));

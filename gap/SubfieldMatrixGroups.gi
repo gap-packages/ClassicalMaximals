@@ -3,7 +3,7 @@
 # <M>Z(GL(n, p ^ e))</M> (i.e. all scalar matrices), where <C>GF(p ^ f)</C> is
 # a subfield of <C>GF(p ^ e)</C>. Note that this means <A>f</A> must be a
 # divisor of <A>e</A>. We further demand that <A>p</A> be a prime number and
-# that the quotient <C>f / e</C> be a prime number as well, i.e. <C>GF(p ^ e)
+# that the quotient <C>e / f</C> be a prime number as well, i.e. <C>GF(p ^ e)
 # </C> is a prime extension of <C>GF(p ^ f)</C>.
 # Construction as in Proposition 8.1 of [HR05] 
 BindGlobal("SubfieldSL", 
@@ -220,7 +220,7 @@ function(epsilon, d, q)
                 #   (q - 1) * n * (d + q + 1) * d / (2 * k)
                 #        = (q - 1) * (d + q + 1) / 2 
                 #           + (q - 1) * (d + q + 1) * (n * d / k - 1) / 2
-                #        = (q - 1) * (d + q + 1) / 2 = det(D * E) ^ (-1)
+                #        = (q - 1) * (d + q + 1) / 2, so zeta ^ (i * d) = det(D * E),
                 # since the second summand is divisible by q - 1 (first
                 # factor), by 2 * k (second factor; since d and q + 1 have the
                 # same 2-adic valuation here) and by (q + 1) / k (third
@@ -353,7 +353,7 @@ function (epsilon, d, p, e, f, epsilon_0)
     fi;
 
     if IsEvenInt(p) and IsOddInt(d) then
-        ErrorNoReturn("<d> must be even if <q> is even");
+        ErrorNoReturn("<d> must be even if <p> is even");
     fi;
 
     if e mod f <> 0 then

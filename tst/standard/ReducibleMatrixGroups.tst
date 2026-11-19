@@ -114,9 +114,9 @@ Error, <epsilon> must be in [-1, 0, 1]
 gap> OmegaStabilizerOfIsotropicSubspace(0, 5, 8, 1);
 Error, <d> must be even if <q> is even
 gap> OmegaStabilizerOfIsotropicSubspace(0, 5, 5, 3);
-Error, <k> must be less than or equal to <m>
+Error, <k> must be less than or equal to <d> / 2
 gap> TestOmegaStabilizerOfIsotropicSubspace(-1, 8, 5, 4);
-Error, <k> must not be equal to <m> for <epsilon> = -1
+Error, <k> must not be equal to <d> / 2 for <epsilon> = -1
 gap> TestOmegaStabilizerOfIsotropicSubspace(1, 2, 5, 1);
 Error, <d> must be at least 3
 

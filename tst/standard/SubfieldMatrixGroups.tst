@@ -123,7 +123,7 @@ Error, <d> must be even
 gap> SubfieldOmega(2, 7, 3, 2, 1, 1);
 Error, <epsilon> must be in [-1, 0, 1]
 gap> SubfieldOmega(0, 7, 4, 2, 1, 0);
-Error, <d> must be even if <q> is even
+Error, <d> must be even if <p> is even
 gap> SubfieldOmega(0, 7, 3, 3, 2, 0);
 Error, <f> must be a divisor of <e>
 gap> SubfieldOmega(0, 7, 3, 4, 1, 0);

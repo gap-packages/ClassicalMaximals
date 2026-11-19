@@ -104,7 +104,7 @@ function(epsilon, d, q)
     if IsEvenInt(d) then
         # det(DEpsilon) = -1
         DEpsilon := generatorsOfOrthogonalGroup.D;
-        # det(EEpsilon) = (epsilon * omega) ^ (d / 2)
+        # det(EEpsilon) = (epsilon * zeta) ^ (d / 2)
         EEpsilon := generatorsOfOrthogonalGroup.E;
         X := zeta * IdentityMat(d, F);
         k := Gcd(q - 1, d);
@@ -112,7 +112,7 @@ function(epsilon, d, q)
         # We deal with the cases epsilon = +1 and epsilon = -1 simultaneously
         if IsEvenInt((q - 1) / k) then
             i1 := QuoInt(q - 1, 2 * k);
-            # Note that det(X ^ i1) = zeta ^ (d * (q - 1) / 2 * k) 
+            # Note that det(X ^ i1) = zeta ^ (d * (q - 1) / (2 * k)) 
             #                       = zeta ^ (Lcm(d, q - 1) / 2)
             #                       = -1
             # since the 2-adic valuation of q - 1 is greater than the 2-adic
@@ -127,7 +127,7 @@ function(epsilon, d, q)
             i2 := ((q - 1) / k - 1) / 2; # an integer since (q - 1) / k is odd
             if IsEvenInt(d / k) or (epsilon = -1 and IsOddInt(d / 2)) then
                 # Note that det(X ^ i2) = zeta ^ (d * ((q - 1) / k - 1) / 2)
-                #                       = zeta ^ (d * (q - 1)) / (2 * k) * zeta ^ (- d / 2)
+                #                       = zeta ^ (d * (q - 1) / (2 * k)) * zeta ^ (- d / 2)
                 #                       = zeta ^ (Lcm(d, q - 1) / 2) * zeta ^ (- d / 2).
                 # If d / k is even, the 2-adic valuation of d is greater than
                 # the 2-adic valuation of q - 1, hence det(X ^ i2) = zeta ^ (- d / 2).
@@ -159,7 +159,7 @@ function(epsilon, d, q)
         Add(generators, W);
     fi;
 
-    # Size according to Table 2.11 in [1] (note that the structure given in
+    # Size according to Table 2.11 in [BHR13] (note that the structure given in
     # Proposition 11.2 of [HR05] is wrong!)
     size := Gcd(q - 1, d) * SizeSO(epsilon, d, q);
     return MatrixGroupWithSize(F, generators, size);

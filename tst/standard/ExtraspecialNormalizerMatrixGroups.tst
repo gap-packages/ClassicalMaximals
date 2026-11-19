@@ -144,6 +144,10 @@ gap> ExtraspecialNormalizerInOmega(2, 5);
 Error, 2 ^ <m> must be at least 8 in the orthogonal case
 gap> ExtraspecialNormalizerInOmega(3, 4);
 Error, <r> must be prime and a divisor of <q> - 1
+gap> ExtraspecialNormalizerInSU(2, 1, 3);
+Error, <r> ^ <m> must be at least 3 in the unitary case
+gap> ExtraspecialNormalizerInSU(3, 1, 3);
+Error, <q> + 1 must be divisible by <r> (or 4 if <r> = 2) in the unitary case
 
 #
 gap> SetInfoLevel(InfoOrb, oldOrbInfoLevel);

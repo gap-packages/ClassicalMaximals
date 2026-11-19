@@ -1,8 +1,7 @@
 #
 # ClassicalMaximals: Maximal subgroups of classical groups
 #
-# This file runs package tests. It is also referenced in the package
-# metadata in PackageInfo.g.
+# This file runs package tests.
 #
 LoadPackage( "ClassicalMaximals" );
 

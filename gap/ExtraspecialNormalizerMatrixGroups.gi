@@ -147,7 +147,7 @@ function(m, q, type...)
     # needed as a generator of the symplectic type subgroup of GL(d, q), but
     # not as a generator of its normalizer in GL(d, q) because for the
     # normalizer, we already need a generating scalar, i.e. a scalar matrix of
-    # order q - 1 (whereas Z has only order (q - 1) / 4), making Z redundant.
+    # order q - 1 (whereas Z has only order 4), making Z redundant.
 
     F := GF(q);
     zeta := PrimitiveRoot(F);
@@ -304,7 +304,7 @@ function(r, m, q, type)
     # and hence the expression Vi * I_d * HermitianConjugate(Vi) is multiplied
     # by the inverse of
     #
-    #   (det(V) ^ 2) ^ ((q + 1) / (2 * r)) = ((-1 / r) * r ^ r) ^ ((q + 1) / 2 * r))
+    #   (det(V) ^ 2) ^ ((q + 1) / (2 * r)) = ((-1 / r) * r ^ r) ^ ((q + 1) / (2 * r))
     #                                      = (-1 / r) ^ ((q + 1) / (2 * r)) * r ^ ((q + 1) / 2)
     #                                      = r * (-1 / r) ^ ((q + 1) / (2 * r)) * r ^ ((q - 1) / 2)
     #                                      = r * (-1 / r) ^ ((q + 1) / (2 * r)) * (r / q)
@@ -663,7 +663,7 @@ function(m, q)
         # described in [HR10] since 
         #   (Vi * V1 ^ (-1)) * (V{i+1} * V1 ^ (-1)) ^ (-1) = Vi * V{i+1} ^ (-1) 
         # and
-        #   (V1 * V2 ^ (-1)) * (V2 * V3 ^ (-1)) * ... * (V{i-1} * Vi ^ (-1)) = V1 * Vi ^ (-1) = (Vi * V1 ^ (-1)) ^ (-1)
+        #   (V1 * V2 ^ (-1)) * (V2 * V3 ^ (-1)) * ... * (V{i-1} * Vi ^ (-1)) = V1 * Vi ^ (-1) = (Vi * V1 ^ (-1)) ^ (-1))
         V1 := listOfVi[1];
         listOfVi := List(listOfVi, Vi -> Vi * V1 ^ (-1));
 
@@ -697,9 +697,9 @@ BindGlobal("ExtraspecialNormalizerInSU",
 function(r, m, q)
     local F, result;
     if not r ^ m > 2 then
-        ErrorNoReturn("<r> ^ <m> must be at least 2 in the unitary case");
+        ErrorNoReturn("<r> ^ <m> must be at least 3 in the unitary case");
     elif not (q + 1) mod r = 0 or (IsEvenInt(r) and not (q + 1) mod 4 = 0) then
-        ErrorNoReturn("<q> + 1 must be divisible by r (or 4 if r = 2) in the ",
+        ErrorNoReturn("<q> + 1 must be divisible by <r> (or 4 if <r> = 2) in the ",
                       "unitary case");
     fi;
 

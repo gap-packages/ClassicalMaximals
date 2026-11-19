@@ -534,10 +534,10 @@ function(d, q)
     # companion matrix of the minimal polynomial of w over GF(q), its
     # determinant is (-1) ^ 2 times the constant term of said minimal
     # polynomial. By Vieta, this constant term is (-1) ^ 2 * the product of
-    # all Galois conjugates of w. Hence, det(A2) = w ^ ((q ^ s - 1) / (q - 1))
+    # all Galois conjugates of w. Hence, det(A2) = w ^ ((q ^ 2 - 1) / (q - 1))
     #                                            = w ^ (q + 1).
     A2 := gammaL1.A;
-    # By Lemma 6.2 det(B2) = (-1) ^ (s - 1) = -1.
+    # By Lemma 6.2 det(B2) = (-1) ^ (2 - 1) = -1.
     B2 := gammaL1.B;
 
     omega := PrimitiveRoot(GF(q ^ 2));
@@ -691,7 +691,7 @@ function(form, q)
 
     for i in [1..d] do
         # The basis vector ei of GF(q) ^ d corresponds to a vector in 
-        # GF(q ^ s) ^ (d / s) with the entry eiOverGFqsEntry in the 
+        # GF(q ^ 2) ^ (d / 2) with the entry eiOverGFqsEntry in the 
         # eiOverGFqsIndex-th component.
         eiOverGFqsEntry := B[(i - 1) mod 2 + 1];
         eiOverGFqsIndex := QuoInt(i - 1, 2) + 1;
