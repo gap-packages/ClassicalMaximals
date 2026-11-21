@@ -39,16 +39,9 @@ gap> TestFormChangingFunctions := function(args)
 >   q := args[2];
 >   type := args[3];
 >   gramMatrix := args[4];
+>   standardGroup := StandardClassicalGroup(type, n, q);
 >   if type = "U" then
->       standardGroup := SU(n, q); q:=q^2;
->   elif type = "S" then
->       standardGroup := Sp(n, q);
->   elif type = "O" then
->       standardGroup := Omega(n, q);
->   elif type = "O+" then
->       standardGroup := Omega(1, n, q);
->   elif type = "O-" then
->       standardGroup := Omega(-1, n, q);
+>       q := q ^ 2;
 >   fi;
 >   if type in ["O", "O+", "O-"] then
 >       if IsOddInt(q) then

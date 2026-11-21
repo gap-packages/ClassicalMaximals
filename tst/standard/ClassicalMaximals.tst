@@ -1151,17 +1151,42 @@ gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, rec( classes := [4], all := fa
 11
 
 #
-# Classes of maximal subgroups of Omega+-(n, q), with orders as in GAP's
-# stored data
+# Classes of maximal subgroups of Omega(n, q) are pairwise non-conjugate, and
+# their generators generate groups of the stored orders
 gap> TestOmegaClasses := function(type, n, q)
 >   local L;
 >   L := ClassicalMaximalsGeneric(type, n, q);
 >   CheckPairwiseNonConjugateOmega(type, n, q, L);
 >   Assert(0, ForAll(L, G -> Size(Group(GeneratorsOfGroup(G))) = Size(G)));
->   return SortedList(List(L, Size));
 > end;;
 gap> TestOmegaClasses("O-", 8, 2);
-[ 168, 4320, 8160, 120960, 184320, 258048, 1451520, 1658880 ]
+gap> TestOmegaClasses("O+", 6, 2);
+gap> TestOmegaClasses("O+", 8, 2);
+gap> TestOmegaClasses("O", 5, 3);
+gap> TestOmegaClasses("O", 7, 3);
+gap> TestOmegaClasses("O-", 6, 4);
+gap> TestOmegaClasses("O-", 8, 4);
+gap> TestOmegaClasses("O-", 10, 2);
+
+#
+# Orders of the maximal subgroups, for the groups whose maximal subgroups the
+# character table library stores; except L7(2), where it lists one of each
+# pair of parabolics swapped by the graph automorphism
+gap> LoadPackage("ctbllib", false);
+true
+gap> for q in [4, 5, 7, 8, 9, 11, 13, 17, 19, 23, 25, 27, 29, 31] do
+>   CheckMaximalOrders("L", 2, q);
+> od;
+gap> for q in [2, 3, 4, 5, 7, 8, 9, 11] do CheckMaximalOrders("L", 3, q); od;
+gap> for q in [3, 4, 5, 7, 8, 9, 11] do CheckMaximalOrders("U", 3, q); od;
+gap> for c in [["L", 4, 2], ["L", 4, 3], ["L", 5, 2], ["L", 6, 2],
+>              ["U", 4, 2], ["U", 4, 3], ["U", 5, 2], ["U", 6, 2],
+>              ["S", 4, 3], ["S", 4, 4], ["S", 4, 5], ["S", 6, 2], ["S", 6, 3],
+>              ["S", 8, 2], ["O", 5, 3, "U4(2)"], ["O", 5, 5], ["O", 7, 3],
+>              ["O+", 6, 2, "L4(2)"], ["O+", 6, 3], ["O+", 8, 2], ["O+", 8, 3],
+>              ["O-", 6, 2, "U4(2)"], ["O-", 6, 3, "U4(3)"], ["O-", 8, 2]] do
+>   CallFuncList(CheckMaximalOrders, c);
+> od;
 
 #
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,7^2));

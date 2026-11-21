@@ -31,16 +31,22 @@ CheckGeneratorsSpecial := function(G)
   fi;
 end;
 
+# GAP's SL, SU, Sp or Omega for the type names of ClassicalMaximalsGeneric
+StandardClassicalGroup := function(type, n, q)
+  return rec(L := SL, U := SU, S := Sp, O := OmegaZero,
+             ("O+") := OmegaPlus, ("O-") := OmegaMinus).(type)(n, q);
+end;
+
 # verify that the subgroups in L of Omega(epsilon, n, q), for type "O", "O+" or
 # "O-", are pairwise non-conjugate, using the action on singular points
 CheckPairwiseNonConjugateOmega := function(type, n, q, L)
   local Om, Q, v, hom, P, images, i, j;
-  Om := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
+  Om := StandardClassicalGroup(type, n, q);
   Q := InvariantQuadraticForm(Om).matrix;
   v := First(GF(q) ^ n, w -> not IsZero(w) and IsZero(w * Q * w));
   hom := ActionHomomorphism(Om, Orbit(Om, NormedRowVector(v), OnLines), OnLines);
   P := Image(hom);
-  images := List(L, G -> Group(List(GeneratorsOfGroup(G), g -> ImageElm(hom, g))));
+  images := List(L, G -> ImagesSet(hom, G));
   for i in [1..Length(L)] do
     for j in [i + 1..Length(L)] do
       if Size(images[i]) = Size(images[j]) and IsConjugate(P, images[i], images[j]) then
@@ -48,6 +54,34 @@ CheckPairwiseNonConjugateOmega := function(type, n, q, L)
       fi;
     od;
   od;
+end;
+
+# compare the orders of the results of ClassicalMaximalsGeneric with those of
+# the maximal subgroups in the character table library; a maximal subgroup of
+# a perfect group contains the centre, so the orders differ by its order. The
+# optional argument names the simple group where the library has no alias.
+CheckMaximalOrders := function(type, n, q, opt...)
+  local name, tbl, G, z, orders, expected;
+  if Length(opt) = 1 then
+    name := opt[1];
+  elif type in ["O+", "O-"] then
+    name := Concatenation("O", String(n), type{[2]}, "(", String(q), ")");
+  else
+    name := Concatenation(type, String(n), "(", String(q), ")");
+  fi;
+  tbl := CharacterTable(name);
+  if tbl = fail or not HasMaxes(tbl) then
+    Error("no stored maximal subgroups of ", name);
+  fi;
+
+  G := StandardClassicalGroup(type, n, q);
+  z := Size(G) / Size(tbl);
+  orders := SortedList(List(ClassicalMaximalsGeneric(type, n, q), H -> Size(H) / z));
+  expected := SortedList(List(Maxes(tbl), m -> Size(CharacterTable(m))));
+  if orders <> expected then
+    Error("maximal subgroups of ", name, " have orders ", orders,
+          ", expected ", expected);
+  fi;
 end;
 
 # verify that forms are given and preserved
@@ -127,8 +161,8 @@ end;
 CheckIsSubsetStandardGroup := function(type, n, q, G)
   local gens, S, field, Q, F;
   gens := GeneratorsOfGroup(G);
+  S := StandardClassicalGroup(type, n, q);
   if type in ["L", "U", "S"] then
-    S := rec(L := SL, U := SU, S := Sp).(type)(n, q);
     if not IsSubset(S, gens) then
       Error("not all generators lie in the standard group");
     fi;
@@ -136,7 +170,6 @@ CheckIsSubsetStandardGroup := function(type, n, q, G)
   fi;
   # Omega(0, n, q) and SO(0, n, q) preserve different forms, so test against
   # the form of Omega directly
-  S := Omega(rec(O := 0, ("O+") := 1, ("O-") := -1).(type), n, q);
   field := GF(q);
   Q := InvariantQuadraticForm(S).matrix;
   F := InvariantBilinearForm(S).matrix;
