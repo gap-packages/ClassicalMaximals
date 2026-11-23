@@ -41,6 +41,12 @@ true
 gap> x := SolveFrobeniusEquation("P", - Z(7) ^ 0, 7);;
 gap> x * x ^ 7 = - Z(7) ^ 0;
 true
+gap> ForAll([2, 4, 8], function(q)
+>   local x;
+>   x := SolveFrobeniusEquation("S", 0 * Z(q), q);
+>   return IsZero(x + x ^ q);
+> end);
+true
 
 #
 gap> TestFindGamma := function(q)

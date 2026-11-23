@@ -117,7 +117,7 @@ function(type, alpha, q)
     # We have to make an exception for this case since the construction below
     # does not work here: x ^ 2 + delta is never irreducible over GF(q) since
     # all elements of GF(q) are squares for q even.
-    if type = "S" and alpha = 0 and IsEvenInt(q) then
+    if type = "S" and IsZero(alpha) and IsEvenInt(q) then
         return Z(q) ^ 0;
     fi;
 
