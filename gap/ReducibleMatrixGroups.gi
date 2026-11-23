@@ -72,7 +72,9 @@ function(d, q, k)
                                         - SquareSingleEntryMatrix(F, d, k + 1, 1);
     elif d - 2 * k = 1 then
         if IsEvenInt(q) then
-            # T2 lies in SU(d, q) iff mu + mu ^ q = 1
+            # T2 lies in SU(d, q) iff mu + mu ^ q = 1. Note that the proof of
+            # Proposition 4.5 in [HR05] takes mu = zeta, which need not satisfy
+            # this, e.g. for q = 8.
             mu := SolveFrobeniusEquation("S", Z(q) ^ 0, q);
             T2 := IdentityMat(d, F) + mu * SquareSingleEntryMatrix(F, d, d, 1)
                                             + SquareSingleEntryMatrix(F, d, d, QuoCeil(d, 2))
@@ -93,6 +95,9 @@ function(d, q, k)
     Append(generators, [T1, T2]);
 
     # finally a diagonal matrix of order q ^ 2 - 1 (or q - 1 if d = 2 * k)
+    # Note that the proof of Proposition 4.5 in [HR05] has zeta ^ p and
+    # zeta ^ (-p) instead of zeta ^ q and zeta ^ (-q) below, which preserves
+    # the unitary form only if q = p.
     D := IdentityMat(d, F);
     if d - 2 * k > 1 then
         D[1, 1] := zeta;
@@ -507,8 +512,7 @@ function(d, q, k)
         Add(gens, Yi);
     od;
 
-    # Size according to Table 2.3 of [BHR13], except we replace
-    # k with 2k because [BHR13] seems to have this wrong.
+    # Size according to Table 2.3 of [BHR13], whose k is our 2k.
     result :=  MatrixGroupWithSize(field, gens, SizeSp(twok, q) * SizeSp(d - twok, q));
     SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
 

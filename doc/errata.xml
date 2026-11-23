@@ -1,0 +1,137 @@
+<Appendix Label="Errata">
+<Heading>Errata to the literature</Heading>
+
+While implementing the constructions of <Cite Key="HR05"/> and
+<Cite Key="HR10"/>, we noticed a few misprints and small omissions.
+We list them here, together with the corrections used in
+&ClassicalMaximals;, in the hope that they are useful to other readers.
+None of them affects the overall approach of these papers.
+<P/>
+
+We use the notation of the respective paper; in addition, <M>E_{i,j}</M>
+denotes the matrix with a <M>1</M> in position <M>(i, j)</M> and zeros
+elsewhere.
+
+<Section Label="Errata:HR05">
+<Heading>Constructing maximal subgroups of classical groups</Heading>
+
+These remarks concern <Cite Key="HR05"/>.
+
+<List>
+<Mark>Proposition 4.5</Mark>
+<Item>
+  The direct product with <M>{\rm SU}(d - 2k, q)</M> should be formed
+  with <M>{\rm SL}(k, q^2)</M> rather than <M>{\rm GL}(k, q^2)</M>:
+  for <M>A \in {\rm GL}(k, q^2)</M>, the matrix
+  <M>{\rm Diag}[A, I_{d - 2k}, J A^{-*} J]</M> has determinant
+  <M>\det(A)^{1 - q}</M>. The diagonal matrix added at the end of the
+  proof supplies the remaining elements.
+  <P/>
+  For odd <M>q</M>, the second transvection is
+  <M>T_2 := I_d + E_{d,d-k} - E_{k+1,1}</M>, and for
+  <M>d - 2k = 1</M> one takes
+  <M>(\lambda_1, \lambda_2, \lambda_3) = (1, -\mu, \mu^q)</M>.
+  With the signs as printed, <M>T_2</M> does not preserve <M>F</M>.
+  <P/>
+  For even <M>q</M> and <M>d - 2k = 1</M>, <M>\lambda_1</M> must
+  satisfy <M>\lambda_1 + \lambda_1^q = 1</M>, so one takes
+  <M>(\lambda_1, \lambda_2, \lambda_3) = (\alpha, 1, 1)</M> with
+  <M>\alpha + \alpha^q = 1</M>, as in Proposition 4.6. A primitive
+  element <M>\zeta</M> need not satisfy this; for example, it fails for
+  <M>q = 8</M> when <M>\zeta</M> is a root of the Conway polynomial.
+  <P/>
+  In the final diagonal matrix, the entries in rows <M>d</M> and
+  <M>d - k</M> are <M>\zeta^{-q}</M> and <M>\zeta^q</M>; with
+  <M>\zeta^{-p}</M> and <M>\zeta^p</M>, the matrix preserves <M>F</M>
+  only if <M>q = p</M>.
+</Item>
+
+<Mark>Proposition 5.4</Mark>
+<Item>
+  The matrix <M>C</M> has determinant <M>(-1)^m</M>. For odd <M>m</M>,
+  replace <M>C</M> by <M>{\rm Diag}[-1, 1, \ldots, 1] \cdot C</M>.
+</Item>
+
+<Mark>Proposition 5.5</Mark>
+<Item>
+  For <M>d = 2</M>, rows <M>1, 2</M> and rows <M>d - 1, d</M> coincide,
+  so <M>D</M> is not well defined. The matrix
+  <M>D := {\rm Diag}[\zeta^{q+1}, 1, \ldots, 1, \zeta^{-q-1}]</M>
+  works for every even <M>d</M>.
+</Item>
+
+<Mark>Lemma 6.1</Mark>
+<Item>
+  The group <M>\langle A, B \rangle \cong \langle \omega, \nu_q \rangle</M>
+  is the subgroup of <M>\Gamma{\rm L}(1, q^s)</M> of
+  <M>{\rm GF}(q)</M>-linear maps, of order <M>s (q^s - 1)</M>; it equals
+  <M>\Gamma{\rm L}(1, q^s)</M> only if <M>q</M> is prime. The subsequent
+  constructions need exactly this subgroup, so they are not affected.
+</Item>
+
+<Mark>Proposition 8.5</Mark>
+<Item>
+  The matrix <M>D</M> is a scalar multiple of a similarity of <M>F</M>
+  with multiplier <M>-\zeta^{-(q+1)}</M>. If <M>q \equiv 3 \bmod 4</M>,
+  this multiplier is a square in <M>{\rm GF}(q)</M>, so
+  <M>D \in \langle C \rangle {\rm Sp}(d, q)</M> and
+  <M>\langle A, B, C, D \rangle</M> has index <M>2</M> in <M>G</M>;
+  the smallest example is <M>{\rm SU}(8, 3)</M>. A suitable choice is
+  <M>D := {\rm Diag}[\zeta^m, \ldots, \zeta^m, \zeta^{-qm}, \ldots, \zeta^{-qm}]</M>
+  with <M>m := (q + 1) / (q + 1, d/2)</M>: then <M>\zeta^{-m} D</M> is a
+  similarity of <M>F</M> with multiplier <M>\zeta^{-m(q+1)}</M>, which is
+  a non-square in <M>{\rm GF}(q)</M> as <M>m</M> is odd when
+  <M>c \neq 1</M>, and <M>\det(D) = 1</M>.
+</Item>
+
+<Mark>Proposition 10.4</Mark>
+<Item>
+  In the structure of <M>G / (G \cap Z)</M>, <M>{\rm PSL}(m, q)</M> should read
+  <M>{\rm PSU}(m, q)</M>, and case (a) occurs for
+  <M>q \equiv 1 \bmod 4</M> rather than <M>q \equiv 3 \bmod 4</M>;
+  compare <Cite Key="BHR13" Where="Table 2.10"/>.
+</Item>
+
+<Mark>Proposition 11.2</Mark>
+<Item>
+  The structure should read
+  <M>G_\varepsilon \cong Z.{\rm PSO}^\varepsilon(d, q).(d, 2)</M>, in
+  line with Propositions 8.4 and 11.1. For even <M>d</M>,
+  <M>Z \cap {\rm SO}^\varepsilon(d, q) = \langle -I_d \rangle</M>, and
+  <M>|G_\varepsilon| = (q - 1, d) |{\rm SO}^\varepsilon(d, q)|</M>;
+  compare <Cite Key="BHR13" Where="Table 2.11"/>.
+  <P/>
+  The elements <M>W_\varepsilon</M> of Proposition 8.4 are constructed
+  in <M>{\rm SU}(d, q)</M>, using <M>(q + 1, d)</M>. For
+  <M>{\rm SL}(d, q)</M> they need an analogous construction with
+  <M>(q - 1, d)</M> in place of <M>(q + 1, d)</M>.
+</Item>
+</List>
+</Section>
+
+<Section Label="Errata:HR10">
+<Heading>Constructing maximal subgroups of orthogonal groups</Heading>
+
+These remarks concern <Cite Key="HR10"/>.
+
+<List>
+<Mark>Lemma 4.2</Mark>
+<Item>
+  In the case <M>d</M> even, <M>k = m - 1 > 1</M> and
+  <M>\varepsilon = +</M>, the matrix <M>H_7</M> should read
+  <M>I + E_{k+2,1} - E_{d,d-k-1}</M>, analogous to <M>H_6</M>. The
+  printed <M>I + E_{k+2,1} - E_{d-k-1,1}</M> does not preserve
+  <M>Q^+_d</M>.
+</Item>
+
+<Mark>Lemma 4.3</Mark>
+<Item>
+  For odd <M>q</M> and <M>k > 1</M>, the matrix <M>H_6</M> should read
+  <M>S^{\varepsilon_1}_k \oplus S^{\varepsilon_2}_{d-k}</M>, as for
+  <M>H_5</M>, rather than
+  <M>S^\varepsilon_k \oplus S^\varepsilon_{d-k}</M>.
+</Item>
+</List>
+</Section>
+
+</Appendix>

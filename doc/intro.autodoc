@@ -64,6 +64,9 @@ use of the main function.
 Chapter <Ref Chap="Chapter_Utils"/> lists utility functions that, while auxiliary,
 may be of independent interest to the user.
 
+Appendix <Ref Appendix="Errata"/> lists misprints in the literature that we
+noticed while implementing the constructions.
+
 @Section Feedback and Support
 Report bugs, questions and issues on the &ClassicalMaximals; issue tracker:
 <URL>https://github.com/gap-packages/ClassicalMaximals/issues</URL>
