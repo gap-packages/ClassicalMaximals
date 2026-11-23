@@ -9,14 +9,35 @@
 BindGlobal("CM_c9lib",
 DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
 
+# Return S ^ x with the invariant forms of S that S ^ x lacks; x must be an
+# isometry or a similarity of them, so S ^ x preserves them too. S ^ x carries
+# the forms over only from GAP 4.16 on, and a sesquilinear form only if x is
+# defined over the field of S.
+BindGlobal("CM_ConjugateWithForms",
+function(S, x)
+    local H, form;
+
+    H := S ^ x;
+    for form in [InvariantBilinearForm, InvariantQuadraticForm,
+                 InvariantSesquilinearForm] do
+        if Tester(form)(S) and not Tester(form)(H) then
+            Setter(form)(H, form(S));
+        fi;
+    od;
+
+    return H;
+end);
+
 # For most classes of subgroups, we have to conjugate the subgroups we
 # determined by an element C from the general group, which is not in the
 # special (or quasisimple) group, in order to get representatives for all
 # conjugacy classes in the special (or quasisimple) group, not only for the
 # conjugacy classes in the general group (which are generally larger).
+#
+# C is an isometry or a similarity of the forms of S.
 BindGlobal("ConjugatesInGeneralGroup",
 function(S, C, r)
-    return List([0..r - 1], i -> S ^ (C ^ i));
+    return Concatenation([S], List([1..r - 1], i -> CM_ConjugateWithForms(S, C ^ i)));
 end);
 
 InstallGlobalFunction(ClassicalMaximalsGeneric,
@@ -2826,7 +2847,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 12 in [1, 11] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -2880,7 +2901,7 @@ function(n, q, opts...)
                     SetSize(S[1], size);
                 fi;
                 if all then
-                    Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                    Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
                 else
                     Add(result, S[1]);
                 fi;
@@ -2911,7 +2932,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 8 in [1, 7] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -2932,8 +2953,8 @@ function(n, q, opts...)
                 SetSize(S[2], size);
             fi;
             if all and p mod 16 in [1, 15] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp,
-                                S[2], S[2] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
+                Append(result, ConjugatesInGeneralGroup(S[2], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
                 Add(result, S[2]);
@@ -2949,7 +2970,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -2968,7 +2989,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 12 in [1, 11] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -2983,7 +3004,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p <> 5 then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -2997,7 +3018,7 @@ function(n, q, opts...)
                 SetSize(S, size);
             fi;
             if all then
-                Append(result, [S, S ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S, generatorNormSpMinusSp, 2));
             else
                 Add(result, S);  # error in Magma: there always c=2
             fi;
@@ -3041,7 +3062,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 12 in [1, 11] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3060,7 +3081,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 20 in [1, 19] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3079,7 +3100,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p <> 2 then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3127,7 +3148,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 16 in [1, 15] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3145,7 +3166,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 8 in [1, 7] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3165,8 +3186,8 @@ function(n, q, opts...)
                 SetSize(S[2], size);
             fi;
             if all and p mod 24 in [1, 5, 7, 17, 19, 23] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
-                Append(result, [S[2], S[2] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
+                Append(result, ConjugatesInGeneralGroup(S[2], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
                 Add(result, S[2]);
@@ -3185,7 +3206,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 8 in [1, 7] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3218,8 +3239,8 @@ function(n, q, opts...)
                 SetSize(S[2], size);
             fi;
             if all and p mod 20 in [1, 19] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
-                Append(result, [S[2], S[2] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
+                Append(result, ConjugatesInGeneralGroup(S[2], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
                 Add(result, S[2]);
@@ -3241,9 +3262,9 @@ function(n, q, opts...)
                 SetSize(S[3], size);
             fi;
             if all and p mod 28 in [1, 27] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
-                Append(result, [S[2], S[2] ^ generatorNormSpMinusSp]);
-                Append(result, [S[3], S[3] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
+                Append(result, ConjugatesInGeneralGroup(S[2], generatorNormSpMinusSp, 2));
+                Append(result, ConjugatesInGeneralGroup(S[3], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
                 Add(result, S[2]);
@@ -3278,7 +3299,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p <> 2 and p <> 5 then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;
@@ -3296,7 +3317,7 @@ function(n, q, opts...)
                 SetSize(S[1], size);
             fi;
             if all and p mod 8 in [1, 7] then
-                Append(result, [S[1], S[1] ^ generatorNormSpMinusSp]);
+                Append(result, ConjugatesInGeneralGroup(S[1], generatorNormSpMinusSp, 2));
             else
                 Add(result, S[1]);
             fi;

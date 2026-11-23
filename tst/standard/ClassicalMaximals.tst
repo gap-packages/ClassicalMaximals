@@ -313,6 +313,15 @@ gap> Length(ClassicalMaximalsGeneric("L", 12, 19));
 gap> CheckMaximalsInStandardGroup("U", 5, 16);
 
 #
+# Conjugates keep the invariant forms
+gap> ForAll(ClassicalMaximalsGeneric("U", 3, 7), HasInvariantSesquilinearForm);
+true
+gap> ForAll(ClassicalMaximalsGeneric("S", 4, 7), HasInvariantBilinearForm);
+true
+gap> ForAll(ClassicalMaximalsGeneric("S", 4, 11, [9]), HasInvariantBilinearForm);
+true
+
+#
 gap> Length(ClassicalMaximalsGeneric("U", 3, 3));
 4
 gap> Length(ClassicalMaximalsGeneric("U", 3, 4));
