@@ -50,6 +50,7 @@ gap> TestSymplecticSubfieldSU := function(n, q)
 gap> TestSymplecticSubfieldSU(4, 5);
 gap> TestSymplecticSubfieldSU(2, 4);
 gap> TestSymplecticSubfieldSU(4, 3);
+gap> TestSymplecticSubfieldSU(8, 3);
 
 # Test error handling
 gap> SymplecticSubfieldSU(3, 3);

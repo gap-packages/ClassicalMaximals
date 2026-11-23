@@ -90,10 +90,11 @@ function(d, p, e, f)
     return ConjugateToStandardForm(result, "U", F);
 end);
 
-# Construction as in Proposition 8.5 of [HR05]
+# Construction as in Proposition 8.5 of [HR05], except for the generator D
+# (see below).
 BindGlobal("SymplecticSubfieldSU",
 function(d, q)
-    local F, generators, zeta, k, C, c, result, D, form, size;
+    local F, generators, zeta, k, C, c, m, result, D, form, size;
 
     if IsOddInt(d) then
         ErrorNoReturn("<d> must be even");
@@ -113,12 +114,26 @@ function(d, q)
     c := QuoInt(Gcd(2, q - 1) * Gcd(q + 1, d / 2), Gcd(q + 1, d));
 
     if c <> 1 then
-        # q is odd and d = 0 mod 4 if c <> 1
+        # q and m are odd if c <> 1.
         #
-        # D preserves the standard symplectic form Antidiag(1, ..., 1, -1, ..., -1) 
-        # up to a factor of -1. det(D) = 1 since d = 0 mod 4.
-        D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta ^ ((q + 1) / 2)),
-                                       List([1..d / 2], i -> - zeta ^ (- (q + 1) / 2))));
+        # D = zeta ^ m * diag(1, ..., 1, mu, ..., mu), mu := zeta ^ (-m * (q + 1)).
+        # The diagonal factor is a similarity of the symplectic form
+        # Antidiag(1, ..., 1, -1, ..., -1) with multiplier mu, a non-square in
+        # GF(q), so D is not in <C> * Sp(d, q).
+        #
+        # D preserves every multiple of the symplectic form as a unitary form;
+        # det(D) = zeta ^ (-m * (q - 1) * d / 2) = 1 as q + 1 divides m * d / 2.
+        #
+        # Note that [HR05] uses
+        #   D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta ^ ((q + 1) / 2)),
+        #                                  List([1..d / 2], i -> - zeta ^ (- (q + 1) / 2))));
+        # here, a scalar times a similarity with multiplier -zeta ^ (-(q + 1)).
+        # This multiplier is a square in GF(q) if q = 3 mod 4; then that D lies
+        # in <C> * Sp(d, q) and the group generated has index 2 in the
+        # maximal subgroup.
+        m := QuoInt(q + 1, Gcd(q + 1, d / 2));
+        D := DiagonalMat(Concatenation(List([1..d / 2], i -> zeta ^ m),
+                                       List([1..d / 2], i -> zeta ^ (- q * m))));
         Add(generators, D);
     fi;
     
