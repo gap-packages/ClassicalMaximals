@@ -1196,7 +1196,28 @@ gap> for c in [["L", 4, 2], ["L", 4, 3], ["L", 5, 2], ["L", 6, 2],
 #@if not IsBound(QUICK_CLASSICAL_MAXIMALS_TESTS)
 gap> CheckPairwiseNonConjugateOmega("O-", 6, 7, ClassicalMaximalsGeneric("O-", 6, 7, [2]));
 gap> CheckPairwiseNonConjugateOmega("O+", 8, 3, ClassicalMaximalsGeneric("O+", 8, 3, [3]));
+gap> L := ClassicalMaximalsGeneric("O+", 12, 3, [4]);;
+gap> List(L, Size);
+[ 110048440320, 110048440320 ]
+gap> PfaffianCounts(L[1]) <> PfaffianCounts(L[2]);
+true
+
+# the other pairs of the first four groups take a minute each
+gap> L := ClassicalMaximalsGeneric("O+", 6, 9, [5]);;
+gap> List(L, Size);
+[ 24261120, 24261120, 24261120, 24261120, 13063680, 13063680 ]
+gap> for pair in [[1, 2], [1, 3], [1, 4], [5, 6]] do
+>   CheckPairwiseNonConjugateOmega("O+", 6, 9, L{pair});
+> od;
 #@fi
+
+# The two classes of O-(4, 3) wr S(2) in Omega+(16, 3) are swapped by a
+# reflection
+gap> L := ClassicalMaximalsGeneric("O+", 16, 3, [7]){[1, 2]};;
+gap> List(L, Size);
+[ 2073600, 2073600 ]
+gap> PfaffianCounts(L[1]) <> PfaffianCounts(L[2]);
+true
 
 #
 gap> Length(C9SubgroupsSpecialLinearGroupGeneric(2,7^2));
