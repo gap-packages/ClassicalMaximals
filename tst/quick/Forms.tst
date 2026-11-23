@@ -173,7 +173,7 @@ gap> CM_ClassicalForms(SO(0, 3, 2), GF(2));
 Error, CM_ClassicalForms: <G> must be absolutely irreducible
 
 # At assertion level 1, CM_ConjugateWithForms checks that the conjugate
-# preserves the forms it copies
+# preserves the forms of the group
 gap> level := AssertionLevel();;
 gap> SetAssertionLevel(1);
 gap> H := CM_ConjugateWithForms(Sp(4, 3), NormSpMinusSp(4, 3));;
@@ -192,6 +192,13 @@ true
 gap> CM_ConjugateWithForms(S, DiagonalMat([Z(9), Z(9)^0, Z(9)^0]));
 Error, Assertion failure
 gap> SetAssertionLevel(level);
+
+# A Hermitian form given without its field cannot be checked
+gap> F := DiagonalMat([Z(9), Z(9)^0, Z(9)^0]);;
+gap> CM_GeneratorsPreserveForm(S, InvariantSesquilinearForm, rec(matrix := F, baseDomain := GF(9)));
+false
+gap> CM_GeneratorsPreserveForm(S, InvariantSesquilinearForm, rec(matrix := F));
+true
 
 #
 gap> STOP_TEST("Forms.tst", 0);
