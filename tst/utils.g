@@ -56,6 +56,57 @@ CheckPairwiseNonConjugateOmega := function(type, n, q, L)
   od;
 end;
 
+# Pfaffian of a skew-symmetric matrix over a field of odd characteristic, by
+# congruence transformations to a sum of 2x2 blocks
+Pfaffian := function(A)
+  local n, pf, i, j, k, c, row;
+  A := MutableCopyMat(A);
+  n := NrRows(A);
+  pf := One(A[1, 1]);
+  for i in [1, 3 .. n - 1] do
+    j := First([i + 1 .. n], j -> not IsZero(A[i, j]));
+    if j = fail then
+      return Zero(pf);
+    fi;
+    if j <> i + 1 then
+      A{[i + 1, j]} := A{[j, i + 1]};
+      A{[1 .. n]}{[i + 1, j]} := A{[1 .. n]}{[j, i + 1]};
+      pf := -pf;
+    fi;
+    pf := pf * A[i, i + 1];
+
+    # clear rows and columns i, i + 1 outside the block
+    for k in [i + 2 .. n] do
+      for row in [[i, i + 1], [i + 1, i]] do
+        c := A[row[1], k] / A[row[1], row[2]];
+        A[k] := A[k] - c * A[row[2]];
+        A{[1 .. n]}[k] := A{[1 .. n]}[k] - c * A{[1 .. n]}[row[2]];
+      od;
+    od;
+  od;
+  return pf;
+end;
+
+# For a subgroup G of Omega+(n, q), q odd, with bilinear form F, count the
+# elements g of G by the nonzero values of Pf((g - g^-1) F). Conjugation by
+# an isometry h multiplies the Pfaffian by det(h), so unequal counts prove
+# that two groups are not conjugate in SO, let alone in Omega. This also
+# works in dimensions out of reach of CheckPairwiseNonConjugateOmega.
+PfaffianCounts := function(G)
+  local F, counts, C, g, pf;
+  F := InvariantBilinearForm(G).matrix;
+  counts := [];
+  for C in ConjugacyClasses(G) do
+    g := Representative(C);
+    pf := Pfaffian((g - g ^ -1) * F);
+    if not IsZero(pf) then
+      Add(counts, [pf, Size(C)]);
+    fi;
+  od;
+  return List(Set(counts, c -> c[1]),
+              pf -> [pf, Sum(Filtered(counts, c -> c[1] = pf), c -> c[2])]);
+end;
+
 # compare the orders of the results of ClassicalMaximalsGeneric with those of
 # the maximal subgroups in the character table library; a maximal subgroup of
 # a perfect group contains the centre, so the orders differ by its order. The

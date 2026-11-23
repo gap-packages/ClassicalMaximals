@@ -3499,11 +3499,17 @@ end);
 
 # Given a subgroup G of Omega(epsilon, n, q), conjugate it with all products of
 # combinations of elements from the set ...
-# * ... [SOMinusOmega(epsilon, n, q)] if numberOfConjugates = 2
-# * ... [SOMinusOmega(epsilon, n, q), GOMinusSO(epsilon, n, q)] 
+# * ... [GOMinusSO(epsilon, n, q)] if numberOfConjugates = 2, q is odd and n
+#       is even
+# * ... [SOMinusOmega(epsilon, n, q)] if numberOfConjugates = 2 otherwise
+# * ... [SOMinusOmega(epsilon, n, q), GOMinusSO(epsilon, n, q)]
 #       if numberOfConjugates = 4
 # * ... [SOMinusOmega(epsilon, n, q), GOMinusSO(epsilon, n, q), NormGOMinusGO(epsilon, n, q)]
 #       if numberOfConjugates = 8.
+# For q odd and n even, the conjugates lie in different Omega-classes only if
+# the isometries normalising G all lie in SO (numberOfConjugates = 2), or in
+# Omega up to sign (numberOfConjugates = 4). Otherwise use
+# ConjugatesOfSubgroupOmega.
 BindGlobal("ConjugateSubgroupOmega",
 function(epsilon, n, q, G, numberOfConjugates)
     local elementsToConjugate;
@@ -3514,6 +3520,13 @@ function(epsilon, n, q, G, numberOfConjugates)
 
     if numberOfConjugates = 1 then
         return [G];
+    fi;
+
+    # Modulo Omega and scalars, SO \ Omega lies in every subgroup of index 2
+    # of the conformal group, so it fixes the class of G if there are only
+    # two.
+    if numberOfConjugates = 2 and IsOddInt(q) and IsEvenInt(n) then
+        return ConjugatesOfSubgroupOmega(G, [GOMinusSO(epsilon, n, q)]);
     fi;
 
     elementsToConjugate := [SOMinusOmega(epsilon, n, q)];
