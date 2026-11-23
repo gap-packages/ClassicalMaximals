@@ -3606,13 +3606,8 @@ function(epsilon, n, q, opts...)
         G := OmegaStabilizerOfIsotropicSubspace(epsilon, n, q, k);
         if epsilon = 1 and k = m and all then
             # The two Omega-classes stabilise spaces in the two families of
-            # totally singular m-spaces. Only elements of GO \ SO swap these;
-            # for q even, SOMinusOmega is such a reflection.
-            if IsOddInt(q) then
-                Append(result, ConjugatesBySubsetsOfGenerators(G, [GOMinusSO(epsilon, n, q)]));
-            else
-                Append(result, ConjugatesBySubsetsOfGenerators(G, [SOMinusOmega(epsilon, n, q)]));
-            fi;
+            # totally singular m-spaces, which reflections swap.
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
         else
             Add(result, G);
         fi;
@@ -3725,7 +3720,8 @@ function(epsilon, n, q, opts...)
                     # according to Proposition 4.2.15 in [KL90]
                     # Similarities swap the Omega-classes of decompositions
                     # into m-spaces of square and non-square discriminant;
-                    # for m = 1 and q = +-1 mod 8, so does SO \ Omega.
+                    # for m = 1 and q = +-1 mod 8, SO \ Omega splits each of
+                    # them in two.
                     if not all then
                         Add(result, G);
                     elif m = 1 then
@@ -3758,13 +3754,11 @@ function(epsilon, n, q, opts...)
         if epsilon = 1 and n mod 4 = 0 and (n <> 8 or q > 3) then
             G := OmegaIsotropicImprimitives(n, q);
             # The two totally singular n/2-spaces lie in the same family; as
-            # in class C1, only elements of GO \ SO swap the families.
-            if not all then
-                Add(result, G);
-            elif IsOddInt(q) then
-                Append(result, ConjugatesBySubsetsOfGenerators(G, [GOMinusSO(epsilon, n, q)]));
+            # in class C1, reflections swap the families.
+            if all then
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
             else
-                Append(result, ConjugatesBySubsetsOfGenerators(G, [SOMinusOmega(epsilon, n, q)]));
+                Add(result, G);
             fi;
         fi;
 
@@ -3781,7 +3775,7 @@ end);
 # Cf. Tables 3.5.D, 3.5.E, 3.5.F and 3.5.G in [KL90]
 BindGlobal("C3SubgroupsOrthogonalGroupGeneric",
 function(epsilon, n, q, opts...)
-    local result, primeDivisorsOfn, s, orthogonalTypeSubgroup, reflection,
+    local result, primeDivisorsOfn, s, orthogonalTypeSubgroup,
     unitaryTypeSubgroup, all;
 
     if Length(opts) = 0 then opts := rec(); else opts := opts[1]; fi;
@@ -3792,13 +3786,7 @@ function(epsilon, n, q, opts...)
 
     # Where a type below has two Omega-classes, its normaliser in the
     # conformal group contains SO \ Omega and similarities but no element of
-    # GO \ SO, so a reflection swaps the classes. For q even, SOMinusOmega is
-    # a reflection.
-    if IsOddInt(q) then
-        reflection := GOMinusSO(epsilon, n, q);
-    else
-        reflection := SOMinusOmega(epsilon, n, q);
-    fi;
+    # GO \ SO, so a reflection swaps the classes.
 
     # type GO(epsilon, n / s, q ^ s)
     for s in primeDivisorsOfn do
@@ -3815,8 +3803,8 @@ function(epsilon, n, q, opts...)
             else
                 orthogonalTypeSubgroup := OrthogonalSemilinearOmega(epsilon, epsilon, n, q);
                 if all and epsilon = 1 then
-                    Append(result, ConjugatesBySubsetsOfGenerators(orthogonalTypeSubgroup,
-                                                                   [reflection]));
+                    Append(result, ConjugateSubgroupOmega(epsilon, n, q,
+                                                          orthogonalTypeSubgroup, 2));
                 else
                     Add(result, orthogonalTypeSubgroup);
                 fi;
@@ -3833,8 +3821,8 @@ function(epsilon, n, q, opts...)
         if q mod 4 = 2 + epsilon or not all then
             Add(result, orthogonalTypeSubgroup);
         else
-            Append(result, ConjugatesBySubsetsOfGenerators(orthogonalTypeSubgroup,
-                                                           [reflection]));
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q,
+                                                  orthogonalTypeSubgroup, 2));
         fi;
     fi;
 
@@ -3844,8 +3832,8 @@ function(epsilon, n, q, opts...)
     if (n mod 4 = 2 and epsilon = -1) or (n mod 4 = 0 and epsilon = 1 and (all or n <> 8)) then
         unitaryTypeSubgroup := UnitarySemilinearOmega(n, q);
         if all and epsilon = 1 then
-            Append(result, ConjugatesBySubsetsOfGenerators(unitaryTypeSubgroup,
-                                                           [reflection]));
+            Append(result, ConjugateSubgroupOmega(epsilon, n, q,
+                                                  unitaryTypeSubgroup, 2));
         else
             Add(result, unitaryTypeSubgroup);
         fi;
@@ -3879,16 +3867,13 @@ function(epsilon, n, q, opts...)
             G := SymplecticTensorProductStabilizerInOmega(n1, n2, q);
             # number of conjugates according to [KL90] Proposition 4.4.12 (I)
             # The normaliser of G in the conformal group contains no element
-            # of GO \ SO, so reflections swap Omega-classes; for q even,
-            # SOMinusOmega is a reflection.
+            # of GO \ SO, so reflections swap Omega-classes.
             if not all then
                 Add(result, G);
             elif IsOddInt(q) and n mod 8 = 0 then
                 Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 4));
-            elif IsOddInt(q) then
-                Append(result, ConjugatesBySubsetsOfGenerators(G, [GOMinusSO(epsilon, n, q)]));
             else
-                Append(result, ConjugatesBySubsetsOfGenerators(G, [SOMinusOmega(epsilon, n, q)]));
+                Append(result, ConjugateSubgroupOmega(epsilon, n, q, G, 2));
             fi;
         fi;
         if IsEvenInt(q) or n1 <= 2 then continue; fi;
