@@ -179,6 +179,8 @@ gap> SetAssertionLevel(1);
 gap> H := CM_ConjugateWithForms(Sp(4, 3), NormSpMinusSp(4, 3));;
 gap> HasInvariantBilinearForm(H);
 true
+gap> CM_ConjugateWithForms(Sp(4, 3), DiagonalMat([Z(3), Z(3)^0, Z(3)^0, Z(3)^0]));
+Error, Assertion failure
 gap> H := CM_ConjugateWithForms(Omega(1, 4, 3), GOMinusSO(1, 4, 3));;
 gap> HasInvariantQuadraticForm(H) and HasInvariantBilinearForm(H);
 true

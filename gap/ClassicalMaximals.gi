@@ -9,25 +9,25 @@
 BindGlobal("CM_c9lib",
 DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
 
-# Return whether the generators of G preserve the form stored in G under the
-# attribute form: InvariantBilinearForm, InvariantQuadraticForm or
-# InvariantSesquilinearForm. A Hermitian form stored without its field cannot
-# be checked and counts as preserved.
+# Return whether the generators of G preserve the form given by the record
+# formRec, a value of the attribute form: InvariantBilinearForm,
+# InvariantQuadraticForm or InvariantSesquilinearForm. A Hermitian form given
+# without its field cannot be checked and counts as preserved.
 BindGlobal("CM_GeneratorsPreserveForm",
-function(G, form)
+function(G, form, formRec)
     local gens, F, q;
 
     gens := GeneratorsOfGroup(G);
-    F := form(G).matrix;
+    F := formRec.matrix;
     if form = InvariantBilinearForm then
         return ForAll(gens, g -> g * F * TransposedMat(g) = F);
     elif form = InvariantQuadraticForm then
         return ForAll(gens, g -> RespectsQuadraticForm(F, g));
-    elif not IsBound(form(G).baseDomain) then
+    elif not IsBound(formRec.baseDomain) then
         return true;
     fi;
 
-    q := RootInt(Size(form(G).baseDomain), 2);
+    q := RootInt(Size(formRec.baseDomain), 2);
     return ForAll(gens, g -> g * F * HermitianConjugate(g, q) = F);
 end);
 
@@ -42,9 +42,14 @@ function(S, x)
     H := S ^ x;
     for form in [InvariantBilinearForm, InvariantQuadraticForm,
                  InvariantSesquilinearForm] do
-        if Tester(form)(S) and not Tester(form)(H) then
+        if not Tester(form)(S) then
+            continue;
+        fi;
+
+        # checked whether or not S ^ x carried the form over
+        Assert(1, CM_GeneratorsPreserveForm(H, form, form(S)));
+        if not Tester(form)(H) then
             Setter(form)(H, form(S));
-            Assert(1, CM_GeneratorsPreserveForm(H, form));
         fi;
     od;
 
