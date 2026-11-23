@@ -9,6 +9,28 @@
 BindGlobal("CM_c9lib",
 DirectoriesPackageLibrary("ClassicalMaximals", "data/c9lattices"));
 
+# Return whether the generators of G preserve the form stored in G under the
+# attribute form: InvariantBilinearForm, InvariantQuadraticForm or
+# InvariantSesquilinearForm. A Hermitian form stored without its field cannot
+# be checked and counts as preserved.
+BindGlobal("CM_GeneratorsPreserveForm",
+function(G, form)
+    local gens, F, q;
+
+    gens := GeneratorsOfGroup(G);
+    F := form(G).matrix;
+    if form = InvariantBilinearForm then
+        return ForAll(gens, g -> g * F * TransposedMat(g) = F);
+    elif form = InvariantQuadraticForm then
+        return ForAll(gens, g -> RespectsQuadraticForm(F, g));
+    elif not IsBound(form(G).baseDomain) then
+        return true;
+    fi;
+
+    q := RootInt(Size(form(G).baseDomain), 2);
+    return ForAll(gens, g -> g * F * HermitianConjugate(g, q) = F);
+end);
+
 # Return S ^ x with the invariant forms of S that S ^ x lacks; x must be an
 # isometry or a similarity of them, so S ^ x preserves them too. S ^ x carries
 # the forms over only from GAP 4.16 on, and a sesquilinear form only if x is
@@ -22,6 +44,7 @@ function(S, x)
                  InvariantSesquilinearForm] do
         if Tester(form)(S) and not Tester(form)(H) then
             Setter(form)(H, form(S));
+            Assert(1, CM_GeneratorsPreserveForm(H, form));
         fi;
     od;
 
