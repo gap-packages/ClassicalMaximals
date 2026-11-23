@@ -161,6 +161,7 @@ gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(9,107, rec(all:=false));  # Error
 #@fi
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(9,2, rec(all:=false));
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,19, rec(novelties:=true, all:=false));
+gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,4, rec(all:=false));
 #@if IsBound(CLASSICAL_MAXIMALS_RUN_BROKEN_TESTS)
 gap> TestC9SubgroupsSpecialUnitaryGroupGeneric(10,31, rec(all:=false));  # Error, Orbit too long, increase opt.OrbitLengthLimit
 #@fi

@@ -2281,7 +2281,7 @@ function(n, q, opts...)
         fi;
         S := AlmostSimpleDefiningCharacteristic_u5qdim10(q, opts);
         if not general and not normaliser then
-            size := Gcd(q + 1, 10) * SizeSU(5, q);
+            size := Gcd(q + 1, 10) * SizePSU(5, q);
             SetSize(S, size);
         fi;
         if all then
