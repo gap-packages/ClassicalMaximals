@@ -172,5 +172,33 @@ gap> TestClassicalForms(SU(4, 2), GF(2^2), "unitary");
 gap> CM_ClassicalForms(SO(0, 3, 2), GF(2));
 Error, CM_ClassicalForms: <G> must be absolutely irreducible
 
+# At assertion level 1, CM_ConjugateWithForms checks that the conjugate
+# preserves the forms of the group
+gap> level := AssertionLevel();;
+gap> SetAssertionLevel(1);
+gap> H := CM_ConjugateWithForms(Sp(4, 3), NormSpMinusSp(4, 3));;
+gap> HasInvariantBilinearForm(H);
+true
+gap> CM_ConjugateWithForms(Sp(4, 3), DiagonalMat([Z(3), Z(3)^0, Z(3)^0, Z(3)^0]));
+Error, Assertion failure
+gap> H := CM_ConjugateWithForms(Omega(1, 4, 3), GOMinusSO(1, 4, 3));;
+gap> HasInvariantQuadraticForm(H) and HasInvariantBilinearForm(H);
+true
+gap> S := Group(PermutationMat((1,2,3), 3, GF(3)), PermutationMat((1,2), 3, GF(3)));;
+gap> SetInvariantSesquilinearForm(S, rec(matrix := IdentityMat(3, GF(9)), baseDomain := GF(9)));
+gap> H := CM_ConjugateWithForms(S, DiagonalMat([Z(9)^2, Z(9)^0, Z(9)^0]));;
+gap> InvariantSesquilinearForm(H) = InvariantSesquilinearForm(S);
+true
+gap> CM_ConjugateWithForms(S, DiagonalMat([Z(9), Z(9)^0, Z(9)^0]));
+Error, Assertion failure
+gap> SetAssertionLevel(level);
+
+# A Hermitian form given without its field cannot be checked
+gap> F := DiagonalMat([Z(9), Z(9)^0, Z(9)^0]);;
+gap> CM_GeneratorsPreserveForm(S, InvariantSesquilinearForm, rec(matrix := F, baseDomain := GF(9)));
+false
+gap> CM_GeneratorsPreserveForm(S, InvariantSesquilinearForm, rec(matrix := F));
+true
+
 #
 gap> STOP_TEST("Forms.tst", 0);
