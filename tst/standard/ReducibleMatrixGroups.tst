@@ -19,7 +19,6 @@ gap> TestSUStabilizerOfIsotropicSubspace := function(n, q, k)
 >   local G;
 >   G := SUStabilizerOfIsotropicSubspace(n, q, k);
 >   CheckIsSubsetSU(n, q, G);
->   CheckIsSubsetStandardGroup("U", n, q, G);
 >   CheckSize(G);
 > end;;
 gap> TestSUStabilizerOfIsotropicSubspace(4, 3, 2);

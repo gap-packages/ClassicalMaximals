@@ -47,270 +47,266 @@ gap> MaximalSubgroupClassRepsOrthogonalGroup(1, 4, 3);
 Error, O^+(4,q) is not quasisimple
 
 #
-gap> Length(ClassicalMaximalsGeneric("L", 2, 4));
+gap> NrCheckedMaximals("L", 2, 4);
 3
-gap> Length(ClassicalMaximalsGeneric("L", 2, 5));
+gap> NrCheckedMaximals("L", 2, 5);
 3
-gap> Length(ClassicalMaximalsGeneric("L", 2, 7));
+gap> NrCheckedMaximals("L", 2, 7);
 3
-gap> Length(ClassicalMaximalsGeneric("L", 2, 8));
+gap> NrCheckedMaximals("L", 2, 8);
 3
-gap> Length(ClassicalMaximalsGeneric("L", 2, 9));
+gap> NrCheckedMaximals("L", 2, 9);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 2, 11));
+gap> NrCheckedMaximals("L", 2, 11);
 4
-gap> Length(ClassicalMaximalsGeneric("L", 2, 13));
+gap> NrCheckedMaximals("L", 2, 13);
 4
-gap> Length(ClassicalMaximalsGeneric("L", 2, 16));
+gap> NrCheckedMaximals("L", 2, 16);
 4
-gap> Length(ClassicalMaximalsGeneric("L", 2, 17));
+gap> NrCheckedMaximals("L", 2, 17);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 2, 19));
+gap> NrCheckedMaximals("L", 2, 19);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 3, 2));
+gap> NrCheckedMaximals("L", 3, 2);
 3
-gap> Length(ClassicalMaximalsGeneric("L", 3, 3));
+gap> NrCheckedMaximals("L", 3, 3);
 4
-gap> Length(ClassicalMaximalsGeneric("L", 3, 4));
+gap> NrCheckedMaximals("L", 3, 4);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 3, 5));
+gap> NrCheckedMaximals("L", 3, 5);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 3, 7));
+gap> NrCheckedMaximals("L", 3, 7);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 3, 8));
+gap> NrCheckedMaximals("L", 3, 8);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 3, 9));
+gap> NrCheckedMaximals("L", 3, 9);
 7
-gap> Length(ClassicalMaximalsGeneric("L", 3, 11));
+gap> NrCheckedMaximals("L", 3, 11);
 6
-gap> Length(ClassicalMaximalsGeneric("L", 3, 13));
+gap> NrCheckedMaximals("L", 3, 13);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 3, 16));
+gap> NrCheckedMaximals("L", 3, 16);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 3, 17));
+gap> NrCheckedMaximals("L", 3, 17);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 3, 19));
+gap> NrCheckedMaximals("L", 3, 19);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 4, 2));
+gap> NrCheckedMaximals("L", 4, 2);
 6
-gap> Length(ClassicalMaximalsGeneric("L", 4, 3));
+gap> NrCheckedMaximals("L", 4, 3);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 4, 4));
+gap> NrCheckedMaximals("L", 4, 4);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 4, 5));
+gap> NrCheckedMaximals("L", 4, 5);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 4, 7));
+gap> NrCheckedMaximals("L", 4, 7);
 12
-gap> Length(ClassicalMaximalsGeneric("L", 4, 8));
+gap> NrCheckedMaximals("L", 4, 8);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 4, 9));
+gap> NrCheckedMaximals("L", 4, 9);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 4, 11));
+gap> NrCheckedMaximals("L", 4, 11);
 12
-gap> Length(ClassicalMaximalsGeneric("L", 4, 13));
+gap> NrCheckedMaximals("L", 4, 13);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 4, 16));
+gap> NrCheckedMaximals("L", 4, 16);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 4, 17));
+gap> NrCheckedMaximals("L", 4, 17);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 4, 19));
+gap> NrCheckedMaximals("L", 4, 19);
 12
-gap> Length(ClassicalMaximalsGeneric("L", 5, 2));
+gap> NrCheckedMaximals("L", 5, 2);
 5
-gap> Length(ClassicalMaximalsGeneric("L", 5, 3));
+gap> NrCheckedMaximals("L", 5, 3);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 5, 4));
+gap> NrCheckedMaximals("L", 5, 4);
 7
-gap> Length(ClassicalMaximalsGeneric("L", 5, 5));
+gap> NrCheckedMaximals("L", 5, 5);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 5, 7));
+gap> NrCheckedMaximals("L", 5, 7);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 5, 8));
+gap> NrCheckedMaximals("L", 5, 8);
 7
-gap> Length(ClassicalMaximalsGeneric("L", 5, 9));
+gap> NrCheckedMaximals("L", 5, 9);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 5, 11));
+gap> NrCheckedMaximals("L", 5, 11);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 5, 13));
+gap> NrCheckedMaximals("L", 5, 13);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 5, 16));
+gap> NrCheckedMaximals("L", 5, 16);
 12
-gap> Length(ClassicalMaximalsGeneric("L", 5, 17));
+gap> NrCheckedMaximals("L", 5, 17);
 7
-gap> Length(ClassicalMaximalsGeneric("L", 5, 19));
+gap> NrCheckedMaximals("L", 5, 19);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 6, 2));
+gap> NrCheckedMaximals("L", 6, 2);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 6, 3));
+gap> NrCheckedMaximals("L", 6, 3);
 17
-gap> Length(ClassicalMaximalsGeneric("L", 6, 4));
+gap> NrCheckedMaximals("L", 6, 4);
 17
-gap> Length(ClassicalMaximalsGeneric("L", 6, 5));
+gap> NrCheckedMaximals("L", 6, 5);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 6, 7));
+gap> NrCheckedMaximals("L", 6, 7);
 37
-gap> Length(ClassicalMaximalsGeneric("L", 6, 8));
+gap> NrCheckedMaximals("L", 6, 8);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 6, 9));
+gap> NrCheckedMaximals("L", 6, 9);
 20
-gap> Length(ClassicalMaximalsGeneric("L", 6, 11));
+gap> NrCheckedMaximals("L", 6, 11);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 6, 13));
+gap> NrCheckedMaximals("L", 6, 13);
 28
-gap> Length(ClassicalMaximalsGeneric("L", 6, 16));
+gap> NrCheckedMaximals("L", 6, 16);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 6, 17));
+gap> NrCheckedMaximals("L", 6, 17);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 6, 19));
+gap> NrCheckedMaximals("L", 6, 19);
 31
-gap> Length(ClassicalMaximalsGeneric("L", 7, 2));
+gap> NrCheckedMaximals("L", 7, 2);
 7
-gap> Length(ClassicalMaximalsGeneric("L", 7, 3));
+gap> NrCheckedMaximals("L", 7, 3);
 8
-gap> Length(ClassicalMaximalsGeneric("L", 7, 4));
+gap> NrCheckedMaximals("L", 7, 4);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 7, 5));
+gap> NrCheckedMaximals("L", 7, 5);
 10
-gap> Length(ClassicalMaximalsGeneric("L", 7, 7));
+gap> NrCheckedMaximals("L", 7, 7);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 7, 8));
+gap> NrCheckedMaximals("L", 7, 8);
 22
-gap> Length(ClassicalMaximalsGeneric("L", 7, 9));
+gap> NrCheckedMaximals("L", 7, 9);
 11
-gap> Length(ClassicalMaximalsGeneric("L", 7, 11));
+gap> NrCheckedMaximals("L", 7, 11);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 7, 13));
+gap> NrCheckedMaximals("L", 7, 13);
 10
-gap> Length(ClassicalMaximalsGeneric("L", 7, 16));
+gap> NrCheckedMaximals("L", 7, 16);
 10
-gap> Length(ClassicalMaximalsGeneric("L", 7, 17));
+gap> NrCheckedMaximals("L", 7, 17);
 10
-gap> Length(ClassicalMaximalsGeneric("L", 7, 19));
+gap> NrCheckedMaximals("L", 7, 19);
 9
-gap> Length(ClassicalMaximalsGeneric("L", 8, 2));
+gap> NrCheckedMaximals("L", 8, 2);
 10
-gap> Length(ClassicalMaximalsGeneric("L", 8, 3));
+gap> NrCheckedMaximals("L", 8, 3);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 8, 4));
+gap> NrCheckedMaximals("L", 8, 4);
 14
-gap> Length(ClassicalMaximalsGeneric("L", 8, 5));
+gap> NrCheckedMaximals("L", 8, 5);
 27
-gap> Length(ClassicalMaximalsGeneric("L", 8, 7));
+gap> NrCheckedMaximals("L", 8, 7);
 17
-gap> Length(ClassicalMaximalsGeneric("L", 8, 8));
+gap> NrCheckedMaximals("L", 8, 8);
 14
-gap> Length(ClassicalMaximalsGeneric("L", 8, 9));
+gap> NrCheckedMaximals("L", 8, 9);
 39
-gap> Length(ClassicalMaximalsGeneric("L", 8, 11));
+gap> NrCheckedMaximals("L", 8, 11);
 17
-gap> Length(ClassicalMaximalsGeneric("L", 8, 13));
+gap> NrCheckedMaximals("L", 8, 13);
 25
-gap> Length(ClassicalMaximalsGeneric("L", 8, 16));
+gap> NrCheckedMaximals("L", 8, 16);
 15
-gap> Length(ClassicalMaximalsGeneric("L", 8, 17));
+gap> NrCheckedMaximals("L", 8, 17);
 33
-gap> Length(ClassicalMaximalsGeneric("L", 8, 19));
+gap> NrCheckedMaximals("L", 8, 19);
 17
-gap> Length(ClassicalMaximalsGeneric("L", 9, 2));
+gap> NrCheckedMaximals("L", 9, 2);
 12
-gap> Length(ClassicalMaximalsGeneric("L", 9, 3));
+gap> NrCheckedMaximals("L", 9, 3);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 9, 4));
+gap> NrCheckedMaximals("L", 9, 4);
 20
-gap> Length(ClassicalMaximalsGeneric("L", 9, 5));
+gap> NrCheckedMaximals("L", 9, 5);
 15
-gap> Length(ClassicalMaximalsGeneric("L", 9, 7));
+gap> NrCheckedMaximals("L", 9, 7);
 32
-gap> Length(ClassicalMaximalsGeneric("L", 9, 8));
+gap> NrCheckedMaximals("L", 9, 8);
 14
-gap> Length(ClassicalMaximalsGeneric("L", 9, 9));
+gap> NrCheckedMaximals("L", 9, 9);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 9, 11));
+gap> NrCheckedMaximals("L", 9, 11);
 15
-gap> Length(ClassicalMaximalsGeneric("L", 9, 13));
+gap> NrCheckedMaximals("L", 9, 13);
 26
-gap> Length(ClassicalMaximalsGeneric("L", 9, 16));
+gap> NrCheckedMaximals("L", 9, 16);
 21
-gap> Length(ClassicalMaximalsGeneric("L", 9, 17));
+gap> NrCheckedMaximals("L", 9, 17);
 15
-gap> Length(ClassicalMaximalsGeneric("L", 9, 19));
+gap> NrCheckedMaximals("L", 9, 19);
 35
-gap> Length(ClassicalMaximalsGeneric("L", 10, 2));
+gap> NrCheckedMaximals("L", 10, 2);
 16
-gap> Length(ClassicalMaximalsGeneric("L", 10, 3));
+gap> NrCheckedMaximals("L", 10, 3);
 22
-gap> Length(ClassicalMaximalsGeneric("L", 10, 4));
+gap> NrCheckedMaximals("L", 10, 4);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 10, 5));
+gap> NrCheckedMaximals("L", 10, 5);
 25
-gap> Length(ClassicalMaximalsGeneric("L", 10, 7));
+gap> NrCheckedMaximals("L", 10, 7);
 25
-gap> Length(ClassicalMaximalsGeneric("L", 10, 8));
+gap> NrCheckedMaximals("L", 10, 8);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 10, 9));
+gap> NrCheckedMaximals("L", 10, 9);
 25
-gap> Length(ClassicalMaximalsGeneric("L", 10, 11));
+gap> NrCheckedMaximals("L", 10, 11);
 77
-gap> Length(ClassicalMaximalsGeneric("L", 10, 13));
+gap> NrCheckedMaximals("L", 10, 13);
 23
-gap> Length(ClassicalMaximalsGeneric("L", 10, 16));
+gap> NrCheckedMaximals("L", 10, 16);
 27
-gap> Length(ClassicalMaximalsGeneric("L", 10, 17));
+gap> NrCheckedMaximals("L", 10, 17);
 29
-gap> Length(ClassicalMaximalsGeneric("L", 10, 19));
+gap> NrCheckedMaximals("L", 10, 19);
 25
-gap> Length(ClassicalMaximalsGeneric("L", 11, 2));
+gap> NrCheckedMaximals("L", 11, 2);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 3));
+gap> NrCheckedMaximals("L", 11, 3);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 4));
+gap> NrCheckedMaximals("L", 11, 4);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 5));
+gap> NrCheckedMaximals("L", 11, 5);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 7));
+gap> NrCheckedMaximals("L", 11, 7);
 14
-gap> Length(ClassicalMaximalsGeneric("L", 11, 8));
+gap> NrCheckedMaximals("L", 11, 8);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 9));
+gap> NrCheckedMaximals("L", 11, 9);
 15
-gap> Length(ClassicalMaximalsGeneric("L", 11, 11));
+gap> NrCheckedMaximals("L", 11, 11);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 13));
+gap> NrCheckedMaximals("L", 11, 13);
 15
-gap> Length(ClassicalMaximalsGeneric("L", 11, 16));
+gap> NrCheckedMaximals("L", 11, 16);
 14
-gap> Length(ClassicalMaximalsGeneric("L", 11, 17));
+gap> NrCheckedMaximals("L", 11, 17);
 13
-gap> Length(ClassicalMaximalsGeneric("L", 11, 19));
+gap> NrCheckedMaximals("L", 11, 19);
 14
-gap> Length(ClassicalMaximalsGeneric("L", 12, 2));
+gap> NrCheckedMaximals("L", 12, 2);
 18
-gap> Length(ClassicalMaximalsGeneric("L", 12, 3));
+gap> NrCheckedMaximals("L", 12, 3);
 26
-gap> Length(ClassicalMaximalsGeneric("L", 12, 4));
+gap> NrCheckedMaximals("L", 12, 4);
 26
-gap> Length(ClassicalMaximalsGeneric("L", 12, 5));
+gap> NrCheckedMaximals("L", 12, 5);
 27
-gap> Length(ClassicalMaximalsGeneric("L", 12, 7));
+gap> NrCheckedMaximals("L", 12, 7);
 39
-gap> Length(ClassicalMaximalsGeneric("L", 12, 8));
+gap> NrCheckedMaximals("L", 12, 8);
 22
-gap> Length(ClassicalMaximalsGeneric("L", 12, 9));
+gap> NrCheckedMaximals("L", 12, 9);
 33
-gap> Length(ClassicalMaximalsGeneric("L", 12, 11));
+gap> NrCheckedMaximals("L", 12, 11);
 25
-gap> Length(ClassicalMaximalsGeneric("L", 12, 13));
+gap> NrCheckedMaximals("L", 12, 13);
 63
-gap> Length(ClassicalMaximalsGeneric("L", 12, 16));
+gap> NrCheckedMaximals("L", 12, 16);
 27
-gap> Length(ClassicalMaximalsGeneric("L", 12, 17));
+gap> NrCheckedMaximals("L", 12, 17);
 27
-gap> Length(ClassicalMaximalsGeneric("L", 12, 19));
+gap> NrCheckedMaximals("L", 12, 19);
 39
-
-#
-# The maximal subgroups lie in GAP's standard groups
-gap> CheckMaximalsInStandardGroup("U", 5, 16);
 
 #
 # Conjugates keep the invariant forms
@@ -322,237 +318,237 @@ gap> ForAll(ClassicalMaximalsGeneric("S", 4, 11, [9]), HasInvariantBilinearForm)
 true
 
 #
-gap> Length(ClassicalMaximalsGeneric("U", 3, 3));
+gap> NrCheckedMaximals("U", 3, 3);
 4
-gap> Length(ClassicalMaximalsGeneric("U", 3, 4));
+gap> NrCheckedMaximals("U", 3, 4);
 4
-gap> Length(ClassicalMaximalsGeneric("U", 3, 5));
+gap> NrCheckedMaximals("U", 3, 5);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 3, 7));
+gap> NrCheckedMaximals("U", 3, 7);
 5
-gap> Length(ClassicalMaximalsGeneric("U", 3, 8));
+gap> NrCheckedMaximals("U", 3, 8);
 7
-gap> Length(ClassicalMaximalsGeneric("U", 3, 9));
+gap> NrCheckedMaximals("U", 3, 9);
 5
-gap> Length(ClassicalMaximalsGeneric("U", 3, 11));
+gap> NrCheckedMaximals("U", 3, 11);
 11
-gap> Length(ClassicalMaximalsGeneric("U", 3, 13));
+gap> NrCheckedMaximals("U", 3, 13);
 6
-gap> Length(ClassicalMaximalsGeneric("U", 3, 16));
+gap> NrCheckedMaximals("U", 3, 16);
 4
-gap> Length(ClassicalMaximalsGeneric("U", 3, 17));
+gap> NrCheckedMaximals("U", 3, 17);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 3, 19));
+gap> NrCheckedMaximals("U", 3, 19);
 6
-gap> Length(ClassicalMaximalsGeneric("U", 4, 2));
+gap> NrCheckedMaximals("U", 4, 2);
 5
-gap> Length(ClassicalMaximalsGeneric("U", 4, 3));
+gap> NrCheckedMaximals("U", 4, 3);
 16
-gap> Length(ClassicalMaximalsGeneric("U", 4, 4));
+gap> NrCheckedMaximals("U", 4, 4);
 7
-gap> Length(ClassicalMaximalsGeneric("U", 4, 5));
+gap> NrCheckedMaximals("U", 4, 5);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 4, 7));
+gap> NrCheckedMaximals("U", 4, 7);
 16
-gap> Length(ClassicalMaximalsGeneric("U", 4, 8));
+gap> NrCheckedMaximals("U", 4, 8);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 4, 9));
+gap> NrCheckedMaximals("U", 4, 9);
 10
-gap> Length(ClassicalMaximalsGeneric("U", 4, 11));
+gap> NrCheckedMaximals("U", 4, 11);
 18
-gap> Length(ClassicalMaximalsGeneric("U", 4, 13));
+gap> NrCheckedMaximals("U", 4, 13);
 12
-gap> Length(ClassicalMaximalsGeneric("U", 4, 16));
+gap> NrCheckedMaximals("U", 4, 16);
 7
-gap> Length(ClassicalMaximalsGeneric("U", 4, 17));
+gap> NrCheckedMaximals("U", 4, 17);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 4, 19));
+gap> NrCheckedMaximals("U", 4, 19);
 18
-gap> Length(ClassicalMaximalsGeneric("U", 5, 2));
+gap> NrCheckedMaximals("U", 5, 2);
 6
-gap> Length(ClassicalMaximalsGeneric("U", 5, 3));
+gap> NrCheckedMaximals("U", 5, 3);
 7
-gap> Length(ClassicalMaximalsGeneric("U", 5, 4));
+gap> NrCheckedMaximals("U", 5, 4);
 11
-gap> Length(ClassicalMaximalsGeneric("U", 5, 5));
+gap> NrCheckedMaximals("U", 5, 5);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 5, 7));
+gap> NrCheckedMaximals("U", 5, 7);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 5, 8));
+gap> NrCheckedMaximals("U", 5, 8);
 7
-gap> Length(ClassicalMaximalsGeneric("U", 5, 9));
+gap> NrCheckedMaximals("U", 5, 9);
 16
-gap> Length(ClassicalMaximalsGeneric("U", 5, 11));
+gap> NrCheckedMaximals("U", 5, 11);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 5, 13));
+gap> NrCheckedMaximals("U", 5, 13);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 5, 16));
+gap> NrCheckedMaximals("U", 5, 16);
 6
-gap> Length(ClassicalMaximalsGeneric("U", 5, 17));
+gap> NrCheckedMaximals("U", 5, 17);
 9
-gap> Length(ClassicalMaximalsGeneric("U", 5, 19));
+gap> NrCheckedMaximals("U", 5, 19);
 21
-gap> Length(ClassicalMaximalsGeneric("U", 6, 2));
+gap> NrCheckedMaximals("U", 6, 2);
 16
-gap> Length(ClassicalMaximalsGeneric("U", 6, 3));
+gap> NrCheckedMaximals("U", 6, 3);
 16
-gap> Length(ClassicalMaximalsGeneric("U", 6, 4));
+gap> NrCheckedMaximals("U", 6, 4);
 12
-gap> Length(ClassicalMaximalsGeneric("U", 6, 5));
+gap> NrCheckedMaximals("U", 6, 5);
 31
-gap> Length(ClassicalMaximalsGeneric("U", 6, 7));
+gap> NrCheckedMaximals("U", 6, 7);
 18
-gap> Length(ClassicalMaximalsGeneric("U", 6, 8));
+gap> NrCheckedMaximals("U", 6, 8);
 17
-gap> Length(ClassicalMaximalsGeneric("U", 6, 9));
+gap> NrCheckedMaximals("U", 6, 9);
 16
-gap> Length(ClassicalMaximalsGeneric("U", 6, 11));
+gap> NrCheckedMaximals("U", 6, 11);
 28
-gap> Length(ClassicalMaximalsGeneric("U", 6, 13));
+gap> NrCheckedMaximals("U", 6, 13);
 18
-gap> Length(ClassicalMaximalsGeneric("U", 6, 16));
+gap> NrCheckedMaximals("U", 6, 16);
 12
-gap> Length(ClassicalMaximalsGeneric("U", 6, 17));
+gap> NrCheckedMaximals("U", 6, 17);
 43
-gap> Length(ClassicalMaximalsGeneric("U", 6, 19));
+gap> NrCheckedMaximals("U", 6, 19);
 18
-gap> Length(ClassicalMaximalsGeneric("U", 7, 2));
+gap> NrCheckedMaximals("U", 7, 2);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 7, 3));
+gap> NrCheckedMaximals("U", 7, 3);
 9
-gap> Length(ClassicalMaximalsGeneric("U", 7, 4));
+gap> NrCheckedMaximals("U", 7, 4);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 7, 5));
+gap> NrCheckedMaximals("U", 7, 5);
 9
-gap> Length(ClassicalMaximalsGeneric("U", 7, 7));
+gap> NrCheckedMaximals("U", 7, 7);
 10
-gap> Length(ClassicalMaximalsGeneric("U", 7, 8));
+gap> NrCheckedMaximals("U", 7, 8);
 9
-gap> Length(ClassicalMaximalsGeneric("U", 7, 9));
+gap> NrCheckedMaximals("U", 7, 9);
 9
-gap> Length(ClassicalMaximalsGeneric("U", 7, 11));
+gap> NrCheckedMaximals("U", 7, 11);
 10
-gap> Length(ClassicalMaximalsGeneric("U", 7, 13));
+gap> NrCheckedMaximals("U", 7, 13);
 22
-gap> Length(ClassicalMaximalsGeneric("U", 7, 16));
+gap> NrCheckedMaximals("U", 7, 16);
 8
-gap> Length(ClassicalMaximalsGeneric("U", 7, 17));
+gap> NrCheckedMaximals("U", 7, 17);
 9
-gap> Length(ClassicalMaximalsGeneric("U", 7, 19));
+gap> NrCheckedMaximals("U", 7, 19);
 10
-gap> Length(ClassicalMaximalsGeneric("U", 8, 2));
+gap> NrCheckedMaximals("U", 8, 2);
 11
-gap> Length(ClassicalMaximalsGeneric("U", 8, 3));
+gap> NrCheckedMaximals("U", 8, 3);
 25
-gap> Length(ClassicalMaximalsGeneric("U", 8, 4));
+gap> NrCheckedMaximals("U", 8, 4);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 8, 5));
+gap> NrCheckedMaximals("U", 8, 5);
 17
-gap> Length(ClassicalMaximalsGeneric("U", 8, 7));
+gap> NrCheckedMaximals("U", 8, 7);
 33
-gap> Length(ClassicalMaximalsGeneric("U", 8, 8));
+gap> NrCheckedMaximals("U", 8, 8);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 8, 9));
+gap> NrCheckedMaximals("U", 8, 9);
 17
-gap> Length(ClassicalMaximalsGeneric("U", 8, 11));
+gap> NrCheckedMaximals("U", 8, 11);
 29
-gap> Length(ClassicalMaximalsGeneric("U", 8, 13));
+gap> NrCheckedMaximals("U", 8, 13);
 17
-gap> Length(ClassicalMaximalsGeneric("U", 8, 16));
+gap> NrCheckedMaximals("U", 8, 16);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 8, 17));
+gap> NrCheckedMaximals("U", 8, 17);
 17
-gap> Length(ClassicalMaximalsGeneric("U", 8, 19));
+gap> NrCheckedMaximals("U", 8, 19);
 29
-gap> Length(ClassicalMaximalsGeneric("U", 9, 2));
+gap> NrCheckedMaximals("U", 9, 2);
 20
-gap> Length(ClassicalMaximalsGeneric("U", 9, 3));
+gap> NrCheckedMaximals("U", 9, 3);
 15
-gap> Length(ClassicalMaximalsGeneric("U", 9, 4));
+gap> NrCheckedMaximals("U", 9, 4);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 9, 5));
+gap> NrCheckedMaximals("U", 9, 5);
 23
-gap> Length(ClassicalMaximalsGeneric("U", 9, 7));
+gap> NrCheckedMaximals("U", 9, 7);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 9, 8));
+gap> NrCheckedMaximals("U", 9, 8);
 20
-gap> Length(ClassicalMaximalsGeneric("U", 9, 9));
+gap> NrCheckedMaximals("U", 9, 9);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 9, 11));
+gap> NrCheckedMaximals("U", 9, 11);
 23
-gap> Length(ClassicalMaximalsGeneric("U", 9, 13));
+gap> NrCheckedMaximals("U", 9, 13);
 15
-gap> Length(ClassicalMaximalsGeneric("U", 9, 16));
+gap> NrCheckedMaximals("U", 9, 16);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 9, 17));
+gap> NrCheckedMaximals("U", 9, 17);
 44
-gap> Length(ClassicalMaximalsGeneric("U", 9, 19));
+gap> NrCheckedMaximals("U", 9, 19);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 10, 2));
+gap> NrCheckedMaximals("U", 10, 2);
 15
-gap> Length(ClassicalMaximalsGeneric("U", 10, 3));
+gap> NrCheckedMaximals("U", 10, 3);
 27
-gap> Length(ClassicalMaximalsGeneric("U", 10, 4));
+gap> NrCheckedMaximals("U", 10, 4);
 21
-gap> Length(ClassicalMaximalsGeneric("U", 10, 5));
+gap> NrCheckedMaximals("U", 10, 5);
 27
-gap> Length(ClassicalMaximalsGeneric("U", 10, 7));
+gap> NrCheckedMaximals("U", 10, 7);
 27
-gap> Length(ClassicalMaximalsGeneric("U", 10, 8));
+gap> NrCheckedMaximals("U", 10, 8);
 18
-gap> Length(ClassicalMaximalsGeneric("U", 10, 9));
+gap> NrCheckedMaximals("U", 10, 9);
 37
-gap> Length(ClassicalMaximalsGeneric("U", 10, 11));
+gap> NrCheckedMaximals("U", 10, 11);
 23
-gap> Length(ClassicalMaximalsGeneric("U", 10, 13));
+gap> NrCheckedMaximals("U", 10, 13);
 29
-gap> Length(ClassicalMaximalsGeneric("U", 10, 16));
+gap> NrCheckedMaximals("U", 10, 16);
 17
-gap> Length(ClassicalMaximalsGeneric("U", 10, 17));
+gap> NrCheckedMaximals("U", 10, 17);
 25
-gap> Length(ClassicalMaximalsGeneric("U", 10, 19));
+gap> NrCheckedMaximals("U", 10, 19);
 67
-gap> Length(ClassicalMaximalsGeneric("U", 11, 2));
+gap> NrCheckedMaximals("U", 11, 2);
 12
-gap> Length(ClassicalMaximalsGeneric("U", 11, 3));
+gap> NrCheckedMaximals("U", 11, 3);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 11, 4));
+gap> NrCheckedMaximals("U", 11, 4);
 12
-gap> Length(ClassicalMaximalsGeneric("U", 11, 5));
+gap> NrCheckedMaximals("U", 11, 5);
 15
-gap> Length(ClassicalMaximalsGeneric("U", 11, 7));
+gap> NrCheckedMaximals("U", 11, 7);
 14
-gap> Length(ClassicalMaximalsGeneric("U", 11, 8));
+gap> NrCheckedMaximals("U", 11, 8);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 11, 9));
+gap> NrCheckedMaximals("U", 11, 9);
 13
-gap> Length(ClassicalMaximalsGeneric("U", 11, 11));
+gap> NrCheckedMaximals("U", 11, 11);
 15
-gap> Length(ClassicalMaximalsGeneric("U", 11, 16));
+gap> NrCheckedMaximals("U", 11, 16);
 12
-gap> Length(ClassicalMaximalsGeneric("U", 12, 2));
+gap> NrCheckedMaximals("U", 12, 2);
 24
-gap> Length(ClassicalMaximalsGeneric("U", 12, 3));
+gap> NrCheckedMaximals("U", 12, 3);
 27
-gap> Length(ClassicalMaximalsGeneric("U", 12, 4));
+gap> NrCheckedMaximals("U", 12, 4);
 21
-gap> Length(ClassicalMaximalsGeneric("U", 12, 5));
+gap> NrCheckedMaximals("U", 12, 5);
 51
-gap> Length(ClassicalMaximalsGeneric("U", 12, 7));
+gap> NrCheckedMaximals("U", 12, 7);
 31
-gap> Length(ClassicalMaximalsGeneric("U", 12, 8));
+gap> NrCheckedMaximals("U", 12, 8);
 26
-gap> Length(ClassicalMaximalsGeneric("U", 12, 9));
+gap> NrCheckedMaximals("U", 12, 9);
 25
-gap> Length(ClassicalMaximalsGeneric("U", 12, 11));
+gap> NrCheckedMaximals("U", 12, 11);
 63
-gap> Length(ClassicalMaximalsGeneric("U", 12, 13));
+gap> NrCheckedMaximals("U", 12, 13);
 25
-gap> Length(ClassicalMaximalsGeneric("U", 12, 16));
+gap> NrCheckedMaximals("U", 12, 16);
 21
-gap> Length(ClassicalMaximalsGeneric("U", 12, 17));
+gap> NrCheckedMaximals("U", 12, 17);
 45
-gap> Length(ClassicalMaximalsGeneric("U", 12, 19));
+gap> NrCheckedMaximals("U", 12, 19);
 31
 
 #
@@ -560,603 +556,595 @@ gap> Length(ClassicalMaximalsGeneric("U", 12, 19));
 gap> L := ClassicalMaximalsGeneric("U", 3, 8, [5]);;
 gap> List(L, Size);
 [ 648, 648, 648 ]
-gap> ForAll(L, G -> IsSubset(SU(3, 8), GeneratorsOfGroup(G))
->                   and Size(Group(GeneratorsOfGroup(G))) = Size(G));
+gap> ForAll(L, G -> Size(Group(GeneratorsOfGroup(G))) = Size(G));
 true
-gap> L := ClassicalMaximalsGeneric("U", 4, 27, [5]);;
-gap> ForAll(L, G -> IsSubset(SU(4, 27), GeneratorsOfGroup(G)));
-true
+gap> NrCheckedMaximals("U", 4, 27, [5]);
+7
 
 #
-gap> Length(ClassicalMaximalsGeneric("S", 4, 3));
+gap> NrCheckedMaximals("S", 4, 3);
 5
-gap> Length(ClassicalMaximalsGeneric("S", 4, 4));
+gap> NrCheckedMaximals("S", 4, 4);
 7
-gap> Length(ClassicalMaximalsGeneric("S", 4, 5));
+gap> NrCheckedMaximals("S", 4, 5);
 8
-gap> Length(ClassicalMaximalsGeneric("S", 4, 7));
+gap> NrCheckedMaximals("S", 4, 7);
 9
-gap> Length(ClassicalMaximalsGeneric("S", 4, 8));
+gap> NrCheckedMaximals("S", 4, 8);
 8
-gap> Length(ClassicalMaximalsGeneric("S", 4, 9));
+gap> NrCheckedMaximals("S", 4, 9);
 8
-gap> Length(ClassicalMaximalsGeneric("S", 4, 11));
+gap> NrCheckedMaximals("S", 4, 11);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 4, 13));
+gap> NrCheckedMaximals("S", 4, 13);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 4, 16));
+gap> NrCheckedMaximals("S", 4, 16);
 7
-gap> Length(ClassicalMaximalsGeneric("S", 4, 17));
+gap> NrCheckedMaximals("S", 4, 17);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 4, 19));
+gap> NrCheckedMaximals("S", 4, 19);
 9
-gap> Length(ClassicalMaximalsGeneric("S", 6, 2));
+gap> NrCheckedMaximals("S", 6, 2);
 8
-gap> Length(ClassicalMaximalsGeneric("S", 6, 3));
+gap> NrCheckedMaximals("S", 6, 3);
 11
-gap> Length(ClassicalMaximalsGeneric("S", 6, 4));
+gap> NrCheckedMaximals("S", 6, 4);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 6, 5));
+gap> NrCheckedMaximals("S", 6, 5);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 6, 7));
+gap> NrCheckedMaximals("S", 6, 7);
 13
-gap> Length(ClassicalMaximalsGeneric("S", 6, 8));
+gap> NrCheckedMaximals("S", 6, 8);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 6, 9));
+gap> NrCheckedMaximals("S", 6, 9);
 15
-gap> Length(ClassicalMaximalsGeneric("S", 6, 11));
+gap> NrCheckedMaximals("S", 6, 11);
 14
-gap> Length(ClassicalMaximalsGeneric("S", 6, 13));
+gap> NrCheckedMaximals("S", 6, 13);
 13
-gap> Length(ClassicalMaximalsGeneric("S", 6, 16));
+gap> NrCheckedMaximals("S", 6, 16);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 6, 17));
+gap> NrCheckedMaximals("S", 6, 17);
 19
-gap> Length(ClassicalMaximalsGeneric("S", 6, 19));
+gap> NrCheckedMaximals("S", 6, 19);
 12
-gap> Length(ClassicalMaximalsGeneric("S", 8, 2));
+gap> NrCheckedMaximals("S", 8, 2);
 11
-gap> Length(ClassicalMaximalsGeneric("S", 8, 3));
+gap> NrCheckedMaximals("S", 8, 3);
 13
-gap> Length(ClassicalMaximalsGeneric("S", 8, 4));
+gap> NrCheckedMaximals("S", 8, 4);
 11
-gap> Length(ClassicalMaximalsGeneric("S", 8, 5));
+gap> NrCheckedMaximals("S", 8, 5);
 15
-gap> Length(ClassicalMaximalsGeneric("S", 8, 7));
+gap> NrCheckedMaximals("S", 8, 7);
 15
-gap> Length(ClassicalMaximalsGeneric("S", 8, 8));
+gap> NrCheckedMaximals("S", 8, 8);
 11
-gap> Length(ClassicalMaximalsGeneric("S", 8, 9));
+gap> NrCheckedMaximals("S", 8, 9);
 17
-gap> Length(ClassicalMaximalsGeneric("S", 8, 11));
+gap> NrCheckedMaximals("S", 8, 11);
 18
-gap> Length(ClassicalMaximalsGeneric("S", 8, 13));
+gap> NrCheckedMaximals("S", 8, 13);
 19
-gap> Length(ClassicalMaximalsGeneric("S", 8, 16));
+gap> NrCheckedMaximals("S", 8, 16);
 11
-gap> Length(ClassicalMaximalsGeneric("S", 8, 17));
+gap> NrCheckedMaximals("S", 8, 17);
 17
-gap> Length(ClassicalMaximalsGeneric("S", 8, 19));
+gap> NrCheckedMaximals("S", 8, 19);
 20
-gap> Length(ClassicalMaximalsGeneric("S", 10, 2));
+gap> NrCheckedMaximals("S", 10, 2);
 10
-gap> Length(ClassicalMaximalsGeneric("S", 10, 3));
+gap> NrCheckedMaximals("S", 10, 3);
 14
-gap> Length(ClassicalMaximalsGeneric("S", 10, 4));
+gap> NrCheckedMaximals("S", 10, 4);
 12
-gap> Length(ClassicalMaximalsGeneric("S", 10, 5));
+gap> NrCheckedMaximals("S", 10, 5);
 14
-gap> Length(ClassicalMaximalsGeneric("S", 10, 7));
+gap> NrCheckedMaximals("S", 10, 7);
 17
-gap> Length(ClassicalMaximalsGeneric("S", 10, 8));
+gap> NrCheckedMaximals("S", 10, 8);
 12
-gap> Length(ClassicalMaximalsGeneric("S", 10, 9));
+gap> NrCheckedMaximals("S", 10, 9);
 14
-gap> Length(ClassicalMaximalsGeneric("S", 10, 11));
+gap> NrCheckedMaximals("S", 10, 11);
 14
-gap> Length(ClassicalMaximalsGeneric("S", 10, 13));
+gap> NrCheckedMaximals("S", 10, 13);
 17
-gap> Length(ClassicalMaximalsGeneric("S", 10, 16));
+gap> NrCheckedMaximals("S", 10, 16);
 12
-gap> Length(ClassicalMaximalsGeneric("S", 10, 17));
+gap> NrCheckedMaximals("S", 10, 17);
 19
-gap> Length(ClassicalMaximalsGeneric("S", 10, 19));
+gap> NrCheckedMaximals("S", 10, 19);
 15
-gap> Length(ClassicalMaximalsGeneric("S", 12, 2));
+gap> NrCheckedMaximals("S", 12, 2);
 16
-gap> Length(ClassicalMaximalsGeneric("S", 12, 3));
+gap> NrCheckedMaximals("S", 12, 3);
 18
-gap> Length(ClassicalMaximalsGeneric("S", 12, 4));
+gap> NrCheckedMaximals("S", 12, 4);
 17
-gap> Length(ClassicalMaximalsGeneric("S", 12, 5));
+gap> NrCheckedMaximals("S", 12, 5);
 20
-gap> Length(ClassicalMaximalsGeneric("S", 12, 7));
+gap> NrCheckedMaximals("S", 12, 7);
 21
-gap> Length(ClassicalMaximalsGeneric("S", 12, 8));
+gap> NrCheckedMaximals("S", 12, 8);
 16
-gap> Length(ClassicalMaximalsGeneric("S", 12, 9));
+gap> NrCheckedMaximals("S", 12, 9);
 24
-gap> Length(ClassicalMaximalsGeneric("S", 12, 11));
+gap> NrCheckedMaximals("S", 12, 11);
 21
-gap> Length(ClassicalMaximalsGeneric("S", 12, 13));
+gap> NrCheckedMaximals("S", 12, 13);
 21
-gap> Length(ClassicalMaximalsGeneric("S", 12, 16));
+gap> NrCheckedMaximals("S", 12, 16);
 16
-gap> Length(ClassicalMaximalsGeneric("S", 12, 17));
+gap> NrCheckedMaximals("S", 12, 17);
 22
-gap> Length(ClassicalMaximalsGeneric("S", 12, 19));
+gap> NrCheckedMaximals("S", 12, 19);
 26
 
 #
-gap> Length(ClassicalMaximalsGeneric("O", 3, 5));
+gap> NrCheckedMaximals("O", 3, 5);
 3
-gap> Length(ClassicalMaximalsGeneric("O", 3, 7));
+gap> NrCheckedMaximals("O", 3, 7);
 3
-gap> Length(ClassicalMaximalsGeneric("O", 3, 9));
+gap> NrCheckedMaximals("O", 3, 9);
 5
-gap> Length(ClassicalMaximalsGeneric("O", 3, 11));
+gap> NrCheckedMaximals("O", 3, 11);
 4
-gap> Length(ClassicalMaximalsGeneric("O", 3, 13));
+gap> NrCheckedMaximals("O", 3, 13);
 4
-gap> Length(ClassicalMaximalsGeneric("O", 3, 17));
+gap> NrCheckedMaximals("O", 3, 17);
 5
-gap> Length(ClassicalMaximalsGeneric("O", 3, 19));
+gap> NrCheckedMaximals("O", 3, 19);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 2));
+gap> NrCheckedMaximals("O-", 4, 2);
 3
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 3));
+gap> NrCheckedMaximals("O-", 4, 3);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 4));
+gap> NrCheckedMaximals("O-", 4, 4);
 4
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 5));
+gap> NrCheckedMaximals("O-", 4, 5);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 7));
+gap> NrCheckedMaximals("O-", 4, 7);
 7
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 8));
+gap> NrCheckedMaximals("O-", 4, 8);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 9));
+gap> NrCheckedMaximals("O-", 4, 9);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 11));
+gap> NrCheckedMaximals("O-", 4, 11);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 13));
+gap> NrCheckedMaximals("O-", 4, 13);
 7
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 16));
+gap> NrCheckedMaximals("O-", 4, 16);
 4
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 17));
+gap> NrCheckedMaximals("O-", 4, 17);
 7
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 19));
+gap> NrCheckedMaximals("O-", 4, 19);
 5
-gap> Length(ClassicalMaximalsGeneric("O", 5, 3));
+gap> NrCheckedMaximals("O", 5, 3);
 5
-gap> Length(ClassicalMaximalsGeneric("O", 5, 5));
+gap> NrCheckedMaximals("O", 5, 5);
 8
-gap> Length(ClassicalMaximalsGeneric("O", 5, 7));
+gap> NrCheckedMaximals("O", 5, 7);
 9
-gap> Length(ClassicalMaximalsGeneric("O", 5, 9));
+gap> NrCheckedMaximals("O", 5, 9);
 8
-gap> Length(ClassicalMaximalsGeneric("O", 5, 11));
+gap> NrCheckedMaximals("O", 5, 11);
 10
-gap> Length(ClassicalMaximalsGeneric("O", 5, 13));
+gap> NrCheckedMaximals("O", 5, 13);
 10
-gap> Length(ClassicalMaximalsGeneric("O", 5, 17));
+gap> NrCheckedMaximals("O", 5, 17);
 10
-gap> Length(ClassicalMaximalsGeneric("O", 5, 19));
+gap> NrCheckedMaximals("O", 5, 19);
 9
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 2));
+gap> NrCheckedMaximals("O+", 6, 2);
 6
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 3));
+gap> NrCheckedMaximals("O+", 6, 3);
 8
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 4));
+gap> NrCheckedMaximals("O+", 6, 4);
 8
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 5));
+gap> NrCheckedMaximals("O+", 6, 5);
 13
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 7));
+gap> NrCheckedMaximals("O+", 6, 7);
 12
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 8));
+gap> NrCheckedMaximals("O+", 6, 8);
 8
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 9));
+gap> NrCheckedMaximals("O+", 6, 9);
 18
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 11));
+gap> NrCheckedMaximals("O+", 6, 11);
 12
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 13));
+gap> NrCheckedMaximals("O+", 6, 13);
 18
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 16));
+gap> NrCheckedMaximals("O+", 6, 16);
 9
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 17));
+gap> NrCheckedMaximals("O+", 6, 17);
 16
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 19));
+gap> NrCheckedMaximals("O+", 6, 19);
 12
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 25));
+gap> NrCheckedMaximals("O+", 6, 25);
 18
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 2));
+gap> NrCheckedMaximals("O-", 6, 2);
 5
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 3));
+gap> NrCheckedMaximals("O-", 6, 3);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 4));
+gap> NrCheckedMaximals("O-", 6, 4);
 7
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 5));
+gap> NrCheckedMaximals("O-", 6, 5);
 14
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 7));
+gap> NrCheckedMaximals("O-", 6, 7);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 8));
+gap> NrCheckedMaximals("O-", 6, 8);
 8
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 9));
+gap> NrCheckedMaximals("O-", 6, 9);
 10
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 11));
+gap> NrCheckedMaximals("O-", 6, 11);
 18
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 13));
+gap> NrCheckedMaximals("O-", 6, 13);
 12
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 16));
+gap> NrCheckedMaximals("O-", 6, 16);
 7
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 17));
+gap> NrCheckedMaximals("O-", 6, 17);
 14
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 19));
+gap> NrCheckedMaximals("O-", 6, 19);
 18
-gap> Length(ClassicalMaximalsGeneric("O", 7, 3));
+gap> NrCheckedMaximals("O", 7, 3);
 15
-gap> Length(ClassicalMaximalsGeneric("O", 7, 5));
+gap> NrCheckedMaximals("O", 7, 5);
 14
-gap> Length(ClassicalMaximalsGeneric("O", 7, 7));
+gap> NrCheckedMaximals("O", 7, 7);
 15
-gap> Length(ClassicalMaximalsGeneric("O", 7, 9));
+gap> NrCheckedMaximals("O", 7, 9);
 13
-gap> Length(ClassicalMaximalsGeneric("O", 7, 11));
+gap> NrCheckedMaximals("O", 7, 11);
 14
-gap> Length(ClassicalMaximalsGeneric("O", 7, 13));
+gap> NrCheckedMaximals("O", 7, 13);
 14
-gap> Length(ClassicalMaximalsGeneric("O", 7, 17));
+gap> NrCheckedMaximals("O", 7, 17);
 15
-gap> Length(ClassicalMaximalsGeneric("O", 7, 19));
+gap> NrCheckedMaximals("O", 7, 19);
 14
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 2));
+gap> NrCheckedMaximals("O+", 8, 2);
 17
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 3));
+gap> NrCheckedMaximals("O+", 8, 3);
 27
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 4));
+gap> NrCheckedMaximals("O+", 8, 4);
 23
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 5));
+gap> NrCheckedMaximals("O+", 8, 5);
 55
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 7));
+gap> NrCheckedMaximals("O+", 8, 7);
 48
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 8));
+gap> NrCheckedMaximals("O+", 8, 8);
 23
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 9));
+gap> NrCheckedMaximals("O+", 8, 9);
 38
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 11));
+gap> NrCheckedMaximals("O+", 8, 11);
 36
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 13));
+gap> NrCheckedMaximals("O+", 8, 13);
 36
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 16));
+gap> NrCheckedMaximals("O+", 8, 16);
 24
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 17));
+gap> NrCheckedMaximals("O+", 8, 17);
 48
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 19));
+gap> NrCheckedMaximals("O+", 8, 19);
 36
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 2));
+gap> NrCheckedMaximals("O-", 8, 2);
 8
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 3));
+gap> NrCheckedMaximals("O-", 8, 3);
 10
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 4));
+gap> NrCheckedMaximals("O-", 8, 4);
 9
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 5));
+gap> NrCheckedMaximals("O-", 8, 5);
 13
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 7));
+gap> NrCheckedMaximals("O-", 8, 7);
 13
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 8));
+gap> NrCheckedMaximals("O-", 8, 8);
 10
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 9));
+gap> NrCheckedMaximals("O-", 8, 9);
 11
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 11));
+gap> NrCheckedMaximals("O-", 8, 11);
 13
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 13));
+gap> NrCheckedMaximals("O-", 8, 13);
 13
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 16));
+gap> NrCheckedMaximals("O-", 8, 16);
 9
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 17));
+gap> NrCheckedMaximals("O-", 8, 17);
 13
-gap> Length(ClassicalMaximalsGeneric("O-", 8, 19));
+gap> NrCheckedMaximals("O-", 8, 19);
 13
-gap> Length(ClassicalMaximalsGeneric("O", 9, 3));
+gap> NrCheckedMaximals("O", 9, 3);
 14
-gap> Length(ClassicalMaximalsGeneric("O", 9, 5));
+gap> NrCheckedMaximals("O", 9, 5);
 17
-gap> Length(ClassicalMaximalsGeneric("O", 9, 7));
+gap> NrCheckedMaximals("O", 9, 7);
 19
-gap> Length(ClassicalMaximalsGeneric("O", 9, 9));
+gap> NrCheckedMaximals("O", 9, 9);
 20
-gap> Length(ClassicalMaximalsGeneric("O", 9, 11));
+gap> NrCheckedMaximals("O", 9, 11);
 21
-gap> Length(ClassicalMaximalsGeneric("O", 9, 13));
+gap> NrCheckedMaximals("O", 9, 13);
 24
-gap> Length(ClassicalMaximalsGeneric("O", 9, 17));
+gap> NrCheckedMaximals("O", 9, 17);
 21
-gap> Length(ClassicalMaximalsGeneric("O", 9, 19));
+gap> NrCheckedMaximals("O", 9, 19);
 23
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 2));
+gap> NrCheckedMaximals("O+", 10, 2);
 9
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 3));
+gap> NrCheckedMaximals("O+", 10, 3);
 16
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 4));
+gap> NrCheckedMaximals("O+", 10, 4);
 12
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 5));
+gap> NrCheckedMaximals("O+", 10, 5);
 31
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 7));
+gap> NrCheckedMaximals("O+", 10, 7);
 16
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 8));
+gap> NrCheckedMaximals("O+", 10, 8);
 12
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 9));
+gap> NrCheckedMaximals("O+", 10, 9);
 28
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 11));
+gap> NrCheckedMaximals("O+", 10, 11);
 16
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 13));
+gap> NrCheckedMaximals("O+", 10, 13);
 24
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 16));
+gap> NrCheckedMaximals("O+", 10, 16);
 13
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 17));
+gap> NrCheckedMaximals("O+", 10, 17);
 26
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 19));
+gap> NrCheckedMaximals("O+", 10, 19);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 2));
+gap> NrCheckedMaximals("O-", 10, 2);
 11
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 3));
+gap> NrCheckedMaximals("O-", 10, 3);
 22
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 4));
+gap> NrCheckedMaximals("O-", 10, 4);
 11
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 5));
+gap> NrCheckedMaximals("O-", 10, 5);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 7));
+gap> NrCheckedMaximals("O-", 10, 7);
 38
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 8));
+gap> NrCheckedMaximals("O-", 10, 8);
 12
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 9));
+gap> NrCheckedMaximals("O-", 10, 9);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 11));
+gap> NrCheckedMaximals("O-", 10, 11);
 24
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 13));
+gap> NrCheckedMaximals("O-", 10, 13);
 20
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 16));
+gap> NrCheckedMaximals("O-", 10, 16);
 11
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 17));
+gap> NrCheckedMaximals("O-", 10, 17);
 20
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 19));
+gap> NrCheckedMaximals("O-", 10, 19);
 32
-gap> Length(ClassicalMaximalsGeneric("O", 11, 3));
+gap> NrCheckedMaximals("O", 11, 3);
 15
-gap> Length(ClassicalMaximalsGeneric("O", 11, 5));
+gap> NrCheckedMaximals("O", 11, 5);
 18
-gap> Length(ClassicalMaximalsGeneric("O", 11, 7));
+gap> NrCheckedMaximals("O", 11, 7);
 18
-gap> Length(ClassicalMaximalsGeneric("O", 11, 9));
+gap> NrCheckedMaximals("O", 11, 9);
 17
-gap> Length(ClassicalMaximalsGeneric("O", 11, 11));
+gap> NrCheckedMaximals("O", 11, 11);
 17
-gap> Length(ClassicalMaximalsGeneric("O", 11, 13));
+gap> NrCheckedMaximals("O", 11, 13);
 20
-gap> Length(ClassicalMaximalsGeneric("O", 11, 17));
+gap> NrCheckedMaximals("O", 11, 17);
 19
-gap> Length(ClassicalMaximalsGeneric("O", 11, 19));
+gap> NrCheckedMaximals("O", 11, 19);
 19
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 2));
+gap> NrCheckedMaximals("O+", 12, 2);
 20
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 3));
+gap> NrCheckedMaximals("O+", 12, 3);
 33
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 4));
+gap> NrCheckedMaximals("O+", 12, 4);
 26
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 5));
+gap> NrCheckedMaximals("O+", 12, 5);
 33
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 7));
+gap> NrCheckedMaximals("O+", 12, 7);
 36
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 8));
+gap> NrCheckedMaximals("O+", 12, 8);
 26
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 9));
+gap> NrCheckedMaximals("O+", 12, 9);
 38
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 11));
+gap> NrCheckedMaximals("O+", 12, 11);
 34
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 13));
+gap> NrCheckedMaximals("O+", 12, 13);
 34
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 16));
+gap> NrCheckedMaximals("O+", 12, 16);
 27
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 17));
+gap> NrCheckedMaximals("O+", 12, 17);
 40
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 19));
+gap> NrCheckedMaximals("O+", 12, 19);
 42
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 2));
+gap> NrCheckedMaximals("O-", 12, 2);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 3));
+gap> NrCheckedMaximals("O-", 12, 3);
 18
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 4));
+gap> NrCheckedMaximals("O-", 12, 4);
 16
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 5));
+gap> NrCheckedMaximals("O-", 12, 5);
 22
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 7));
+gap> NrCheckedMaximals("O-", 12, 7);
 22
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 8));
+gap> NrCheckedMaximals("O-", 12, 8);
 18
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 9));
+gap> NrCheckedMaximals("O-", 12, 9);
 24
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 11));
+gap> NrCheckedMaximals("O-", 12, 11);
 26
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 13));
+gap> NrCheckedMaximals("O-", 12, 13);
 20
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 16));
+gap> NrCheckedMaximals("O-", 12, 16);
 14
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 17));
+gap> NrCheckedMaximals("O-", 12, 17);
 20
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 19));
+gap> NrCheckedMaximals("O-", 12, 19);
 22
-
-#
-# C5 subgroups of minus type lie in GAP's standard groups
-gap> CheckMaximalsInStandardGroup("O+", 6, 4);
-gap> CheckMaximalsInStandardGroup("O+", 8, 9);
-gap> CheckMaximalsInStandardGroup("O-", 4, 8);
 
 # Test selected higher-dimensional cases
-gap> Length(ClassicalMaximalsGeneric("L", 36, 3, [1..8]));
+gap> NrCheckedMaximals("L", 36, 3, [1..8]);
 53
-gap> Length(ClassicalMaximalsGeneric("U", 36, 5, [1..8]));
+gap> NrCheckedMaximals("U", 36, 5, [1..8]);
 66
-gap> Length(ClassicalMaximalsGeneric("O", 15, 5, [1..8]));
+gap> NrCheckedMaximals("O", 15, 5, [1..8]);
 27
-gap> Length(ClassicalMaximalsGeneric("O-", 20, 3, [1..8]));
+gap> NrCheckedMaximals("O-", 20, 3, [1..8]);
 31
-gap> Length(ClassicalMaximalsGeneric("O+", 48, 3, [4]));
+gap> NrCheckedMaximals("O+", 48, 3, [4]);
 30
-gap> Length(ClassicalMaximalsGeneric("O+", 64, 3, [7]));  # Magma also returns O^+(4,q) wr S_t for n = 4^t, t > 2, contrary to [KL90] Table 3.5.E
+gap> NrCheckedMaximals("O+", 64, 3, [7]);  # Magma also returns O^+(4,q) wr S_t for n = 4^t, t > 2, contrary to [KL90] Table 3.5.E
 14
-gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, [4]));
+gap> NrCheckedMaximals("O+", 80, 3, [4]);
 31
 
 # C6 is maximal for n >= 16 also when q = +-3 mod 8, cf. [KL90] Tables 3.5.E, 3.5.H, 3.5.I
-gap> Length(ClassicalMaximalsGeneric("O+", 16, 3, [6]));
+gap> NrCheckedMaximals("O+", 16, 3, [6]);
 4
-gap> Length(ClassicalMaximalsGeneric("O+", 16, 7, [6]));
+gap> NrCheckedMaximals("O+", 16, 7, [6]);
 8
 
 # Test all option
-gap> Length(ClassicalMaximalsGeneric("L", 2, 11, rec( all := false )));
+gap> NrCheckedMaximals("L", 2, 11, rec( all := false ));
 3
-gap> Length(ClassicalMaximalsGeneric("L", 3, 9, rec( all := false )));
+gap> NrCheckedMaximals("L", 3, 9, rec( all := false ));
 6
-gap> Length(ClassicalMaximalsGeneric("L", 3, 11, rec( all := false )));
+gap> NrCheckedMaximals("L", 3, 11, rec( all := false ));
 5
-gap> Length(ClassicalMaximalsGeneric("L", 3, 19, rec( all := false )));
+gap> NrCheckedMaximals("L", 3, 19, rec( all := false ));
 6
-gap> Length(ClassicalMaximalsGeneric("L", 4, 7, rec( all := false )));
+gap> NrCheckedMaximals("L", 4, 7, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("L", 4, 11, rec( all := false )));
+gap> NrCheckedMaximals("L", 4, 11, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("L", 5, 3, rec( all := false )));
+gap> NrCheckedMaximals("L", 5, 3, rec( all := false ));
 5
-gap> Length(ClassicalMaximalsGeneric("L", 6, 5, rec( all := false )));
+gap> NrCheckedMaximals("L", 6, 5, rec( all := false ));
 14
-gap> Length(ClassicalMaximalsGeneric("L", 6, 7, rec( all := false )));
+gap> NrCheckedMaximals("L", 6, 7, rec( all := false ));
 16
-gap> Length(ClassicalMaximalsGeneric("L", 6, 19, rec( all := false )));
+gap> NrCheckedMaximals("L", 6, 19, rec( all := false ));
 15
-gap> Length(ClassicalMaximalsGeneric("L", 7, 5, rec( all := false )));
+gap> NrCheckedMaximals("L", 7, 5, rec( all := false ));
 7
-gap> Length(ClassicalMaximalsGeneric("L", 8, 5, rec( all := false )));
+gap> NrCheckedMaximals("L", 8, 5, rec( all := false ));
 14
-gap> Length(ClassicalMaximalsGeneric("L", 9, 5, rec( all := false )));
+gap> NrCheckedMaximals("L", 9, 5, rec( all := false ));
 11
-gap> Length(ClassicalMaximalsGeneric("L", 9, 7, rec( all := false )));
+gap> NrCheckedMaximals("L", 9, 7, rec( all := false ));
 14
-gap> Length(ClassicalMaximalsGeneric("L", 10, 11, rec( all := false )));
+gap> NrCheckedMaximals("L", 10, 11, rec( all := false ));
 22
-gap> Length(ClassicalMaximalsGeneric("L", 11, 7, rec( all := false )));
+gap> NrCheckedMaximals("L", 11, 7, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("L", 11, 13, rec( all := false )));
+gap> NrCheckedMaximals("L", 11, 13, rec( all := false ));
 10
-gap> Length(ClassicalMaximalsGeneric("L", 12, 13, rec( all := false )));
+gap> NrCheckedMaximals("L", 12, 13, rec( all := false ));
 20
 
 #
-gap> Length(ClassicalMaximalsGeneric("U", 3, 5, rec( all := false )));
+gap> NrCheckedMaximals("U", 3, 5, rec( all := false ));
 4
-gap> Length(ClassicalMaximalsGeneric("U", 4, 11, rec( all := false )));
+gap> NrCheckedMaximals("U", 4, 11, rec( all := false ));
 11
-gap> Length(ClassicalMaximalsGeneric("U", 4, 13, rec( all := false )));
+gap> NrCheckedMaximals("U", 4, 13, rec( all := false ));
 10
-gap> Length(ClassicalMaximalsGeneric("U", 4, 3, rec( all := false )));
+gap> NrCheckedMaximals("U", 4, 3, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("U", 5, 19, rec( all := false )));
+gap> NrCheckedMaximals("U", 5, 19, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("U", 6, 2, rec( all := false )));
+gap> NrCheckedMaximals("U", 6, 2, rec( all := false ));
 10
-gap> Length(ClassicalMaximalsGeneric("U", 6, 8, rec( all := false )));
+gap> NrCheckedMaximals("U", 6, 8, rec( all := false ));
 13
-gap> Length(ClassicalMaximalsGeneric("U", 6, 17, rec( all := false )));
+gap> NrCheckedMaximals("U", 6, 17, rec( all := false ));
 19
-gap> Length(ClassicalMaximalsGeneric("U", 7, 7, rec( all := false )));
+gap> NrCheckedMaximals("U", 7, 7, rec( all := false ));
 10
-gap> Length(ClassicalMaximalsGeneric("U", 8, 11, rec( all := false )));
+gap> NrCheckedMaximals("U", 8, 11, rec( all := false ));
 18
-gap> Length(ClassicalMaximalsGeneric("U", 9, 2, rec( all := false )));
+gap> NrCheckedMaximals("U", 9, 2, rec( all := false ));
 14
-gap> Length(ClassicalMaximalsGeneric("U", 9, 3, rec( all := false )));
+gap> NrCheckedMaximals("U", 9, 3, rec( all := false ));
 15
-gap> Length(ClassicalMaximalsGeneric("U", 10, 3, rec( all := false )));
+gap> NrCheckedMaximals("U", 10, 3, rec( all := false ));
 23
-gap> Length(ClassicalMaximalsGeneric("U", 11, 5, rec( all := false )));
+gap> NrCheckedMaximals("U", 11, 5, rec( all := false ));
 15
-gap> Length(ClassicalMaximalsGeneric("U", 12, 5, rec( all := false )));
+gap> NrCheckedMaximals("U", 12, 5, rec( all := false ));
 26
-gap> Length(ClassicalMaximalsGeneric("U", 12, 11, rec( all := false )));
+gap> NrCheckedMaximals("U", 12, 11, rec( all := false ));
 25
 
 #
-gap> Length(ClassicalMaximalsGeneric("S", 4, 4, rec( all := false )));
+gap> NrCheckedMaximals("S", 4, 4, rec( all := false ));
 4
-gap> Length(ClassicalMaximalsGeneric("S", 4, 11, rec( all := false )));
+gap> NrCheckedMaximals("S", 4, 11, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("S", 6, 7, rec( all := false )));
+gap> NrCheckedMaximals("S", 6, 7, rec( all := false ));
 12
-gap> Length(ClassicalMaximalsGeneric("S", 6, 9, rec( all := false )));  # error in magma
+gap> NrCheckedMaximals("S", 6, 9, rec( all := false ));  # error in magma
 12
-gap> Length(ClassicalMaximalsGeneric("S", 6, 11, rec( all := false )));
+gap> NrCheckedMaximals("S", 6, 11, rec( all := false ));
 12
-gap> Length(ClassicalMaximalsGeneric("S", 6, 17, rec( all := false )));
+gap> NrCheckedMaximals("S", 6, 17, rec( all := false ));
 15
-gap> Length(ClassicalMaximalsGeneric("S", 8, 11, rec( all := false )));
+gap> NrCheckedMaximals("S", 8, 11, rec( all := false ));
 17
-gap> Length(ClassicalMaximalsGeneric("S", 8, 19, rec( all := false )));
+gap> NrCheckedMaximals("S", 8, 19, rec( all := false ));
 18
-gap> Length(ClassicalMaximalsGeneric("S", 10, 7, rec( all := false )));
+gap> NrCheckedMaximals("S", 10, 7, rec( all := false ));
 15
-gap> Length(ClassicalMaximalsGeneric("S", 12, 11, rec( all := false )));
+gap> NrCheckedMaximals("S", 12, 11, rec( all := false ));
 20
 
 #
-gap> Length(ClassicalMaximalsGeneric("O", 3, 11, rec( all := false )));
+gap> NrCheckedMaximals("O", 3, 11, rec( all := false ));
 3
-gap> Length(ClassicalMaximalsGeneric("O-", 4, 7, rec( all := false )));
+gap> NrCheckedMaximals("O-", 4, 7, rec( all := false ));
 5
-gap> Length(ClassicalMaximalsGeneric("O", 5, 11, rec( all := false )));
+gap> NrCheckedMaximals("O", 5, 11, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 3, rec( all := false )));
+gap> NrCheckedMaximals("O-", 6, 3, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 11, rec( all := false )));
+gap> NrCheckedMaximals("O-", 6, 11, rec( all := false ));
 11
-gap> Length(ClassicalMaximalsGeneric("O+", 6, 13, rec( all := false )));
+gap> NrCheckedMaximals("O+", 6, 13, rec( all := false ));
 10
-gap> Length(ClassicalMaximalsGeneric("O-", 6, 19, rec( all := false )));
+gap> NrCheckedMaximals("O-", 6, 19, rec( all := false ));
 11
-gap> Length(ClassicalMaximalsGeneric("O", 7, 3, rec( all := false )));
+gap> NrCheckedMaximals("O", 7, 3, rec( all := false ));
 12
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 2, rec( all := false )));
+gap> NrCheckedMaximals("O+", 8, 2, rec( all := false ));
 9
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 5, rec( all := false )));
+gap> NrCheckedMaximals("O+", 8, 5, rec( all := false ));
 17
-gap> Length(ClassicalMaximalsGeneric("O+", 8, 8, rec( all := false )));
+gap> NrCheckedMaximals("O+", 8, 8, rec( all := false ));
 14
-gap> Length(ClassicalMaximalsGeneric("O", 9, 9, rec( all := false )));
+gap> NrCheckedMaximals("O", 9, 9, rec( all := false ));
 18
-gap> Length(ClassicalMaximalsGeneric("O", 9, 11, rec( all := false )));
+gap> NrCheckedMaximals("O", 9, 11, rec( all := false ));
 19
-gap> Length(ClassicalMaximalsGeneric("O", 9, 13, rec( all := false )));
+gap> NrCheckedMaximals("O", 9, 13, rec( all := false ));
 21
-gap> Length(ClassicalMaximalsGeneric("O+", 10, 3, rec( all := false )));
+gap> NrCheckedMaximals("O+", 10, 3, rec( all := false ));
 12
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 7, rec( all := false )));
+gap> NrCheckedMaximals("O-", 10, 7, rec( all := false ));
 19
-gap> Length(ClassicalMaximalsGeneric("O-", 10, 13, rec( all := false )));
+gap> NrCheckedMaximals("O-", 10, 13, rec( all := false ));
 16
-gap> Length(ClassicalMaximalsGeneric("O", 11, 5, rec( all := false )));
+gap> NrCheckedMaximals("O", 11, 5, rec( all := false ));
 17
-gap> Length(ClassicalMaximalsGeneric("O", 11, 13, rec( all := false )));
+gap> NrCheckedMaximals("O", 11, 13, rec( all := false ));
 19
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 7, rec( all := false )));
+gap> NrCheckedMaximals("O-", 12, 7, rec( all := false ));
 18
-gap> Length(ClassicalMaximalsGeneric("O-", 12, 11, rec( all := false )));
+gap> NrCheckedMaximals("O-", 12, 11, rec( all := false ));
 19
-gap> Length(ClassicalMaximalsGeneric("O+", 12, 19, rec( all := false )));
+gap> NrCheckedMaximals("O+", 12, 19, rec( all := false ));
 26
-gap> Length(ClassicalMaximalsGeneric("O+", 16, 3, rec( all := false )));
+gap> NrCheckedMaximals("O+", 16, 3, rec( all := false ));
 28
-gap> Length(ClassicalMaximalsGeneric("O+", 48, 3, rec( classes := [4], all := false )));
+gap> NrCheckedMaximals("O+", 48, 3, rec( classes := [4], all := false ));
 10
-gap> Length(ClassicalMaximalsGeneric("O+", 80, 3, rec( classes := [4], all := false)));
+gap> NrCheckedMaximals("O+", 80, 3, rec( classes := [4], all := false));
 11
 
 #
@@ -1644,8 +1632,8 @@ gap> Length(C9SubgroupsOrthogonalGroupGeneric(-1,12,11^3));  # slow due to the u
 
 #
 # Conjugates by NormGOMinusGO lie in GAP's standard groups
-gap> CheckMaximalsInStandardGroup("O-", 6, 11);
-gap> CheckMaximalsInStandardGroup("O-", 8, 25);
+gap> NrCheckedMaximals("O-", 8, 25);
+13
 
 #
 gap> STOP_TEST("ClassicalMaximals.tst", 0);
