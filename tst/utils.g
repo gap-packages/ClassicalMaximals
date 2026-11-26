@@ -185,8 +185,8 @@ UpperTriangularQuadraticForm := function(Q)
   N := List(Q, List);
   for i in [1..n] do
     for j in [1..i - 1] do
-      N[j][i] := N[j][i] + N[i][j];
-      N[i][j] := Zero(N[i][j]);
+      N[j,i] := N[j,i] + N[i,j];
+      N[i,j] := Zero(N[i,j]);
     od;
   od;
   return N;
