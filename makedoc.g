@@ -10,5 +10,5 @@ fi;
 AutoDoc( rec(
     autodoc := rec( files := [ "doc/intro.autodoc",
                                "doc/theory.autodoc" ] ),
-    scaffold := true,
+    scaffold := rec( appendix := [ "errata.xml" ] ),
 ) );
