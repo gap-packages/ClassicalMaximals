@@ -3517,8 +3517,7 @@ function(epsilon, n, q)
     # D is a similarity of StandardOrthogonalForm, which for epsilon = -1
     # differs from the form of GO(epsilon, n, q)
     G := Group(StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D);
-    CM_SetInvariantQuadraticFormFromMatrix(G, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
-    G := ConjugateToStandardForm(G, ["O-", "O", "O+"][epsilon + 2], GF(q));
+    G := CM_ConjugateToGAPOrthogonalForm(G, epsilon, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
     return GeneratorsOfGroup(G)[1];
 end);
 

@@ -558,10 +558,8 @@ function(d, q, s)
     standardForm := AntidiagonalHalfOneMat(d / s, F);
     formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, s, "S-S");
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := F));
 
-    # Conjugate the result so that it preserves the standard symplectic form 
-    return ConjugateToStandardForm(result, "S", F);
+    return CM_ConjugateToGAPSymplecticForm(result, formMatrix, F);
 end);
 
 # Construction as in Proposition 6.5 of [HR05]
@@ -609,10 +607,8 @@ function(d, q)
     standardForm := omega ^ ((q + 1) / 2) * InvariantSesquilinearForm(GU(d / 2, q)).matrix;
     formMatrix := TakeTraceOfSesquilinearForm(standardForm, q, 2, "U-S");
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := F));
 
-    # Conjugate the result so that it preserves the standard symplectic form 
-    return ConjugateToStandardForm(result, "S", F);
+    return CM_ConjugateToGAPSymplecticForm(result, formMatrix, F);
 end);
 
 # For a quadratic form Q on the vector space GF(q ^ s) ^ (d / s) given 
@@ -708,15 +704,7 @@ function(epsilon, d, q, s)
 
     # The constructed group preserves the quadratic form given by <formMatrix>
     formMatrix := TakeTraceOfQuadraticForm(Q, q, s);
-    CM_SetInvariantQuadraticFormFromMatrix(result, formMatrix, F);
-    
-    if epsilon = 0 then
-        return ConjugateToStandardForm(result, "O", F);
-    elif epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+", F);
-    elif epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-", F);
-    fi;
+    return CM_ConjugateToGAPOrthogonalForm(result, epsilon, formMatrix, F);
 end);
 
 # Let k be a unitary form over GF(q ^ 2) ^ (d / 2). We can consider a vector v
@@ -828,13 +816,7 @@ function(d, q)
     fi;
     result := MatrixGroupWithSize(F, generators, size);
 
-    CM_SetInvariantQuadraticFormFromMatrix(result, formMatrix, F);
-    
-    if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+", F);
-    else
-        return ConjugateToStandardForm(result, "O-", F);
-    fi;
+    return CM_ConjugateToGAPOrthogonalForm(result, epsilon, formMatrix, F);
 end);
 
 # Construction as in Lemma 6.4 of [HR10]
@@ -967,11 +949,5 @@ function(epsilon, epsilon1, d, q)
     result := MatrixGroupWithSize(F, generators, size);
 
     # The constructed group preserves the quadratic form given by <formMatrix>
-    CM_SetInvariantQuadraticFormFromMatrix(result, formMatrix, F);
-
-    if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+", F);
-    else
-        return ConjugateToStandardForm(result, "O-", F);
-    fi;
+    return CM_ConjugateToGAPOrthogonalForm(result, epsilon, formMatrix, F);
 end);

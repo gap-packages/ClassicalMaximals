@@ -105,8 +105,7 @@ function(d, q, t)
     # Size according to Table 2.5 of [BHR13]
     size := SizeSU(m, q) ^ t * (q + 1) ^ (t - 1) * Factorial(t);
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(d, F), baseDomain := F));
-    return ConjugateToStandardForm(result, "U", F);
+    return CM_ConjugateToGAPUnitaryForm(result, IdentityMat(d, F), F);
 end);
 
 # Construction as in Proposition 5.5 of [HR05]
@@ -165,8 +164,7 @@ function(d, q)
     # Size according to Table 2.5 of [BHR13]
     size := SizeSL(d / 2, q ^ 2) * (q - 1) * 2;
     result := MatrixGroupWithSize(F, generators, size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
-    return ConjugateToStandardForm(result, "U", F);
+    return CM_ConjugateToGAPUnitaryForm(result, AntidiagonalMat(d, F), F);
 end);
 
 # Construction as in Proposition 5.2 of [HR05]
@@ -263,9 +261,7 @@ function(d, q, t)
     fi;
 
     result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
-
-    return ConjugateToStandardForm(result, "S", field);
+    return CM_ConjugateToGAPSymplecticForm(result, AntidiagonalHalfOneMat(d, field), field);
 end);
 
 # Construction as in Proposition 5.3 of [HR05]
@@ -311,9 +307,7 @@ function(d, q)
     Add(gens, C);
 
     result := MatrixGroupWithSize(field, gens, SizeGL(l, q) * 2);
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
-
-    return ConjugateToStandardForm(result, "S", field);
+    return CM_ConjugateToGAPSymplecticForm(result, AntidiagonalHalfOneMat(d, field), field);
 end);
 
 # Construction as in Lemmata 5.2 and 5.3 of [HR10]
@@ -482,15 +476,7 @@ function(epsilon, d, q, epsilon_0, t)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
-
-    if epsilon = -1 then
-        return ConjugateToStandardForm(result, "O-", field);
-    elif epsilon = 0 then
-        return ConjugateToStandardForm(result, "O", field);
-    else
-        return ConjugateToStandardForm(result, "O+", field);
-    fi;
+    return CM_ConjugateToGAPOrthogonalForm(result, epsilon, Q, field);
 end);
 
 # Construction as in Lemma 5.4 of [HR10]
@@ -526,8 +512,7 @@ function(d, q)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    CM_SetInvariantQuadraticFormFromMatrix(result, StandardOrthogonalForm(1, d, q).Q, field);
-    return ConjugateToStandardForm(result, "O+", field);
+    return CM_ConjugateToGAPOrthogonalForm(result, 1, StandardOrthogonalForm(1, d, q).Q, field);
 end);
 
 # Construction as in Lemma 5.5 of [HR10]
@@ -585,11 +570,5 @@ function(epsilon, d, q)
     Add(gens, S_2);
 
     result := MatrixGroupWithSize(field, gens, SizeSO(0, m, q) ^ 2);
-    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
-
-    if epsilon = 1 then
-        return ConjugateToStandardForm(result, "O+", field);
-    else
-        return ConjugateToStandardForm(result, "O-", field);
-    fi;
+    return CM_ConjugateToGAPOrthogonalForm(result, epsilon, Q, field);
 end);
