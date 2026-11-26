@@ -200,5 +200,45 @@ false
 gap> CM_GeneratorsPreserveForm(S, InvariantSesquilinearForm, rec(matrix := F));
 true
 
+# Given the form a group preserves, CM_ConjugateToGAP*Form returns a new
+# conjugate preserving GAP's standard form. Returns whether the size carries
+# over and whether the given group gained a form.
+gap> TestConjugateToGAPForm := function(type, n, q, X)
+>   local S, G, F, H;
+>   S := StandardClassicalGroup(type, n, q);
+>   G := Group(List(GeneratorsOfGroup(S), g -> g ^ X));
+>   SetSize(G, Size(S));
+>   if type = "S" then
+>     F := X ^ -1 * InvariantBilinearForm(S).matrix * TransposedMat(X ^ -1);
+>     H := CM_ConjugateToGAPSymplecticForm(G, F, GF(q));
+>   elif type = "U" then
+>     F := X ^ -1 * InvariantSesquilinearForm(S).matrix * HermitianConjugate(X ^ -1, q);
+>     H := CM_ConjugateToGAPUnitaryForm(G, F, GF(q ^ 2));
+>   else
+>     F := X ^ -1 * InvariantQuadraticForm(S).matrix * TransposedMat(X ^ -1);
+>     H := CM_ConjugateToGAPOrthogonalForm(G, Position(["O-", "O", "O+"], type) - 2, F, GF(q));
+>   fi;
+>   CheckIsSubsetClassicalGroup(type, n, q, H);
+>   return [Size(H) = Size(S), HasInvariantBilinearForm(G)
+>                              or HasInvariantSesquilinearForm(G)
+>                              or HasInvariantQuadraticForm(G)];
+> end;;
+gap> TestConjugateToGAPForm("S", 4, 5, DiagonalMat(Z(5) ^ 0 * [2, 1, 1, 1]) * PermutationMat((1, 2, 3), 4, GF(5)));
+[ true, false ]
+gap> TestConjugateToGAPForm("S", 4, 5, IdentityMat(4, GF(5)));
+[ true, false ]
+gap> TestConjugateToGAPForm("U", 3, 3, DiagonalMat([Z(9), Z(9) ^ 0, Z(9) ^ 0]) * PermutationMat((1, 2), 3, GF(9)));
+[ true, false ]
+gap> TestConjugateToGAPForm("O+", 6, 5, DiagonalMat(Z(5) ^ 0 * [2, 1, 1, 1, 1, 1]) * PermutationMat((1, 2, 4), 6, GF(5)));
+[ true, false ]
+gap> TestConjugateToGAPForm("O", 5, 7, PermutationMat((1, 3), 5, GF(7)));
+[ true, false ]
+gap> TestConjugateToGAPForm("O-", 4, 4, DiagonalMat([Z(4), Z(4) ^ 0, Z(4) ^ 0, Z(4) ^ 0]) * PermutationMat((2, 3, 4), 4, GF(4)));
+[ true, false ]
+
+# The sign must match the form
+gap> CM_ConjugateToGAPOrthogonalForm(Omega(1, 4, 5), -1, InvariantQuadraticForm(Omega(1, 4, 5)).matrix, GF(5));
+Error, The forms <from> and <to> must be similar
+
 #
 gap> STOP_TEST("Forms.tst", 0);

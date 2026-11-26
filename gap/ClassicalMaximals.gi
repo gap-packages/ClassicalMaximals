@@ -3040,7 +3040,6 @@ function(n, q, opts...)
         if q = 9 then
             # 2.A7
             S := ReadAsFunction(Filename(CM_c9lib, "2a7d6f9.g"))();
-            ConjugateToStandardForm(S, "S", GF(q));
             if not normaliser then
                 size := 5040;
                 SetSize(S, size);
