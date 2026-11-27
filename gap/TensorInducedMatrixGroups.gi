@@ -229,8 +229,7 @@ function(m, t, q)
     fi;
 
     result := MatrixGroupWithSize(F, Concatenation(generatorsOfHInSU, [C, U, S * E]), size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
-    return ConjugateToStandardForm(result, "U", F);
+    return CM_ConjugateToGAPUnitaryForm(result, AntidiagonalMat(d, F), F);
 end);
 
 # Construction as in Proposition 10.3 of [HR05]
@@ -265,8 +264,7 @@ function(m, t, q)
     # Size according to the aforementioned proposition, but we add a
     # factor of 2 because we want the size of G, not of G / Z(G)
     result := MatrixGroupWithSize(field, gens, SizeSp(m, q) ^ t * Factorial(t));
-    SetInvariantBilinearForm(result, rec(matrix := formMatrix, baseDomain := field));
-    return ConjugateToStandardForm(result, "S", field);
+    return CM_ConjugateToGAPSymplecticForm(result, formMatrix, field);
 end);
 
 # Construction as in Lemma 10.3 in [HR10]
@@ -346,8 +344,7 @@ function(m, t, q)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    CM_SetInvariantQuadraticFormFromMatrix(result, Q, field);
-    return ConjugateToStandardForm(result, "O+", field);
+    return CM_ConjugateToGAPOrthogonalForm(result, 1, Q, field);
 end);
 
 # Construction as in Lemma 10.4 in [HR10]
@@ -419,8 +416,7 @@ function(m, t, q)
 
     # Size according to Table 2.10 of [BHR13]
     result := MatrixGroupWithSize(field, gens, 2 ^ (t - 1) * SizeOmega(0, m, q) ^ t * Factorial(t));
-    CM_SetInvariantQuadraticFormFromMatrix(result, F / 2, field);
-    return ConjugateToStandardForm(result, "O", field);
+    return CM_ConjugateToGAPOrthogonalForm(result, 0, F / 2, field);
 end);
 
 # Construction as in Lemma 10.5 in [HR10]
@@ -549,6 +545,5 @@ function(epsilon, m, t, q)
     fi;
 
     result := MatrixGroupWithSize(field, gens, size);
-    CM_SetInvariantQuadraticFormFromMatrix(result, F / 2, field);
-    return ConjugateToStandardForm(result, "O+", field);
+    return CM_ConjugateToGAPOrthogonalForm(result, 1, F / 2, field);
 end);

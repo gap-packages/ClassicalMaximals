@@ -27,84 +27,151 @@ function(gramMatrix)
     return Q;
 end);
 
-# Note that if type = "U" then `field` must be GF(q^2) for a subgroup of GU(d,q)
-InstallGlobalFunction("ConjugateToSesquilinearForm",
-function(group, type, gramMatrix, field)
-    local gapForm, newForm, baseChangeMatrix, formMatrix,
-        result, d, q;
-    if not type in ["S", "O-B", "O-Q", "U"] then
-        ErrorNoReturn("<type> must be one of 'S', 'U', 'O-B', 'O-Q'");
-    fi;
-    d := DimensionOfMatrixGroup(group);
-    if type = "S" or type = "O-B" then
-        formMatrix := CM_BilinearForm(group, field);
-        if type = "S" then
-            if formMatrix = fail or formMatrix <> -TransposedMat(formMatrix) then
-                ErrorNoReturn("No preserved symplectic form found for <group>");
-            fi;
-        else
-            if formMatrix = fail or formMatrix <> TransposedMat(formMatrix) then
-                ErrorNoReturn("No preserved symmetric bilinear form found for <group>");
-            fi;
+# The kinds of forms below are "S" (symplectic), "U" (Hermitian, over
+# <field> = GF(q ^ 2)), "O-B" (symmetric bilinear) and "O-Q" (quadratic).
+
+# Return the matrix of the form of kind <kind> that the group G preserves:
+# the stored form if there is one, else one found by the MeatAxe.
+BindGlobal("CM_InvariantFormMatrix",
+function(G, kind, field)
+    local M;
+
+    if kind in ["S", "O-B"] then
+        M := CM_BilinearForm(G, field);
+        if kind = "S" and (M = fail or M <> -TransposedMat(M)) then
+            ErrorNoReturn("No preserved symplectic form found for <group>");
+        elif kind = "O-B" and (M = fail or M <> TransposedMat(M)) then
+            ErrorNoReturn("No preserved symmetric bilinear form found for <group>");
         fi;
-        gapForm := BilinearFormByMatrix(formMatrix, field);
-        newForm := BilinearFormByMatrix(gramMatrix, field);
-    elif type = "U" then
-        formMatrix := CM_UnitaryForm(group, field);
-        if formMatrix = fail then
+    elif kind = "U" then
+        M := CM_UnitaryForm(G, field);
+        if M = fail then
             ErrorNoReturn("No preserved unitary form found for <group>");
         fi;
-        gapForm := HermitianFormByMatrix(formMatrix, field);
-        newForm := HermitianFormByMatrix(gramMatrix, field);
     else
-        # This is the case type = "O-Q"
-        formMatrix := CM_QuadraticForm(group, field);
-        if formMatrix = fail then
+        M := CM_QuadraticForm(G, field);
+        if M = fail then
             ErrorNoReturn("No preserved quadratic form found for <group>");
         fi;
-        gapForm := QuadraticFormByMatrix(formMatrix, field);
-        newForm := QuadraticFormByMatrix(gramMatrix, field);
-    fi;
-    if gapForm = newForm then
-        # nothing to be done
-        result := group;
-        result!.baseChangeMatrix := IdentityMat(d, field);
-    # The Forms package has a bug for d = 1 so we need to make this exception
-    elif d <> 1 then
-        # the following if condition can only ever be fulfilled if <group> is an
-        # orthogonal group; there the case of even dimension is problematic since,
-        # in that case, there are two similarity classes of bilinear forms
-        if not WittIndex(gapForm) = WittIndex(newForm) then
-            ErrorNoReturn("The form preserved by <group> must be similar to the form ", 
-                          "described by the Gram matrix <gramMatrix>.");
-        fi;
-        baseChangeMatrix := BaseChangeToCanonical(gapForm)^-1 * BaseChangeToCanonical(newForm);
-        result := MatrixGroup(field, List(GeneratorsOfGroup(group), g -> g ^ baseChangeMatrix));
-        result!.baseChangeMatrix := baseChangeMatrix;
-
-        # Set useful attributes
-        UseIsomorphismRelation(group, result);
-    else
-        # replaces the Witt index check above
-        if IsZero(gramMatrix) <> IsZero(formMatrix) then
-            ErrorNoReturn("The form preserved by <group> must be similar to the",
-                          " form described by the Gram matrix <gramMatrix>.");
-        fi;
-        result := group;
-        result!.baseChangeMatrix := IdentityMat(d, field);
     fi;
 
-    if type = "S" then
-        SetInvariantBilinearForm(result, rec(matrix := gramMatrix, baseDomain := field));
-    elif type = "O-B" then
-        CM_SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(gramMatrix), field);
-    elif type = "U" then
-        SetInvariantSesquilinearForm(result, rec(matrix := gramMatrix, baseDomain := field));
+    return M;
+end);
+
+# Return a matrix B such that G ^ B preserves the form with matrix <to> for
+# every group G preserving the form with matrix <from>; both forms are of kind
+# <kind>.
+BindGlobal("CM_BaseChangeBetweenForms",
+function(kind, from, to, field)
+    local d, formByMatrix, fromForm, toForm;
+
+    d := NrRows(from);
+
+    # The Forms package fails in dimension 1, where nonzero forms are similar
+    if d = 1 then
+        if IsZero(from) <> IsZero(to) then
+            ErrorNoReturn("The forms <from> and <to> must be similar");
+        fi;
+        return IdentityMat(1, field);
+    fi;
+
+    if kind in ["S", "O-B"] then
+        formByMatrix := BilinearFormByMatrix;
+    elif kind = "U" then
+        formByMatrix := HermitianFormByMatrix;
     else
-        CM_SetInvariantQuadraticFormFromMatrix(result, gramMatrix, field);
+        formByMatrix := QuadraticFormByMatrix;
+    fi;
+    fromForm := formByMatrix(from, field);
+    toForm := formByMatrix(to, field);
+    if fromForm = toForm then
+        return IdentityMat(d, field);
+    fi;
+
+    # Symmetric forms in even dimension fall into two similarity classes
+    if WittIndex(fromForm) <> WittIndex(toForm) then
+        ErrorNoReturn("The forms <from> and <to> must be similar");
+    fi;
+
+    return BaseChangeToCanonical(fromForm) ^ -1 * BaseChangeToCanonical(toForm);
+end);
+
+# Return a new group G ^ B for the matrix B of CM_BaseChangeBetweenForms, with
+# the form <to> stored and B in the component baseChangeMatrix.
+BindGlobal("CM_ConjugateBetweenForms",
+function(G, kind, from, to, field)
+    local B, result;
+
+    B := CM_BaseChangeBetweenForms(kind, from, to, field);
+    # an explicit identity, since G may have no generators
+    result := GroupByGenerators(List(GeneratorsOfGroup(G), g -> ImmutableMatrix(field, g ^ B)),
+                                ImmutableMatrix(field, One(G)));
+    UseIsomorphismRelation(G, result);
+    result!.baseChangeMatrix := B;
+
+    if kind = "S" then
+        SetInvariantBilinearForm(result, rec(matrix := to, baseDomain := field));
+    elif kind = "U" then
+        SetInvariantSesquilinearForm(result, rec(matrix := to, baseDomain := field));
+    elif kind = "O-B" then
+        CM_SetInvariantQuadraticFormFromMatrix(result, BilinearToQuadraticForm(to), field);
+    else
+        CM_SetInvariantQuadraticFormFromMatrix(result, to, field);
     fi;
 
     return result;
+end);
+
+# Return a conjugate of the group G preserving GAP's standard symplectic form,
+# given that G preserves the symplectic form with matrix M.
+BindGlobal("CM_ConjugateToGAPSymplecticForm",
+function(G, M, field)
+    local standardForm;
+
+    standardForm := InvariantBilinearForm(Sp(NrRows(M), Size(field))).matrix;
+    return CM_ConjugateBetweenForms(G, "S", M, standardForm, field);
+end);
+
+# Return a conjugate of the group G preserving GAP's standard unitary form,
+# given that G preserves the Hermitian form with matrix M over <field> =
+# GF(q ^ 2).
+BindGlobal("CM_ConjugateToGAPUnitaryForm",
+function(G, M, field)
+    local standardForm;
+
+    standardForm := InvariantSesquilinearForm(GU(NrRows(M), RootInt(Size(field), 2))).matrix;
+    return CM_ConjugateBetweenForms(G, "U", M, standardForm, field);
+end);
+
+# Return a conjugate of the group G preserving GAP's standard orthogonal form
+# of sign <epsilon>, given that G preserves the quadratic form with matrix Q.
+# In odd characteristic only its bilinear form Q + Q ^ T is used.
+BindGlobal("CM_ConjugateToGAPOrthogonalForm",
+function(G, epsilon, Q, field)
+    local standardGroup, standardForm;
+
+    standardGroup := Omega(epsilon, NrRows(Q), Size(field));
+    if IsEvenInt(Size(field)) then
+        standardForm := InvariantQuadraticForm(standardGroup).matrix;
+        return CM_ConjugateBetweenForms(G, "O-Q", Q, standardForm, field);
+    fi;
+
+    standardForm := InvariantBilinearForm(standardGroup).matrix;
+    return CM_ConjugateBetweenForms(G, "O-B", Q + TransposedMat(Q), standardForm, field);
+end);
+
+# Return a conjugate of <group> preserving the form with matrix <gramMatrix> of
+# kind <type>, given that <group> preserves a form of that kind.
+InstallGlobalFunction("ConjugateToSesquilinearForm",
+function(group, type, gramMatrix, field)
+    local formMatrix;
+
+    if not type in ["S", "O-B", "O-Q", "U"] then
+        ErrorNoReturn("<type> must be one of 'S', 'U', 'O-B', 'O-Q'");
+    fi;
+
+    formMatrix := CM_InvariantFormMatrix(group, type, field);
+    return CM_ConjugateBetweenForms(group, type, formMatrix, gramMatrix, field);
 end);
 
 # If <group> preserves a sesquilinear form of type <type> (one of "S", "U", "O"
@@ -112,10 +179,9 @@ end);
 # conjugate to <group> preserving the standard form of that type.
 InstallGlobalFunction("ConjugateToStandardForm",
 function(group, type, field)
-    local d, q, gapForm, broadType;
+    local d, Q;
 
-    # determining d (dimension of matrix group) and q (<field> is GF(q), or
-    # GF(q ^ 2) for type "U") plus some sanity checks
+    # sanity checks; <field> is GF(q), or GF(q ^ 2) for type "U"
     if not type in ["S", "O+", "O-", "O", "U"] then
         ErrorNoReturn("<type> must be one of 'S', 'U', 'O+', 'O-', 'O'");
     fi;
@@ -129,44 +195,18 @@ function(group, type, field)
         ErrorNoReturn("If <type> is 'O+', 'O-' or 'O' and the size of <field> is",
                       " even, <d> must be even");
     fi;
-    if type in ["S", "O", "O+", "O-"] then
-        q := Size(field);
-    else
-        q := Characteristic(field) ^ (DegreeOverPrimeField(field)/2);
-    fi;
-    
-    # get standard GAP form
+
     if type = "S" then
-        gapForm := InvariantBilinearForm(Sp(d, q)).matrix;
+        return CM_ConjugateToGAPSymplecticForm(group, CM_InvariantFormMatrix(group, "S", field), field);
     elif type = "U" then
-        gapForm := InvariantSesquilinearForm(GU(d, q)).matrix;
-    elif type = "O" then
-        gapForm := InvariantBilinearForm(Omega(d, q)).matrix;
-    elif type = "O+" then
-        if Characteristic(field) = 2 then
-            gapForm := InvariantQuadraticForm(Omega(1, d, q)).matrix;
-        else
-            gapForm := InvariantBilinearForm(Omega(1, d, q)).matrix;
-        fi;
-    elif type = "O-" then
-        if Characteristic(field) = 2 then
-            gapForm := InvariantQuadraticForm(Omega(-1, d, q)).matrix;
-        else
-            gapForm := InvariantBilinearForm(Omega(-1, d, q)).matrix;
-        fi;
-    fi;
-
-    if type in ["O", "O+", "O-"] then
-        if Characteristic(field) = 2 then
-            broadType := "O-Q";
-        else
-            broadType := "O-B";
-        fi;
+        return CM_ConjugateToGAPUnitaryForm(group, CM_InvariantFormMatrix(group, "U", field), field);
+    elif IsEvenInt(Size(field)) then
+        Q := CM_InvariantFormMatrix(group, "O-Q", field);
     else
-        broadType := type;
+        Q := BilinearToQuadraticForm(CM_InvariantFormMatrix(group, "O-B", field));
     fi;
 
-    return ConjugateToSesquilinearForm(group, broadType, gapForm, field);
+    return CM_ConjugateToGAPOrthogonalForm(group, Position(["O-", "O", "O+"], type) - 2, Q, field);
 end);
 
 # Let <forms> = [f1, f2, ..., ft] be a list of sesquilinear forms on the vector

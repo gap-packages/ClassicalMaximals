@@ -3040,7 +3040,6 @@ function(n, q, opts...)
         if q = 9 then
             # 2.A7
             S := ReadAsFunction(Filename(CM_c9lib, "2a7d6f9.g"))();
-            ConjugateToStandardForm(S, "S", GF(q));
             if not normaliser then
                 size := 5040;
                 SetSize(S, size);
@@ -3518,8 +3517,7 @@ function(epsilon, n, q)
     # D is a similarity of StandardOrthogonalForm, which for epsilon = -1
     # differs from the form of GO(epsilon, n, q)
     G := Group(StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D);
-    CM_SetInvariantQuadraticFormFromMatrix(G, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
-    G := ConjugateToStandardForm(G, ["O-", "O", "O+"][epsilon + 2], GF(q));
+    G := CM_ConjugateToGAPOrthogonalForm(G, epsilon, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
     return GeneratorsOfGroup(G)[1];
 end);
 

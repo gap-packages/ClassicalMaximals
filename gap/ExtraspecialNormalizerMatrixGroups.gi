@@ -714,8 +714,7 @@ function(r, m, q)
     # (see the constructor functions above for more info).
     # We conjugate the group so that it preserves the standard GAP form
     # Antidiag(1, ..., 1). 
-    SetInvariantSesquilinearForm(result, rec(matrix := IdentityMat(r ^ m, F), baseDomain := F));
-    result := ConjugateToStandardForm(result, "U", F);
+    result := CM_ConjugateToGAPUnitaryForm(result, IdentityMat(r ^ m, F), F);
 
     return result;
 end);
@@ -744,8 +743,7 @@ function(m, q)
                                                      i -> [2 * i - 1, 2 * i, 1]),
                                                 List([1..2 ^ (m - 1)],
                                                      i -> [2 * i, 2 * i - 1, -1])));
-    SetInvariantBilinearForm(result, rec(matrix := gramMatrix, baseDomain := F));
-    result := ConjugateToStandardForm(result, "S", F);
+    result := CM_ConjugateToGAPSymplecticForm(result, gramMatrix, F);
 
     return result;
 end);
@@ -763,8 +761,7 @@ function(m, q)
     
     # This group now preserves the bilinear form given by the identity matrix
     # and we conjugate it so that it preserves the standard GAP form
-    SetInvariantBilinearForm(result, rec(matrix := IdentityMat(2 ^ m, F), baseDomain := F));
-    result := ConjugateToStandardForm(result, "O+", F);
+    result := CM_ConjugateToGAPOrthogonalForm(result, 1, BilinearToQuadraticForm(IdentityMat(2 ^ m, F)), F);
 
     return result;
 end);

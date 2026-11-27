@@ -67,8 +67,7 @@ function(d, p, e, f)
 
     if c = Gcd(p ^ f + 1, d) then
         result := MatrixGroupWithSize(F, Concatenation(AandB, [C]), size);
-        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
-        return ConjugateToStandardForm(result, "U", F);
+        return CM_ConjugateToGAPUnitaryForm(result, AntidiagonalMat(d, F), F);
     fi;
 
     # a primitive element of GF(p ^ (2 * f))
@@ -86,8 +85,7 @@ function(d, p, e, f)
     X := zeta ^ (lambda * (q - 1)) * IdentityMat(d, F);
 
     result := MatrixGroupWithSize(F, Concatenation(AandB, [C, X * D]), size);
-    SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
-    return ConjugateToStandardForm(result, "U", F);
+    return CM_ConjugateToGAPUnitaryForm(result, AntidiagonalMat(d, F), F);
 end);
 
 # Construction as in Proposition 8.5 of [HR05], except for the generator D
@@ -145,15 +143,14 @@ function(d, q)
         # - zeta ^ ((q + 1) / 2) * Antidiag(1, ..., 1, -1, ..., -1);
         # we conjugate it to preserve the standard unitary form given by
         # Antidiag(1, ..., 1).
-        SetInvariantSesquilinearForm(result, 
-                                     rec(matrix := - zeta ^ QuoInt(q + 1, 2) * form, baseDomain := F));
+        form := - zeta ^ QuoInt(q + 1, 2) * form;
     else
         # The result preserves the unitary form given by
         # Antidiag(1, ..., 1).
-        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
+        form := AntidiagonalMat(d, F);
     fi;
-    
-    return ConjugateToStandardForm(result, "U", F);
+
+    return CM_ConjugateToGAPUnitaryForm(result, form, F);
 end);
 
 # Construction as in Proposition 8.4 of [HR05]
@@ -189,8 +186,7 @@ function(epsilon, d, q)
                                                      GF(q));
         Append(generators, GeneratorsOfGroup(SOChangedForm));
         result := MatrixGroupWithSize(F, generators, size);
-        SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
-        result := ConjugateToStandardForm(result, "U", F);
+        result := CM_ConjugateToGAPUnitaryForm(result, AntidiagonalMat(d, F), F);
     else
         generatorsOfOrthogonalGroup := GeneratorsOfOrthogonalGroup(epsilon, d, q);
         Append(generators, generatorsOfOrthogonalGroup.generatorsOfSO);
@@ -248,8 +244,7 @@ function(epsilon, d, q)
             Add(generators, W);
             
             result := MatrixGroupWithSize(F, generators, size);
-            SetInvariantSesquilinearForm(result, rec(matrix := AntidiagonalMat(d, F), baseDomain := F));
-            result := ConjugateToStandardForm(result, "U", F);
+            result := CM_ConjugateToGAPUnitaryForm(result, AntidiagonalMat(d, F), F);
 
         elif epsilon = -1 then
 
@@ -291,8 +286,7 @@ function(epsilon, d, q)
             fi;
 
             result := MatrixGroupWithSize(F, generators, size);
-            SetInvariantSesquilinearForm(result, rec(matrix := form, baseDomain := F));
-            result := ConjugateToStandardForm(result, "U", F);
+            result := CM_ConjugateToGAPUnitaryForm(result, form, F);
         fi;
     fi;
  
@@ -344,9 +338,7 @@ function (d, p, e, f)
         result := MatrixGroupWithSize(field, gens, SizeSp(d, q0) * 2);
     fi;
 
-    SetInvariantBilinearForm(result, rec(matrix := AntidiagonalHalfOneMat(d, field), baseDomain := field));
-
-    return ConjugateToStandardForm(result, "S", field);
+    return CM_ConjugateToGAPSymplecticForm(result, AntidiagonalHalfOneMat(d, field), field);
 end);
 
 # Construction as in Proposition 8.1 of [HR10]
@@ -450,6 +442,5 @@ function (epsilon, d, p, e, f, epsilon_0)
     gens := List(GeneratorsOfGroup(ConjugateToSesquilinearForm(SO(epsilon_0, d, q0), "O-B", F, GF(q0))));
     Add(gens, A);
     result := MatrixGroupWithSize(field, gens, SizeSO(epsilon_0, d, q0) * 2);
-    SetInvariantBilinearForm(result, rec(matrix := F, baseDomain := field));
-    return ConjugateToStandardForm(result, "O+", field);
+    return CM_ConjugateToGAPOrthogonalForm(result, 1, BilinearToQuadraticForm(F), field);
 end);
