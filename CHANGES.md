@@ -1,6 +1,6 @@
 This file describes changes in the ClassicalMaximals package.
 
-## Unreleased
+## 1.2 (2026-11-27)
 
   - Classes C1-C8 now work in all dimensions, following the tables
     in [KL90]; previously, some cases were only handled up to
