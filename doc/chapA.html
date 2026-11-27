@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>GAP (ClassicalMaximals) - Appendix A: Errata to the literature</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chapA"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapA.html">A</a>  <a href="chapBib.html">Bib</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap5.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapBib.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p id="mathjaxlink" class="pcenter"><a href="chapA_mj.html">[MathJax on]</a></p>
+<p><a id="X7CB9AD4581012859" name="X7CB9AD4581012859"></a></p>
+<div class="ChapSects"><a href="chapA.html#X7CB9AD4581012859">A <span class="Heading">Errata to the literature</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapA.html#X817E3CC878955AEC">A.1 <span class="Heading">Constructing maximal subgroups of classical groups</span></a>
+</span>
+</div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapA.html#X85C70CB58572D00F">A.2 <span class="Heading">Constructing maximal subgroups of orthogonal groups</span></a>
+</span>
+</div>
+</div>
+
+<h3>A <span class="Heading">Errata to the literature</span></h3>
+
+<p>While implementing the constructions of <a href="chapBib.html#biBHR05">[HR05]</a> and <a href="chapBib.html#biBHR10">[HR10]</a>, we noticed a few misprints and small omissions. We list them here, together with the corrections used in <strong class="pkg">ClassicalMaximals</strong>, in the hope that they are useful to other readers. None of them affects the overall approach of these papers.</p>
+
+<p>We use the notation of the respective paper; in addition, <span class="SimpleMath">E_i,j</span> denotes the matrix with a <span class="SimpleMath">1</span> in position <span class="SimpleMath">(i, j)</span> and zeros elsewhere.</p>
+
+<p><a id="X817E3CC878955AEC" name="X817E3CC878955AEC"></a></p>
+
+<h4>A.1 <span class="Heading">Constructing maximal subgroups of classical groups</span></h4>
+
+<p>These remarks concern <a href="chapBib.html#biBHR05">[HR05]</a>.</p>
+
+
+<dl>
+<dt><strong class="Mark">Proposition 4.5</strong></dt>
+<dd><p>The direct product with <span class="SimpleMath">SU(d - 2k, q)</span> should be formed with <span class="SimpleMath">SL(k, q^2)</span> rather than <span class="SimpleMath">GL(k, q^2)</span>: for <span class="SimpleMath">A ∈ GL(k, q^2)</span>, the matrix <span class="SimpleMath">Diag[A, I_d - 2k, J A^-* J]</span> has determinant <span class="SimpleMath">det(A)^1 - q</span>. The diagonal matrix added at the end of the proof supplies the remaining elements.</p>
+
+<p>For odd <span class="SimpleMath">q</span>, the second transvection is <span class="SimpleMath">T_2 := I_d + E_d,d-k - E_k+1,1</span>, and for <span class="SimpleMath">d - 2k = 1</span> one takes <span class="SimpleMath">(λ_1, λ_2, λ_3) = (1, -μ, μ^q)</span>. With the signs as printed, <span class="SimpleMath">T_2</span> does not preserve <span class="SimpleMath">F</span>.</p>
+
+<p>For even <span class="SimpleMath">q</span> and <span class="SimpleMath">d - 2k = 1</span>, <span class="SimpleMath">λ_1</span> must satisfy <span class="SimpleMath">λ_1 + λ_1^q = 1</span>, so one takes <span class="SimpleMath">(λ_1, λ_2, λ_3) = (α, 1, 1)</span> with <span class="SimpleMath">α + α^q = 1</span>, as in Proposition 4.6. A primitive element <span class="SimpleMath">ζ</span> need not satisfy this; for example, it fails for <span class="SimpleMath">q = 8</span> when <span class="SimpleMath">ζ</span> is a root of the Conway polynomial.</p>
+
+<p>In the final diagonal matrix, the entries in rows <span class="SimpleMath">d</span> and <span class="SimpleMath">d - k</span> are <span class="SimpleMath">ζ^-q</span> and <span class="SimpleMath">ζ^q</span>; with <span class="SimpleMath">ζ^-p</span> and <span class="SimpleMath">ζ^p</span>, the matrix preserves <span class="SimpleMath">F</span> only if <span class="SimpleMath">q = p</span>.</p>
+
+</dd>
+<dt><strong class="Mark">Proposition 5.4</strong></dt>
+<dd><p>The matrix <span class="SimpleMath">C</span> has determinant <span class="SimpleMath">(-1)^m</span>. For odd <span class="SimpleMath">m</span>, replace <span class="SimpleMath">C</span> by <span class="SimpleMath">Diag[-1, 1, ..., 1] ⋅ C</span>.</p>
+
+</dd>
+<dt><strong class="Mark">Proposition 5.5</strong></dt>
+<dd><p>For <span class="SimpleMath">d = 2</span>, rows <span class="SimpleMath">1, 2</span> and rows <span class="SimpleMath">d - 1, d</span> coincide, so <span class="SimpleMath">D</span> is not well defined. The matrix <span class="SimpleMath">D := Diag[ζ^q+1, 1, ..., 1, ζ^-q-1]</span> works for every even <span class="SimpleMath">d</span>.</p>
+
+</dd>
+<dt><strong class="Mark">Lemma 6.1</strong></dt>
+<dd><p>The group <span class="SimpleMath">⟨ A, B ⟩ ≅ ⟨ ω, ν_q ⟩</span> is the subgroup of <span class="SimpleMath">Γ L(1, q^s)</span> of <span class="SimpleMath">GF(q)</span>-linear maps, of order <span class="SimpleMath">s (q^s - 1)</span>; it equals <span class="SimpleMath">Γ L(1, q^s)</span> only if <span class="SimpleMath">q</span> is prime. The subsequent constructions need exactly this subgroup, so they are not affected.</p>
+
+</dd>
+<dt><strong class="Mark">Proposition 8.5</strong></dt>
+<dd><p>The matrix <span class="SimpleMath">D</span> is a scalar multiple of a similarity of <span class="SimpleMath">F</span> with multiplier <span class="SimpleMath">-ζ^-(q+1)</span>. If <span class="SimpleMath">q ≡ 3 mod 4</span>, this multiplier is a square in <span class="SimpleMath">GF(q)</span>, so <span class="SimpleMath">D ∈ ⟨ C ⟩ Sp(d, q)</span> and <span class="SimpleMath">⟨ A, B, C, D ⟩</span> has index <span class="SimpleMath">2</span> in <span class="SimpleMath">G</span>; the smallest example is <span class="SimpleMath">SU(8, 3)</span>. A suitable choice is <span class="SimpleMath">D := Diag[ζ^m, ..., ζ^m, ζ^-qm, ..., ζ^-qm]</span> with <span class="SimpleMath">m := (q + 1) / (q + 1, d/2)</span>: then <span class="SimpleMath">ζ^-m D</span> is a similarity of <span class="SimpleMath">F</span> with multiplier <span class="SimpleMath">ζ^-m(q+1)</span>, which is a non-square in <span class="SimpleMath">GF(q)</span> as <span class="SimpleMath">m</span> is odd when <span class="SimpleMath">c ≠ 1</span>, and <span class="SimpleMath">det(D) = 1</span>.</p>
+
+</dd>
+<dt><strong class="Mark">Proposition 10.4</strong></dt>
+<dd><p>In the structure of <span class="SimpleMath">G / (G ∩ Z)</span>, <span class="SimpleMath">PSL(m, q)</span> should read <span class="SimpleMath">PSU(m, q)</span>, and case (a) occurs for <span class="SimpleMath">q ≡ 1 mod 4</span> rather than <span class="SimpleMath">q ≡ 3 mod 4</span>; compare <a href="chapBib.html#biBBHR13">[BHR13, Table 2.10]</a>.</p>
+
+</dd>
+<dt><strong class="Mark">Proposition 11.2</strong></dt>
+<dd><p>The structure should read <span class="SimpleMath">G_ε ≅ Z. PSO^ε(d, q).(d, 2)</span>, in line with Propositions 8.4 and 11.1. For even <span class="SimpleMath">d</span>, <span class="SimpleMath">Z ∩ SO^ε(d, q) = ⟨ -I_d ⟩</span>, and <span class="SimpleMath">|G_ε| = (q - 1, d) | SO^ε(d, q)|</span>; compare <a href="chapBib.html#biBBHR13">[BHR13, Table 2.11]</a>.</p>
+
+<p>The elements <span class="SimpleMath">W_ε</span> of Proposition 8.4 are constructed in <span class="SimpleMath">SU(d, q)</span>, using <span class="SimpleMath">(q + 1, d)</span>. For <span class="SimpleMath">SL(d, q)</span> they need an analogous construction with <span class="SimpleMath">(q - 1, d)</span> in place of <span class="SimpleMath">(q + 1, d)</span>.</p>
+
+</dd>
+</dl>
+<p><a id="X85C70CB58572D00F" name="X85C70CB58572D00F"></a></p>
+
+<h4>A.2 <span class="Heading">Constructing maximal subgroups of orthogonal groups</span></h4>
+
+<p>These remarks concern <a href="chapBib.html#biBHR10">[HR10]</a>.</p>
+
+
+<dl>
+<dt><strong class="Mark">Lemma 4.2</strong></dt>
+<dd><p>In the case <span class="SimpleMath">d</span> even, <span class="SimpleMath">k = m - 1 &gt; 1</span> and <span class="SimpleMath">ε = +</span>, the matrix <span class="SimpleMath">H_7</span> should read <span class="SimpleMath">I + E_k+2,1 - E_d,d-k-1</span>, analogous to <span class="SimpleMath">H_6</span>. The printed <span class="SimpleMath">I + E_k+2,1 - E_d-k-1,1</span> does not preserve <span class="SimpleMath">Q^+_d</span>.</p>
+
+</dd>
+<dt><strong class="Mark">Lemma 4.3</strong></dt>
+<dd><p>For odd <span class="SimpleMath">q</span> and <span class="SimpleMath">k &gt; 1</span>, the matrix <span class="SimpleMath">H_6</span> should read <span class="SimpleMath">S^ε_1_k ⊕ S^ε_2_d-k</span>, as for <span class="SimpleMath">H_5</span>, rather than <span class="SimpleMath">S^ε_k ⊕ S^ε_d-k</span>.</p>
+
+</dd>
+</dl>
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap5.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapBib.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapA.html">A</a>  <a href="chapBib.html">Bib</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>
