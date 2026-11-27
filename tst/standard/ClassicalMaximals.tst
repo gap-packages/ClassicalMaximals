@@ -1636,4 +1636,34 @@ gap> NrCheckedMaximals("O-", 8, 25);
 13
 
 #
+# SOMinusOmega and GOMinusSO are isometries of the form of GAP's Omega
+gap> TestIsometriesOutsideOmega := function(epsilon, n, q)
+>   local field, O, Q, F, S, G;
+>   field := GF(q);
+>   O := Omega(epsilon, n, q);
+>   Q := InvariantQuadraticForm(O).matrix;
+>   F := InvariantBilinearForm(O).matrix;
+>   S := SOMinusOmega(epsilon, n, q);
+>   Assert(0, RespectsQuadraticForm(Q, S));
+>   Assert(0, IsOne(DeterminantMat(S)));
+>   Assert(0, FancySpinorNorm(F, field, S) = -1);
+>   if IsEvenInt(q) then
+>     return;
+>   fi;
+>   G := GOMinusSO(epsilon, n, q);
+>   Assert(0, RespectsQuadraticForm(Q, G));
+>   Assert(0, IsOne(-DeterminantMat(G)));
+> end;;
+gap> for q in [2, 3, 4, 5, 9] do
+>   for n in [4, 6, 8] do
+>     TestIsometriesOutsideOmega(1, n, q);
+>     TestIsometriesOutsideOmega(-1, n, q);
+>   od;
+>   if IsOddInt(q) then
+>     TestIsometriesOutsideOmega(0, 5, q);
+>     TestIsometriesOutsideOmega(0, 7, q);
+>   fi;
+> od;
+
+#
 gap> STOP_TEST("ClassicalMaximals.tst", 0);

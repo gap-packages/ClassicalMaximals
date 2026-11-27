@@ -33,8 +33,9 @@ end;
 
 # GAP's SL, SU, Sp or Omega for the type names of ClassicalMaximalsGeneric
 StandardClassicalGroup := function(type, n, q)
-  return rec(L := SL, U := SU, S := Sp, O := OmegaZero,
-             ("O+") := OmegaPlus, ("O-") := OmegaMinus).(type)(n, q);
+  return rec(L := SL, U := SU, S := Sp, O := {n, q} -> Omega(0, n, q),
+             ("O+") := {n, q} -> Omega(1, n, q),
+             ("O-") := {n, q} -> Omega(-1, n, q)).(type)(n, q);
 end;
 
 # verify that the subgroups in L of Omega(epsilon, n, q), for type "O", "O+" or

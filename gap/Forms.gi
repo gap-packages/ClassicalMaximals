@@ -289,6 +289,14 @@ function(epsilon, d, q)
     return rec(Q := Q, F := F);
 end);
 
+# For nondegenerate forms with <form> = s * <tform>, return the scalar s.
+BindGlobal("CM_FormRatio",
+function(form, tform)
+    local j;
+    j := PositionNonZero(form[1]);
+    return form[1, j] / tform[1, j];
+end);
+
 BindGlobal("CM_ConjugateModule",
 function(M, q)
     return GModuleByMats(List(MTX.Generators(M), A -> ApplyFunctionToEntries(A, x -> x ^ q)),

@@ -326,7 +326,7 @@ function(q, opts...)
     # adjust G.3 to fix form and G.4 to have determinant 1
     form := CM_BilinearForm(GroupByGenerators([G.1, G.2]), GF(q));
     tform := G.3 * form * TransposedMat(G.3);
-    scal := form[1,9] / tform[1,9];
+    scal := CM_FormRatio(form, tform);
     rt := RootFFE(GF(q), scal, 2);
     Assert(0, rt <> fail);
     g3 := G.3 * (rt * IdentityMat(9, GF(q)));
@@ -674,7 +674,7 @@ function(q, opts...)
     G := G^tmat;
     form := CM_BilinearForm(Group([G.1, G.2]), GF(q));
     tform := G.3 * form * TransposedMat(G.3);
-    scal := form[1,10] / tform[1,10];
+    scal := CM_FormRatio(form, tform);
     rt := RootFFE(GF(q), scal, 2);
     Assert(0, rt <> fail);
     g3 := G.3 * (rt * IdentityMat(10, GF(q)));

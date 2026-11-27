@@ -3495,10 +3495,21 @@ function(n, q, opts...)
 
 end);
 
+# Return the entry <name> of StandardGeneratorsOfOrthogonalGroup(epsilon, n, q),
+# conjugated from StandardOrthogonalForm to the form of Omega(epsilon, n, q);
+# the two forms need not agree.
+BindGlobal("CM_StandardOrthogonalGeneratorForOmega",
+function(epsilon, n, q, name)
+    local G;
+    G := Group(StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).(name));
+    G := CM_ConjugateToGAPOrthogonalForm(G, epsilon, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
+    return GeneratorsOfGroup(G)[1];
+end);
+
 # Return an element of SO(epsilon, n, q) \ Omega(epsilon, n, q)
 InstallGlobalFunction("SOMinusOmega",
 function(epsilon, n, q)
-   return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).S; 
+    return CM_StandardOrthogonalGeneratorForOmega(epsilon, n, q, "S");
 end);
 
 # Return an element of GO(epsilon, n, q) \ SO(epsilon, n, q)
@@ -3507,18 +3518,13 @@ function(epsilon, n, q)
     if not IsOddInt(q) then
         ErrorNoReturn("<q> must be odd");
     fi;
-    return StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).G;
+    return CM_StandardOrthogonalGeneratorForOmega(epsilon, n, q, "G");
 end);
 
 # Return an element of Normaliser(GL(n, q), GO(epsilon, n, q)) \ GO(epsilon, n, q)
 InstallGlobalFunction("NormGOMinusGO",
 function(epsilon, n, q)
-    local G;
-    # D is a similarity of StandardOrthogonalForm, which for epsilon = -1
-    # differs from the form of GO(epsilon, n, q)
-    G := Group(StandardGeneratorsOfOrthogonalGroup(epsilon, n, q).D);
-    G := CM_ConjugateToGAPOrthogonalForm(G, epsilon, StandardOrthogonalForm(epsilon, n, q).Q, GF(q));
-    return GeneratorsOfGroup(G)[1];
+    return CM_StandardOrthogonalGeneratorForOmega(epsilon, n, q, "D");
 end);
 
 # Given a subgroup G of Omega(epsilon, n, q), conjugate it with all products of
